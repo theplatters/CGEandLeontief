@@ -78,7 +78,7 @@ IO(temp,:) = []; % remove government sectors, and sectors with no gross sales
 Ind = IO(:,1); %store industry names
 IO(:,1) = [];
 IO(:,temp) =[];
-Omega = bsxfun(@rdivide, IO, sum(IO,2));
+Omega = bsxfun(@rdivide, IO, sum(IO,2)); %Divides each elememt IO[i,j] with sum_i IO[i,j]
 alpha = (vadd(:,year-1959)./grossy(:,year-1959)); % set the factor share by industry
 N = length(Omega);
 beta = grossy(:,year-1959)'*(eye(N)-diag(1-alpha)*Omega);
@@ -128,7 +128,7 @@ init = [ones(N,1);(beta'*inv(eye(N)-diag(1-alpha)*Omega))']; % initial condition
 
 tic
 
-% Oil Shocks
+% Oil Shocks -- these aren't used anymore
 Oil = ones(45,1);
 Oil(13:15) = exp(stfp(7,13:15)-mu(7));
 Oil(19:21) = exp(stfp(7,19:21)-mu(7));

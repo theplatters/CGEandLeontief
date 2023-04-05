@@ -14,42 +14,33 @@ mu = mean(stfp');
 
 load us80dbasedata.mat
 
+%
+
 %AUXILIARY COUNTERS TO TURN ORIGINAL DATA INTO MATRIX(SECTORxYEAR)
-printf("Auxiliary Counters")
+
 startcount=1:46:4048;
-for k=1:size(startcount,2)
-    endcount(k)=startcount(k)-1;
-end
-endcount(89)=size(data,1);
+s = size(startcount,2)
+endcount(1:s-1)= startcount(2:s) -1
+endcount(s) = 1
+
 
 %NOMINAL GROSS OUTPUT IS THE SUM OF NOMINAL CAPITAL, LABOR AND ALL
 %INTERMEDIATE INPUTS (INCLUDING NONCOMPETING IMPORTS)
-printf("Auxiliary Counters")
-for i=1:size(startcount,2)
-    grossy(i,:)=data(startcount(i):endcount(i+1),3)';
-end
-%%
+grossy(1:s,:)=data(startcount(1:s):endcount(1:s,3)';
+
 
 %NOMINAL VALUE ADDED IS THE SUM OF NOMINAL CAPITAL AND LABOR
+vadd(1:s,:)=(data(startcount(1:s):endcount(1:s),4)')+(data(startcount(1:s):endcount(1:s),5)');
 
-for i=1:size(startcount,2)
-    vadd(i,:)=(data(startcount(i):endcount(i+1),4)')+(data(startcount(i):endcount(i+1),5)');
-end
-%%
 
-%NOMINAL CAPITAL
-printf("Nomianl Capital")
-for i=1:size(startcount,2)
-    capital(i,:)=(data(startcount(i):endcount(i+1),4)');
-end
+capital(1:s,:)=(data(startcount(1:s):endcount(1:s),4)'); %NOMINAL CAPITAL
 
-%NOMINAL LABOR
-for i=1:size(startcount,2)
-    labor(i,:)=(data(startcount(i):endcount(i+1),5)');
-end
+
+labor(1:s,:)=(data(startcount(1:s):endcount(1:s),5)'); %NOMINAL LABOR
+
 
 %REMOVE GOVERNMENT SECTORS & RENTS IMPUTED FROM OWNER-OCCUPIED HOUSING
-temp=80:1:88;
+temp=80:88;
 temp=[60;temp'];
 grossy(temp,:)=[];
 vadd(temp,:)=[];
@@ -70,7 +61,7 @@ labor(temp,:)=[];
 
 %% Initialize a year for IO Matrix
 year = 1982;
-temp=80:1:88;
+temp=80:88;
 temp=[8;60;62;temp'];
 IO = data(find(data(:,1)==year),:);
 IO(:,[1 3 4 5 94]) = []; % delete year, gross output, capital, labor, noncompetitive imports

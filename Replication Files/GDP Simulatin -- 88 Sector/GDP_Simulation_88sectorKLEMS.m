@@ -26,17 +26,14 @@ endcount(s) = 1
 
 %NOMINAL GROSS OUTPUT IS THE SUM OF NOMINAL CAPITAL, LABOR AND ALL
 %INTERMEDIATE INPUTS (INCLUDING NONCOMPETING IMPORTS)
-grossy(1:s,:)=data(startcount(1:s):endcount(1:s,3)';
+grossy(1:s,:) = data(startcount(1:s):endcount(1:s,3)';
 
+capital(1:s,:) = (data(startcount(1:s):endcount(1:s),4)'); %NOMINAL CAPITAL
+
+labor(1:s,:) = (data(startcount(1:s):endcount(1:s),5)'); %NOMINAL LABOR
 
 %NOMINAL VALUE ADDED IS THE SUM OF NOMINAL CAPITAL AND LABOR
-vadd(1:s,:)=(data(startcount(1:s):endcount(1:s),4)')+(data(startcount(1:s):endcount(1:s),5)');
-
-
-capital(1:s,:)=(data(startcount(1:s):endcount(1:s),4)'); %NOMINAL CAPITAL
-
-
-labor(1:s,:)=(data(startcount(1:s):endcount(1:s),5)'); %NOMINAL LABOR
+vadd = capital + labor;
 
 
 %REMOVE GOVERNMENT SECTORS & RENTS IMPUTED FROM OWNER-OCCUPIED HOUSING

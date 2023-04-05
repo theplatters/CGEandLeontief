@@ -1,0 +1,6 @@
+maxit 200
+gradopt exact
+derivcheck 0
+derivcheck_tol 1.0e-3
+derivcheck_type 2
+feastol 1.0e-8

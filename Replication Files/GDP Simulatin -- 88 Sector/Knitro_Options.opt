@@ -1,0 +1,5 @@
+maxit 200
+gradopt central
+gradopt exact
+derivcheck 0
+derivcheck_tol 1.0e-5

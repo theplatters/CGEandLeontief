@@ -16,34 +16,12 @@ load us80dbasedata.mat
 
 %
 
-%AUXILIARY COUNTERS TO TURN ORIGINAL DATA INTO MATRIX(SECTORxYEAR)
-printf("Auxiliary Counters")
-startcount=1:46:4048;
-for k=1:size(startcount,2)
-    endcount(k)=startcount(k)-1;
-end
-endcount(89)=size(data,1);
+grossy = reshape(data(:,3),46,88)'; %NOMINAL OUTPUT
+capital = reshape(data(:,4),46,88)'; %NOMINAL CAPITAL
+labor = reshape(data(:,5),46,88)'; %NOMINAL LABOR
+vadd = labor + capital; %NOMINAL VALUE
 
-%NOMINAL GROSS OUTPUT IS THE SUM OF NOMINAL CAPITAL, LABOR AND ALL
-%INTERMEDIATE INPUTS (INCLUDING NONCOMPETING IMPORTS)
-printf("Auxiliary Counters")
-for i=1:size(startcount,2)
-    grossy(i,:)=data(startcount(i):endcount(i+1),3)';
-end
-%%
 
-%NOMINAL CAPITAL
-printf("Nomianl Capital")
-for i=1:size(startcount,2)
-    capital(i,:)=(data(startcount(i):endcount(i+1),4)');
-end
-
-%NOMINAL LABOR
-for i=1:size(startcount,2)
-    labor(i,:)=(data(startcount(i):endcount(i+1),5)');
-end
-
-vadd = labor + capital;
 
 %REMOVE GOVERNMENT SECTORS & RENTS IMPUTED FROM OWNER-OCCUPIED HOUSING
 temp=80:88;

@@ -24,8 +24,8 @@ vadd = labor + capital; %NOMINAL VALUE
 
 
 %REMOVE GOVERNMENT SECTORS & RENTS IMPUTED FROM OWNER-OCCUPIED HOUSING
-temp=80:88;
-temp=[60;temp'];
+
+temp=[60 ,80:88];
 grossy(temp,:)=[];
 vadd(temp,:)=[];
 capital(temp,:)=[];
@@ -94,8 +94,9 @@ sigma = .9; %
 trials = 1; % number of draws
 clear Shocks LShocks;
 GDP = zeros(trials,1);
-variances = (movingvar(stfp(:,:)',5)'); % rolling estimate of variance of TFP
+variances = (movingvar(stfp',5)'); % rolling estimate of variance of TFP
 var_cri = variances(:,22);
+
 var_cri = diag(Sigma)*2; % crisis episode variances
 %parfor_progress(trials);
 L = (beta'*inv(eye(N)-diag(1-alpha)*Omega))'.*alpha; % steady-state allocation of labor

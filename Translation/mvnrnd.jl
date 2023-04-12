@@ -1,4 +1,4 @@
-hich octavefunction mvnrnd(μ,Σ)
+function mvnrnd(μ,Σ)
     U = cholesky(Σ).U
     (Random.randn(size(μ))'* U + μ')'
 end

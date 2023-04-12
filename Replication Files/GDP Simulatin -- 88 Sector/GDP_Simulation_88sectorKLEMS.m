@@ -14,7 +14,6 @@ mu = mean(stfp');
 
 load us80dbasedata.mat
 
-%
 
 grossy = reshape(data(:,3),46,88)'; %NOMINAL OUTPUT
 capital = reshape(data(:,4),46,88)'; %NOMINAL CAPITAL
@@ -64,9 +63,12 @@ beta(beta<0) = 0; %remove industries with negative implied final sales
 beta = beta/sum(beta); %normalize consumption vector to sum to unity.
 beta = beta';
 
+
+domar_weights = (beta'*inv(eye(N)-diag(1-alpha)*Omega))';
+
 %% Fmincon Options
 %optionsf = optimoptions('fmincon', 'MaxIter', 10000, 'MaxFunEvals', 10000, 'Algorithm','interior-point', 'TolCon', 1*10^(-10), 'TolFun', 10^(-10));
-optionsf = optimoptions('Algorithm','interior-point')
+%optionsf = optimoptions('Algorithm','interior-point')
 
 %% Simulation with no reallocation
 % create 4-yearly standard deviation of shocks
@@ -110,23 +112,14 @@ Oil(13:15) = exp(stfp(7,13:15)-mu(7));
 Oil(19:21) = exp(stfp(7,19:21)-mu(7));
 
 
-% This is literally the same as A and init.
-% A2 = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma))))';
-% init2 = [exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A));(beta'*inv(eye(N)-diag(1-alpha)*Omega))'./exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A))];  % judicious choice of starting values
-
-%%
-
 parfor k = 1:trials
             A = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma))))';
             % A = exp(mvnrnd(-1/2*diag(Sigma_4year),diag(diag(Sigma_4year))))';
             init = [exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A));(beta'*inv(eye(N)-diag(1-alpha)*Omega))'./exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A))];  % judicious choice of starting values
 
-            % pick solver type
-            %[Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
             [Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),optionsf);
 
-            %if exitfl == 1 || exitfl == 2% solver no error (fmincon)
-            if exitfl == 0% solver no error (knitro)
+            if exitfl == 1 || exitfl == 2% solver no error (fmincon)
                 GDP(k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
                 lambda_simul(:,k) = Soln(1:N).*Soln(1+N:end)/GDP(k);
             end
@@ -142,7 +135,6 @@ skewness(log(GDP(correct)));
 kurtosis(log(GDP(correct)))-3;
 
 
-domar_weights = (beta'*inv(eye(N)-diag(1-alpha)*Omega))';
 
 lambd = lambda_simul(:, correct);
 

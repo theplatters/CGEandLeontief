@@ -3,7 +3,7 @@ N = length(alpha);
 p = X(1:N);
 y = X(N+1:2*N);
 
-q = (Omega*(p.^(1-theta))).^(1/(1-theta));0
+q = (Omega*(p.^(1-theta))).^(1/(1-theta));
 w = p.*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(y.^(1/epsilon)).*(1./L).^(1/epsilon);
 C = w'*L;
 
@@ -13,7 +13,7 @@ Out = Out';
 outineq = [];
 outineq2 = [];
 
-DQDP = bsxfun(@times, (q.^theta), (p.^(-theta))').*Omega; % 
+DQDP = bsxfun(@times, (q.^theta), (p.^(-theta))').*Omega; %
 DWDP = diag((A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(y.^(1/epsilon)).*(1./L).^(1/epsilon)); %checked
 DWDY = (1/epsilon)*diag(p.*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(y.^(1/epsilon-1)).*(L).^(-1/epsilon)); %checked
 DCDP = DWDP'*L; %checked

@@ -146,8 +146,8 @@ stop
 count  =1 ;
 for year = 1960:2005
 %year = 1960;
-temp=80:1:88;
-temp=[8;60;62;temp'];
+temp=[8,60,62,80:88];
+
 IO = data(find(data(:,1)==year),:);
 IO(:,[1 3 4 5 94]) = []; % delete year, gross output, capital, labor, noncompetitive imports
 IO(temp,:) = []; % reove government sectors, and sectors with no gross sales

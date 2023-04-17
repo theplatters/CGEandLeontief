@@ -116,8 +116,8 @@ parfor k = 1:trials
             A = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma))))';
             % A = exp(mvnrnd(-1/2*diag(Sigma_4year),diag(diag(Sigma_4year))))';
             init = [exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A));(beta'*inv(eye(N)-diag(1-alpha)*Omega))'./exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A))];  % judicious choice of starting values
-
             [Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),optionsf);
+
 
             if exitfl == 1 || exitfl == 2% solver no error (fmincon)
                 GDP(k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
@@ -143,27 +143,27 @@ volatility = sqrt(var(lambd, 0, 2)')*domar_weights(:)./sum(domar_weights);
 stop
 
 % record domar weightrs over time
-count  =1 ;
+count = 1;
 for year = 1960:2005
 %year = 1960;
-temp=[8,60,62,80:88];
+  temp=[8,60,62,80:88];
 
-IO = data(find(data(:,1)==year),:);
-IO(:,[1 3 4 5 94]) = []; % delete year, gross output, capital, labor, noncompetitive imports
-IO(temp,:) = []; % reove government sectors, and sectors with no gross sales
-Ind = IO(:,1); %store industry names
-IO(:,1) = [];
-IO(:,temp) =[];
-Omega = bsxfun(@rdivide, IO, sum(IO,2));
-%Omega = diag(1-vadd(:,year-1959)./grossy(:,year-1959))*Omega; % scale IO table by intermediate input share
-alpha = (vadd(:,year-1959)./grossy(:,year-1959)); % set the factor share by industry
-N = length(Omega);
-beta = grossy(:,year-1959)'*(eye(N)-diag(1-alpha)*Omega);
-beta(beta<0) = 0; %remove industries with negative implied final sales
-beta = beta/sum(beta); %normalize consumption vector to sum to unity.
-beta = beta';
-lambda(:,count) = (beta'*inv(eye(N)-diag(1-alpha)*Omega))';
-count = count+1;
+  IO = data(find(data(:,1)==year),:);
+  IO(:,[1 3 4 5 94]) = []; % delete year, gross output, capital, labor, noncompetitive imports
+  IO(temp,:) = []; % reove government sectors, and sectors with no gross sales
+  Ind = IO(:,1); %store industry names
+  IO(:,1) = [];
+  IO(:,temp) =[];
+  Omega = bsxfun(@rdivide, IO, sum(IO,2));
+  %Omega = diag(1-vadd(:,year-1959)./grossy(:,year-1959))*Omega; % scale IO table by intermediate input share
+  alpha = (vadd(:,year-1959)./grossy(:,year-1959)); % set the factor share by industry
+  N = length(Omega);
+  beta = grossy(:,year-1959)'*(eye(N)-diag(1-alpha)*Omega);
+  beta(beta<0) = 0; %remove industries with negative implied final sales
+  beta = beta/sum(beta); %normalize consumption vector to sum to unity.
+  beta = beta';
+  lambda(:,count) = (beta'*inv(eye(N)-diag(1-alpha)*Omega))';
+  count = count+1;
 end
 
 mean(lambda')*(std(diff(log(lambda_simul(:,correct))')))'
@@ -213,11 +213,11 @@ for k = 1:length(list)
 for j = 1:M
         A = ones(N,1);
         A(Ind) = grid(j);
-            [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
-            if exitfl == 0
-                GDP(j,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
-            end
-            init = Soln;
+        [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
+        if exitfl == 0
+          GDP(j,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
+        end
+        init = Soln;
 end
 
 

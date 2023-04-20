@@ -52,13 +52,13 @@ IO(temp,:) = []; % remove government sectors, and sectors with no gross sales
 Ind = IO(:,1); %store industry names
 IO(:,1) = [];
 IO(:,temp) =[];
+
 Omega = bsxfun(@rdivide, IO, sum(IO,2)); %Divides each elememt IO[i,j] with sum_i IO[i,j]
-alpha = (vadd(:,year-1959)./grossy(:,year-1959)); % set the factor share by industry
+alpha = (vadd(:,year-1959)./grossy(:,year-1959)); %set the factor share by industry
 N = length(Omega);
+
+
 beta = grossy(:,year-1959)'*(eye(N)-diag(1-alpha)*Omega);
-
-%%
-
 beta(beta<0) = 0; %remove industries with negative implied final sales
 beta = beta/sum(beta); %normalize consumption vector to sum to unity.
 beta = beta';
@@ -115,7 +115,7 @@ Oil(19:21) = exp(stfp(7,19:21)-mu(7));
 parfor k = 1:trials
             A = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma))))';
             % A = exp(mvnrnd(-1/2*diag(Sigma_4year),diag(diag(Sigma_4year))))';
-            init = [exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A));(beta'*inv(eye(N)-diag(1-alpha)*Omega))'./exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A))];  % judicious choice of starting values
+             init = [exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A));(beta'*inv(eye(N)-diag(1-alpha)*Omega))'./exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A))];  % judicious choice of starting values
             [Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),optionsf);
 
 
@@ -208,31 +208,31 @@ GDP = zeros(2*M,1);
 grid = linspace(1.0, a, M);
 list = [7;53;8]
 for k = 1:length(list)
-    Ind = list(k);
-    grid = linspace(1.0, a, M);
-for j = 1:M
-        A = ones(N,1);
-        A(Ind) = grid(j);
-        [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
-        if exitfl == 0
-          GDP(j,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
-        end
-        init = Soln;
-end
+      Ind = list(k);
+      grid = linspace(1.0, a, M);
+  for j = 1:M
+      A = ones(N,1);
+      A(Ind) = grid(j);
+      [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
+      if exitfl == 0
+        GDP(j,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
+      end
+      init = Soln;
+  end
 
 
-grid = linspace(1.0, b, M);
-init = [ones(N,1);(beta'*inv(eye(N)-diag(1-alpha)*Omega))'];
-for j = 1:M
-        A = ones(N,1);
-        A(Ind) = grid(j);
-            [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
-            if exitfl == 0
-                GDP(j+M,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
-            end
-            init = Soln;
-end
-GDP(1:M,k) = flipud(GDP(1:M,k));
+  grid = linspace(1.0, b, M);
+  init = [ones(N,1);(beta'*inv(eye(N)-diag(1-alpha)*Omega))'];
+  for j = 1:M
+          A = ones(N,1);
+          A(Ind) = grid(j);
+              [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
+              if exitfl == 0
+                  GDP(j+M,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
+              end
+              init = Soln;
+  end
+  GDP(1:M,k) = flipud(GDP(1:M,k));
 end
 toc
 GDP(M,:) =[];

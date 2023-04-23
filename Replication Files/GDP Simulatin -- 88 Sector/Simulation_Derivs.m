@@ -18,11 +18,10 @@ DWDP = diag((A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(y.^(1/epsilon)).*
 DWDY = (1/epsilon)*diag(p.*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(y.^(1/epsilon-1)).*(L).^(-1/epsilon)); %checked
 DCDP = DWDP'*L; %checked
 DCDY = DWDY'*L;%checked
-DOut1DP = eye(N) - diag(diag(A)^(-1)*((alpha.*(w.^(1-epsilon))+(1-alpha).*(q.^(1-epsilon)))).^(epsilon/(1-epsilon)))*...
-    (diag(alpha)*diag(w.^(-epsilon))*DWDP+diag(1-alpha)*diag(q.^(-epsilon))*DQDP);
 
-DOut1DY =  -diag(diag(A.^(-1))*((alpha.*(w.^(1-epsilon))+(1-alpha).*(q.^(1-epsilon)))).^(epsilon/(1-epsilon)))*...
-    (diag(alpha)*diag(w.^(-epsilon))*DWDY);
+DOut1DP = eye(N) - diag(diag(A)^(-1)*((alpha.*(w.^(1-epsilon))+(1-alpha).*(q.^(1-epsilon)))).^(epsilon/(1-epsilon)))*(diag(alpha)*diag(w.^(-epsilon))*DWDP+diag(1-alpha)*diag(q.^(-epsilon))*DQDP);
+
+DOut1DY =  -diag(diag(A.^(-1))*((alpha.*(w.^(1-epsilon))+(1-alpha).*(q.^(1-epsilon)))).^(epsilon/(1-epsilon)))*(diag(alpha)*diag(w.^(-epsilon))*DWDY);
 
 DOut2DP = -(epsilon * diag(p.^(-theta))*Omega'*diag((p.^(epsilon-1)).*(y).*(q.^(theta-epsilon)).*(1-alpha).*(A.^(epsilon-1)))...
     +(theta-epsilon)*diag(p.^(-theta))*Omega'*diag((p.^(epsilon)).*(y).*(q.^(theta-epsilon-1)).*(1-alpha).*(A.^(epsilon-1)))*DQDP ...

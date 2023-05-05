@@ -67,7 +67,7 @@ beta = beta';
 domar_weights = (beta'*inv(eye(N)-diag(1-alpha)*Omega))';
 
 %% Fmincon Options
-%optionsf = optimoptions('fmincon', 'MaxIter', 10000, 'MaxFunEvals', 10000, 'Algorithm','interior-point', 'TolCon', 1*10^(-10), 'TolFun', 10^(-10));
+optionsf = optimoptions('fmincon', 'MaxIter', 10000, 'MaxFunEvals', 10000, 'Algorithm','interior-point', 'TolCon', 1*10^(-10), 'TolFun', 10^(-10));
 %optionsf = optimoptions('Algorithm','interior-point')
 
 %% Simulation with no reallocation
@@ -127,7 +127,11 @@ parfor k = 1:trials
 
 end
 toc
-%parfor_progress(0);
+
+
+parfor_progress(0);
+
+
 correct = (GDP~=0 & log(GDP)>-.4 & log(GDP) <.3); % Only use GDP values that are not caused by numerical errors
 mean(log(GDP(correct)));
 std(log(GDP(correct)));
@@ -140,7 +144,7 @@ lambd = lambda_simul(:, correct);
 
 volatility = sqrt(var(lambd, 0, 2)')*domar_weights(:)./sum(domar_weights);
 
-stop
+
 
 % record domar weightrs over time
 count = 1;
@@ -168,7 +172,7 @@ end
 
 mean(lambda')*(std(diff(log(lambda_simul(:,correct))')))'
 
-stop
+
 %% Hulten
 Tin = year - 1960;
 Shocks = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma)),trials))';

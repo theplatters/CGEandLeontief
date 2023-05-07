@@ -1,5 +1,5 @@
 using LinearAlgebra, NonlinearSolve
-using ForwardDiff, StaticArrays, SciMLNLSolve, LineSearches
+using ForwardDiff, SciMLNLSolve, LineSearches
 
 
 function problem(x,A)
@@ -18,7 +18,7 @@ function j!(J,u,p)
     J[1:152,1:152] = problemJacobian(u,p)
 end
 
-f = NonlinearFunction(f!)
+f = NonlinearFunction(f!,jac = j!)
 
 init = ones(Complex{Float64},152);
 A = ones(152);
@@ -30,3 +30,10 @@ p = A
 
 ProbN = NonlinearProblem(f,init,p)
 sol = solve(ProbN,NLSolveJL(linesearch = HagerZhang(),method = :newton), reltol = 1e-8,abstol = 1e-8)
+
+
+print(sol.u)
+eltype(init)<: Number
+
+typeof(init)<: Vector{T} where T <: Number
+

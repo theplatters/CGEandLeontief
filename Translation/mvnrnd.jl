@@ -1,4 +1,4 @@
-function mvnrnd(μ,Σ)
+function mvnrnd(μ, Σ)
     U = cholesky(Σ).U
-    (Random.randn(size(μ))'* U + μ')'
+    (Random.randn(size(μ))' * U + μ')'
 end

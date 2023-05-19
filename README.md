@@ -13,5 +13,10 @@ The project also uses the following Packages, that can be used using the Julia p
 - StaticArrays
 - SciMLNLSolve
 - LineSearches
+- Makie
+- GLMakue
+- JLD
+
+
 
 

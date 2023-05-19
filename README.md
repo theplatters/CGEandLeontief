@@ -1,5 +1,8 @@
 # BeyondHulten
 
+A translation and anaylsis of the code presented in the papaer "Beyond Hulten"
+
+## Installation
 Julia v. >1.8 is required https://julialang.org/
 
 The project also uses the following Packages, that can be used using the Julia package manager.

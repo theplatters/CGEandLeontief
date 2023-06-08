@@ -7,6 +7,8 @@ stfp(:,1) = []; % remove the first year growth which is blank
 stfp(end,:) = []; % remove the private household industry
 Sigma = cov(stfp');
 mu = mean(stfp');
+
+save("stfp.mat","stfp")
 %% READ JORGENSON ET AL DATA AND PERFORM BASIC MANIPULATIONS
 %data is quantity data matrix
 %price is price data matrix

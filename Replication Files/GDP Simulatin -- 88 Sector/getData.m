@@ -1,21 +1,9 @@
-%% Run Carvalho Gabaix to get sectoral TFP measures
-clear
-%cd('/Users/Joko/Desktop/Replication Files/GDP Simulatin -- 88 Sector')
-run('industries_data_privatesector_1960_2008.m');
-clearvars -except stfp agggdp aggtfp
-stfp(:,1) = []; % remove the first year growth which is blank
-stfp(end,:) = []; % remove the private household industry
-Sigma = cov(stfp');
-mu = mean(stfp');
-%% READ JORGENSON ET AL DATA AND PERFORM BASIC MANIPULATIONS
-%data is quantity data matrix
-%price is price data matrix
 
 
 load us80dbasedata.mat
 
 %AUXILIARY COUNTERS TO TURN ORIGINAL DATA INTO MATRIX(SECTORxYEAR)
-printf("Auxiliary Counters")
+fprintf("Auxiliary Counters")
 startcount=1:46:4048;
 for k=1:size(startcount,2)
     endcount(k)=startcount(k)-1;
@@ -24,7 +12,7 @@ endcount(89)=size(data,1);
 
 %NOMINAL GROSS OUTPUT IS THE SUM OF NOMINAL CAPITAL, LABOR AND ALL
 %INTERMEDIATE INPUTS (INCLUDING NONCOMPETING IMPORTS)
-printf("Auxiliary Counters")
+fprintf("Auxiliary Counters")
 for i=1:size(startcount,2)
     grossy(i,:)=data(startcount(i):endcount(i+1),3)';
 end
@@ -38,7 +26,7 @@ end
 %%
 
 %NOMINAL CAPITAL
-printf("Nomianl Capital")
+fprintf("Nomianl Capital")
 for i=1:size(startcount,2)
     capital(i,:)=(data(startcount(i):endcount(i+1),4)');
 end
@@ -91,5 +79,5 @@ beta = beta';
 
 clear -g temp i k Ind N endcount startcount year
 
-save -mat7-binary "simulationData.mat"
+save "simulationData.mat"
 

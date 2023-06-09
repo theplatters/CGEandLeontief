@@ -55,30 +55,31 @@ vadd = vadd[grossSales, :];
 α, β, Ω, L, λ = getVariables(1980)
 
 
-Ωlite = Ω[1:10, 1:10]
+Ωlite = Ω[1:76, 1:76]
 G = SimpleWeightedDiGraph(Ωlite)
 
 
 add_vertex!(G)
 
 for i ∈ 1:(nv(G)-1)
-    add_edge!(G, i, 11, 1)
+    add_edge!(G, i, 76, 1)
 end
 
-rem_edge!(G,11,11)
+rem_edge!(G,76,76)
 
 
-function increaseProduction!(G, sector, amount)
-    if abs(amount - 1)  ≤ 0.05
+function changeProduction!(G, sector, amount)
+    if abs(amount - 1)  ≤ 0.05 #Eigenproduktion, can surely be estimated with elasticity of labor
         return
     end
     for nb in inneighbors(G, sector)
         w = get_weight(G, nb, sector)
 
         println("Setting weight of Edge $nb -> $sector to $(w * amount), from $w")
-        add_edge!(G, nb, sector, w * amount)
+        add_edge!(G, nb, sector, w * amount) 
+        #Again, there could be a elasticity included in the model
 
-        increaseProduction!(G, nb, 1 + w * (amount - 1))
+        changeProduction!(G, nb, 1 + w * (amount - 1))
     end
 end
 
@@ -87,15 +88,15 @@ function shockConsumption!(G, sector::Integer, amount)
 
     add_edge!(G, sector, 5, amount * w)
 
-    increaseProduction!(G, sector, w * amount)
+    changeProduction!(G, sector, w * amount)
 end
 
 G2 = deepcopy(G)
 
 
-shockConsumption!(G2, 9, 1.3)
+shockConsumption!(G2, 7, 0.7)
 
-adjacency_matrix(G) - adjacency_matrix(G2)
+(adjacency_matrix(G) - adjacency_matrix(G2))[5:15,5:15]
 
 edws = [get_weight(G2,e.src,e.dst) for e in edges(G2)]
 

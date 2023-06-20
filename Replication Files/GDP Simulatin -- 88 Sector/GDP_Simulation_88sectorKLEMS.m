@@ -14,6 +14,7 @@ save("stfp.mat","stfp")
 %price is price data matrix
 
 
+
 load us80dbasedata.mat
 
 

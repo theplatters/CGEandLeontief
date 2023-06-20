@@ -1,16 +1,6 @@
 using Graphs, GraphMakie, GLMakie, MAT, LinearAlgebra, SimpleWeightedGraphs
-
 using GraphMakie.NetworkLayout
-
-function loadInData()
-    file = matopen("Translation/simulationData.mat")
-
-    data = read(file, "data")
-
-    close(file)
-
-    return data
-end
+include("../loaders.jl")
 
 function getVariables(year)
     IO = data[data[:, 1].==year, :]
@@ -65,9 +55,12 @@ end
 
 rem_edge!(G, size + 1, size + 1)
 
+## ELASTICITIES
+θ = 0.9
+
 function changeProduction!(G, sector, amount, count)
     #println("Sector $sector Amount: $amount, Count $count")
-    if count ≥ 5 || abs(amount - 1) ≤ 0.05  #Eigenproduktion, can surely be estimated with elasticity of labor
+    if count ≥ 5 || abs(amount - 1) ≤ 0.001  #Eigenproduktion, can surely be estimated with elasticity of labor
         return
     end
     for nb in inneighbors(G, sector)
@@ -75,10 +68,10 @@ function changeProduction!(G, sector, amount, count)
 
         println("Setting weight of Edge $nb -> $sector to $(w + w *(amount -1)), from $w")
         println("Count: $count")
-        add_edge!(G, nb, sector, w + w * (amount - 1))
+        change = (w * (amount - 1))
+        add_edge!(G, nb, sector, w + change)
         #Again, there could be a elasticity included in the model
-
-        changeProduction!(G, nb, 1+ w * (amount -1), count + 1)
+        changeProduction!(G, nb, 1 + change, count + 1)
     end
 end
 
@@ -94,7 +87,7 @@ end
 G2 = deepcopy(G)
 
 shockConsumption!(G2, 7, 1.4)
-
+sum(adjacency_matrix(G2),dims=2)
 norm(adjacency_matrix(G) - adjacency_matrix(G2))
 
 edws = [get_weight(G2, e.src, e.dst) for e in edges(G2)]

@@ -1,7 +1,7 @@
 using MAT
 
 function loadInData()
-    file = matopen("Data/simulationData.mat")
+    file = matopen("data/simulationData.mat")
 
     data = read(file, "data")
 
@@ -11,7 +11,7 @@ function loadInData()
 end
 
 function loadStfp()
-    file = matopen("Data/stfp.mat")
+    file = matopen("data/stfp.mat")
 
     stfp = read(file,"stfp")
 

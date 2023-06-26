@@ -1,6 +1,6 @@
 using Graphs, GraphMakie, GLMakie, MAT, LinearAlgebra, SimpleWeightedGraphs
 using GraphMakie.NetworkLayout
-include("../loaders.jl")
+include("../src/loaders.jl")
 
 function getVariables(year)
     IO = data[data[:, 1].==year, :]
@@ -10,7 +10,7 @@ function getVariables(year)
     Ω = IO ./ sum(IO, dims=2)
     α = vadd[:, year-1959] ./ grossy[:, year-1959]
     β = ((I - diagm(1 .- α) * Ω)' * grossy[:, year-1959])
-    @views β[β.<0] .= 0
+    β = max.(β,0.0) 
     β = β / sum(β)
     λ = (inv(I - diagm(1 .- α) * Ω)' * β)
     L = λ .* α
@@ -38,20 +38,25 @@ capital = capital[grossSales, :];
 labor = labor[grossSales, :];
 vadd = vadd[grossSales, :];
 
+year = 1980
 
-α, β, Ω, L, λ = getVariables(1980)
+α, β, Ω, L, λ = getVariables(year)
 
 size = 76
 
 Ωlite = Ω[1:size, 1:size]
 G = SimpleWeightedDiGraph(Ωlite)
 
+d = Ω*(grossy[:,year - 1959]/sum(grossy[:,year - 1959]))
 
 add_vertex!(G)
 
 for i ∈ 1:(nv(G)-1)
-    add_edge!(G, i, size + 1, 1)
+    #TODO: REPLACE THE ONES WITH THE ACTUAL SALES
+    add_edge!(G, i, size + 1, d[i])
 end
+
+adjacency_matrix(G)[:,77]
 
 rem_edge!(G, size + 1, size + 1)
 
@@ -60,14 +65,14 @@ rem_edge!(G, size + 1, size + 1)
 
 function changeProduction!(G, sector, amount, count)
     #println("Sector $sector Amount: $amount, Count $count")
-    if count ≥ 5 || abs(amount - 1) ≤ 0.001  #Eigenproduktion, can surely be estimated with elasticity of labor
+    if count ≥ 10 || abs(amount - 1) ≤ 0.000001  #Eigenproduktion, can surely be estimated with elasticity of labor
         return
     end
     for nb in inneighbors(G, sector)
         w = get_weight(G, nb, sector)
 
-        println("Setting weight of Edge $nb -> $sector to $(w + w *(amount -1)), from $w")
-        println("Count: $count")
+        #println("Setting weight of Edge $nb -> $sector to $(w + w *(amount -1)), from $w")
+        #println("Count: $count")
         change = (w * (amount - 1))
         add_edge!(G, nb, sector, w + change)
         #Again, there could be a elasticity included in the model
@@ -77,21 +82,33 @@ end
 
 
 function shockConsumption!(G, sector::Integer, amount)
-    w = (get_weight(G, sector, nv(G)))
+    w = get_weight(G, sector, nv(G))
 
-    add_edge!(G, sector, nv(G), amount * w)
-    println("Setting weight of edge 7 -> $(nv(G)) to $(amount * w)")
-    changeProduction!(G, sector, w * amount, 0)
+    change = (w * (amount - 1))
+    add_edge!(G, sector, nv(G), w + change)
+    #println("Setting weight of edge 7 -> $(nv(G)) to $(amount * w)")
+    changeProduction!(G, sector,1 + change, 0)
 end
 
 G2 = deepcopy(G)
 
-shockConsumption!(G2, 7, 1.4)
-sum(adjacency_matrix(G2),dims=2)
+function shock(sector,amount,G)
+    G2 = deepcopy(G) 
+    shockConsumption!(G2, sector, amount)
+    x = sum(adjacency_matrix(G2)[1:76,1:76],dims=2)
+    extrema(x)
+end
+
+
+y = LinRange(0,2,100)
+f = [shock(55,x,G) for x in y]
+
+f
+lines(y, y -> shock(55,y,G))
 norm(adjacency_matrix(G) - adjacency_matrix(G2))
+
+shock(55,0,G)
 
 edws = [get_weight(G2, e.src, e.dst) for e in edges(G2)]
 
 graphplot(G2, edge_width=2 .* edws, arrow_size=5 .+ 5 .* edws)
-
-

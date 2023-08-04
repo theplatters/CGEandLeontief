@@ -96,6 +96,7 @@ function shock(sector,amount,G)
     G2 = deepcopy(G) 
     shockConsumption!(G2, sector, amount)
     x = sum(adjacency_matrix(G2)[1:76,1:76],dims=2)
+    println(norm(adjacency_matrix(G) - adjacency_matrix(G2)))
     extrema(x)
 end
 
@@ -104,8 +105,6 @@ y = LinRange(0,2,100)
 f = [shock(55,x,G) for x in y]
 
 f
-lines(y, y -> shock(55,y,G))
-norm(adjacency_matrix(G) - adjacency_matrix(G2))
 
 shock(55,0,G)
 

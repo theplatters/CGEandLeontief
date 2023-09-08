@@ -46,7 +46,7 @@ capital(temp,:)=[];
 labor(temp,:)=[];
 
 %% Initialize a year for IO Matrix
-year = 1982;
+year = 1980;
 temp=80:88;
 temp=[8;60;62;temp'];
 IO = data(find(data(:,1)==year),:);

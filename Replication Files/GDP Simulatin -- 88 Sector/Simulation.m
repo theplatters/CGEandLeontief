@@ -1,4 +1,5 @@
 function [outineq, Out]=Simulation(X,A, beta, Omega, alpha, epsilon, theta, sigma,L)
+
 N = length(alpha);
 p = X(1:N);
 y = X(N+1:2*N);

@@ -14,6 +14,7 @@ Also the I-O file has to be inserted into the /data directory
 
 ## Files
 
-The `Analysis.ipynb` file contains code from the original B&F paper, that was then translated into Julia. A more condensed replication can be found in `Translation.ipynb`. In the Notebook `DemandShocks.ipynb` the model works on the data from germany and with demand shocks already implemented. This is probably the most interresting to look at. The model can be found in `src/model.jl`.
+The `Analysis.ipynb` file contains code from the original B&F paper, that was then translated into Julia. A more condensed replication can be found in `Translation.ipynb`. In the Notebook `DemandShocks.ipynb` the model works on the data from germany and with demand shocks already implemented. This is probably the most interresting to look at. The model can be found in `src` directory.
+
 
 

@@ -6,7 +6,7 @@ q = (Omega*(p.^(1-theta))).^(1/(1-theta));
 w = 1;
 %C = sum(L)/Pc;
 
-Out(1:N) = p - (diag(A)^(epsilon-1)*(alpha.*w.^(1-epsilon)+(1-alpha).*q.^(1-epsilon))).^(1/(1-epsilon));
+Out(1:N) = p - (diag(A)^(epsilon-1)*(alpha.*w.^(1-epsilon)+(1-alpha).* q.^(1-epsilon))).^(1/(1-epsilon));
 Out = Out';
 outineq = [];
 outineq2 = [];

@@ -1,6 +1,6 @@
 %% Run Carvalho Gabaix to get sectoral TFP measures 
 clear
-cd('/Users/joko/Desktop/Replication Files/GDP Simulatin -- 88 Sector')
+%cd('/Users/joko/Desktop/Replication Files/GDP Simulatin -- 88 Sector')
 run('industries_data_privatesector_1960_2008.m');
 clearvars -except stfp agggdp
 stfp(:,1) = []; % remove the first year growth which is blank
@@ -8,7 +8,7 @@ stfp(end,:) = []; % remove the private household industry
 Sigma = cov(stfp');
 mu = mean(stfp');
 
-%% READ JORGENSON ET AL DATA AND PERFORM BASIC MANIPULATIONS
+%% cREAD JORGENSON ET AL DATA AND PERFORM BASIC MANIPULATIONS
 %data is quantity data matrix
 %price is price data matrix
 
@@ -97,7 +97,7 @@ theta = 0.2; %
 sigma = .9; % 
 
 %%
-trials = 10000;
+trials = 10;
 clear Shocks;
 GDP = zeros(trials,1);
 parfor_progress(trials);
@@ -110,6 +110,7 @@ init = [ones(N,1)];
 %  end
 %Shocks = datasample(stfp'-repmat(mu,size(stfp',1),1),trials)';
 tic
+optionsf = optimoptions('fmincon', 'MaxIter', 10000, 'MaxFunEvals', 10000, 'Algorithm','interior-point', 'TolCon', 1*10^(-10), 'TolFun', 10^(-10));
 
 parfor k = 1:trials
             %A = exp(Shocks(:,k));
@@ -119,10 +120,13 @@ parfor k = 1:trials
             %A = exp(mvnrnd(-1/2*diag(Sigma),Sigma))';         
             A = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma))))';  
             A = exp(mvnrnd(-1/2*diag(Sigma_4year),diag(diag(Sigma_4year))))';  
+            display(A)
             %A = exp(mvnrnd(-diag(Sigma),2*diag(diag(Sigma))))'; % twice as big shocks
             %A(1) = grid(k);
-            [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),ones(N,1),[],[],[],[],[],[], @(X)Simulation_Derivs_realloc(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
-            if exitfl == 0
+            [Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs_realloc(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),optionsf);         
+            display(Soln)
+
+            if exitfl == 1 || exitfl == 2
                 GDP(k) = (beta'*Soln.^(1-sigma))^(1/(sigma-1));
                 %lambda_simul(:,k) = Soln(1:N)*Soln(1+N,:)/GDP(k);
             end
@@ -138,7 +142,7 @@ std(log(GDP(correct)));
 skewness(log(GDP(correct)));
 kurtosis(log(GDP(correct)))-3;
 
-stop
+
 %save('GDP_histogram_norealloc_normalCOV.mat', 'GDP')
 %hist(GDP(GDP~=0),25)
 %hist(GDP(abs(GDP)>.1& abs(GDP)<1.4),25)

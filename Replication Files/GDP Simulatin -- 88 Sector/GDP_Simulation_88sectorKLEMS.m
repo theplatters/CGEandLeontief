@@ -121,7 +121,6 @@ parfor k = 1:trials
              init = [exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A));(beta'*inv(eye(N)-diag(1-alpha)*Omega))'./exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A))];  % judicious choice of starting values
             [Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),optionsf);
 
-
             if exitfl == 1 || exitfl == 2% solver no error (fmincon)
                 GDP(k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
                 lambda_simul(:,k) = Soln(1:N).*Soln(1+N:end)/GDP(k);

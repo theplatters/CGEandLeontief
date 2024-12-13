@@ -87,10 +87,10 @@ mp_eps = zeros(3,100);
 mp_theta = zeros(3,100);
 mp_sigma = zeros(3,100);
 
-sigma_orig = 0.99;
-theta_orig = 0.99;
-eps_orig = 0.99;
-
+sigma_orig = 0.2;
+theta_orig = 0.2;
+eps_orig = 0.2;
+%%
 i = 1;
 for sector = sectors
     shock = ones(N,1);
@@ -119,7 +119,7 @@ for sector = sectors
      end
     theta = theta_orig;
     sigma = sigma_orig;
-    j = j+1;
+    j = 1;
      for epsilon = epsilons
         [gdp,mp] = eg(shock,epsilon,theta,sigma,beta,Omega,alpha,L,N);
         gdp_eps(i,j) = gdp;
@@ -138,14 +138,14 @@ figure; % Open a new figure window
 plot(x, gdp_theta(1,:)  , 'r', 'LineWidth', 1.5); % First line in red
 hold on; % Hold the current plot
 plot(x, gdp_sigma(1,:), 'g', 'LineWidth', 1.5); % Second line in green
-plot(x, gdp_epsilon(1,:), 'b', 'LineWidth', 1.5); % Third line in blue
+plot(x, gdp_eps(1,1:100), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
 
 figure; % Open a new figure window
 plot(x, mp_theta(1,:)  , 'r', 'LineWidth', 1.5); % First line in red
 hold on; % Hold the current plot
 plot(x, mp_sigma(1,:), 'g', 'LineWidth', 1.5); % Second line in green
-plot(x, mp_epsilon(1,:), 'b', 'LineWidth', 1.5); % Third line in blue
+plot(x, mp_eps(1,:), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
 
 
@@ -159,12 +159,12 @@ hold on; % Hold the current plot
 plot(x, gdp_sigma(2,:), 'g', 'LineWidth', 1.5); % Second line in green
 plot(x, gdp_eps(2,:), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
-
+%%
 figure; % Open a new figure window
 plot(x, mp_theta(2,:)  , 'r', 'LineWidth', 1.5); % First line in red
 hold on; % Hold the current plot
 plot(x, mp_sigma(2,:), 'g', 'LineWidth', 1.5); % Second line in green
-plot(x, mp_(2,:), 'b', 'LineWidth', 1.5); % Third line in blue
+plot(x, mp_eps(2,:), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
 
 %%
@@ -175,14 +175,14 @@ figure; % Open a new figure window
 plot(x, gdp_theta(3,:)  , 'r', 'LineWidth', 1.5); % First line in red
 hold on; % Hold the current plot
 plot(x, gdp_sigma(3,:), 'g', 'LineWidth', 1.5); % Second line in green
-plot(x, gdp_epsilon(3,:), 'b', 'LineWidth', 1.5); % Third line in blue
+plot(x, gdp_eps(3,:), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
-
+%%
 figure; % Open a new figure window
 plot(x, mp_theta(3,:)  , 'r', 'LineWidth', 1.5); % First line in red
 hold on; % Hold the current plot
 plot(x, mp_sigma(3,:), 'g', 'LineWidth', 1.5); % Second line in green
-plot(x, mp_epsilon(3,:), 'b', 'LineWidth', 1.5); % Third line in blue
+plot(x, mp_eps(3,:), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
 
 

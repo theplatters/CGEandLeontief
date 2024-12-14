@@ -87,9 +87,9 @@ mp_eps = zeros(3,100);
 mp_theta = zeros(3,100);
 mp_sigma = zeros(3,100);
 
-sigma_orig = 0.2;
-theta_orig = 0.2;
-eps_orig = 0.2;
+sigma_orig = 0.015;
+theta_orig = 0.015;
+eps_orig = 0.015;
 %%
 i = 1;
 for sector = sectors
@@ -134,38 +134,44 @@ end
 % Plotting
 x = linspace(0.015,0.99)
 % Plot the lines
-figure; % Open a new figure window
+h = figure; % Open a new figure window
 plot(x, gdp_theta(1,:)  , 'r', 'LineWidth', 1.5); % First line in red
 hold on; % Hold the current plot
 plot(x, gdp_sigma(1,:), 'g', 'LineWidth', 1.5); % Second line in green
 plot(x, gdp_eps(1,1:100), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
+saveas(h,"eg_supply_1_0015",'png')
+
 %%
-figure; % Open a new figure window
+h = figure; % Open a new figure window
 plot(x, mp_theta(1,:)  , 'r', 'LineWidth', 1.5); % First line in red
 hold on; % Hold the current plot
 plot(x, mp_sigma(1,:), 'g', 'LineWidth', 1.5); % Second line in green
 plot(x, mp_eps(1,:), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
 
+saveas(h,"eg_supply_mp_1_0015",'png')
 
 %%
 % Sector 2
 x = linspace(0.015,0.99)
 % Plot the lines
-figure; % Open a new figure window
+h = figure; % Open a new figure window
 plot(x, gdp_theta(2,:)  , 'r', 'LineWidth', 1.5); % First line in red
 hold on; % Hold the current plot
 plot(x, gdp_sigma(2,:), 'g', 'LineWidth', 1.5); % Second line in green
 plot(x, gdp_eps(2,:), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
+
+saveas(h,"eg_supply_2_0015",'png')
 %%
-figure; % Open a new figure window
+h = figure; % Open a new figure window
 plot(x, mp_theta(2,:)  , 'r', 'LineWidth', 1.5); % First line in red
 hold on; % Hold the current plot
 plot(x, mp_sigma(2,:), 'g', 'LineWidth', 1.5); % Second line in green
 plot(x, mp_eps(2,:), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
+saveas(h,"eg_supply_2_mp_0015",'png')
 
 %%
 % Sector 3
@@ -177,13 +183,17 @@ hold on; % Hold the current plot
 plot(x, gdp_sigma(3,:), 'g', 'LineWidth', 1.5); % Second line in green
 plot(x, gdp_eps(3,:), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
-%%
-figure; % Open a new figure window
+
+saveas(h,"eg_supply_3_0015",'png')
+
+%%              
+h = figure; % Open a new figure window
 plot(x, mp_theta(3,:)  , 'r', 'LineWidth', 1.5); % First line in red
 hold on; % Hold the current plot
 plot(x, mp_sigma(3,:), 'g', 'LineWidth', 1.5); % Second line in green
 plot(x, mp_eps(3,:), 'b', 'LineWidth', 1.5); % Third line in blue
 hold off; % Release the hold on the plot
+saveas(h,"eg_supply_mp_3_0015-",'png')
 
 
 

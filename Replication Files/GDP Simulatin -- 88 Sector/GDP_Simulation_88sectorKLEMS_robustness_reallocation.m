@@ -94,7 +94,7 @@ beta = beta';
 %% Fmincon Options
 optionsf = optimoptions('fmincon', 'MaxIter', 10000, 'MaxFunEvals', 10000, 'Algorithm','interior-point', 'TolCon', 1*10^(-10), 'TolFun', 10^(-10));
 
-%% Simulation with no reallocation
+f%% Simulation with no reallocation
 cum_stfp = cumsum(log(1+stfp)')';
 cum_stfp_4year = cum_stfp(:,[1:step_size:size(stfp,2)]);
 Sigma_4year = cov(diff(cum_stfp_4year'));

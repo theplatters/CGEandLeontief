@@ -96,7 +96,7 @@ theta = 0.001; %
 sigma = .9; %
 
 
-trials = 1; % number of draws
+trials = 10; % number of draws
 clear Shocks LShocks;
 GDP = zeros(trials,1);
 variances = (movingvar(stfp',5)'); % rolling estimate of variance of TFP
@@ -114,6 +114,8 @@ Oil = ones(45,1);
 Oil(13:15) = exp(stfp(7,13:15)-mu(7));
 Oil(19:21) = exp(stfp(7,19:21)-mu(7));
 
+prices = [];
+wages = [];
 
 parfor k = 1:trials
             A = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma))))';
@@ -122,8 +124,17 @@ parfor k = 1:trials
             [Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),optionsf);
 
             if exitfl == 1 || exitfl == 2% solver no error (fmincon)
-                GDP(k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
+                C = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))' * L;
+                GDP(k) = C;
                 lambda_simul(:,k) = Soln(1:N).*Soln(1+N:end)/GDP(k);
+                prices(:,k) = Soln(1:N)
+                wages_weighted_lambda(k) = sum(lambda_simul(:,k) .* (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))) / sum(lambda_simul(:,k))
+                wages_weighted_beta(k) = sum(beta .* (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))) / sum(beta)
+                
+                
+                wages_weighted_beta_2(k) = sum(beta .*diag(Soln(1:N))^(-sigma)*C .* (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))) / sum(beta .* diag(Soln(1:N))^(-sigma)*C)
+
+
             end
             %parfor_progress;
 

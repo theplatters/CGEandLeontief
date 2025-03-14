@@ -1,6 +1,5 @@
 %% Run Carvalho Gabaix to get sectoral TFP measures 
 clear
-cd('/Users/joko/Desktop/Replication Files/GDP Simulatin -- 88 Sector')
 run('industries_data_privatesector_1960_2008.m');
 clearvars -except stfp agggdp aggtfp
 stfp(:,1) = []; % remove the first year growth which is blank
@@ -67,7 +66,7 @@ year = 1982;
 temp=80:1:88;
 temp=[8;60;62;temp'];
 IO = data(find(data(:,1)==year),:);
-IO:,[1 3 4 5 94]) = []; % delete year, gross output, capital, labor, noncompetitive imports
+IO(:,[1 3 4 5 94]) = []; % delete year, gross output, capital, labor, noncompetitive imports
 IO(temp,:) = []; % remove government sectors, and sectors with no gross sales
 Ind = IO(:,1); %store industry names
 IO(:,1) = [];
@@ -100,7 +99,7 @@ theta = 0.001; %
 sigma = .9; % 
 
 
-trials = 1; % number of draws
+trials = 10; % number of draws
 clear Shocks LShocks;
 GDP = zeros(trials,1);
 variances = (movingvar(stfp(:,:)',5)'); % rolling estimate of variance of TFP
@@ -116,20 +115,21 @@ tic
 Oil = ones(45,1);
 Oil(13:15) = exp(stfp(7,13:15)-mu(7));
 Oil(19:21) = exp(stfp(7,19:21)-mu(7));
-
+prices = []
 parfor k = 1:trials
             A = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma))))';  
             A = exp(mvnrnd(-1/2*diag(Sigma_4year),diag(diag(Sigma_4year))))';  
             init = [exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A));(beta'*inv(eye(N)-diag(1-alpha)*Omega))'./exp(-inv(eye(N)-diag(1-alpha)*Omega)*log(A))];  % judicious choice of starting values
             
             % pick solver type
-            [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
-            %[Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L), optionsf);
+            %[Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
+            [Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L), optionsf);
             
-            %if exitfl == 1 || exitfl == 2% solver no error (fmincon)
-            if exitfl == 0% solver no error (knitro)
+            if exitfl == 1 || exitfl == 2% solver no error (fmincon)
+            %if exitfl == 0% solver no error (knitro)
                 GDP(k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
                 lambda_simul(:,k) = Soln(1:N).*Soln(1+N:end)/GDP(k);
+                prices(:,k) = Soln(1:N)
             end
             parfor_progress;
      
@@ -149,35 +149,33 @@ lambd = lambda_simul(:, correct);
 
 volatility = sqrt(var(lambd, 0, 2)')*domar_weights(:)./sum(domar_weights);
 
-stop
 
 % record domar weightrs over time
 count  =1 ;
 for year = 1960:2005
-%year = 1960;
-temp=80:1:88;
-temp=[8;60;62;temp'];
-IO = data(find(data(:,1)==year),:);
-IO(:,[1 3 4 5 94]) = []; % delete year, gross output, capital, labor, noncompetitive imports
-IO(temp,:) = []; % reove government sectors, and sectors with no gross sales
-Ind = IO(:,1); %store industry names
-IO(:,1) = [];
-IO(:,temp) =[];
-Omega = bsxfun(@rdivide, IO, sum(IO,2));
-%Omega = diag(1-vadd(:,year-1959)./grossy(:,year-1959))*Omega; % scale IO table by intermediate input share
-alpha = (vadd(:,year-1959)./grossy(:,year-1959)); % set the factor share by industry
-N = length(Omega);
-beta = grossy(:,year-1959)'*(eye(N)-diag(1-alpha)*Omega);
-beta(beta<0) = 0; %remove industries with negative implied final sales
-beta = beta/sum(beta); %normalize consumption vector to sum to unity. 
-beta = beta';
-lambda(:,count) = (beta'*inv(eye(N)-diag(1-alpha)*Omega))';
-count = count+1;
+    %year = 1960;
+    temp=80:1:88;
+    temp=[8;60;62;temp'];
+    IO = data(find(data(:,1)==year),:);
+    IO(:,[1 3 4 5 94]) = []; % delete year, gross output, capital, labor, noncompetitive imports
+    IO(temp,:) = []; % reove government sectors, and sectors with no gross sales
+    Ind = IO(:,1); %store industry names
+    IO(:,1) = [];
+    IO(:,temp) =[];
+    Omega = bsxfun(@rdivide, IO, sum(IO,2));
+    %Omega = diag(1-vadd(:,year-1959)./grossy(:,year-1959))*Omega; % scale IO table by intermediate input share
+    alpha = (vadd(:,year-1959)./grossy(:,year-1959)); % set the factor share by industry
+    N = length(Omega);
+    beta = grossy(:,year-1959)'*(eye(N)-diag(1-alpha)*Omega);
+    beta(beta<0) = 0; %remove industries with negative implied final sales
+    beta = beta/sum(beta); %normalize consumption vector to sum to unity. 
+    beta = beta';
+    lambda(:,count) = (beta'*inv(eye(N)-diag(1-alpha)*Omega))';
+    count = count+1;
 end
 
 mean(lambda')*(std(diff(log(lambda_simul(:,correct))')))'
 
-stop
 %% Hulten 
 Tin = year - 1960;
 Shocks = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma)),trials))';  
@@ -205,6 +203,7 @@ sigma = .4; % Elasticity of substitution between in consumption
  epsilon = .5; % Elasticity of substitution between VA and intermediates
  theta = 0.0001; % Elasticity of substitution between intermediates
  sigma = .9; % Elasticity of substitution between in consumption
+ optionsf = optimoptions('fmincon', 'MaxIter', 10000, 'MaxFunEvals', 10000, 'Algorithm','interior-point', 'TolCon', 1*10^(-10), 'TolFun', 10^(-10));
 
 
 clear Shocks LShocks GDP;
@@ -222,7 +221,7 @@ for k = 1:length(list)
 for j = 1:M
         A = ones(N,1);    
         A(Ind) = grid(j);
-            [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
+            [Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L), optionsf);
             if exitfl == 0
                 GDP(j,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
             end
@@ -235,9 +234,10 @@ init = [ones(N,1);(beta'*inv(eye(N)-diag(1-alpha)*Omega))'];
 for j = 1:M
         A = ones(N,1);    
         A(Ind) = grid(j);
-            [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
+            [Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L), optionsf);
             if exitfl == 0
                 GDP(j+M,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
+                prices(:,k)
             end
             init = Soln;
 end

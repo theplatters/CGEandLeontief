@@ -79,10 +79,6 @@ cum_stfp = cumsum(log(1+stfp)')';
 cum_stfp_4year = cum_stfp(:,[1:4:size(stfp,2)]);
 Sigma_4year = cov(diff(cum_stfp_4year'));
 %%
-
-
-
-
 A = ones(N,1);
 
 % WHAT
@@ -215,27 +211,31 @@ sigma = .4; % Elasticity of substitution between in consumption
  sigma = .9; % Elasticity of substitution between in consumption
 
 
+
 clear Shocks LShocks GDP;
 L = (beta'*inv(eye(N)-diag(1-alpha)*Omega))'.*alpha;
 init = [ones(N,1);(beta'*inv(eye(N)-diag(1-alpha)*Omega))'];
 %generate idiosyncratic shocks from empirical CDF
 tic
 M = 10;
-GDP = zeros(2*M,1);
+GDP = zeros(2*M,3);
 grid = linspace(1.0, a, M);
-list = [7;53;8]
+list = [7;53; 8];
 for k = 1:length(list)
       Ind = list(k);
       grid = linspace(1.0, a, M);
-  for j = 1:M
-      A = ones(N,1);
-      A(Ind) = grid(j);
-      [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
-      if exitfl == 0
-        GDP(j,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
+      for j = 1:M
+          A = ones(N,1);
+          A(Ind) = grid(j);
+          [Soln,~,exitfl] =  fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),optionsf);
+    
+          if exitfl == 1 || exitfl == 2
+            wages = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon));
+            GDP(j,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
+            %GDP(j,k) = sum(wages' * L * Soln(1:N) .^ (-sigma) .* beta)
+          end
+          init = Soln;
       end
-      init = Soln;
-  end
 
 
   grid = linspace(1.0, b, M);
@@ -243,9 +243,11 @@ for k = 1:length(list)
   for j = 1:M
           A = ones(N,1);
           A(Ind) = grid(j);
-              [Soln,~,exitfl] = knitromatlab(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),[],[],'Knitro_options.opt');
-              if exitfl == 0
-                  GDP(j+M,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
+              [Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),optionsf);
+              if exitfl == 1 || exitfl == 2
+                   wages = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon));
+                   GDP(j + M,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
+                   %GDP(j + M,k) = sum(wages' * L * Soln(1:N) .^ (-sigma) .* beta);              
               end
               init = Soln;
   end
@@ -289,8 +291,8 @@ set(a1,'XTickLabels',[])
 set(a1,'YTickLabels',[])
 set(a1,'YTick',[])
 set(a1,'XTick',[])
-set(a1, 'legend','off')
-matlab2tikz('OilvRetail.tex')
+%set(a1, 'legend','off')
+%matlab2tikz('OilvRetail.tex')
 
 %% Oil V. Construction
 
@@ -309,4 +311,4 @@ legend(h,'Oil','Construction','Hulten Oil','Hulten Construction','Location','Sou
 hold off
 xlabel('TFP')
 ylabel('log(GDP)')
-matlab2tikz('OilvConstruction.tex')
+%matlab2tikz('OilvConstruction.tex')

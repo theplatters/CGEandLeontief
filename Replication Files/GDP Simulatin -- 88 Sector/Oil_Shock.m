@@ -1,15 +1,15 @@
  %% Run Carvalho Gabaix to get sectoral TFP measures 
 clear
-cd('C:\Users\baqaee\Dropbox\Work\Hultens Theorem\Calibration\GDP Simulatin -- 88 Sector')
+%cd('C:\Users\baqaee\Dropbox\Work\Hultens Theorem\Calibration\GDP Simulatin -- 88 Sector')
 run('industries_data_privatesector_1960_2008.m');
 clearvars -except stfp agggdp aggtfp
 stfp(:,1) = []; % remove the first year growth which is blank
 stfp(end,:) = []; % remove the private household industry
 Sigma = cov(stfp');
 mu = mean(stfp');
-stfp_fe =  csvread('C:\Users\baqaee\Dropbox\Work\Hultens Theorem\Calibration\GDP Simulatin -- 88 Sector\stfp_resids_fe.csv', 1,0);
-stfp_tt =  csvread('C:\Users\baqaee\Dropbox\Work\Hultens Theorem\Calibration\GDP Simulatin -- 88 Sector\stfp_resids_linear_trend.csv', 1,0);
-stfp_tt_ind =  csvread('C:\Users\baqaee\Dropbox\Work\Hultens Theorem\Calibration\GDP Simulatin -- 88 Sector\stfp_resids_ttind.csv', 1,0);
+%stfp_fe =  csvread('C:\Users\baqaee\Dropbox\Work\Hultens Theorem\Calibration\GDP Simulatin -- 88 Sector\stfp_resids_fe.csv', 1,0);
+%stfp_tt =  csvread('C:\Users\baqaee\Dropbox\Work\Hultens Theorem\Calibration\GDP Simulatin -- 88 Sector\stfp_resids_linear_trend.csv', 1,0);
+%stfp_tt_ind =  csvread('C:\Users\baqaee\Dropbox\Work\Hultens Theorem\Calibration\GDP Simulatin -- 88 Sector\stfp_resids_ttind.csv', 1,0);
 %% READ JORGENSON ET AL DATA AND PERFORM BASIC MANIPULATIONS
 %data is quantity data matrix
 %price is price data matrix

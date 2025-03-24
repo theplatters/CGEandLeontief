@@ -158,7 +158,7 @@ volatility = sqrt(var(lambd, 0, 2)')*domar_weights(:)./sum(domar_weights);
 % record domar weightrs over time
 count = 1;
 for year = 1960:2005
-%year = 1960;
+year = 1960;
   temp=[8,60,62,80:88];
 
   IO = data(find(data(:,1)==year),:);
@@ -184,16 +184,16 @@ mean(lambda')*(std(diff(log(lambda_simul(:,correct))')))'
 
 %% Hulten
 Tin = year - 1960;
-Shocks = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma)),trials))';
-mean((grossy(:,Tin)./sum(vadd(:,Tin)))'*log(Shocks))
-std((grossy(:,Tin)./sum(vadd(:,Tin)))'*log(Shocks))
-skewness((grossy(:,Tin)./sum(vadd(:,Tin)))'*log(Shocks))
+%Shocks = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma)),trials))';
+%mean((grossy(:,Tin)./sum(vadd(:,Tin)))'*log(Shocks))
+%std((grossy(:,Tin)./sum(vadd(:,Tin)))'*log(Shocks))
+%skewness((grossy(:,Tin)./sum(vadd(:,Tin)))'*log(Shocks))
 
 lambda = (beta'*inv(eye(N)-diag(1-alpha)*Omega))';
-trials = 50000;
-Shocks = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma)),trials))';
-GDP_CD = exp(lambda'*log(Shocks))';
-save('GDP_simulation_50K_CD.mat', 'GDP_CD')
+%trials = 50000;
+%Shocks = exp(mvnrnd(-1/2*diag(Sigma),diag(diag(Sigma)),trials))';
+%GDP_CD = exp(lambda'*log(Shocks))';
+%save('GDP_simulation_50K_CD.mat', 'GDP_CD')
 
 %% Shocks to single industries and comparison to Hulten
 Ind = 7; % Industry with most action is 7, least action is 17, sames sales as oil is 53;
@@ -231,8 +231,8 @@ for k = 1:length(list)
     
           if exitfl == 1 || exitfl == 2
             wages = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon));
-            GDP(j,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
-            %GDP(j,k) = sum(wages' * L * Soln(1:N) .^ (-sigma) .* beta)
+            %GDP(j,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
+            GDP(j,k) = sum(wages' * L * Soln(1:N) .^ (-sigma) .* beta)
           end
           init = Soln;
       end
@@ -246,8 +246,8 @@ for k = 1:length(list)
               [Soln,~,exitfl] = fmincon(@(X) trivial(X),init,[],[],[],[],[],[], @(X)Simulation_Derivs(X,  A, beta, Omega, alpha, epsilon, theta, sigma,L),optionsf);
               if exitfl == 1 || exitfl == 2
                    wages = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon));
-                   GDP(j + M,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
-                   %GDP(j + M,k) = sum(wages' * L * Soln(1:N) .^ (-sigma) .* beta);              
+                   %GDP(j + M,k) = (Soln(1:N).*(A.^((epsilon-1)/epsilon)).*(alpha.^(1/epsilon)).*(Soln(N+1:2*N).^(1/epsilon)).*(1./L).^(1/epsilon))'*L;
+                   GDP(j + M,k) = sum(wages' * L * Soln(1:N) .^ (-sigma) .* beta);              
               end
               init = Soln;
   end

@@ -1,0 +1,439 @@
+\documentclass{article}
+
+% Language setting
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+
+\usepackage[
+style=authoryear-ibid,backend=biber
+]{biblatex}
+\addbibresource{BandF.bib}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\newcommand{\costf}[1]{\mathscr{C}_#1}
+\newcommand{\cfx}[1]{\mathscr{C}_#1^{X_#1}}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\setlength\parindent{0pt}
+
+\title{Nested CES production functions and the \parencite{BF2019} model}
+
+\begin{document}
+\maketitle
+
+
+\section{Introduction}
+This is a brief review of the model introduced by \parencite{BF2019} in section 2. Key characteristics: 
+\begin{enumerate}
+    \item The model only consists of consumers and there is no government and no trade and therefore \textbf{real final demand} consists only of consumption goods $(c_1, \dots, c_N)$ with prices $(p_1, \dots, p_N)$. There are $N$ different goods or sectors in this economy. It follows that \textbf{nominal GDP} (defined from the expenditure side) is given by:
+        \begin{equation}\label{GDP_exp}
+            \text{GDP} = \sum_{i=1}^{N} p_i c_i
+        \end{equation}
+    \item Each good can be used for final consumption or as an intermediate input and therefore we have \textbf{real output} or sales given by:
+        \begin{equation}\label{eq:goods_clear}
+            y_i = c_i + \sum_{j=1}^N x_{ij}
+        \end{equation}
+    where $x_{ij}$ is an intermediate input of good $j$ used by sector $i$.
+    \item Each good is produced by a competitive firm\footnote{'Competitive' denotes the assumption that due to competitive pressure, the firm is unable to charge a price that exceeds its costs of production, hence price is equal to marginal costs.} with production function $F_i$ using $F$ different factors of production (labour, $l_{if}$) and intermediate inputs $x_{ij}$:
+        \begin{equation}\label{gen_prodfunc}
+            y_i = A_i F_i\left( l_{i1}, \dots, l_{iF}, x_{i1}, \dots, x_{iN}  \right)
+        \end{equation}
+    \item Each type of labour is supplied in a fixed quantity and there is no unemployment:
+        \begin{equation}\label{labour_clear}
+            \Bar{l}_f = \sum_{i=1}^N l_{if}
+        \end{equation}
+    \item \textbf{Nominal GDP} defined from the income side is therefore:
+        \begin{equation}\label{GDP_inc}
+            \text{GDP} = \sum_{f=1}^F w_f \Bar{l}_f + \sum_{i=1}^N \pi_i 
+        \end{equation}
+        where $w_f$ is the wage (price) of factor $f$ and $\pi_i$ is the profit of sector $i$ which are 0 if production functions $F_i$ have constant returns to scale.
+    \item \textbf{Real GDP} is interpreted as the outcome of the utility maximization problem of the representative household:
+        \begin{equation}\label{utilityF}
+            Y = \max_{c_1, \dots, c_N} \quad \mathcal{D}(c_1, \dots, c_N)
+        \end{equation}
+        subject to the budget constraint that total expenditures must be equal total income, which is obtained by combining the two definitions of nominal GDP as given by equations (\ref{GDP_exp}) and (\ref{GDP_inc}): 
+            \begin{equation}
+                \sum_{i=1}^{N} p_i c_i = \sum_{f=1}^F w_f \Bar{l}_f + \sum_{i=1}^N \pi_i 
+            \end{equation}
+    \item Producers maximize profits by choosing levels of production ($y_i$), labour ($l_{if}$) and intermediary inputs ($x_{ij}$) but take prices ($p_j$) and wages ($w_f$) as given:
+    \begin{equation}
+            \max_{x_{ij}, l_{if}} \pi_ i = p_i y_i - \sum_{j =1}^N p_j x_{ij} - \sum_{f=1}^F w_f l_{if} 
+        \end{equation}
+    subject to the production function (\ref{gen_prodfunc}) and market clearing conditions (\ref{eq:goods_clear}) and (\ref{labour_clear}).
+
+            
+\end{enumerate}
+
+The solution to the utility and profit maximization problem yields an equilibrium which consists of the following vectors:
+    \begin{itemize}
+        \item $c^* = (c_1^*, \dots, c_N^*)$
+        \item $y^* = Y = (y_1^*, \dots, y_N^*)$
+        \item $p^* = (p_1^*, \dots, p_N^*)$
+    \end{itemize}
+Factor prices (wages) are assumed to be exogenously given.
+\parencite{BF2019} normalize the technology coefficients $A_i=1$ and solve the model for the corresponding equilibrium $\Bar{Y}$. 
+
+
+\subsection{IO-table}
+
+In order to find parameters for the production functions $y_i$ empirical data is used. 
+IO-tables, published by national agencies, contain the recorded aggregate flows, in monetary terms, between sectors.
+Furthermore, data on labour, value added and consumption can be found in these tables. 
+
+Putting it in matrix notation yields
+\begin{align}
+  \Omega = \begin{pmatrix}
+    \omega_{01} &\dots &\omega_{0n} \\ 
+    \omega_{11} & \dots &\omega_{1n} \\ 
+    \vdots &\ddots &\vdots \\ 
+    \omega_{n1} & \dots & \omega_{nn} \\ 
+    \omega_{l1} & \dots & \omega_{ln}
+  \end{pmatrix}
+\end{align}
+where the flows are normalized such that $\sum_{i=1}^n \omega_{ij} = 1$ for all $0 \leq j \leq n$. The last row is normalized, so that $1- w_{li}$ is the ratio of value added to total sales.  The first row $\omega_{0}$ is the consumption share, and the last row $\omega_l$ is the share of labour used by sector $i$. 
+The rows $1$ to $n$ contain the share of goods in sector $j$ used by sector $i$ $\omega_{ij}$. 
+
+\section{Example of section 6.1}
+For the empirical example in section 6.1 of the paper \parencite{BF2019} chose a specific functional form for the utility function $\mathcal{D}$ (see equation \ref{utilityF}):
+    \begin{equation}
+        \frac{Y}{\Bar{Y}} = \left(  \sum_{i=1}^N \omega_{0i} \left( \frac{c_i}{\Bar{c}_i}\right)^{\frac{\sigma-1}{\sigma}} \right)^{\frac{\sigma}{\sigma-1}}
+    \end{equation}
+where $\sum_{i=1}^N \omega_{0i}=1$ is the share of good $i$ in aggregate real output (\textcolor{red}{check equivalence in code}) and $\sigma$ the consumption elasticity of substitution. \newline
+Production is modelled as a nested CES function rather than a single (non-nested) production function $F_i$, like in equation (\ref{gen_prodfunc}). The final stage of production involves firms choosing between labour $l_i$ and a composite intermediary input $\hat{X}$ with substitution elasticity $\theta$:
+    \begin{equation}
+        \label{eq:cesprodfun}
+        \frac{y_i}{\Bar{y}_i} = A_i \left(   \omega_{li} \left( \frac{l_i}{\Bar{l}_i}\right)^{\frac{\theta-1}{\theta}} + (1-\omega_{li}) \left( \frac{\hat{X}_i}{\Bar{X}_i}\right)^{\frac{\theta-1}{\theta}} \right)^{\frac{\theta}{\theta-1}}
+    \end{equation}
+which means that for the case where labour is sector specific $l_i = \Bar{l}_f$ holds and means that all labour in a given sector is employed. The intermediate production process is to choose different intermediate inputs to produce an aggregate intermediate input $\hat{X}:$
+    \begin{equation}
+        \frac{\hat{X}_i}{\Bar{X}_i} = \left(  \sum_{j=1}^N \omega_{ij} \left( \frac{x_{ij}}{\Bar{x}_{ij}}\right)^{\frac{\epsilon-1}{\epsilon}} \right)^{\frac{\epsilon}{\epsilon-1}}
+    \end{equation}
+Their benchmark calibration is to choose $(\sigma, \theta, \epsilon) = (0.9, 0.5, 0.001)$. The low value of $\epsilon$ represents the assumption that the specific mix of intermediary inputs cannot be changed easily (e.g. a car requires four tyres and one stirring wheel, see \parencite[p.129]{burfisherIntroductionComputableGeneral2016}). However, labour can be substituted with intermediary inputs as represented by the higher value of $\theta$. And $\sigma$ represents the elasticity of substitution for consumption goods, meaning that households do not require certain hard to substitute goods such as housing or energy. \cite{BF2019} produce several robustness checks for their choice of these elasticities of substitution. \newline
+
+
+\subsection{Cost minimisation}
+In this section we find optimality conditions for the cost minimisation problem for the production function \eqref{eq:cesprodfun}.
+The cost minimisation problem for the unit production function is:
+\begin{align}
+  \min_{l_i > 0,\mathbf x_{i} \in \mathbb R^n_+} & w_i  l_i + \langle \mathbf p,\mathbf x_{i} \rangle = \mathscr C_i(\mathbf p,\mathbf y)\\
+  \text{subject to }& A_i \left(\omega_{li} \left( \frac{l_i}{\Bar{l}_i}\right)^{\frac{\theta-1}{\theta}} + (1-\omega_{li}) \left( \frac{\hat{X}_i}{\Bar{X}_i}\right)^{\frac{\theta-1}{\theta}} \right)^{\frac{\theta}{\theta-1}} = 1
+\end{align}
+as stated in \parencite[p.~62,85]{rayHandbookProductionEconomics2022}.
+
+We can state this for arbitrary production functions $y \in C^\infty(\mathbb R^n_+,\mathbb R_+)$, given that they are homogeneous and strictly increasing: 
+\begin{align}
+  \label{eq:costmin}
+  \min_{\mathbf x \in \mathbb R^n_+} \langle \mathbf p, \mathbf x \rangle \tag{MP} \\ 
+  \text{subject to } y(\mathbf x) = 1. \notag
+\end{align}
+
+Let us first consider minimising cost of multi-factor CES functions $X_i(\mathbf x_i) = A \left( \sum_{j=1}^N \omega_{ij} \left( x_{i_j}\right)^{\frac{\epsilon-1}{\epsilon}} \right)$
+The Lagrangian of this problem reads as follows.
+\begin{align}
+    \label{eq:lagrangian}
+  \mathcal L_\lambda(\mathbf x) = \langle \mathbf p, \mathbf x_i \rangle + \lambda \left(A \left(  \sum_{j=1}^N \omega_{ij} \left( x_{i,j}\right)^{\frac{\epsilon-1}{\epsilon}} \right)^{\frac{\epsilon}{\epsilon-1}} - 1\right).
+\end{align}
+
+As in \parencite[p.281]{rockafellarConvexAnalysis1997} the following theorem can be stated to find optimallity conditions for Lagrangian's.
+
+\begin{theorem}
+  \label{th:lagrange}
+  Let $f,g$ be convex functions. $\bar x$ minimises 
+  \begin{align}
+    \min_x f(x) \\
+    g(x) = 0
+  \end{align}
+  if and only if the exists a $\bar\lambda \geq 0$ so that the following conditions hold: 
+  \begin{itemize}
+    \item $g(\bar x) = 0$
+    \item $\bar \lambda g(\bar x) = 0 $
+    \item $\nabla \mathcal L_{\bar \lambda }(\bar x) = 0$
+  \end{itemize}
+\end{theorem}
+
+The partial derivatives of \eqref{eq:lagrangian} are
+\begin{align}
+  \frac{\mathcal L_\lambda}{\partial x_{i,j}}(\mathbf x) = p_{j} + \lambda A \omega_{ji} x_{i,j}^{-\frac{1}{\varepsilon}} X_i^{\frac{1}{\varepsilon}} \quad \forall 0 < j \leq N.
+\end{align}
+
+
+
+Thus, with the theorem above $\bar {\mathbf x_{i}}$ is a solution, when the following holds for all $j$:
+
+\begin{align}
+  p_j &= A \lambda \omega_{ji} x_{i,j}^{-\frac{1}{\varepsilon}}  \\
+  1 &= X_i(\mathbf x_i).
+\end{align}
+
+One can easily check that $\bar {\mathbf x_i}$ and $\lambda$ fulfil these conditions if
+\begin{align}
+  \label{eq:optimaldemand}
+  \bar x_{i,j} = \frac{\omega_{ij}^{ \varepsilon} p_{j}^{- \varepsilon}}{A \left( \sum_{j=1}^N \omega_{ij}^{\varepsilon} p_{j}^{1 - \varepsilon} \right)^{\frac {\varepsilon}{\varepsilon - 1}}} \\
+  \lambda = \frac{1}{A^\frac{\varepsilon - 1}{\varepsilon}}\left( \sum_{j=1}^N \omega_{ij}^{\varepsilon} p_{j}^{1 - \varepsilon} \right)^{\frac {\varepsilon}{\varepsilon - 1}}.
+\end{align}
+
+We can now find the unit cost function simply by plugging in \eqref{eq:optimaldemand} into the objective function of \eqref{eq:costmin}.
+
+\begin{align*}
+  \mathscr{C}_i^{\text{CES}}(\mathbf p,\mathbf 1) &= \sum_{j=1}^N p_j,\bar x_{i,j} = \frac{1}{A} \sum_{j=1}^N p_j \frac{\omega_{ij}^{ \varepsilon} p_{j}^{- \varepsilon}}{\left( \sum_{j=1}^N \omega_{ij}^{\varepsilon} p_{j}^{1 - \varepsilon} \right)^{\frac {\varepsilon}{\varepsilon - 1}}} \\
+              &=\frac{1}{A} \left( \sum_{j=1}^N  \omega_{ij}^{ \varepsilon} p_{j}^{1 - \varepsilon} \right)^{\frac{1}{1 - \varepsilon}}.
+\end{align*}
+
+Note that this holds for any CES-Function. Thus the two factor CES-Functions has the unit cost function
+\begin{align*}
+  \costf{i} (l_i,k_i) = \frac 1 A (\omega_{li}^\theta l_i^{1-\theta} + (1 - \omega_{li})^\theta k_i ^{1-\theta})^{\frac{1}{1- \theta}}.
+\end{align*}
+
+In our case $k_i$ is a function dependent on the prices $\mathbf p_{i}$. It is in fact the cost function of the intermediary goods $c_i^{X_i}(\mathbf p,\mathbf y)$.
+This is because $X_i$ is homogeneous of degree $1$ and monotonously increasing.
+
+Put this way. 
+\begin{enumerate}
+  \item If $k_i(\mathbf p_i) > \mathscr{C}_i^{X_i}(\mathbf p,\mathbf y)$ then the demand, that the cost function induces is not optimal.
+  \item On the other hand if $k_i(\mathbf p_i) < \mathscr{C}_i^{X_i}(\mathbf p,\mathbf y)$ then it would somehow be possible to produce the same quantity for cheaper, which is also impossible,
+    since we just shown, that the cost function $\mathscr{C}_i^{X_i}(\mathbf p_i)$ minimises cost.
+\end{enumerate}
+
+We can finalise this and note, that the cost function presented in \parencite{BF2019} takes the form
+\begin{align*}
+  &\costf{i} (\mathbf p, \mathbf y) = \frac {y_i}{A} \left(\omega_{li}^\theta l_i^{1-\theta} + (1 - \omega_{li})^\theta \mathscr{C}_i^{X_i}(\mathbf p,\mathbf y) ^{1-\theta} \right)^{\frac{1}{1- \theta}}
+\end{align*}
+
+with 
+\begin{align*}
+  \cfx{i}(\mathbf p, \mathbf y) = \left( \sum_{j=1}^N \omega_{ij}^{ \varepsilon} p_{j}^{1 - \varepsilon} \right)^{\frac{1}{1 - \varepsilon}}. 
+\end{align*}
+
+To get the optimal demand $\mathbf x_{i}^*$ for all goods we can use Sheppard's lemma.
+
+For $1 \leq i,j \leq n$
+\begin{align}
+  \label{eq:optprod}
+  x_{j,i}^* = \frac{\partial \costf{i}}{\partial p_j} &=  y_i^{1 - \theta} A_i^{\theta - 1} \costf{i}(\mathbf p,\mathbf y)^{\theta} (1-\omega_{li})^\theta \cfx{i}(\mathbf p,\mathbf y)^{-\theta} \frac{\partial \cfx{i}}{\partial p_j} \\
+                                                   & =  y_i^{1 - \theta} A_i^{\theta - 1} \costf{i}(\mathbf p,\mathbf y)^\theta(1-\omega_{li})^\theta \cfx{i}(\mathbf p,\mathbf y)^{-\theta}  \frac{\omega_{i,j}^{ \varepsilon} p_{j}^{- \varepsilon}}{\left( \sum_{j=1}^N \omega_{ij}^{\varepsilon} p_{j}^{1 - \varepsilon} \right)^{\frac {\varepsilon}{\varepsilon - 1}}} \notag \\ 
+  & =  y_i^{1 - \theta} A_i^{\theta - 1} \costf{i}(\mathbf p,\mathbf y)^ \theta (1-\omega_{li})^\theta \cfx{i}(\mathbf p,\mathbf y)^{-\theta + \varepsilon}  \omega_{ij}^{ \varepsilon} p_{j}^{- \varepsilon}. \notag
+\end{align}
+
+And the demand for labour is:
+\begin{align}
+  l_i^* = \frac{\partial \costf{i}}{\partial l_i}(\mathbf p,\mathbf y)= y_i^{1 - \theta} A_i^{\theta - 1} \costf{i}(\mathbf p,\mathbf y)^\theta \omega_{li}^\theta l_i^{-\theta}
+\end{align}
+
+
+\subsection{Utility Maximisation}
+For a given utility function one can state the cost maximsation problem 
+\begin{align}
+  \label{eq:utilitymax}
+  \max_{\mathbf c}  \quad & Y(\mathbf c) \tag{UMP} \\
+  \text{subject to } & \sum_{j=1}^N p_j c_j \leq \text{GDP} \notag
+\end{align}
+
+In this section we talk about calculating global demand $\mathbf{c}$ from a given utility function under budget constraints, with given prices.
+The problem reads as follows:
+\begin{align*}
+  \max_{\mathbf c} & \left(\sum_{j=1}^N \omega_{0j}  c_j^{\frac{\sigma - 1}{\sigma}} \right)^{\frac{\sigma}{\sigma - 1}} \\
+  \text{ subject to } &\sum_{j=1}^N p_j c_j \leq \text{GDP}.
+\end{align*}
+
+The Lagragian of the corresponding minimisation problem $\min - Y$ is 
+\begin{align}
+  \mathcal L_\lambda(\mathbf c) = - \left(\sum_{j=1}^N \omega_{0j}  c_j^{\frac{\sigma - 1}{\sigma}} \right)^{\frac{\sigma}{\sigma - 1}}  + \lambda \left(\sum_{j=1}^N p_j c_j - \text{GDP} \right)
+\end{align}
+
+with partial derivatives
+\begin{align*}
+  \frac{\partial \mathcal L_\lambda}{\partial c_i}(\mathbf c) = - c_j^{- \frac{1}{\sigma}} Y^{\frac{1}{\sigma}} + \lambda p_j.
+\end{align*}
+
+With Theorem~\ref{th:lagrange} $\mathbf{ \bar c}$ is a solution if the following conditions hold:
+\begin{align*}
+  \lambda p_i =  \omega_{0i} \bar c_i^{- \frac{1}{\sigma}} Y^{\frac{1}{\sigma}}(\mathbf{\bar c}) \\
+  \sum_{j=1}^N p_j \bar c_j = \text{GDP}.
+\end{align*}
+
+We can again solve for $\bar c_i,\lambda$, and find
+\begin{align*}
+  \bar c_i &= \frac {\text{GDP} \omega_{0i}^{\sigma} p_i^{-\sigma}}{\sum_{j=1}^N \omega_{0i}^\sigma p_j^{1- \sigma}} \label{eq:optdemand} \\
+  \lambda &= \text{GDP}^{\frac 1 \sigma} Y(\mathbf{\bar c})^{\frac{2-\sigma}{\sigma}}.
+\end{align*}
+
+Inserting $\mathbf{\bar c}$ into $Y$ yields
+\begin{align*}
+  Y(\mathbf{\bar c}) = \text{GDP} \left(\sum_{i=1}^N w_{0i}^\sigma p_i^{1-\sigma} \right)^{\frac{1}{\sigma - 1}}.
+\end{align*}
+
+We can therefore define the optimal production function $\bar Y_C$, as the function, that gives us, for given prices $\mathbf p$ and budget constraint $\text{GDP}$, the optimal amount produced $Y(\mathbf{\bar c})$
+\begin{align*}
+  \bar Y_{\text{GDP}}(\mathbf p) := \text{GDP} \left(\sum_{i=1}^N w_{0i}^\sigma p_i^{1-\sigma} \right)^{\frac{1}{\sigma - 1}}.
+\end{align*}
+
+We can define
+\begin{align*}
+  \bar P_{\text{GDP}}(\mathbf p) := \left( \sum_{j=1}^N \omega_{0i}^\sigma p_i^{1 - \sigma} \right)^{\frac {1}{1 - \sigma}},
+\end{align*}
+and imidiatley see, that $\text{GDP} = \bar Y_C(\mathbf p)  \bar P_C(\mathbf p)$
+
+Therefore Equation~\eqref{eq:optdemand} can be rewritten as
+\begin{align}
+  \bar c_i = \bar Y_{\text{GDP}}(\mathbf p) \bar P_{\text{GDP}}^\sigma(\mathbf p) \omega_{0i}^\sigma p_i^{-\sigma}.
+\end{align}
+
+Note, that this responds to \parencite[(6)]{HttpBergholtWeebly}
+
+\section{CES-GE-Model}
+
+We have now found optimal production for given prices and optimal demand for a given level of utility and want to unify these findings, to state our final model. 
+
+It is assumed, that in equilibrium prices correspond to production cost, thus it must hold for every $i \leq n$
+\begin{equation}
+  \label{eq:costequilibrium}
+  p_i = \costf{i}(\mathbf p,\mathbf 1)
+\end{equation}
+
+Wages are given as the derivative of the production function with respect to labour 
+\begin{align*}
+    w_i = \frac{\partial y_i}{\partial l_i} = A_i^{1 \theta} y_i^{\frac 1 \theta} \omega_{li} l_i^{- \frac 1 \theta}
+\end{align*}
+
+Inserting the optimal demand \eqref{eq:optprod} and \eqref{eq:optdemand} into \eqref{eq:goods_clear} yields 
+\begin{align}
+  & y_i = \sum_{j=1}^N x_{i,j} + c_i \notag \\
+  & \quad =  \sum_{j=1}^N \costf{j}(\mathbf p,\mathbf y)^\theta y_j^{1-\theta} A_j^{\theta - 1} (1-\omega_{li})^\theta \cfx{j}(\mathbf p,\mathbf y)^{-\theta + \varepsilon}  \omega_{ij}^{ \varepsilon} p_{i}^{- \varepsilon}  +  \frac {\text{GDP} \omega_{0i}^{\sigma} p_i^{-\sigma}}{\sum_{j=1}^N \omega_{0i}^\sigma p_j^{1- \sigma}}.
+  \label{eq:eqprod}
+\end{align}
+
+Equations \eqref{eq:costequilibrium} and \eqref{eq:eqprod} form a system of $2 \times n$ equations, with $2 \times n$ unknowns $\mathbf p, \mathbf y$. 
+Solving this system for $\mathbf p$ and $\mathbf y$ gives the prices and production in the equilibrium.
+    
+\section{IO-model}
+
+The IO-model was first perceived by Wassili Leontief. In it's most basic form it is perhaps the most straight-forward way to capture inter-dependencies between sectors/goods. 
+
+It is assumed, each good is either consumed or used to produce other goods, as stated in \eqref{eq:goods_clear}, furthermore the production function of a good takes the form $y_i(\mathbf x) = \min_{j}(\frac{x_{i,j}}{w_{i,j}})$. 
+In contrast to CES-production functions with elasticities greater than $0$, this means, fixed proportions of inputs are needed to produce a good. 
+In an equilibrium this means production is given by %TODO elaborate 
+\begin{align*}
+  y_1 &= \omega_{11} y_1 + \dots \omega_{1n} y_n + c_1  \\ 
+      &\vdots \\ 
+  y_n &= \omega_{n1} y_1 + \dots + \omega_{nn} y_n + c_n,
+\end{align*}
+
+or, with $\Omega = (\omega_{ij}) \in \mathbb R^{n\times n}$ in matrix form:
+\begin{align}
+  \mathbf y = \Omega \mathbf y + \mathbf c.
+\end{align}
+
+Assuming $I - \Omega$ is invertible, this can be rewritten as 
+\begin{align}
+  \mathbf y = (I - \Omega)^{-1} \mathbf c.
+\end{align}
+
+Households are often treated as an additional sector $(n+1)$ (supplying labour to all other sectors, while purchasing consumption goods from all other sectors), thus reducing the initial $\mathbf c$ to be exports or consumption by the state, etc.
+
+\begin{align*}
+  y_1 &= \omega_{11} y_1 + \dots \omega_{1n} y_n + \omega_{1,n+1} y_{n+1} + c^*_1  \\ 
+      &\vdots \\ 
+  y_n &= \omega_{n1} y_1 + \dots + \omega_{nn} y_n + \omega_{n,n+1} y_{n+1} + c^*_n,\\
+  y_{n+1} &= \omega_{n+1,1} y_1 + \dots + \omega_{n+1,n} y_n + \omega_{n+1,n+1} y_{n+1} + c^*_{n+1},
+\end{align*}
+
+or, with $\overline{\Omega} = (\omega_{ij}) \in \mathbb R^{(n+1)\times (n+1)}$, and assuming $I - \overline{\Omega}$ is invertible \parencite[see e.g.][]{millerInputOutputAnalysisFoundations2021}:
+
+\begin{align}
+  \overline{\mathbf y} = (I - \overline{\Omega})^{-1} \overline{\mathbf c}.
+\end{align}
+
+
+\subsection{Modeling demand shocks}
+Given a change in demand $\Delta \overline{\mathbf c} = \mathbf \overline{c}^{\text{new}} -  \overline{\mathbf c}$, the effect on sectors $\mathbf \overline{y}$ can then be calculated by simply solving. 
+\begin{equation}
+  \Delta  \overline{\mathbf y} = (I - \overline{\Omega})^{-1} \Delta  \overline{\mathbf c}
+  \label{eq:leontiefdemand}
+\end{equation}
+
+\section{Comparison}
+
+While on first glance the models seem different, they do have more in common than meets the eye. 
+But starting with the differences the most striking one, is that the IO-model in the presented form does not account for price changes. However one can easily introduce them, as done in \cite[p.~24]{cardeneteAppliedGeneralEquilibrium2017}  for example.
+Perhaps the more fundamental difference is however, that the IO-model is a demand-side model, while the CES-GE model leans more on the supply side. I will make the argument, that this stems from the selection of different functions, to represent demand, as will be seen later. 
+
+The most notable commonality is the basic structure. Let us break it down:
+Both models require to find $\bar {\mathbf y}$, so that the equation 
+\begin{equation}
+  \bar {\mathbf y} - f(\bar {\mathbf y}, \mathbf e) = g(\bar{\mathbf y},\mathbf e)
+  \label{eq:models}
+\end{equation}
+holds, where $\mathbf e$ is the collection of exogenous variables. 
+What differs is the choice of the functions $f$ and $g$.
+
+For the CES-GE-model the choice of $f$ is the optimal demand of production \eqref{eq:optprod} and the same for $g$ and the optimal demand of consumption \eqref{eq:eqprod}.
+
+For the IO-model the choice of $f$ is also the optimal demand of production, of the Leontief production function. In fact, the Leontief production function can be interpreted as a CES production function with substitution elasticity $0$. 
+One could argue this makes the IO-model just an extreme case of the CES-GE model.
+The choice of $g$ in the IO-model is simply $g(\mathbf e) = \begin{pmatrix}
+  \text{GDP} \omega_{1,0} & \dots & \text{GDP} \omega_{n,0}
+\end{pmatrix}^T.$
+So, consumption in sector $i$ is just the share of total consumption. 
+
+The different choices of $f$ and $g$ lead to different outcomes of the two models that can be summarised as follows:
+
+\begin{itemize}
+  \item Demand in the CES-GE-model is dependent on prices in a nonlinear way, while the demand in the IO-model is exogenously given. This leads to a feedback-cycle, in the CES-GE-model that possesses a higher degree of non-linearity.
+  \item On the other hand it requires more assumptions in the model. The IO-model maps the consumption to the level of production needed to accommodate it, the CES-GE-model maps the consumption share to the level of production and prices 
+    that matches the estimated level of consumption.
+  \item While the Leontief production function implies every good consists of a fixed quantity of other goods, the CES production function implies goods can be substituted by all other goods, with some degree of disadvantage. 
+    One could argue the Leontief production function thus has a closer connection to real production conditions, where screws can not be substituted by dung. On the other hand, the CES production function could balance out factors, that cannot be measured, by leaving some wiggle room with an additional parameter. 
+    If accuracy of a model is all that matters is a discussion, that I as a mathematician am not qualified to participate in. 
+
+\end{itemize}
+
+%WIP
+\section{A generalised GE-Model}
+
+To summarise:
+The choices of functions $f$ and $g$ result from optimising \eqref{eq:costmin} and \eqref{eq:utilitymax} for given functions $y$ and $Y$. 
+We can therefore rewrite \eqref{eq:models} as 
+\begin{equation*}
+  \bar {y_i} -\| \argmin_{\substack{\mathbf x_i \\  y_i(\mathbf x_i) \geq \bar {y_i}}} \langle \mathbf p, \mathbf x_{i} \rangle \|_1 = \left( \argmax_{\substack{\mathbf c \\ \sum_{i=1}^n p_i c_i \leq \text{GDP}}} Y(\mathbf c) \right)_i
+\end{equation*}
+However if prices are not exogenously given, this does not work. We can extend it with \eqref{eq:costequilibrium}, without the assumption, that the cost function is homogeneous, so the final model reads:
+
+\textit{Find $\bar {\mathbf y}, \bar{\mathbf p}$ so that}
+\begin{align*}
+  \bar p_i \bar y_i = \costf{i} (\bar {\mathbf p}, \bar {\mathbf y}) &= \sum_{j=1}^n p_j \left( \argmin_{\substack{\mathbf x_i \\ y_i(\mathbf x_i) \geq \bar{y}_i}} \langle \mathbf p,\mathbf x_i \rangle \right)_j \\
+  \bar {y_i} -\| \argmin_{\substack{\mathbf x_i \\  y_i(\mathbf x_i) \geq \bar {y_i}}} \langle \bar{ \mathbf p}, \mathbf x_{i} \rangle \|_1 &= \left( \argmax_{\substack{\mathbf c \\ \sum_{i=1}^n p_i c_i \leq \text{GDP} }} Y(\mathbf c) \right)_i
+\end{align*}
+\textit{for every $1 \leq i \leq n$}.
+
+
+
+\if false
+\textcolor{red}{
+Next steps / open questions:
+\begin{itemize}
+    \item State profit maximisation problem with nested CES. It seems to be easier to solve corresponding cost minimisation.
+    \item Check if we need prices for intermediate inputs $\hat{X}_i$. \href{https://fanwangecon.github.io/R4Econ/math/func_prod/htmlpdfr/fs_nested_CES.html}{This source} does not seem to use intermediary prices.
+    \item Attempt to solve for N=2 case and link to exponent problem.
+\end{itemize}
+}
+\fi
+
+%TODO Distinguish between unit cost and cost function
+\printbibliography
+
+\end{document}

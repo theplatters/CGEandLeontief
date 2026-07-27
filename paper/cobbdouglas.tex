@@ -1,0 +1,61 @@
+\documentclass{article}
+
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+
+\usepackage[
+style=authoryear-ibid,backend=biber
+]{biblatex}
+\addbibresource{BandF.bib}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\newcommand{\costf}[1]{\mathscr{C}_#1}
+\newcommand{\cfx}[1]{\mathscr{C}_#1^{X_#1}}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\setlength\parindent{0pt}
+
+\begin{document}
+    We want to find the cost function of $Y(\mathbf x) = \prod_{i=1}^n x_i^{\beta i}$, where $\sum_i^n \beta_i = 1$.
+
+    The cost minisisation problem reads as 
+    \begin{gather}
+        \min \langle p,x \rangle \\
+        Y(x) = 1
+    \end{gather}
+
+Which is equivalent to 
+
+    \begin{gather}
+        \min \langle p,x \rangle \\
+        \log Y(x) = 0
+    \end{gather}
+
+The First order conditions are 
+$$x_i = \lambda \beta_i \frac{1}{p_i} \quad \forall i$$
+
+Summing over all $j$ we can see, that 
+$ \lambda = \sum p_j x_j$
+
+Thus $x_i = \frac{\beta_i}{p_i}\sum p_j x_j $
+
+Inserting into $Y(x) = 1$, leads to 
+
+$\sum_j p_j x_j = \mathcal C(\mathbf p) = \prod_{j=1}^n  \left( \frac {p_j}{\beta_j} \right)^{\beta_j}.$
+
+\end{document}

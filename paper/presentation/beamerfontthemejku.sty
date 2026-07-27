@@ -1,0 +1,460 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% LaTeX Beamer Font Theme for Johannes Kepler University Linz
+%% 
+%% Copyright (C) 2021  Michael Roland
+%% 
+%% This is a rewrite of the JKU theme originally by
+%% Susanne Hametner, Doris Pargfrieder, and Pieter-Jan Hoedt.
+%% 
+%% This Source Code Form is subject to the terms of the Mozilla Public
+%% License, v. 2.0. If a copy of the MPL was not distributed with this
+%% file, You can obtain one at https://mozilla.org/MPL/2.0/.
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+
+\ProvidesPackage{beamerfontthemejku}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Dependencies
+%% 
+
+\RequirePackage{etoolbox}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{ifxetex}
+\RequirePackage{listings}
+\RequirePackage{verbatim}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Options & Parameters
+%% 
+
+% Option fontpath={}: set path to template font resources (defaults to "./fonts")
+\newcommand{\jkubeamer@fontpath}{./fonts}
+\DeclareOptionBeamer{fontpath}{\renewcommand{\jkubeamer@fontpath}{#1}}
+
+% Option [no]fancyfonts: use custom TTF fonts with XeTeX (defaults to true)
+\newbool{jkubeamer@xetexfonts}
+\booltrue{jkubeamer@xetexfonts}%
+\DeclareOptionBeamer{fancyfonts}[true]{\setbool{jkubeamer@xetexfonts}{#1}}
+\DeclareOptionBeamer{nofancyfonts}{\boolfalse{jkubeamer@xetexfonts}}
+
+% Option [no]compactverb: use condensed fixed-width font for verbatim and listings (requires XeTeX and the fancyfonts option)
+\newbool{jkubeamer@compactverb}
+\booltrue{jkubeamer@compactverb}%
+\DeclareOptionBeamer{compactverb}[true]{\setbool{jkubeamer@compactverb}{#1}}
+\DeclareOptionBeamer{nocompactverb}{\boolfalse{jkubeamer@compactverb}}
+
+% Option [no]compactmono: use condensed fixed-width font (requires XeTeX and the fancyfonts option)
+\newbool{jkubeamer@compactmono}
+%\booltrue{jkubeamer@compactmono}%
+\DeclareOptionBeamer{compactmono}[true]{\setbool{jkubeamer@compactmono}{#1}}
+\DeclareOptionBeamer{nocompactmono}{\boolfalse{jkubeamer@compactmono}}
+
+% Option [no]mathastext: use standard document fonts (and default to sans-serif font) in math mode
+\newbool{jkubeamer@mathastext}
+%\booltrue{jkubeamer@mathastext}%
+\DeclareOptionBeamer{mathastext}[true]{\setbool{jkubeamer@mathastext}{#1}}
+\DeclareOptionBeamer{nomathastext}{\boolfalse{jkubeamer@mathastext}}
+
+\ProcessOptionsBeamer
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Fancy fonts with XeTeX
+%% 
+
+\RequirePackage{lmodern}
+\RequirePackage{inconsolata}
+\RequirePackage{helvet}
+\RequirePackage{euler}
+%\usefonttheme{serif}
+\usefonttheme{professionalfonts}
+
+\ifxetex\else%
+    \ifbool{jkubeamer@xetexfonts}{%
+        \PackageWarning{beamerfontthemejku}{True-type fonts are only supported on XeLaTeX. Please consider switching to XeLaTeX to get the full look and feel of this beamer template. Note that you can silence this warning with the `nofancyfonts' option.}%
+    }{}%
+    \boolfalse{jkubeamer@xetexfonts}%
+\fi
+
+\ifbool{jkubeamer@xetexfonts}{%
+    \expandafter\IfFileExists\expandafter{\jkubeamer@fontpath PublicSans-Regular.ttf}{%
+    }{\expandafter\IfFileExists\expandafter{\jkubeamer@fontpath/PublicSans-Regular.ttf}{%
+        \xdef\jkubeamer@fontpath{\jkubeamer@fontpath/}
+    }{%
+        \PackageError{beamerfontthemejku}{Font files not found in `\jkubeamer@fontpath', forgot to set the font path with package option `fontpath='?}{}%
+        \stop
+    }}
+    
+    \RequirePackage[no-math]{fontspec}
+    \defaultfontfeatures{
+        Path={\jkubeamer@fontpath},
+        Extension=.ttf,
+        UprightFont=*-Regular,
+        BoldFont=*-Bold,
+        ItalicFont=*-Italic,
+        BoldItalicFont=*-BoldItalic
+    }
+    \defaultfontfeatures+[Inconsolata,InconsolataCondensed]{
+        Scale=1.16,
+        ItalicFont={},
+        BoldItalicFont={},
+        AutoFakeSlant,
+        AutoFakeBold,
+        %BoldItalicFeatures={FakeSlant}
+    }
+    \setmainfont{Merriweather}
+    %\setsansfont{OpenSans}
+    \setsansfont{PublicSans}
+    \ifbool{jkubeamer@compactmono}{%
+        \setmonofont{InconsolataCondensed}
+    }{%
+        \setmonofont{Inconsolata}
+    }
+    \newfontfamily\rmlightfamily{Merriweather}[
+        NFSSFamily=rmlight,
+        UprightFont=*-Light,
+        BoldFont=*-Regular,
+        ItalicFont=*-LightItalic,
+        BoldItalicFont=*-Italic,
+        Ligatures=TeX]
+    \newfontfamily\rmblackfamily{Merriweather}[
+        NFSSFamily=rmblack,
+        UprightFont=*-Black,
+        BoldFont=*-Black,
+        ItalicFont=*-BlackItalic,
+        BoldItalicFont=*-BlackItalic,
+        Ligatures=TeX]
+    %\newfontfamily\sflightfamily{OpenSans}[
+    %    NFSSFamily=sflight,
+    %    UprightFont=*-Light,
+    %    BoldFont=*-SemiBold,
+    %    ItalicFont=*-LightItalic,
+    %    BoldItalicFont=*-SemiBoldItalic,
+    %    Ligatures=TeX]
+    %\newfontfamily\sfblackfamily{OpenSans}[
+    %    NFSSFamily=sfblack,
+    %    UprightFont=*-ExtraBold,
+    %    BoldFont=*-ExtraBold,
+    %    ItalicFont=*-ExtraBoldItalic,
+    %    BoldItalicFont=*-ExtraBoldItalic,
+    %    Ligatures=TeX]
+    \newfontfamily\sflightfamily{PublicSans}[
+        NFSSFamily=sflight,
+        UprightFont=*-Thin,
+        BoldFont=*-Medium,
+        ItalicFont=*-ThinItalic,
+        BoldItalicFont=*-MediumItalic,
+        Ligatures=TeX]
+    \newfontfamily\sfblackfamily{PublicSans}[
+        NFSSFamily=sfblack,
+        %LetterSpace=1.0,
+        UprightFont=*-ExtraBold,
+        BoldFont=*-Black,
+        ItalicFont=*-ExtraBoldItalic,
+        BoldItalicFont=*-BlackItalic,
+        Ligatures=TeX]
+    \ifbool{jkubeamer@compactmono}{%
+        \newfontfamily\ttlightfamily{InconsolataCondensed}[
+            NFSSFamily=ttlight,
+            UprightFont=*-Light,
+            BoldFont=*-Medium]
+    }{%
+        \newfontfamily\ttlightfamily{Inconsolata}[
+            NFSSFamily=ttlight,
+            UprightFont=*-Light,
+            BoldFont=*-Medium]
+    }
+    \newfontfamily\ttcondensedfamily{InconsolataCondensed}[
+        NFSSFamily=ttcondensed]
+    \newfontfamily\ttcondensedlightfamily{InconsolataCondensed}[
+        NFSSFamily=ttcondensedlight,
+        UprightFont=*-Light,
+        BoldFont=*-Medium]
+    %\setmathsfont(Digits,Latin){Merriweather}
+    %\setmathrm{Merriweather}
+    %\setboldmathrm{Merriweather}[
+    %    NFSSFamily=rmblack,
+    %    UprightFont=*-Black,
+    %    BoldFont=*-Black,
+    %    ItalicFont=*-BlackItalic,
+    %    BoldItalicFont=*-BlackItalic]
+    %%\setmathsf{OpenSans}
+    %\setmathsf{PublicSans}
+    %\ifbool{jkubeamer@compactmono}{%
+    %    \setmathtt{InconsolataCondensed}
+    %}{%
+    %    \setmathtt{Inconsolata}
+    %}
+}{%
+    \RequirePackage[T1]{fontenc}
+    \newcommand{\rmlightfamily}{\rmfamily}
+    \newcommand{\rmblackfamily}{\rmfamily\bfseries}
+    \newcommand{\sflightfamily}{\sffamily}
+    \newcommand{\sfblackfamily}{\sffamily\bfseries}
+    \newcommand{\ttlightfamily}{\ttfamily}
+    \newcommand{\ttcondensedfamily}{\ttfamily}
+    \newcommand{\ttcondensedlightfamily}{\ttfamily}
+    
+    \ifbool{jkubeamer@compactmono}{%
+        \PackageWarning{beamerfontthemejku}{Option `compactmono' requires the `fancyfonts' option.}%
+    }{}%
+    \ifbool{jkubeamer@compactverb}{%
+        \PackageWarning{beamerfontthemejku}{Option `compactverb' requires the `fancyfonts' option.}%
+    }{}%
+}
+
+\ifbool{jkubeamer@compactverb}{%
+    \newcommand{\jkubeamer@verbfamily}{\ttcondensedfamily}
+}{%
+    \newcommand{\jkubeamer@verbfamily}{\ttfamily}
+}%
+
+\renewcommand\familydefault{\sfdefault}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Packages loaded for convenience
+%% 
+%% NOTE: These packages were loaded by the old JKU beamer package and remain
+%%       here to match legacy behavior. You can prevent these packages from
+%%       being loaded by using the nooptpackages option.
+%% 
+
+\ifbool{jkubeamer@optpackages}{%
+    \RequirePackage{textcomp}
+    \PassOptionsToPackage{full}{textcomp}
+    %\RequirePackage{wasysym}
+    %\RequirePackage{pifont}
+}{}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Experimental: Use standard document fonts in math mode
+%% 
+
+\ifbool{jkubeamer@mathastext}{%
+    \usepackage[italic,defaultmathsizes,eulergreek]{mathastext}
+}{}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Normal style
+%% 
+\setbeamerfont*{normal text}{family=\sffamily, size*={11pt}{12.5pt}}
+\setbeamerfont*{structure}{parent=normal text}
+\setbeamerfont*{alerted text}{parent=normal text, series=\bfseries}
+\setbeamerfont*{example text}{parent=normal text}
+\setbeamerfont*{emphasized text}{parent=normal text, series=\itshape}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Title frames
+%% 
+\setbeamerfont*{title}{family=\sfblackfamily, series=\bfseries, size*={22pt}{26.4pt}}
+\setbeamerfont*{series title}{parent=title, size*={10pt}{12pt}}
+\setbeamerfont*{subtitle}{family=\sffamily, size*={10pt}{12pt}}
+\setbeamerfont*{subsubtitle}{parent=subtitle, size*={8pt}{9.6pt}}
+
+\setbeamerfont*{author}{parent=subtitle}
+\setbeamerfont*{institute}{parent=subsubtitle}
+\setbeamerfont*{date}{parent=subsubtitle}
+\setbeamerfont*{agenda}{parent=subtitle}
+\setbeamerfont*{agenda title}{parent=agenda, family=\sfblackfamily, series=\bfseries}
+
+\setbeamerfont*{imprint}{family=\sffamily, size*={4pt}{5pt}}
+\setbeamerfont*{imprint name}{parent=imprint, family=\sfblackfamily, series=\bfseries}
+\setbeamerfont*{imprint address}{parent=imprint}
+\setbeamerfont*{imprint url}{parent=imprint}
+
+\setbeamerfont*{section title}{parent=title}
+\setbeamerfont*{subsection title}{parent=subtitle}
+\setbeamerfont*{subsubsection title}{parent=subsubtitle}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Frame title/footer
+%% 
+\setbeamerfont*{frametitle}{family=\sfblackfamily, series=\bfseries, size*={14pt}{16.8pt}}
+\setbeamerfont*{framesubtitle}{parent=frametitle}
+\setbeamerfont*{section in head/foot}{parent=structure, size*={6pt}{7pt}}
+\setbeamerfont*{page number in head/foot}{parent=section in head/foot}
+\setbeamerfont*{date in head/foot}{parent=section in head/foot}
+\setbeamerfont*{footnote}{parent=normal text, size*={8pt}{9.6pt}}
+\setbeamerfont*{footnote mark}{parent=normal text, size*={6pt}{7pt}}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Itemization and enumeration
+%% 
+\setbeamerfont*{itemize item}{parent=normal text}
+\setbeamerfont*{itemize subitem}{parent=itemize item}
+\setbeamerfont*{itemize subsubitem}{parent=itemize subitem}
+\setbeamerfont*{enumerate item}{parent=normal text}
+\setbeamerfont*{enumerate subitem}{parent=enumerate item}
+\setbeamerfont*{enumerate subsubitem}{parent=enumerate subitem}
+\setbeamerfont*{description item}{parent=normal text, series=\bfseries}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Table of contents
+%% 
+\setbeamerfont*{section in toc}{parent=structure}
+\setbeamerfont*{subsection in toc}{parent=section in toc}
+\setbeamerfont*{subsubsection in toc}{parent=subsection in toc}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Bibliography
+%% 
+\setbeamerfont*{bibliography item}{parent=normal text}
+\setbeamerfont*{bibliography entry author}{parent=normal text}
+\setbeamerfont*{bibliography entry title}{parent=normal text}
+\setbeamerfont*{bibliography entry location}{parent=normal text}
+\setbeamerfont*{bibliography entry note}{parent=normal text}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Captions
+%% 
+\setbeamerfont*{caption}{parent=normal text, size*={10pt}{12pt}}
+\setbeamerfont*{caption name}{parent=caption}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Blocks
+%% 
+\setbeamerfont*{block body}{parent=normal text}
+\setbeamerfont*{block title}{parent=block body}
+\setbeamerfont*{block body example}{parent=block body}
+\setbeamerfont*{block title example}{parent=block title}
+\setbeamerfont*{block body alerted}{parent=block body}
+\setbeamerfont*{block title alerted}{parent=block title}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Highlighting commands
+%% 
+
+\renewcommand<>{\alert}[1]{{\only#2{\usebeamerfont{alerted text}\usebeamercolor[fg]{alerted text}}#1}}
+\renewcommand<>{\emph}[1]{{\only#2{\usebeamerfont{emphasized text}\usebeamercolor[fg]{emphasized text}}#1}}
+\newcommand<>{\highlight}[1]{{\only#2{\usebeamerfont{example text}\usebeamercolor[fg]{example text}}#1}}
+\renewcommand<>{\structure}[1]{{\only#2{\usebeamerfont{structure}\usebeamercolor[fg]{structure}}#1}}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Verbatim and listings
+%% 
+
+%\def\verbatim@font{\fontsize{10pt}{11pt}\jkubeamer@verbfamily\hyphenchar\font\m@ne\@noligs}
+\def\verbatim@font{\normalfont\jkubeamer@verbfamily\hyphenchar\font\m@ne\@noligs}
+
+% Command \textverb{...}: Display argument in verbatim font (unlike with \verb|...|, the argument is not treated as verbatim).
+\newcommand{\textverb}[1]{{\verbatim@font #1}}
+
+\lstset{%
+    %language=[LaTeX]TeX,
+    extendedchars=true,
+    columns=fullflexible, % since we are using a fixed-width font anyways
+    keepspaces=true,      % needs to be set to maintain fixed-width property of spaces with fullflexible
+    %fontadjust=true,
+    numbers=left,
+    numberstyle=\fontsize{6pt}{6.6pt}\jkubeamer@verbfamily,
+    %stepnumber=1,
+    basicstyle=\fontsize{10pt}{11pt}\jkubeamer@verbfamily,
+    commentstyle=\crGreen\itshape,
+    keywordstyle=\crBlue\bfseries,
+    stringstyle=\crPurple,
+    tabsize=4,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=true,
+    breaklines=true,
+    %frame=tb,
+    %framerule=0.5pt,
+    %framexleftmargin=0.5em,
+    %framexrightmargin=0.5em,
+    %xleftmargin=0.5em,
+    %xrightmargin=0.5em,
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% URLs
+%% 
+
+\urlstyle{same}
+
+% Nasty hack to emulate passing option `hyphens' to the url package:
+\def\do@url@hyp{\do\-}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Setup default document font
+%% 
+
+\linespread{1.15}
+\AtBeginDocument{\usebeamerfont{normal text}}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

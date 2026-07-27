@@ -1,0 +1,50 @@
+
+# LaTeX auxiliary and temporary files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.synctex
+*.toc
+
+# Intermediate and backup files
+*.fdb_latexmk
+*.fls
+*.xdv
+*.dvi
+*.bbl
+*.blg
+*.brf
+*.run.xml
+
+# Generated PDFs
+*.pdf
+
+# Editor-specific files
+._*
+Thumbs.db
+Desktop.ini
+
+# VS Code workspace settings
+.vscode/
+
+# TeXShop specific
+*.sav
+*.backup
+
+# TeXworks specific
+*.auxlock
+
+# Kile specific
+*.kileproject
+*.kilepr
+
+# Overleaf-specific
+output-*

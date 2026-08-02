@@ -1,0 +1,169 @@
+% OLD TEXT FROM HERE ON
+% This chapter contains text from the original submission.
+% It will be revised as part of the salvage plan.
+
+\subsection{A 'classical' approach: Computable General Equilibrium} \label{subsec:CGE}
+
+In contrast to Leontief-Models, where changes in production are strictly determined by corresponding changes in demand, Computable General Equilibrium models assume that consumption and production are mutually interdependent \citep[see][for a general introduction]{cardeneteAppliedGeneralEquilibrium2017}.
+Hence, changes in final demand will lead to a re-allocation of scarce factor endowments, that impacts on both, quantities as well as prices.
+
+Following the basic Walrasian approach, the model is thus given by a $2n \times 2n$ system of equations for relative prices $\mathbf{p}$ and quantities $\mathbf{y}$: 
+
+\begin{align}
+\label{eq:equilibrium}
+  p_s y_s &= \costf_s (\prices,\wagef(\prices,\quant), \quant) \\
+ y_s &=  \sum_{u=1}^n \frac{\partial \costf_u (\prices,\wagef(\prices,\quant),\quant)}{\partial p_s} + \demandf_s(\prices,\mathscr W(\prices,\quant)),
+\end{align}
+for each $1 \leq  k \leq n$ .
+The functions $\mathscr{C} \colon \mathbb R^{3n}_+ \to \mathbb R^n_+,\, \mathscr{W}: \mathbb R^{2n}_+ \to \mathbb R^n_+$ and $\mathscr{D}: \mathbb R^{2n}_+ \to \mathbb R^n_+$ serve to calculate key variables of the underlying model, namely total costs, wages and final demand. More specifically, $\costf_k(\prices,\wages,\quant)$ represents the total costs associated with good $k$ ,
+$\wagef_k(\prices,\wages,\quant)$ represents the wages in sector $k$
+and $\demandf_k(\prices,\wages)$ represents the final demand for good $k$. Hence, assuming that the functions $\costf, \wagef$ and $\demandf$ provide a valid description of sectoral production is at the core of neoclassical argumentation and the following section is devoted to illustrating and deriving these functions.
+
+In this framework every household $h$ possesses a utility function $u_h$, that it seeks to maximize under the budget constraint that income must suffice to finance consumption, i.e.,
+\begin{equation}
+  \sum_{h = 1}^H p_s c_{sh} \leq \sum_{u=1}^n w_{u} l_{hu},
+\end{equation}
+where $c_{sh}$ is the household's $h$ consumption of good $s$ and $l_{hu}$ is the labor supplied by household $h$ to some sector $u$.
+
+To aggregate over households the framework is typically kept as parsimonious as possible by assuming that every household offers the same amount of labor $l_{hu} = \frac{l_u}{H_u}$, where $H_u$ is the number of households working in sector $u$. Furthermore, households have a unitary utility function $u_h(\mathbf c) = u(\mathbf c)$ with constant returns to scale. Hence, any change in individual purchasing power (whether due to changes in budget or prices) is reflected by a proportional change in utility. As social welfare is also defined as a constant returns to scale function over all individual $u_h$ it follows that aggregate utility is given by the sum of individual utility over all $h$. By arranging the assumptions in this way, aggregate utility (i.e. social welfare) is simply a linear function of total final consumption, independent of any distributional considerations. In the most straightforward case real consumption is directly equated with individual utility, which implies that maximizing social welfare is equivalent to maximizing real GDP. Against this backdrop, we can define $\mathcal D(\mathbf c)$ to represent both, social welfare as well as final demand, which requires homogeneity of degree one $\mathcal D(\mathbf c)$ in $\mathbf c$ (i.e., $\mathcal D$ is a "constant returns to scale aggregator", see \citealp{BF2019}, p. 1159).
+
+\begin{align}
+  \mathcal D(\mathbf c) := \sum_{h  = 1}^H \mathcal U_h(\mathbf{c}_{\mathbf{s} h}), 
+\end{align}
+
+which for our purposes simplifies to $\mathcal D(\mathbf c) =  H \mathcal U(\frac{\mathbf c}{H}) = \mathcal U(\mathbf c).$
+A key implication that arises from this setup is that maximizing $\mathcal D$ is equivalent to maximizing each $\mathcal U_h$ individually, where the relevant budget constraint is also formulated on an aggregate level. Taking these observations into account we arrive at a standard utility maximization problem incorporating a budget constraint, i.e.
+
+\begin{gather}
+  \label{eq:cgutilitymax}
+  \begin{split}
+  \max_{c \in \mathbb R^n} & \, \mathcal D(\mathbf c)  \\
+  \text{subject to } &\sum_{s=1}^n  p_s c_s  \leq \sum_{u=1}^n w_u l_u  \\
+  \end{split}
+\end{gather}
+
+If $\mathcal U$ is strictly concave \eqref{eq:cgutilitymax} possesses a unique solution for all $\prices \in \mathbb R^n_+$ and $\wages \in \mathbb R^n_+$.
+We can thus define the $\demandf$ from above, as the function that maps $\prices$ and $\wages$ to the consumption bundle $\cons$ that solves \eqref{eq:cgutilitymax}. 
+
+While the considerations above provide a minimal model for deriving final demands, we have not yet addressed issues of production. 
+It is notable that most CGEs start from the core motive of profit maximization and assume perfect competition, which implies that all overall outcomes satisfy the efficiency properties as stated by the first theorem of welfare economics. 
+For simplicity, we again employ only labor as a production factor to focus on the role of intermediate goods. Typically, each sector $k$ is represented by a single firm that seeks to maximize profit under the condition that sectoral production can satisfy intermediate as well as final demands for the sector's output.
+
+\begin{align}
+  \label{eq:profitmaxproblem}
+  \begin{split}
+    \max_{\mathbf x_{\mathbf{s},k},\mathbf l}  \, \pi_{k}(\mathbf x,\mathbf l)  :=p_k f_k(\mathbf x,\mathbf l) &- \sum_{s = 1}^ n p_s x_{sk} - w_k l_{hk}  \\
+  \text{subject to } f_k(\mathbf x, \mathbf l) &\geq y_k \\
+  l_k &\leq  l^{\text{max}}_k\\
+\end{split}
+\end{align}
+which again accounts for the fact the each sector $k$ uses and supplies goods at the same time. 
+
+Following standard conventions the problem represented by equation \eqref{eq:profitmaxproblem} can be split into two parts \citep[][p.~146]{jehleAdvancedMicroeconomicTheory2011}:
+it is equivalent to first finding the cost function $\costf_k(\prices,\wages,\quant)$ and then deriving the optimal production level for each sector from \textit{Shephard's Lemma}.
+
+We thus define the cost minimization problem as 
+\begin{align}
+  \label{eq:pricemin}
+  \begin{split}
+    \min_{\mathbf x_{\mathbf{s},k},\mathbf l}  \, \sum_{s = 1}^ n p_s x_{sk} - w_k l_{hk}  \\
+  \text{subject to } f_k(\mathbf x, \mathbf l) &\geq y_k \\
+  l_k &\leq  l^{\text{max}}_k\\
+\end{split}
+\end{align}
+
+and observe, that \eqref{eq:pricemin} has a unique solution if $f_k$ is convex.
+In this case we can define the cost function $\costf$ for a sector $k$ as the function that maps prices, quantities and wages to solution of \eqref{eq:pricemin}. 
+
+From a formal perspective the cost function has a few well-known, but important properties:
+it is continuous, concave and homogeneous of degree 1 in $\mathbf p$ and $w$, while the degree of homogeneity in $y$ is determined by the returns to scale encapsulated by the respective production function (if the latter scales with $\alpha$, the cost function will scale with $\frac{1}{\alpha}$). 
+Importantly, if some basic restrictions on the production function\footnote{Specifically. that $f_u$ is continuous, convex, and strictly increasing and $f_u(\mathbf 0) = 0$} are satisfied, \textit{Shephard's lemma} will hold which allows for deriving optimal demand $x_{\mathbf{s},u}$ directly by differentiating the cost-function by intermediate good prices $\mathbf{p}$.
+
+As in this setup the production of $y$ is subject to constant returns to scale, $\mathscr C$ is homogeneous of degree 1 in $ y$. Using \textit{Shephard's Lemma} we can derive the optimal demand for intermediate goods, as 
+\begin{align}
+  x_{su} = \frac{\partial \costf_u(\mathbf p,\mathbf w,\mathbf y)}{\partial p_s},
+\end{align}
+or, in matrix form
+\begin{align}
+  X = \nabla_p \costf(\mathbf p,\mathbf w,\mathbf y).
+\end{align}
+
+We can thus rewrite the market clearing conditions \eqref{eq:_goods_clear} as
+\begin{align}
+\label{eq:market_clearing_sheppard}
+  y_s = \sum_{u = 1}^n \frac{\partial \costf_u(\mathbf p,\mathbf w,\mathbf y)}{\partial p_s} + \demandf_s(\prices,\wages,\quant).
+\end{align}
+
+In equilibrium all prices correspond to the marginal utility or marginal revenues accruing from the respective goods and factors. One consequence is that wages are given directly as the marginal product of labor times the price of the produced good, i.e. $w_{s} =  p_s \frac{\partial f_s}{\partial l_s}(\mathbf x, l) $.
+If we can rewrite $ p_s \frac{\partial f_s}{\partial l_s}(\mathbf x, l) $ as a function, that only depends on $f(\mathbf x,l)$ and $l$ and not $\mathbf x$ itself (because in an equilibrium $f_s(\mathbf x,l) = y_s$), we can interpet $p_s \frac{\partial f_s}{\partial l_s}(\mathbf x, l)$ as a function that maps prices and quantities to wages.
+This  representation is thus the wage function $\wagef(\prices,\quant)$ from above.
+Similarly, prices for intermediate goods are given by $p_{s} =  p_u \frac{\partial f_u}{\partial x_{su}} = \frac{\partial \mathcal D}{\partial c_s}$.\footnote{However here it is not possible to express $p_u \frac{\partial f_u}{\partial x_{su}}$ independent from $x_{su}$.}
+With these components we can reproduce the definition of general equilibrium. In this vision competition among economic agents acting in a profit and utility maximizing manner leads to a stable and pareto-optimal allocation of resources, where markets clear, profits and utility are maximal and marginal costs always correspond to marginal benefits or revenues.
+In formal terms this means the following:
+
+\begin{definition}[General Equilibrium]
+  A consumption vector $\mathbf c$, a price vector $\mathbf p$, wages $\mathbf w $ and a allocation matrix $ X$ form a General Equilibrium if the following three conditions hold for every sector:
+  \begin{enumerate}
+    \item $\mathbf c$ maximizes social welfare by solving the utility maximization problem encapsulated by equation \eqref{eq:cgutilitymax}.
+        \item $ \mathbf{x}_{\mathbf{s},u }$ solves the profit maximisation problem as given in equation \eqref{eq:profitmaxproblem} for all firm and sectors, respectively allowing to derive optimal production $\bar {\mathbf{y}}$ across all sectors. 
+    \item  Revenues and costs have to coincide in all sectors, i.e. 
+$ p_u y_u = \sum_{s=1}^N p_s x_{su} +  w_u l_u$ holds for all sectors $u$.
+  \end{enumerate}
+\end{definition}
+We see that for a solution to equation~\eqref{eq:equilibrium}, prices equal production costs and markets clear. As the consumption bundle $\mathbf c$ maximizes utility and \textit{Shephard's Lemma} guarantees that each $x_{su}$ is optimal, the resulting equilibrium carries the usual efficiency properties.
+
+Eventually, the question emerges how to link such a setup with the Input-Output tables introduced in the beginning of section \ref{sec:IO_models}. In practice, such a link necessitates that $\Omega$ plays a role in the exact specification of the production function and/or consumption function. For a Cobb-Douglas function, as the most widely used specification, the cost shares contained in $\Omega$ are interpreted as output elasticities and, correspondingly, used to specify the relative contribution of factors and intermediates to net output of a given sector, which translates into
+
+\begin{equation}
+  \label{eq:cobbdouglasprodfun}
+  f_u(l,\mathbf x) = \mathcal A_u \left(l_u^{\omega_{ul}} \left(\prod_{s=1}^n x_{su}^{\omega_{us}}\right)^{1-\omega_{ul}}\right)
+\end{equation}
+to model production.
+
+Here $\mathbf{\mathcal A}$ is a productivity parameter, $\omega_{ul}$ is taken to be the output elasticity of labor, and $\omega_{us}$ is assumed to represent the output elasticities of good $s$. It is often assumed, that production has constant returns to scale, thus $\sum_{s=1}^N \omega_{su} = 1$. In contrast, mapping an IO-table on a constant elasticity of substitution (CES) production function would use $\Omega$ to calibrate the share parameters that indicate the relative contribution of each (intermediate) factor as in 
+
+\begin{align}
+  f_u(\mathbf x) = \left( \sum_{s = 1}^n \omega_{su} x_{su}^{\frac{\theta - 1}{\theta}}\right)^{\frac{\theta}{\theta - 1}}.
+\end{align}
+
+When applying this setup  to practical questions, the standard procedure is to envisage a stable 'pre-shock' equilibrium, while the relevant changes to the system are framed as external shock. Formally, the former assumption implies that we can normalize prices and quantities, so that in the pre-shock state prices all equal one and quantities are equal to the \textit{Domar weights}, that are defined as the ratio between \textit{gross} output in some sector and GDP \citep[see][]{Hulten.1978}.
+
+\begin{definition}[Domar Weights]
+  The Domar weight $\lambda_s$ of sector $s$ is given as 
+  \begin{align}
+    \lambda_s := \frac{p_s y_s}{\sum_{u=1}^n p_u c_u}.
+  \end{align}
+The Domar weights thus capture the relative size of a sector in relation to GDP. Summing up these weights across all sectors in turn shows the relation between gross and net output for the whole economy.
+\end{definition}
+
+In addition to the Domar weights, which represent the relative importance of specific sectors for gross production, we can also calculate each sector's contribution to final demand, which is simply given by the share of each sector in final consumption as given by total expenditures $\sum_{u=1}^n p_u c_u$.
+
+\begin{definition}[Consumption Share]
+  The consumption share of sector $s$ is given as 
+  \begin{align}
+    \beta_s := \frac{p_s c_s}{\sum_{u=1}^n p_u c_u}.
+  \end{align}
+\end{definition}
+
+At this point it is important to note that Domar weights as well as consumption shares are solely determined by $y_s$ (Domar weights) and $c_s$ (consumption share) in the pre-shock equilibrium as all other relevant variables, prices as well as GDP, are normalized to one. 
+
+As all prices are initially normalized to one, any subsequent price changes due to shocks must be interpreted relative to a chosen numeraire. There are two common approaches to define meaningful post-shock prices. The first is to fix a specific numeraire and then to re-normalize the post-shock prices relative to the numeraire $N$. The second approach explicitly specifies the numeraire as some constant value in the system of equations to avoid confusion between nominal and real values. Using the former approach, we define the relative post-shock prices as
+
+
+\begin{align}
+  \post  { \tilde \prices} := \frac{1}{N} \post \prices
+\end{align}
+
+
+and choose the CES consumer price index as the numeraire:$$
+\text{CPI} = \left( \sum_{u=1}^n \omega_{0u} p_u^{\theta  -1} \right)^{\frac{1}{\theta - 1}}.
+$$
+Calculating GDP directly using these post-shock prices would yield a nominal GDP measure. To obtain real GDP, one typically employs a price index such as the Laspeyres or Paasche index. We use the Laspeyres index, so that GDP is computed as
+$$
+\text{GDP} = \frac{\sum_{s=1}^n p_s \post c_s}{\sum_{s=1}^n p_s  c_s}
+$$
+which measures the change in consumption valued at pre-shock prices, providing a meaningful comparison of real economic activity before and after the shock.
+While this basic formal setup obviously differs from the Leontief model presented in Section~\ref{sec:leontief} in many details,
+a major practical difference in applying these models also emerges from the underlying paradigmatic perspectives:
+loosely spoken, the Leontief model follows a 'demand-side view', where production structures are assumed constant and final demands change exogenously. In contrast, general equilibrium approaches will start from a 'supply-side view', where economic changes arise from changes in the exogenous parameters -- like production functions, technology or endowments -- and demand will respond.   
+

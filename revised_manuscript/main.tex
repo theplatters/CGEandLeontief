@@ -1,0 +1,102 @@
+\documentclass{article}
+
+% Language setting
+\usepackage[english]{babel}
+
+% Set page size and margins
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{parskip}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{authblk}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{makecell}
+
+\usepackage{amsthm}
+\usepackage[english]{babel}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{pgfplots}
+\usepackage{nicefrac}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{lmodern,textcomp}
+% pgfplots settings ===========================
+\pgfplotsset{width=10cm,compat=1.9}
+
+% We will externalize the figures
+\usepgfplotslibrary{external}
+\tikzexternalize
+%================================================
+
+\newcommand{\hbf}[1]{\hat {\mathbf #1}}
+\newcommand{\costf}{\mathscr{C}}
+\newcommand{\prices}{\mathbf{p}}
+\newcommand{\quant}{\mathbf{y}}
+\newcommand{\wages}{\mathbf{w}}
+\newcommand{\cons}{\mathbf{c}}
+\newcommand{\wagef}{\mathscr{W}}
+\newcommand{\demandf}{\mathscr{D}}
+\newcommand{\post}[1]{#1^*}
+
+\usepackage[
+backend=natbib,
+style=authoryear-icomp,
+isbn=false, issn=false, url=false, pagetotal=false, natbib=true
+]{biblatex}
+
+
+\addbibresource{BandF.bib}
+
+%==============================================
+%=====      Math Theorems and operators   =====
+%==============================================
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{axiom}{Axiom}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\setlength\parindent{0pt}
+
+\title{Labor supply elasticities and sectoral dynamics in the input-output modeling continuum:\break
+a quantitative decomposition using the German housing transformation\thanks{This paper has benefited from funding provided by the \textit{Hans Böckler Foundation} under grant number 2021-544-2, by the \textit{Linz Institute for Transformational Change (LIFT\_C)} under grant number 2022-1-114 as well as by \textit{Dezernat Zukunft}. Moreover, we thank Lukas Cserjan and Bernhard Schütz for their extensive feedback as well as David Baqaee, Anna Hornykewycz, Stefan Steinerberger, Rafael Wildauer and Jan David Weber for their responses to our queries and the comments on specific aspects of this manuscript. All remaining errors are our own.}}
+
+\author[1]{Jakob Kapeller}
+\author[2]{Franz Scharnreitner}
+\affil[1]{University of Duisburg-Essen, Institute for Socio-Economics and Johannes Kepler University Linz, Institute for Comprehensive Analysis of the Economy (ICAE), \href{mailto:jakob.kapeller@uni-due.de}{jakob.kapeller@uni-due.de}}
+\affil[2]{Johannes Kepler University Linz, Institute for Comprehensive Analysis of the Economy (ICAE)}
+
+\begin{document}
+\maketitle
+
+\section*{Abstract}
+
+It is well understood that the IO multiplier model is a special case of a CGE model with fixed prices and unconstrained factor supply \citep{Robinson.2006}. The labor supply elasticity~$\eta$ --- running from zero (full-employment CGE) to infinity (IO multiplier) --- is thus the key parameter governing the relationship between these modeling traditions. While this conceptual bridge has been recognized for decades \citep{Rose.1995,Dervis.1982}, its quantitative implications have not been systematically measured.
+
+We replicate and extend the Baqaee--Farhi framework to quantify the relative importance of factor market closures versus production technology parameters. Using the German housing transformation toward carbon neutrality as a policy-relevant application, we conduct a systematic sensitivity analysis across the labor supply elasticity continuum and a range of CES substitution elasticities. We find that the factor market closure explains roughly an order of magnitude more variation in both aggregate and sectoral outcomes than all production technology parameters combined. The estimated GDP effect of the housing transformation ranges from virtually zero to approximately 1.5\% depending on the closure, while CES elasticities shift this estimate by only a fraction of a percentage point. Moving from exogenous labor slack to endogenous labor supply produces the ``bridge'' the literature already knows exists --- and here we show how much it matters.
+
+\textbf{Keywords:} input-output modeling, general equilibrium, labor supply elasticity, factor market closures, CES production functions, socio-ecological transformation
+
+\textbf{JEL-Codes:} C67, C68, D57, E24
+
+\newpage
+
+%%% CHAPTER INPUTS %%%
+
+\input{chapters/ch01_introduction}
+\input{chapters/ch02_io_leontief}
+\input{chapters/ch03_cge_model}
+\input{chapters/ch04_data}
+\input{chapters/ch05_ces_functions}
+\input{chapters/ch06_labor_slack}
+\input{chapters/ch07_conclusion}
+\input{chapters/ch08_backmatter}
+
+\end{document}

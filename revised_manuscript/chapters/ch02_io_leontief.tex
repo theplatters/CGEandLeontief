@@ -1,0 +1,83 @@
+% OLD TEXT FROM HERE ON
+% This chapter contains text from the original submission.
+% It will be revised as part of the salvage plan.
+
+\section{Representation of Input-Output tables in basic economic models} \label{sec:IO_models}
+
+Input-output tables (IO-tables) -- and corresponding models utilizing such tables as an empirical anchor -- are effectively derived from general accounting principles that reflect inter-sectoral relations and dependencies within the economy. One such basic principle is that effective output of each sector $s$ has to correspond to gross demand for $s$, i.e.,
+
+\begin{align}
+  \label{eq:_goods_clear}
+  p_sy_s = \sum_{u = 1}^n p_s x_{su} + p_s c_s,
+\end{align}
+where $p_s$ is the price of goods produced in sector $s$, $x_{su}$ is the amount of intermediate goods used in sector $u$, that is supplied by sector $s$, whereas $c_s$ gives the amount of final sales originating from sector $s$. Note that price $p_s$ is redundant in the above formulation, as both production and demand refer only to goods of type $s$. As a consequence, equation \eqref{eq:_goods_clear} also holds in material terms (i.e., $y_s = \sum_{u = 1}^n x_{su} + c_s$).
+
+By defining $a_{su} := \frac{x_{su}}{y_u}$ as  the amount of inputs from sector $s$ required to produce one output in sector $u$, we can express equation~\eqref{eq:_goods_clear} by means of the following canonical representation
+
+\begin{align}
+  \label{eq:_goods_clear_a}
+  p_s y_s = \sum_{u = 1}^n p_s a_{su} y_u + p_s c_s,
+\end{align}
+that can be nicely summarized to cover all sectors in a single matrix expression of the form
+
+\begin{align}
+  \label{eq:_goods_clear_a_matrix}
+\hbf{p} \mathbf{y} = \hbf{p} A   \mathbf{y} + \hbf{p} \mathbf{c}.
+\end{align}
+
+Based on a similar reasoning total revenues of each sector, here denoted as, $p_u y_u$, have to correspond to total costs for intermediate goods and production factors, i.e. $\sum_{s=1}^n p_s x_{su} + v_u$. The latter expression includes costs for intermediate goods ($\sum_{s=1}^n p_s x_{su}$) as well as total incomes received, which are equal to the value-added $v_u$ in the respective sector $u$. Hence, for this mapping between revenues and costs the respective identity is given by.
+
+\begin{align}
+    \label{eq:supply_clear}
+    p_u y_u = \sum_{s=1}^n p_s x_{su} + v_u = \sum_{s=1}^n p_s a_{su} y_u + v_u
+\end{align}
+
+We observe that in the above formulation quantity $y_u$ will become redundant, if we assume that $v_u$ scales linearly with $y_u$, so that a constant share $\alpha_u$ of unit costs is devoted to factor incomes.
+
+This setup indicates that in the basic logic of IO-tables prices and quantities are separable: prices adjust depending on costs, while quantities change in order to satisfy effective demands for intermediate and final goods as specified in equations \eqref{eq:_goods_clear} to \eqref{eq:_goods_clear_a_matrix}. Following this logic we can apply simple model closures to equations \eqref{eq:_goods_clear} and \eqref{eq:supply_clear} to explore pure quantity or price dynamics, by assuming that one side of the equation is given exogenously. In this setup, assuming that gross production (i.e. supply) adapts to effective demand of final goods will lead to the classic Leontief model \citep[][see also section \ref{subsec:Leontief}]{leontief1986input}, while assuming that price increases in inputs translates into price increases of outputs will lead to the somewhat less well known Leontief price model (see \citealp{Weber.2023}, \citealp{Weber.2024} or \citealp{Nikiforos.2024} for recent applications). In more general Kuhnian terms, we can also say that equation \eqref{eq:_goods_clear}, which makes the components of effective demand explicit, suggests 'demand-led' solutions associated with Keynesian and other heterodox approaches, while the cost-focused equation \eqref{eq:supply_clear} is the starting point for analyzing sector-specific cost-structures, which provides the focal point of neoclassical approaches, where constraints from scarcity on the supply side feed back on prices.
+
+From a formal perspective we can again rewrite equation \eqref{eq:supply_clear} in matrix form so that
+\begin{align}
+     \hat {\mathbf p} \mathbf y = \hat {\mathbf y} A^T \mathbf p + \mathbf v,
+\end{align}
+
+where $A$ serves a shared conceptual anchor between this formulation and the canonical expression shown in equation \eqref{eq:_goods_clear_a_matrix}. It can easily be seen that, dividing equation~\eqref{eq:_goods_clear_a} by total production $p_s y_s$ gives demand shares, while applying the same operation to equation~\eqref{eq:supply_clear} with $p_u y_u$ gives cost shares. 
+Focusing on the core matrix of production coefficients $A$, we can show that the demand and cost shares derived from this setup are effectively transposed mirror-images of each other as
+
+\begin{align}
+    \label{eq:unity}
+    (\hat {\mathbf p} A \hbf{y} \cdot \hat {\mathbf z})^T = \hat {\mathbf z} \cdot  \hat {\mathbf y} A^T \hbf{p} =: \Omega_{p},
+\end{align}
+
+where ${\mathbf z}$ is a vector containing the inverse of total production $p_u y_u$ for each sector $u$ and $\Omega_p$ represents final cost shares associated with all intermediate goods $s$ used in that sector $u$.
+Hence, the elements of $\Omega_p$ are defined as $\omega_{us}=\frac{p_sx_{su}}{p_uy_u}=\frac{p_sa_{su}y_u}{p_uy_u}=\frac{p_s}{p_u}a_{su}$ so that $\Omega_p$ captures in each row the relative contributions to the production of some sector $u$ in monetary terms.\footnote{From equation \eqref{eq:unity} the identity $A = \hbf{p}^{-1} \Omega_p^T \hbf{p}$ follows (as $\hbf {p}$ is invertible). In practical work one often starts from standard notation with $a_{su}$ and arrives at an expression for cost shares by dividing each element $p_sx_{su}$ by the total output of sector $u$, i.e., by taking the column sum as a divisor (dividing by row sums would give demand shares instead). 
+If we proceed along these lines and transpose the result, we similarly will arrive at $\Omega_p$.}
+The relationship as posited in equation \eqref{eq:unity} makes exceptionally clear that different paradigmatic perspectives indeed start from the same (accounting) identities to structure observational data in IO-tables, but quite immediately diverge when it comes to providing a first representation of these data in conceptual terms.
+
+In both cases, $\Omega_p$ eventually represents all inter-sectoral dependencies, but without explicitly accounting for production factors (and associated incomes) and final demands for each good. However, those aspects can be incorporated in the same basic representation by adding additional rows and columns that represent final demand and factor incomes to provide an exhaustive representation of the economy. 
+
+In analogy to the construction of $\Omega_p$ demand for final goods can be expressed as $\omega_{0s}=\frac{p_s c_s}{p_s y_s}$, and incomes associated with production factors are given as $\omega_{uf}=\frac{v_{uf}}{p_u y_u}$ where $v_{uf}$ represents the value-added of some factor $f$, which, by accounting convention, directly corresponds to the income this factor receives. Put succinctly, incomes as well as final demand are normalized with respect to total sector output. 
+
+If IO-Tables are extended by these additional row (for final consumption) and column vectors (for production factors) the flow of goods between sectors, production factors and consumers can be represented exhaustively. 
+Taking the example of only one production factor, labor $l$, such an exhaustive representation can be depicted as $\Omega \in \mathbb R^{(n+1) \times (n+1)}_+$ with
+
+\begin{align}
+  \label{eq:iomatrix}
+  \Omega = \left( \begin{array}{@{}ccccc|c@{}}
+    \omega_{01} &\dots &\omega_{0s} &\dots &\omega_{0n} &  \\ \hline
+    \omega_{11} & \dots & \omega_{1s} & \dots &\omega_{1n} & \omega_{1l}\\ 
+    \vdots &\ddots &\vdots  &\ddots & \vdots & \vdots\\ 
+    \omega_{u1} & \dots & \omega_{us} & \dots &\omega_{un} & \omega_{ul}\\ 
+    \vdots &\ddots &\vdots  &\ddots & \vdots & \vdots\\ 
+    \omega_{n1} & \dots &\omega_{ns} & \dots & \omega_{nn} & \omega_{nl}    
+    \end{array} \right) = 
+    \left( \begin{array}{c|c}
+    \Omega_0 & \\ \hline
+    \Omega_p & \Omega_l\\ 
+  \end{array} \right)
+\end{align}
+
+Note that in this formulation we still remain agnostic about two main aspects, where variations across different traditions occur. One is related to the exact production technology, which has not been specified precisely as, in principle, we can restrict the validity of the linear representations presented so far to provide only static representation of the economy at some point in time, but is not suitable to extrapolate changes. Another blind spot refers to the role of factor endowments, where assumptions on the utilization of such endowments may differ: while in some traditions all endowments are flexible, others assume such flexibility is constrained, either fully or partially. 
+
+In what follows, we will first review classic responses to these questions in the remainder of this section. In a second step, sections \ref{sec:ces} and \ref{sec:labor}  inspect how more recent mainstream literature employs "axiomatic variation" \citep{Kapeller.2013}, i.e., slight modifications of standard neoclassical setups. to arrive at more flexible answers to these issues. Moreover, we analyze and discuss whether the so modified approaches provide suitable vantage points for constructing inter-paradigmatic bridges.
+

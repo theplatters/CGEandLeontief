@@ -1,0 +1,43 @@
+% OLD TEXT FROM HERE ON
+% This chapter contains text from the original submission.
+% It will be revised as part of the salvage plan.
+
+\section{Introduction: Kuhnian cleavages and input-output models}
+
+In his classic account on the “Structure of Scientific Revolutions” Thomas Kuhn \citetext{\citealp{Kuhn1962}, see also \citealt{Fleck1935}} emphasized that paradigms reflected different foundational perspectives taken by researchers. Consequently, scientists associated with different paradigms often cannot agree on basic theoretical assumptions or the interpretation of some observational data. These cleavages arise from different pre-analytical conceptions, which shape researchers’ intuitions and lead them to correspondingly different judgments.
+
+In his tract, Kuhn illustrates this instance graphically with reference to so-called ambiguous pictures that show different images when viewed from different perspectives, i.e. with a different mind-set. Taking this analogy into the realm of the history of science Kuhn asserts that there exist no bridges between such different perspectives as they inherently lack commensurability: researchers are ultimately captured in a certain “style of thought” \citep{Fleck1935}.
+
+While one can suppose that paradigms in a Kuhnian sense do indeed exist in past and contemporary economics, these paradigms, or ‘schools of thought’, partly defy the ideal-typical description on incommensurability leveraged by Kuhn: although they often feature seemingly irreconcilable views, most of these schools of thought are based on a recombination of often already existing theoretical beliefs and assumptions, that are sometimes shared across schools in unexpected ways \citep[e.g.][]{Kaldor1961,Lawson1985}.
+
+As a consequence, paradigmatic cleavages in economics often focus on specific conceptual disagreements: is the profit share a measure for the contribution of capital or for the degree of exploitation? Do higher wages lead to growth or stagnation? Does money rely on an exogenous source or is it created endogenously through social relations? Do environmental constraints pose a maximization problem or, rather, a maximin problem \citep{Costanza.1989}? Are results in behavioral economics, that systemically deviate from rational choice predictions, due to deficiencies of the subjects under study \citep{Gintis.2010} or do they point to the need for alternative conceptions of purposeful behavior based on evolutionary stable instincts and heuristics \citep{gigerenzer1999simple}? Some historians of economic thought have framed these reoccurring disagreements as diverging “base orientations” that “are like rivers on limestone which sometimes disappear underground, [before] they come to light again, when nobody expects it.“ \citep[][p. 9]{Screpanti2005}.
+
+As indicated, individual schools of thought often recombine distinct elements from these rivers and, hence, occasionally defy the rather dichotomous vision of Kuhn that sometimes suggests that there cannot be common ground across such paradigms. Additionally, and of special interest to this paper, we observe that constructive communication and interaction across paradigms is indeed possible and sometimes there even exist explicit attempts to build bridges across said rivers. Although it is not ex-ante clear, whether such bridges truly provide fertile ground for original research efforts, they provide an opportunity for tracing the impact differences in foundational assumptions exert on the obtained results. Hence, these bridges can be seen as a natural starting point for a pluralist inquiry \citep[see also][]{Dobusch.2012}.
+
+This paper aims to explore such a bridge for the case of economic models that use empirical input-output data to model the overall state or development of a given economy. The practical motivation for doing so arises from the expectation that additional investments in foundational infrastructures and production technologies will be required in the near future to better accommodate ecological requirements \citep[e.g.][]{Creutzig.2018,He.2023,Hornykewycz.2025}. While the economic impacts of such additional investments can be assessed by employing input-output data and related models, the results of such analyses are typically contested in theoretical as well as political terms. This outcome is not only due to differences in assumptions, but also because the estimates obtained of such investment are strongly contingent on the modeling philosophy and concrete modeling approach employed. 
+
+At the heart of such contestation -- that basically concerns all applied models based on input-output data of various sorts -- resides a paradigmatic cleavage: does an expansion of investment lead to an expansion of output (by mobilizing additional productive factors) or will it simply lead to a, possibly sub-optimal, reallocation of scarce resources? In model terms, the first option is represented by the classic Leontief-Inverse \citep{Leontief.1936,leontief1986input,BlairMiller}, where additional investments are represented by linearly extrapolating current proportions of intermediary inputs and factors, whereas the canonical computable general equilibrium (CGE) models represent an alternative vision on how to conceptualize an exogenous expansion of investment within a neoclassical equilibrium framework.
+
+To better advance a focused comparison between these approaches this paper takes recent developments in mainstream approaches to input-output modeling into account \citep{BF2019,Baqaee.2021,BF2022} that explicitly try to incorporate heterodox arguments on constraints to gross substitutability \citep[e.g.][]{davidson1994}, labor market slack \citep[e.g.][]{lavoie2014} or the peculiar role of energy provisioning \citep[e.g.][]{Keen.2018}, but still hold on to the basic vision of rational behavior and fully competitive markets. 
+By juxtaposing these approaches with more traditional applications following Leontief we aim to trace the most relevant single assumptions leading to differences in obtained estimates, explore their relative impact on the results and thereby illuminate a concrete case of a paradigmatic cleavage to better understand the possibilities and constraints for building bridges across rivers of paradigmatic confinement. 
+By combining models building on input-output data as analytical venues with an applied focus on specific transformation requirements in the German housing sector \citep[largely based on][]{Hornykewycz.2025} we are able to illustrate the consequences of the underlying paradigmatic cleavage with reference to an example of great practical and political importance. Moreover, by focusing on two major "axiomatic variations" \citep{Kapeller.2013} in the main assumptions guiding neoclassical input-output models (see Table \ref{tab:overview}), we explore a case in the recent literature that holds some potential for bridging the underlying cleavage.
+
+\begin{table}
+\label{tab:overview}
+\centering
+\scriptsize
+\begin{tabular}{|c|c|c|c|} 
+\hline
+\textbf{Axiomatic variation} & \textbf{Challenged concepts} & \makecell{\textbf{Alternative}\\ \textbf{operationalization}} & \textbf{Related heterodox intuition}  \\ 
+\hline
+\makecell{Decreasing substitution\\elasticities} & \makecell{Optimism regarding\\substitution / Cobb-Douglas\\production function} & \makecell{CES production\\function} & Leontief production function       \\ 
+\hline
+\makecell{Introducing labor\\market slack} & Full utilization of resources & \makecell{New factors become\\spontaneously available} & Underutilized factors endowment \\ 
+\hline
+\end{tabular}
+\caption{Axiomatic variation in the context of input-output models}
+
+\end{table}
+
+In the remainder of the paper we have tried to use a consistent notation that builds on the standard conventions: accordingly, we write vectors in lower-case bold letters (e.g. $\mathbf{x}$), matrices in standard capital letters (e.g. $A$) and vectors embedded in a diagonal matrix as $\hat{\mathbf{x}}$. When referring to elements of matrices that represent inter-sectoral relationships and interdependencies, we will generally use $s$ as an index for the sector that is \textit{supplying} something and $u$ for the sector that is \textit{using} something. Hence, we denote intermediate goods as $x_{su}$ (instead of the standard convention to use $x_{ij}$), where dropping one index means the sum over all elements (i.e. $x_s=\sum_{u=1}^n x_{su}$), while vectorized indices are again written in bold (i.e. $\mathbf{x}_{\mathbf{s},u}=(x_{1u},x_{2u}, \dots , x_{nu})^T$).
+

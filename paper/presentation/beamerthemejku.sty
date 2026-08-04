@@ -1,0 +1,1941 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% LaTeX Beamer Theme for Johannes Kepler University Linz
+%% 
+%% Copyright (C) 2021  Michael Roland
+%% 
+%% This is a rewrite of the JKU theme originally by
+%% Susanne Hametner, Doris Pargfrieder, and Pieter-Jan Hoedt.
+%% 
+%% This Source Code Form is subject to the terms of the Mozilla Public
+%% License, v. 2.0. If a copy of the MPL was not distributed with this
+%% file, You can obtain one at https://mozilla.org/MPL/2.0/.
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+
+\ProvidesPackage{beamerthemejku}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Dependencies
+%% 
+\RequirePackage{etoolbox}
+\RequirePackage{xkeyval}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+\usetikzlibrary{backgrounds}
+\usetikzlibrary{calc}
+\RequirePackage{babel}
+\RequirePackage{translations}
+\RequirePackage{datetime2}
+\RequirePackage{amsmath}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Options & Parameters
+%% 
+
+% Option logopath={}: set path to template logo resources (defaults to "./logos")
+\newcommand{\jkubeamer@logopath}{./logos}
+\DeclareOptionBeamer{logopath}{\renewcommand{\jkubeamer@logopath}{#1}}
+
+% Option [no]frametitlecaps: set frame titles in all-caps (defaults to false)
+\newbool{jkubeamer@frametitlecaps}
+\DeclareOptionBeamer{capsframetitle}[true]{\setbool{jkubeamer@frametitlecaps}{#1}}
+\DeclareOptionBeamer{nocapsframetitle}{\boolfalse{jkubeamer@frametitlecaps}}
+
+% Option [no]footer: display a frame footer (defaults to true)
+\newbool{jkubeamer@framefooter}
+\booltrue{jkubeamer@framefooter}
+\DeclareOptionBeamer{footer}[true]{\setbool{jkubeamer@framefooter}{#1}}
+\DeclareOptionBeamer{nofooter}{\boolfalse{jkubeamer@framefooter}}
+
+% Option [no]jkufooter: insert JKU/partner logos into the frame footer (defaults to true)
+\newbool{jkubeamer@framefooterjku}
+\booltrue{jkubeamer@framefooterjku}
+\DeclareOptionBeamer{jkufooter}[true]{\setbool{jkubeamer@framefooterjku}{#1}}
+\DeclareOptionBeamer{nojkufooter}{\boolfalse{jkubeamer@framefooterjku}}
+
+% DEPRECATED option nojkuFooter: old spelling, also implied nofooter in the past
+\DeclareOptionBeamer{nojkuFooter}{%
+    \PackageWarning{beamerthemejku}{Option `nojkuFooter' deprecated, use nojkufooter or nofooter instead!}%
+    \boolfalse{jkubeamer@framefooter}%
+    \boolfalse{jkubeamer@framefooterjku}%
+}
+
+% Option [no]framenumber: insert current frame number into the frame footer (defaults to false)
+\newbool{jkubeamer@framenumber}
+\DeclareOptionBeamer{framenumber}[true]{\setbool{jkubeamer@framenumber}{#1}}
+\DeclareOptionBeamer{noframenumber}{\boolfalse{jkubeamer@framenumber}}
+
+% Option [no]totalframenumber: insert total frame number (in addition to current frame number) into the frame footer; frames in appendix are not counted; (defaults to false)
+\newbool{jkubeamer@totalframenumber}
+\DeclareOptionBeamer{totalframenumber}[true]{%
+    \setbool{jkubeamer@framenumber}{#1}%
+    \setbool{jkubeamer@totalframenumber}{#1}%
+}
+\DeclareOptionBeamer{nototalframenumber}{%
+    \boolfalse{jkubeamer@totalframenumber}%
+}
+
+% Option [no]appendixframenumber: insert overall total frame number (in addition to current frame number) into the frame footer; when combined with totalframenumber, the appendix is not counted for frames in the main part; (defaults to false)
+\newbool{jkubeamer@appendixframenumber}
+\DeclareOptionBeamer{appendixframenumber}[true]{%
+    \setbool{jkubeamer@framenumber}{#1}%
+    \setbool{jkubeamer@appendixframenumber}{#1}%
+}
+\DeclareOptionBeamer{noappendixframenumber}{%
+    \boolfalse{jkubeamer@appendixframenumber}%
+}
+
+% Option [no]sectionpage: insert section frames (defaults to true)
+\newbool{jkubeamer@sectionpage}
+\booltrue{jkubeamer@sectionpage}
+\DeclareOptionBeamer{sectionpage}[true]{%
+    \setbool{jkubeamer@sectionpage}{#1}%
+    \setbool{jkubeamer@subsectionpage}{#1}%
+    \setbool{jkubeamer@subsubsectionpage}{#1}%
+}
+\DeclareOptionBeamer{nosectionpage}{%
+    \boolfalse{jkubeamer@sectionpage}%
+    \boolfalse{jkubeamer@subsectionpage}%
+    \boolfalse{jkubeamer@subsubsectionpage}%
+}
+
+% Option [no]subsectionpage: insert subsection frames (defaults to state of sectionpage)
+\newbool{jkubeamer@subsectionpage}
+\booltrue{jkubeamer@subsectionpage}
+\DeclareOptionBeamer{subsectionpage}[true]{%
+    \setbool{jkubeamer@subsectionpage}{#1}%
+    \setbool{jkubeamer@subsubsectionpage}{#1}%
+}
+\DeclareOptionBeamer{nosubsectionpage}{%
+    \boolfalse{jkubeamer@subsectionpage}%
+    \boolfalse{jkubeamer@subsubsectionpage}%
+}
+
+% Option [no]subsubsectionpage: insert subsubsection frames (defaults to state of subsectionpage)
+\newbool{jkubeamer@subsubsectionpage}
+\booltrue{jkubeamer@subsubsectionpage}
+\DeclareOptionBeamer{subsubsectionpage}[true]{\setbool{jkubeamer@subsubsectionpage}{#1}}
+\DeclareOptionBeamer{nosubsubsectionpage}{\boolfalse{jkubeamer@subsubsectionpage}}
+
+% Option [no]partpage: insert part frames (defaults to false)
+\newbool{jkubeamer@partpage}
+\DeclareOptionBeamer{partpage}[true]{\setbool{jkubeamer@partpage}{#1}}
+\DeclareOptionBeamer{nopartpage}{\boolfalse{jkubeamer@partpage}}
+
+% Option [no]imprint: insert imprint on title pages (defaults to true)
+\newbool{jkubeamer@imprint}
+\booltrue{jkubeamer@imprint}
+\DeclareOptionBeamer{imprint}[true]{\setbool{jkubeamer@imprint}{#1}}
+\DeclareOptionBeamer{noimprint}{\boolfalse{jkubeamer@imprint}}
+
+% Option [no]optpackages: load convenience packages to mimic legacy behavior (defaults to true)
+\newbool{jkubeamer@optpackages}
+\booltrue{jkubeamer@optpackages}
+\DeclareOptionBeamer{optpackages}[true]{\setbool{jkubeamer@optpackages}{#1}}
+\DeclareOptionBeamer{nooptpackages}{\boolfalse{jkubeamer@optpackages}}
+
+% Option c/t: override default vertical centering of beamer class, but allow manually switching to centering mode
+\boolfalse{beamer@centered}
+\DeclareOptionBeamer{t}{\boolfalse{beamer@centered}}
+\DeclareOptionBeamer{c}{%
+    \booltrue{beamer@centered}%
+    \PackageWarning{beamerthemejku}{Use option `c' with care; I hope you really know what you are doing!}%
+}
+
+% Option JKU: use color palette for all JKU
+\newcommand{\jkubeamer@faculty}{jku}
+\newcommand{\jkubeamer@institute@code}{}
+\DeclareOptionBeamer{JKU}{\renewcommand{\jkubeamer@faculty}{jku}}
+\DeclareOptionBeamer{jku}{\renewcommand{\jkubeamer@faculty}{jku}}
+
+% Option BUS: use color palette for the business school
+\DeclareOptionBeamer{BUS}{\renewcommand{\jkubeamer@faculty}{bus}}
+\DeclareOptionBeamer{bus}{\renewcommand{\jkubeamer@faculty}{bus}}
+
+% Option LIT: use color palette for the Linz Institute of Technology
+\DeclareOptionBeamer{LIT}{\renewcommand{\jkubeamer@faculty}{lit}\renewcommand{\jkubeamer@institute@code}{LIT}}
+\DeclareOptionBeamer{lit}{\renewcommand{\jkubeamer@faculty}{lit}\renewcommand{\jkubeamer@institute@code}{LIT}}
+
+% Option MED: use color palette for the MED faculty
+\DeclareOptionBeamer{MED}{\renewcommand{\jkubeamer@faculty}{med}}
+\DeclareOptionBeamer{med}{\renewcommand{\jkubeamer@faculty}{med}}
+
+% Option RE: use color palette for the RE faculty
+\DeclareOptionBeamer{RE}{\renewcommand{\jkubeamer@faculty}{re}}
+\DeclareOptionBeamer{re}{\renewcommand{\jkubeamer@faculty}{re}}
+
+% Option SOE: use color palette for the School of Education
+\DeclareOptionBeamer{SOE}{\renewcommand{\jkubeamer@faculty}{soe}}
+\DeclareOptionBeamer{SoE}{\renewcommand{\jkubeamer@faculty}{soe}}
+\DeclareOptionBeamer{soe}{\renewcommand{\jkubeamer@faculty}{soe}}
+
+% Option SOWI: use color palette for the SOWI faculty
+\DeclareOptionBeamer{SOWI}{\renewcommand{\jkubeamer@faculty}{sowi}}
+\DeclareOptionBeamer{sowi}{\renewcommand{\jkubeamer@faculty}{sowi}}
+
+% Option TNF: use color palette for the TNF faculty
+\DeclareOptionBeamer{TNF}{\renewcommand{\jkubeamer@faculty}{tnf}}
+\DeclareOptionBeamer{tnf}{\renewcommand{\jkubeamer@faculty}{tnf}}
+
+
+% DEPRECATED options: these options no longer have any effect
+\DeclareOptionBeamer{nopagenumber}{%
+    \PackageWarning{beamerthemejku}{Option `nopagenumber' deprecated, option has no effect!}%
+}
+\DeclareOptionBeamer{noprogressbar}{%
+    \PackageWarning{beamerthemejku}{Option `noprogressbar' deprecated, option has no effect!}%
+}
+\DeclareOptionBeamer{protectframetitle}{%
+    \PackageWarning{beamerthemejku}{Option `protectframetitle' deprecated, option has no effect!}%
+}
+
+% DISALLOWED options: these options must not be used
+\DeclareOptionBeamer{8pt}{%
+    \PackageError{beamerthemejku}{Option `8pt' is not allowed, do not mess with font sizes!}{}%
+}
+\DeclareOptionBeamer{9pt}{%
+    \PackageError{beamerthemejku}{Option `9pt' is not allowed, do not mess with font sizes!}{}%
+}
+\DeclareOptionBeamer{10pt}{%
+    \PackageError{beamerthemejku}{Option `10pt' is not allowed, do not mess with font sizes!}{}%
+}
+\DeclareOptionBeamer{12pt}{%
+    \PackageError{beamerthemejku}{Option `12pt' is not allowed, do not mess with font sizes!}{}%
+}
+\DeclareOptionBeamer{14pt}{%
+    \PackageError{beamerthemejku}{Option `14pt' is not allowed, do not mess with font sizes!}{}%
+}
+\DeclareOptionBeamer{17pt}{%
+    \PackageError{beamerthemejku}{Option `17pt' is not allowed, do not mess with font sizes!}{}%
+}
+\DeclareOptionBeamer{20pt}{%
+    \PackageError{beamerthemejku}{Option `20pt' is not allowed, do not mess with font sizes!}{}%
+}
+
+% Options to be passed to the color theme (see color theme for more information)
+\DeclareOptionBeamer{darkmode}[true]{\PassOptionsToPackage{darkmode=#1}{beamercolorthemejku}}
+\DeclareOptionBeamer{MAC}[true]{\PassOptionsToPackage{mac=#1}{beamercolorthemejku}}
+\DeclareOptionBeamer{mac}[true]{\PassOptionsToPackage{mac=#1}{beamercolorthemejku}}
+\DeclareOptionBeamer{greyText}{\PassOptionsToPackage{greyText}{beamercolorthemejku}}
+
+% Options to be passed to the font theme (see font theme for more information)
+\DeclareOptionBeamer{fontpath}{\PassOptionsToPackage{fontpath=#1}{beamerfontthemejku}}
+\DeclareOptionBeamer{fancyfonts}[true]{\PassOptionsToPackage{fancyfonts=#1}{beamerfontthemejku}}
+\DeclareOptionBeamer{nofancyfonts}{\PassOptionsToPackage{nofancyfonts}{beamerfontthemejku}}
+\DeclareOptionBeamer{compactverb}[true]{\PassOptionsToPackage{compactverb=#1}{beamerfontthemejku}}
+\DeclareOptionBeamer{nocompactverb}{\PassOptionsToPackage{nocompactverb}{beamerfontthemejku}}
+\DeclareOptionBeamer{compactmono}[true]{\PassOptionsToPackage{compactmono=#1}{beamerfontthemejku}}
+\DeclareOptionBeamer{nocompactmono}{\PassOptionsToPackage{nocompactmono}{beamerfontthemejku}}
+\DeclareOptionBeamer{mathastext}[true]{\PassOptionsToPackage{mathastext=#1}{beamerfontthemejku}}
+\DeclareOptionBeamer{nomathastext}{\PassOptionsToPackage{nomathastext}{beamerfontthemejku}}
+
+\ProcessOptionsBeamer
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Packages loaded for convenience
+%% 
+%% NOTE: These packages were loaded by the old JKU beamer package and remain
+%%       here to match legacy behavior. You can prevent these packages from
+%%       being loaded by using the nooptpackages option.
+%% 
+
+\ifbool{jkubeamer@optpackages}{%
+    \RequirePackage{ragged2e}
+    \RequirePackage{booktabs}
+    \RequirePackage{tabularx}
+    \RequirePackage{pgfplots}
+    \pgfplotsset{compat=1.9}
+}{}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Definitions
+%% 
+
+\newcommand{\jkubeamer@logoprefix}{jku}
+
+% Margin
+\newlength{\jkubeamer@margin}
+\setlength{\jkubeamer@margin}{7.5mm}
+
+% Title page
+\newlength{\jkubeamer@Klogo@width}
+\setlength{\jkubeamer@Klogo@width}{25mm}
+\newlength{\jkubeamer@Klogo@height}
+\newlength{\jkubeamer@logo@height}
+\setlength{\jkubeamer@logo@height}{40mm}
+\newlength{\jkubeamer@titlelogo@offset}
+\setlength{\jkubeamer@titlelogo@offset}{32mm}
+\newlength{\jkubeamer@titlelogo@height}
+\setlength{\jkubeamer@titlelogo@height}{10.5mm}
+\newlength{\jkubeamer@titleimprint@offset}
+\setlength{\jkubeamer@titleimprint@offset}{26.5mm}
+\newlength{\jkubeamer@partnerlogo@width}
+\setlength{\jkubeamer@partnerlogo@width}{\dimexpr\jkubeamer@titleimprint@offset-\jkubeamer@margin\relax}
+
+% Footer
+\newlength{\jkubeamer@footerheight}
+\setlength{\jkubeamer@footerheight}{10mm}
+\newlength{\jkubeamer@footerlogo@height}
+\setlength{\jkubeamer@footerlogo@height}{3.5mm}
+\newlength{\jkubeamer@footerlogo@spacer}
+\setlength{\jkubeamer@footerlogo@spacer}{1em}
+\newcommand{\jkubeamer@frameofframes}{/}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Tweaks
+%% 
+
+% JKU theme uses narrow margins
+\setbeamersize{text margin left=\jkubeamer@margin, text margin right=\jkubeamer@margin}
+
+% Disable Beamer's automatic updates of hyperref PDF info since this does not seem to work
+\AtBeginDocument{%
+    \boolfalse{beamer@autopdfinfo}%
+}
+
+% Add a boolean flag to detect if authors are set
+\def\author{\@dblarg\jkubeamer@author}
+\newbool{jkubeamer@author@isset}
+\long\def\jkubeamer@author[#1]#2{%
+    \expandafter\notblank\expandafter{#2}{%
+        \booltrue{jkubeamer@author@isset}%
+    }{%
+        \boolfalse{jkubeamer@author@isset}%
+    }%
+    \beamer@author[#1]{#2}%
+}
+
+%\AtBeginEnvironment{columns}{%
+%    \let\tempsetkeys\setkeys%
+%    \renewcommand{\setkeys}[2]{%
+%        \tempsetkeys{#1}{onlytextwidth,#2}%
+%        \let\setkeys\tempsetkeys%
+%    }%
+%}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Color and font themes
+%% 
+
+\usecolortheme{jku}
+\usefonttheme{jku}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Logos
+%% 
+
+% Adapted from grapics.sty
+\newbool{jkubeamer@temp@exists}%
+\newcommand{\jkubeamer@IfLogoFileExists}[1]{%
+    \booltrue{jkubeamer@temp@exists}%
+    \def\jkubeamer@temp@file{}%
+    \begingroup%
+    \ifx\detokenize\@undefined\else%
+        \edef\Gin@extensions{\detokenize\expandafter{\Gin@extensions}}%
+    \fi%
+    \let\input@path\Ginput@path%
+    \set@curr@file{#1}%
+    \expandafter\filename@parse\expandafter{\@curr@file}%
+    \ifx\filename@ext\Gin@gzext%
+        \expandafter\filename@parse\expandafter{\filename@base}%
+        \ifx\filename@ext\relax%
+            \let\filename@ext\Gin@gzext%
+        \else%
+            \edef\Gin@ext{\Gin@ext\Gin@sepdefault\Gin@gzext}%
+        \fi%
+    \fi%
+    \ifx\filename@ext\relax%
+        \@for\Gin@temp:=\Gin@extensions\do{%
+            \ifx\Gin@ext\relax%
+                \Gin@getbase\Gin@temp%
+            \fi%
+        }%
+    \else%
+        \Gin@getbase{\Gin@sepdefault\filename@ext}%
+        \ifnum0%
+        \ifx\Gin@ext\relax 1%
+        \else \@ifundefined{Gin@rule@\Gin@ext}{1}{0}%
+        \fi >0%
+            \let\Gin@ext\relax%
+            \let\Gin@savedbase\filename@base%
+            \let\Gin@savedext\filename@ext%
+            \edef\filename@base{\filename@base\Gin@sepdefault\filename@ext}%
+            \let\filename@ext\relax%
+            \@for\Gin@temp:=\Gin@extensions\do{%
+                \ifx\Gin@ext\relax%
+                    \Gin@getbase\Gin@temp%
+                \fi%
+            }%
+            \ifx\Gin@ext\relax%
+                \let\filename@base\Gin@savedbase%
+                \let\filename@ext\Gin@savedext%
+            \fi%
+        \fi%
+        \ifx\Gin@ext\relax%
+            \def\Gin@base{\filename@area\filename@base}%
+            \edef\Gin@ext{\Gin@sepdefault\filename@ext}%
+            \global\boolfalse{jkubeamer@temp@exists}%
+        \fi%
+    \fi%
+    \ifx\Gin@ext\relax%
+        \global\boolfalse{jkubeamer@temp@exists}%
+    \else%
+        \xdef\jkubeamer@temp@file{\Gin@base\Gin@ext}%
+    \fi%
+    \endgroup%
+    \ifbool{jkubeamer@temp@exists}{%
+        \expandafter\@firstoftwo
+    }{%
+        \expandafter\@secondoftwo
+    }%
+}
+
+
+\newcommand{\jkubeamer@logo@getname}[3]{%
+    \jkubeamer@logopath/\jkubeamer@logoprefix%
+    \expandafter\notblank\expandafter{#1}{_#1}{}%
+    \expandafter\notblank\expandafter{#2}{_#2}{}%
+    \expandafter\notblank\expandafter{#3}{_#3}{}%
+}
+
+\newsavebox{\jkubeamer@logoblack@K}
+\sbox{\jkubeamer@logoblack@K}{%
+    \includegraphics[width=\jkubeamer@Klogo@width]{\jkubeamer@logo@getname{}{k}{black}}%
+}
+\newsavebox{\jkubeamer@logowhite@K}
+\sbox{\jkubeamer@logowhite@K}{%
+    \includegraphics[width=\jkubeamer@Klogo@width]{\jkubeamer@logo@getname{}{k}{white}}%
+}
+\settoheight{\jkubeamer@Klogo@height}{\usebox{\jkubeamer@logoblack@K}}
+
+\newcommand{\jkubeamer@Klogo}{%
+    \ifcsequal{\string\color@white}{\string\color@fg}{%
+        \usebox{\jkubeamer@logowhite@K}%
+    }{%
+        \usebox{\jkubeamer@logoblack@K}%
+    }%
+}
+
+\newsavebox{\jkubeamer@logoblack@en}
+\newsavebox{\jkubeamer@logocolor@en}
+\newsavebox{\jkubeamer@logowhite@en}
+\newsavebox{\jkubeamer@footerlogo@en}
+\newsavebox{\jkubeamer@logoblack@de}
+\newsavebox{\jkubeamer@logocolor@de}
+\newsavebox{\jkubeamer@logowhite@de}
+\newsavebox{\jkubeamer@footerlogo@de}
+\newcommand{\jkubeamer@updatelogos}{%
+    \sbox{\jkubeamer@logoblack@en}{%
+        \jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{en}{black}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{en}{black}}%
+        }{\jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{black}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{black}}%
+        }{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{}{en}{black}}%
+        }}%
+    }
+    \sbox{\jkubeamer@logocolor@en}{%
+        \jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{en}{color}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{en}{color}}%
+        }{\jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{color}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{color}}%
+        }{%
+            \usebox{\jkubeamer@logoblack@en}%
+        }}%
+    }
+    \sbox{\jkubeamer@logowhite@en}{%
+        \jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{en}{white}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{en}{white}}%
+        }{\jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{white}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{white}}%
+        }{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{}{en}{white}}%
+        }}%
+    }
+    \sbox{\jkubeamer@footerlogo@en}{%
+        \jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{en}{black_wide}}{%
+            \includegraphics[height=\jkubeamer@footerlogo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{en}{black_wide}}%
+        }{\jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{black_wide}}{%
+            \includegraphics[height=\jkubeamer@footerlogo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{black_wide}}%
+        }{%
+            \includegraphics[height=\jkubeamer@footerlogo@height]{\jkubeamer@logo@getname{}{en}{black_wide}}%
+        }}%
+    }
+    \sbox{\jkubeamer@logoblack@de}{%
+        \jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{de}{black}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{de}{black}}%
+        }{\jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{black}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{black}}%
+        }{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{}{de}{black}}%
+        }}%
+    }
+    \sbox{\jkubeamer@logocolor@de}{%
+        \jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{de}{color}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{de}{color}}%
+        }{\jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{color}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{color}}%
+        }{%
+            \usebox{\jkubeamer@logoblack@de}%
+        }}%
+    }
+    \sbox{\jkubeamer@logowhite@de}{%
+        \jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{de}{white}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{de}{white}}%
+        }{\jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{white}}{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{white}}%
+        }{%
+            \includegraphics[height=\jkubeamer@logo@height]{\jkubeamer@logo@getname{}{de}{white}}%
+        }}%
+    }
+    \sbox{\jkubeamer@footerlogo@de}{%
+        \jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{de}{black_wide}}{%
+            \includegraphics[height=\jkubeamer@footerlogo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{de}{black_wide}}%
+        }{\jkubeamer@IfLogoFileExists{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{black_wide}}{%
+            \includegraphics[height=\jkubeamer@footerlogo@height]{\jkubeamer@logo@getname{\jkubeamer@institute@code}{}{black_wide}}%
+        }{%
+            \includegraphics[height=\jkubeamer@footerlogo@height]{\jkubeamer@logo@getname{}{de}{black_wide}}%
+        }}%
+    }%
+}
+\jkubeamer@updatelogos% execute logo fetching now
+\newcommand{\jkubeamer@logoblack}{%
+    \ifcurrentbaselanguage{german}{%
+        \usebox{\jkubeamer@logoblack@de}%
+    }{%
+        \usebox{\jkubeamer@logoblack@en}%
+    }
+}
+\newcommand{\jkubeamer@logocolor}{%
+    \ifcurrentbaselanguage{german}{%
+        \usebox{\jkubeamer@logocolor@de}%
+    }{%
+        \usebox{\jkubeamer@logocolor@en}%
+    }
+}
+\newcommand{\jkubeamer@logowhite}{%
+    \ifcurrentbaselanguage{german}{%
+        \usebox{\jkubeamer@logowhite@de}%
+    }{%
+        \usebox{\jkubeamer@logowhite@en}%
+    }
+}
+\newcommand{\jkubeamer@logo}{%
+    \ifcsequal{\string\color@white}{\string\color@.}{%
+        \jkubeamer@logowhite%
+    }{\ifcsequal{\string\color@black}{\string\color@.}{%
+        \jkubeamer@logoblack%
+    }{%
+        \jkubeamer@logocolor%
+    }}%
+}
+\newcommand{\jkubeamer@footerlogo}{%
+    \ifcurrentbaselanguage{german}{%
+        \usebox{\jkubeamer@footerlogo@de}%
+    }{%
+        \usebox{\jkubeamer@footerlogo@en}%
+    }
+}
+
+\newsavebox{\jkubeamer@logo@partner@color}
+\sbox{\jkubeamer@logo@partner@color}{}
+\newsavebox{\jkubeamer@logo@partner@white}
+\sbox{\jkubeamer@logo@partner@white}{}
+\newsavebox{\jkubeamer@footerlogo@partner@color}
+\sbox{\jkubeamer@footerlogo@partner@color}{}
+\newsavebox{\jkubeamer@footerlogo@partner@white}
+\sbox{\jkubeamer@footerlogo@partner@white}{}
+
+\newcommand{\jkubeamer@kv@scale}{1.0}
+\define@key{jkubeamer@kv}{scale}{%
+    \renewcommand{\jkubeamer@kv@scale}{#1}%
+}
+\define@key{jkubeamer@kv}{footer scale}{%
+    \KV@jkubeamer@kv@scale{#1}%
+}
+\newlength{\jkubeamer@kv@offset}
+\setlength{\jkubeamer@kv@offset}{0mm}
+\define@key{jkubeamer@kv}{offset}{%
+    \setlength{\jkubeamer@kv@offset}{#1}%
+}
+\define@key{jkubeamer@kv}{footer offset}{%
+    \KV@jkubeamer@kv@offset{#1}%
+}
+\newcommand{\jkubeamer@kv@white}{}
+\define@key{jkubeamer@kv}{white}{%
+    \renewcommand{\jkubeamer@kv@white}{#1}%
+}
+
+% Command \partnerlogo[[footer] scale=factor,[footer] offset=horizontaloffset,white=filename]{filename}: use filename as partnerlogo, filename may be blank to disable the logo
+\newcommand{\partnerlogo}[2][]{%
+    \setkeys{jkubeamer@kv}{scale=1.0,offset=0mm,white={#2_white}}% set defaults
+    \setkeys{jkubeamer@kv}[footer scale,footer offset]{#1}%
+    \ifblank{#2}{%
+        \sbox{\jkubeamer@logo@partner@color}{}%
+        \sbox{\jkubeamer@logo@partner@white}{}%
+    }{%
+        \ifdimgreater{\jkubeamer@kv@offset}{\dimexpr\jkubeamer@titlelogo@offset - \jkubeamer@titleimprint@offset\relax}{%
+            \setlength{\jkubeamer@kv@offset}{\dimexpr\jkubeamer@titlelogo@offset - \jkubeamer@titleimprint@offset\relax}%
+        }{}%
+        \ifdimgreater{.5\jkubeamer@margin}{\dimexpr\jkubeamer@titleimprint@offset + \jkubeamer@kv@offset - \jkubeamer@kv@scale\jkubeamer@partnerlogo@width\relax}{%
+            \setlength{\jkubeamer@kv@offset}{\dimexpr\jkubeamer@kv@scale\jkubeamer@partnerlogo@width + .5\jkubeamer@margin - \jkubeamer@titleimprint@offset\relax}%
+        }{}%
+        \sbox{\jkubeamer@logo@partner@color}{%
+            \hspace*{-1\jkubeamer@kv@offset}%
+            \includegraphics[width=\jkubeamer@kv@scale\jkubeamer@partnerlogo@width]{#2}%
+        }%
+        \sbox{\jkubeamer@logo@partner@white}{%
+            \notblank{\jkubeamer@kv@white}{%
+                \jkubeamer@IfLogoFileExists{\jkubeamer@kv@white}{%
+                    \hspace*{-1\jkubeamer@kv@offset}%
+                    \includegraphics[width=\jkubeamer@kv@scale\jkubeamer@partnerlogo@width]{\jkubeamer@kv@white}%
+                }{%
+                    \usebox{\jkubeamer@logo@partner@color}%
+                }%
+            }{}%
+        }%
+    }%
+    \footerpartnerlogo[#1]{#2}
+}
+
+% Command \footerpartnerlogo[[footer] scale=factor,[footer] offset=verticaloffset]{filename}: use filename as partnerlogo (in footer only), filename may be blank to disable the logo
+\newcommand{\footerpartnerlogo}[2][]{%
+    \setkeys{jkubeamer@kv}{scale=1.0,offset=0mm,white={#2_white}}% set defaults
+    \setkeys{jkubeamer@kv}[footer scale,footer offset]{#1}%
+    \setkeys{jkubeamer@kv}[scale,offset]{#1}% give "footer scale" / "footer offset" preceedence
+    \ifblank{#2}{%
+        \sbox{\jkubeamer@footerlogo@partner@color}{}%
+        \sbox{\jkubeamer@footerlogo@partner@white}{}%
+    }{%
+        \ifdimgreater{\jkubeamer@kv@offset}{.5\dimexpr\jkubeamer@footerheight - \jkubeamer@kv@scale\jkubeamer@footerlogo@height\relax}{%
+            \setlength{\jkubeamer@kv@offset}{.5\dimexpr\jkubeamer@footerheight - \jkubeamer@kv@scale\jkubeamer@footerlogo@height\relax}%
+        }{}%
+        \ifdimgreater{.5\dimexpr\jkubeamer@footerlogo@height - \jkubeamer@kv@scale\jkubeamer@footerlogo@height\relax}{\jkubeamer@kv@offset}{%
+            \setlength{\jkubeamer@kv@offset}{.5\dimexpr\jkubeamer@footerlogo@height - \jkubeamer@kv@scale\jkubeamer@footerlogo@height\relax}%
+        }{}%
+        \sbox{\jkubeamer@footerlogo@partner@color}{%
+            \raisebox{\dimexpr.5\dimexpr\jkubeamer@footerlogo@height - \jkubeamer@kv@scale\jkubeamer@footerlogo@height\relax - \jkubeamer@kv@offset\relax}{%
+                \includegraphics[height=\jkubeamer@kv@scale\jkubeamer@footerlogo@height]{#2}%
+            }%
+        }%
+        \sbox{\jkubeamer@footerlogo@partner@white}{%
+            \notblank{\jkubeamer@kv@white}{%
+                \jkubeamer@IfLogoFileExists{\jkubeamer@kv@white}{%
+                    \raisebox{\dimexpr.5\dimexpr\jkubeamer@footerlogo@height - \jkubeamer@kv@scale\jkubeamer@footerlogo@height\relax - \jkubeamer@kv@offset\relax}{%
+                        \includegraphics[height=\jkubeamer@kv@scale\jkubeamer@footerlogo@height]{\jkubeamer@kv@white}%
+                    }%
+                }{%
+                    \usebox{\jkubeamer@footerlogo@partner@color}%
+                }%
+            }{}%
+        }%
+    }%
+}
+
+\newcommand{\jkubeamer@logo@partner}{%
+    \ifcsequal{\string\color@white}{\string\color@.}{%
+        \usebox{\jkubeamer@logo@partner@white}%
+    }{%
+        \usebox{\jkubeamer@logo@partner@color}%
+    }%
+}
+\newcommand{\jkubeamer@footerlogo@partner}{%
+    \ifcsequal{\string\color@white}{\string\color@.}{%
+        \usebox{\jkubeamer@footerlogo@partner@white}%
+    }{%
+        \usebox{\jkubeamer@footerlogo@partner@color}%
+    }%
+}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Other commands
+%% 
+
+% Command \insertseries: inserts the series title
+\newcommand{\insertseries}{}
+% Command \series{series title}: sets the series title
+\newcommand{\series}[1]{%
+    \renewcommand{\insertseries}{#1}%
+}
+
+\newcommand{\jkubeamer@insertfooterdate}{\insertshortdate}
+% Command \footerdate{date}: use specific date in footer (defaults to \insertshortdate = the short document date)
+\newcommand{\footerdate}[1]{%
+    \renewcommand{\jkubeamer@insertfooterdate}{#1}
+}
+
+\newcommand{\jkubeamer@insertfooter}{\insertsectionhead}
+% Command \footer{text}: set footer text (defaults to \insertsectionhead = section title)
+\newcommand{\footer}[1]{%
+    \renewcommand{\jkubeamer@insertfooter}{#1}
+}
+
+\newcommand{\jkubeamer@insertagendaname}{}
+\newcommand{\jkubeamer@insertagenda}{}
+% Command \agenda[caption]{text}: sets the agenda (and optional caption) for the next title or section page
+\newcommand{\agenda}[2][]{%
+    \renewcommand{\jkubeamer@insertagendaname}{#1}%
+    \renewcommand{\jkubeamer@insertagenda}{#2}%
+}
+
+\newcommand{\jkubeamer@insertsectionsubtitle}{}
+\newcommand{\jkubeamer@insertsectionsubsubtitle}{}
+% Command \sectionextra{subtitle}{subsubtitle}: sets the subtitle and subsubtitle for a section page (if subsections and subsubsections are not usable)
+\newcommand{\sectionextra}[2]{%
+    \renewcommand{\jkubeamer@insertsectionsubtitle}{#1}%
+    \renewcommand{\jkubeamer@insertsectionsubsubtitle}{#2}%
+}
+
+% Command \institutecode{code}: set the institute code (used to load institute-specific logo instead of JKU logo)
+\newcommand{\institutecode}[1]{%
+    \renewcommand{\jkubeamer@institute@code}{#1}%
+    \jkubeamer@updatelogos%
+}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Title frames
+%% 
+
+%TODO: Make text dynamically configurable
+\newcommand{\jkubeamer@insertimprint}{%
+    \parbox[t]{\dimexpr\jkubeamer@titleimprint@offset - \jkubeamer@margin\relax}{%
+        \raggedright%
+        \linespread{1.0}%
+        \setlength{\parindent}{0pt}%
+        \setlength{\parskip}{0pt}%
+        \usebeamerfont{imprint}%
+        \usebeamercolor[fg]{imprint}%
+        \begingroup
+        \usebeamerfont{imprint name}%
+        \usebeamercolor[fg]{imprint name}%
+        \MakeUppercase{Johannes Kepler}\\
+        \ifcurrentbaselanguage{german}{%
+            \MakeUppercase{Universit\"{a}t Linz}
+        }{%
+            \MakeUppercase{University Linz}
+        }\\
+        \endgroup
+        \begingroup
+        \usebeamerfont{imprint address}%
+        \usebeamercolor[fg]{imprint address}%
+        Altenbergerstra{\ss}e 69\\
+        4040 Linz, Austria\\
+        \endgroup
+        \begingroup
+        \usebeamerfont{imprint url}%
+        \usebeamercolor[fg]{imprint url}%
+        \href{https://jku.at/}{jku.at}\\
+        \hfill
+        \endgroup
+    }%
+}
+
+% Command \titlesmall{text}: switches to small font size inside title
+\newcommand{\titlesmall}[1]{%
+    \begingroup%
+    \usebeamerfont{series title}%
+    #1%
+    \endgroup%
+}
+
+\setbeamertemplate{title page}{%
+    \thispagestyle{empty}%
+    \begin{tikzpicture}[remember picture, overlay]
+    %\fill[fill=bg] (current page.south west) rectangle (current page.north east);
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.west) + (\beamer@leftmargin, 0mm)$) {
+        \color{fg}%
+        \jkubeamer@Klogo%
+    };
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.north east) - (\jkubeamer@titlelogo@offset, \jkubeamer@margin)$) {%
+        \color{fg}%
+        \ifbool{jkubeamer@framefooterjku}{%
+            \resizebox{!}{\jkubeamer@titlelogo@height}{\jkubeamer@logo}%
+        }{}%
+    };
+    \node[anchor=south west,line width=0mm, inner sep=0mm] at ($(current page.south east) - (\jkubeamer@titleimprint@offset, -\jkubeamer@margin)$) {%
+        \color{fg}%
+        \ifbool{jkubeamer@framefooterjku}{%
+            \ifbool{jkubeamer@imprint}{%
+                \jkubeamer@insertimprint%
+            }{}%
+        }{}%
+    };
+    \node[anchor=south west,line width=0mm, inner sep=0mm, yshift=\notbool{jkubeamer@imprint}{-2\jkubeamer@margin}{0mm}] at ($(current page.south east) - (\jkubeamer@titleimprint@offset, -3\jkubeamer@margin)$) {%
+        \color{fg}%
+        {%
+            \jkubeamer@logo@partner%
+        }%
+    };
+    %\fill[fill=red,opacity=0.5] ($(current page.west) + (\jkubeamer@margin, 0.15\jkubeamer@Klogo@height)$) rectangle ($(current page.north east) - (\jkubeamer@margin, \jkubeamer@margin)$);
+    \node[anchor=south west,line width=0mm, inner sep=0mm] at ($(current page.west) + (\beamer@leftmargin, 0.15\jkubeamer@Klogo@height)$) {%
+        \begin{minipage}[b][\dimexpr.5\paperheight-\jkubeamer@margin\relax]{\dimexpr\paperwidth-2\jkubeamer@margin\relax}%
+            \raggedright%
+            \linespread{0.85}%
+            \setlength{\parindent}{0pt}%
+            \setlength{\parskip}{0pt}%
+            \usebeamerfont{title}%
+            \usebeamercolor[fg]{title}%
+            \expandafter\notblank\expandafter{\insertseries}{%
+                \begingroup%
+                \linespread{1.0}%
+                \usebeamerfont{series title}%
+                \usebeamercolor[fg]{series title}%
+                \vphantom{Gg}%
+                \ifbool{jkubeamer@frametitlecaps}{%
+                    \MakeUppercase{\insertseries}%
+                }{%
+                    \protect\insertseries%
+                }
+                \vphantom{Gg}%
+                \par%
+                \vspace*{.5ex}%
+                \endgroup%
+            }{}%
+            \vphantom{Gg}%
+            \ifbool{jkubeamer@frametitlecaps}{%
+                \MakeUppercase{\inserttitle}%
+            }{%
+                \protect\inserttitle%
+            }
+            \vphantom{Gg}%
+            \par%
+            \linespread{1.0}\selectfont%
+            \vspace*{\dimexpr\f@size\p@ - \baselineskip\relax}%
+        \end{minipage}%
+    };
+    %\fill[fill=red,opacity=0.5] ($(current page.west) + (\jkubeamer@margin, -1.15\jkubeamer@Klogo@height)$) rectangle ($(current page.south east) + (-\jkubeamer@titlelogo@offset, \jkubeamer@margin)$);
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.west) + (\beamer@leftmargin, -1.15\jkubeamer@Klogo@height)$) {%
+        \begin{minipage}[t][\dimexpr.5\paperheight-\jkubeamer@margin\relax]{\dimexpr\paperwidth-\jkubeamer@margin-\jkubeamer@titlelogo@offset\relax}%
+            \raggedright%
+            \linespread{0.95}%
+            \setlength{\parindent}{0pt}%
+            \setlength{\parskip}{0pt}%
+            \usebeamerfont{subtitle}%
+            \usebeamercolor[fg]{subtitle}%
+            \begingroup%
+            \def\beamer@insttitle##1{\textsuperscript{##1}}%
+            \def\beamer@andtitle{\unskip, }%
+            \def\beamer@instother##1{}%
+            \def\beamer@andother{\unskip, }%
+            \def\beamer@instinst##1{\textsuperscript{##1}\ignorespaces}%
+            \def\beamer@andinst{\unskip, }%
+            \let\thanks=\@gobble%
+            \expandafter\notblank\expandafter{\insertsubtitle}{%
+                \vphantom{Gg}%
+                \protect\insertsubtitle%
+                \vphantom{Gg}%
+                \par%
+            }{}%
+            \ifbool{jkubeamer@author@isset}{%
+                \begingroup%
+                \usebeamerfont{author}%
+                \usebeamercolor[fg]{author}%
+                \vphantom{Gg}%
+                \protect\insertauthor%
+                \vphantom{Gg}%
+                \endgroup%
+                \par% with baselineskip of outer font (subtitle)
+            }{}%
+            \expandafter\notblank\expandafter{\insertinstitute}{%
+                \begingroup%
+                \usebeamerfont{institute}%
+                \usebeamercolor[fg]{institute}%
+                \vphantom{Gg}%
+                \protect\insertinstitute%
+                \vphantom{Gg}%
+                \endgroup%
+                \par% with baselineskip of outer font (subtitle)
+            }{}%
+            \expandafter\notblank\expandafter{\insertdate}{%
+                \begingroup%
+                \usebeamerfont{date}%
+                \usebeamercolor[fg]{date}%
+                \vphantom{Gg}%
+                \protect\insertdate%
+                \vphantom{Gg}%
+                \endgroup%
+                \par% with baselineskip of outer font (subtitle)
+            }{}%
+            \endgroup%
+        \end{minipage}%
+    };
+    %\fill[fill=red,opacity=0.5] ($(current page.center) - (\jkubeamer@Klogo@width, 0mm)$) rectangle ($(current page.east) - (\jkubeamer@titlelogo@offset, \jkubeamer@Klogo@height)$);
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.center) - (\jkubeamer@Klogo@width, 0mm)$) {%
+        \begin{minipage}[t][\jkubeamer@Klogo@height]{\dimexpr.5\paperwidth+\jkubeamer@Klogo@width-\jkubeamer@titlelogo@offset\relax}%
+            \raggedright%
+            \linespread{0.95}%
+            \setlength{\parindent}{0pt}%
+            \setlength{\parskip}{0pt}%
+            \setlength{\fboxsep}{0pt}%
+            \usebeamerfont{agenda}%
+            \usebeamercolor[fg]{agenda}%
+            \expandafter\notblank\expandafter{\jkubeamer@insertagendaname}{%
+                \begingroup%
+                \usebeamerfont{agenda title}%
+                \usebeamercolor[fg]{agenda title}%
+                \vphantom{Gg}%
+                \jkubeamer@insertagendaname%
+                \vphantom{Gg}%
+                \par
+                \endgroup%
+            }{}%
+            \expandafter\notblank\expandafter{\jkubeamer@insertagenda}{%
+                \vphantom{Gg}%
+                \begin{minipage}[t]{\textwidth}%
+                    \raggedright%
+                    \setlength{\parindent}{0pt}%
+                    \setlength{\parskip}{0pt}%
+                    \let\jkubeamer@temp@list=\list%
+                    \def\list##1##2{%
+                        \vskip-.5\topsep%
+                        \jkubeamer@temp@list{##1}{##2}%
+                    }
+                    \protect\jkubeamer@insertagenda%
+                    \par%
+                \end{minipage}%
+            }{}%
+        \end{minipage}%
+    };
+    \end{tikzpicture}%
+}
+
+\mode
+<presentation>
+
+% Command \maketitle[light | dark | gray | black, FACULTY]: insert a title page, automatically wrap into a frame using the given color mode (mode defaults to global default color mode)
+\renewcommand{\maketitle}[1][]{\titlepage[#1]}
+
+% Command \titlepage[light | dark | gray | black, FACULTY]: insert a title page, automatically wrap into a frame using the given color mode (mode defaults to global default color mode)
+\renewcommand{\titlepage}[1][]{
+    \ifbool{beamer@inframe}{%
+        \usebeamertemplate{title page}%
+    }{%
+        \begingroup%
+        \framecolormode{#1}%
+        \usebeamercolor[fg]{background canvas}%
+        \begin{frame}[plain]%
+        \usebeamertemplate{title page}%
+        \end{frame}
+        %\addtocounter{framenumber}{-1}
+        \endgroup%
+    }%
+    \agenda[]{}%
+}
+
+\mode
+<article>
+
+\let\jkubeamer@original@maketitle=\maketitle%
+\renewcommand{\maketitle}[1][]{\jkubeamer@original@maketitle}
+\renewcommand{\titlepage}[1][]{}
+
+\mode
+<all>
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Part title frames
+%% 
+
+\setbeamertemplate{part page}{%
+    \thispagestyle{empty}%
+    \begin{tikzpicture}[remember picture, overlay]
+    %\fill[fill=bg] (current page.south west) rectangle (current page.north east);
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.west) + (\beamer@leftmargin, 0mm)$) {
+        \color{fg}%
+        \jkubeamer@Klogo%
+    };
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.north east) - (\jkubeamer@titlelogo@offset, \jkubeamer@margin)$) {%
+        \color{fg}%
+        \ifbool{jkubeamer@framefooterjku}{%
+            \resizebox{!}{\jkubeamer@titlelogo@height}{\jkubeamer@logo}%
+        }{}%
+    };
+    \node[anchor=south west,line width=0mm, inner sep=0mm] at ($(current page.south east) - (\jkubeamer@titleimprint@offset, -\jkubeamer@margin)$) {%
+        \color{fg}%
+        \ifbool{jkubeamer@framefooterjku}{%
+            \ifbool{jkubeamer@imprint}{%
+                \jkubeamer@insertimprint%
+            }{}%
+        }{}%
+    };
+    \node[anchor=south west,line width=0mm, inner sep=0mm, yshift=\notbool{jkubeamer@imprint}{-2\jkubeamer@margin}{0mm}] at ($(current page.south east) - (\jkubeamer@titleimprint@offset, -3\jkubeamer@margin)$) {%
+        \color{fg}%
+        {%
+            \jkubeamer@logo@partner%
+        }%
+    };
+    %\fill[fill=red,opacity=0.5] ($(current page.west) + (\jkubeamer@margin, 0.15\jkubeamer@Klogo@height)$) rectangle ($(current page.north east) - (\jkubeamer@margin, \jkubeamer@margin)$);
+    \node[anchor=south west,line width=0mm, inner sep=0mm] at ($(current page.west) + (\beamer@leftmargin, 0.15\jkubeamer@Klogo@height)$) {%
+        \begin{minipage}[b][\dimexpr.5\paperheight-\jkubeamer@margin\relax]{\dimexpr\paperwidth-2\jkubeamer@margin\relax}%
+            \raggedright%
+            \linespread{0.85}%
+            \setlength{\parindent}{0pt}%
+            \setlength{\parskip}{0pt}%
+            \usebeamerfont{title}%
+            \usebeamercolor[fg]{title}%
+            \expandafter\notblank\expandafter{\insertseries}{%
+                \begingroup%
+                \linespread{1.0}%
+                \usebeamerfont{series title}%
+                \usebeamercolor[fg]{series title}%
+                \vphantom{Gg}%
+                \ifbool{jkubeamer@frametitlecaps}{%
+                    \MakeUppercase{\insertseries}%
+                }{%
+                    \protect\insertseries%
+                }
+                \vphantom{Gg}%
+                \par%
+                \vspace*{.5ex}%
+                \endgroup%
+            }{}%
+            \vphantom{Gg}%
+            \ifbool{jkubeamer@frametitlecaps}{%
+                \MakeUppercase{\insertpart}%
+            }{%
+                \protect\insertpart%
+            }
+            \vphantom{Gg}%
+            \par%
+            \linespread{1.0}\selectfont%
+            \vspace*{\dimexpr\f@size\p@ - \baselineskip\relax}%
+        \end{minipage}%
+    };
+    %\fill[fill=red,opacity=0.5] ($(current page.west) + (\jkubeamer@margin, -1.15\jkubeamer@Klogo@height)$) rectangle ($(current page.south east) + (-\jkubeamer@titlelogo@offset, \jkubeamer@margin)$);
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.west) + (\beamer@leftmargin, -1.15\jkubeamer@Klogo@height)$) {%
+        \begin{minipage}[t][\dimexpr.5\paperheight-\jkubeamer@margin\relax]{\dimexpr\paperwidth-\jkubeamer@margin-\jkubeamer@titlelogo@offset\relax}%
+            \raggedright%
+            \linespread{0.95}%
+            \setlength{\parindent}{0pt}%
+            \setlength{\parskip}{0pt}%
+            \usebeamerfont{subtitle}%
+            \usebeamercolor[fg]{subtitle}%
+            \begingroup%
+            \def\beamer@insttitle##1{\textsuperscript{##1}}%
+            \def\beamer@andtitle{\unskip, }%
+            \def\beamer@insttitle##1{}%
+            \def\beamer@andtitle{}%
+            \def\beamer@instother##1{}%
+            \def\beamer@andother{\unskip, }%
+            \def\beamer@instinst##1{\textsuperscript{##1}\ignorespaces}%
+            \def\beamer@andinst{\unskip, }%
+            \let\thanks=\@gobble%
+            %\expandafter\notblank\expandafter{\insertsubtitle}{%
+            %    \vphantom{Gg}%
+            %    \protect\insertsubtitle%
+            %    \vphantom{Gg}%
+            %    \par%
+            %}{}%
+            \ifbool{jkubeamer@author@isset}{%
+                \begingroup%
+                \usebeamerfont{author}%
+                \usebeamercolor[fg]{author}%
+                \vphantom{Gg}%
+                \protect\insertauthor%
+                \vphantom{Gg}%
+                \endgroup%
+                \par% with baselineskip of outer font (subtitle)
+            }{}%
+            \expandafter\notblank\expandafter{\insertinstitute}{%
+                \begingroup%
+                \usebeamerfont{institute}%
+                \usebeamercolor[fg]{institute}%
+                \vphantom{Gg}%
+                \protect\insertinstitute%
+                \vphantom{Gg}%
+                \endgroup%
+                \par% with baselineskip of outer font (subtitle)
+            }{}%
+            \expandafter\notblank\expandafter{\insertdate}{%
+                \begingroup%
+                \usebeamerfont{date}%
+                \usebeamercolor[fg]{date}%
+                \vphantom{Gg}%
+                \protect\insertdate%
+                \vphantom{Gg}%
+                \endgroup%
+                \par% with baselineskip of outer font (subtitle)
+            }{}%
+            \endgroup%
+        \end{minipage}%
+    };
+    %\fill[fill=red,opacity=0.5] ($(current page.center) - (\jkubeamer@Klogo@width, 0mm)$) rectangle ($(current page.east) - (\jkubeamer@titlelogo@offset, \jkubeamer@Klogo@height)$);
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.center) - (\jkubeamer@Klogo@width, 0mm)$) {%
+        \begin{minipage}[t][\jkubeamer@Klogo@height]{\dimexpr.5\paperwidth+\jkubeamer@Klogo@width-\jkubeamer@titlelogo@offset\relax}%
+            \raggedright%
+            \linespread{0.95}%
+            \setlength{\parindent}{0pt}%
+            \setlength{\parskip}{0pt}%
+            \setlength{\fboxsep}{0pt}%
+            \usebeamerfont{agenda}%
+            \usebeamercolor[fg]{agenda}%
+            \expandafter\notblank\expandafter{\jkubeamer@insertagendaname}{%
+                \begingroup%
+                \usebeamerfont{agenda title}%
+                \usebeamercolor[fg]{agenda title}%
+                \vphantom{Gg}%
+                \jkubeamer@insertagendaname%
+                \vphantom{Gg}%
+                \par
+                \endgroup%
+            }{}%
+            \expandafter\notblank\expandafter{\jkubeamer@insertagenda}{%
+                \vphantom{Gg}%
+                \begin{minipage}[t]{\textwidth}%
+                    \raggedright%
+                    \setlength{\parindent}{0pt}%
+                    \setlength{\parskip}{0pt}%
+                    \let\jkubeamer@temp@list=\list%
+                    \def\list##1##2{%
+                        \vskip-.5\topsep%
+                        \jkubeamer@temp@list{##1}{##2}%
+                    }
+                    \protect\jkubeamer@insertagenda%
+                    \par%
+                \end{minipage}%
+            }{}%
+        \end{minipage}%
+    };
+    \end{tikzpicture}%
+}
+
+\mode
+<presentation>
+
+% Command \partpage[light | dark | gray | black, FACULTY]: insert a section page, automatically wrap into a frame using the given color mode (mode defaults to global default color mode)
+\renewcommand{\partpage}[1][]{
+    \ifbool{beamer@inframe}{%
+        \usebeamertemplate{part page}%
+    }{%
+        \begingroup%
+        \framecolormode{#1}%
+        \usebeamercolor[fg]{background canvas}%
+        \begin{frame}[plain]%
+        \usebeamertemplate{part page}%
+        \end{frame}
+        %\addtocounter{framenumber}{-1}
+        \endgroup%
+    }%
+    \agenda[]{}%
+}
+
+\mode
+<article>
+
+\renewcommand{\partpage}[1][]{}
+
+\mode
+<all>
+
+\ifbool{jkubeamer@partpage}{%
+    \AtBeginPart{\partpage}
+}{}%
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Section title frames
+%% 
+
+\setbeamertemplate{section page}{%
+    %\thispagestyle{empty}%
+    \begin{tikzpicture}[remember picture, overlay]
+    %\fill[fill=bg] (current page.south west) rectangle (current page.north east);
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.west) + (\beamer@leftmargin, 0mm)$) {
+        \color{fg}%
+        \jkubeamer@Klogo%
+    };
+    %\fill[fill=red,opacity=0.5] ($(current page.west) + (\jkubeamer@margin, 0.15\jkubeamer@Klogo@height)$) rectangle ($(current page.north east) - (\jkubeamer@margin, \jkubeamer@margin)$);
+    \node[anchor=south west,line width=0mm, inner sep=0mm] at ($(current page.west) + (\beamer@leftmargin, 0.15\jkubeamer@Klogo@height)$) {%
+        \begin{minipage}[b][\dimexpr.5\paperheight-\jkubeamer@margin\relax]{\dimexpr\paperwidth-2\jkubeamer@margin\relax}%
+            \raggedright%
+            \linespread{0.85}%
+            \setlength{\parindent}{0pt}%
+            \setlength{\parskip}{0pt}%
+            \usebeamerfont{section title}%
+            \usebeamercolor[fg]{section title}%
+            \vphantom{Gg}%
+            \ifbool{jkubeamer@frametitlecaps}{%
+                \MakeUppercase{\insertsection}%
+            }{%
+                \protect\insertsection%
+            }
+            \vphantom{Gg}%
+            \par%
+            \linespread{1.0}\selectfont%
+            \vspace*{\dimexpr\f@size\p@ - \baselineskip\relax}%
+        \end{minipage}%
+    };
+    %\fill[fill=red,opacity=0.5] ($(current page.west) + (\jkubeamer@margin, -1.15\jkubeamer@Klogo@height)$) rectangle ($(current page.south east) + (-\jkubeamer@titlelogo@offset, \jkubeamer@margin)$);
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.west) + (\beamer@leftmargin, -1.15\jkubeamer@Klogo@height)$) {%
+        \begin{minipage}[t][\dimexpr.5\paperheight-\jkubeamer@margin\relax]{\dimexpr\paperwidth-\jkubeamer@margin-\jkubeamer@titlelogo@offset\relax}%
+            \raggedright%
+            \linespread{0.95}%
+            \setlength{\parindent}{0pt}%
+            \setlength{\parskip}{0pt}%
+            \usebeamerfont{subsection title}%
+            \usebeamercolor[fg]{subsection title}%
+            \begingroup%
+            \expandafter\notblank\expandafter{\insertsubsection}{%
+                \vphantom{Gg}%
+                \protect\insertsubsection%
+                \vphantom{Gg}%
+                \par%
+            }{\expandafter\notblank\expandafter{\jkubeamer@insertsectionsubtitle}{%
+                \vphantom{Gg}%
+                \protect\jkubeamer@insertsectionsubtitle%
+                \vphantom{Gg}%
+                \par%
+            }{}}%
+            \expandafter\notblank\expandafter{\insertsubsubsection}{%
+                \begingroup%
+                \usebeamerfont{subsubsection title}%
+                \usebeamercolor[fg]{subsubsection title}%
+                \vphantom{Gg}%
+                \protect\insertsubsubsection%
+                \vphantom{Gg}%
+                \endgroup%
+                \par% with baselineskip of outer font (subtitle)
+            }{\expandafter\notblank\expandafter{\jkubeamer@insertsectionsubsubtitle}{%
+                \begingroup%
+                \usebeamerfont{subsubsection title}%
+                \usebeamercolor[fg]{subsubsection title}%
+                \vphantom{Gg}%
+                \protect\jkubeamer@insertsectionsubsubtitle%
+                \vphantom{Gg}%
+                \endgroup%
+                \par% with baselineskip of outer font (subtitle)
+            }{}}%
+            \endgroup%
+        \end{minipage}%
+    };
+    %\fill[fill=red,opacity=0.5] ($(current page.center) - (\jkubeamer@Klogo@width, 0mm)$) rectangle ($(current page.east) - (\jkubeamer@titlelogo@offset, \jkubeamer@Klogo@height)$);
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.center) - (\jkubeamer@Klogo@width, 0mm)$) {%
+        \begin{minipage}[t][\jkubeamer@Klogo@height]{\dimexpr.5\paperwidth+\jkubeamer@Klogo@width-\jkubeamer@titlelogo@offset\relax}%
+            \raggedright%
+            \linespread{0.95}%
+            \setlength{\parindent}{0pt}%
+            \setlength{\parskip}{0pt}%
+            \setlength{\fboxsep}{0pt}%
+            \usebeamerfont{agenda}%
+            \usebeamercolor[fg]{agenda}%
+            \expandafter\notblank\expandafter{\jkubeamer@insertagendaname}{%
+                \begingroup%
+                \usebeamerfont{agenda title}%
+                \usebeamercolor[fg]{agenda title}%
+                \vphantom{Gg}%
+                \jkubeamer@insertagendaname%
+                \vphantom{Gg}%
+                \par
+                \endgroup%
+            }{}%
+            \expandafter\notblank\expandafter{\jkubeamer@insertagenda}{%
+                \vphantom{Gg}%
+                \begin{minipage}[t]{\textwidth}%
+                    \raggedright%
+                    \setlength{\parindent}{0pt}%
+                    \setlength{\parskip}{0pt}%
+                    \let\jkubeamer@temp@list=\list%
+                    \def\list##1##2{%
+                        \vskip-.5\topsep%
+                        \jkubeamer@temp@list{##1}{##2}%
+                    }
+                    \protect\jkubeamer@insertagenda%
+                    \par%
+                \end{minipage}%
+            }{}%
+        \end{minipage}%
+    };
+    \end{tikzpicture}%
+}
+
+\mode
+<presentation>
+
+% Command \sectionpage[light | dark | gray | black, FACULTY]: insert a section page, automatically wrap into a frame using the given color mode (mode defaults to global default color mode)
+\renewcommand{\sectionpage}[1][]{
+    \begingroup%
+    \renewcommand{\insertsectionhead}{}%
+    \renewcommand{\insertsubsectionhead}{}%
+    \renewcommand{\insertsubsubsectionhead}{}%
+    \ifbool{beamer@inframe}{%
+        \usebeamertemplate{section page}%
+    }{%
+        \begingroup%
+        \framecolormode{#1}%
+        \usebeamercolor[fg]{background canvas}%
+        \begin{frame}%
+        \usebeamertemplate{section page}%
+        \end{frame}
+        %\addtocounter{framenumber}{-1}
+        \endgroup%
+    }%
+    \endgroup%
+    \agenda[]{}%
+    \sectionextra{}{}%
+}
+
+\renewcommand{\subsectionpage}[1][]{\sectionpage[#1]}
+
+\ifbool{jkubeamer@sectionpage}{%
+    \AtBeginSection[]{\sectionpage}
+}{
+    \AtBeginSection[]{}
+}%
+\ifbool{jkubeamer@subsectionpage}{%
+    \AtBeginSubsection[]{\sectionpage}
+}{
+    \AtBeginSubsection[]{}
+}%
+\ifbool{jkubeamer@subsubsectionpage}{%
+    \AtBeginSubsubsection[]{\sectionpage}
+}{
+    \AtBeginSubsubsection[]{}
+}%
+
+\mode
+<handout>
+
+\ifbool{jkubeamer@sectionpage}{%
+    \AtBeginSection[]{\addtocounter{framenumber}{1}}
+}{
+    \AtBeginSection[]{}
+}%
+\ifbool{jkubeamer@subsectionpage}{%
+    \AtBeginSubsection[]{\addtocounter{framenumber}{1}}
+}{
+    \AtBeginSubsection[]{}
+}%
+\ifbool{jkubeamer@subsubsectionpage}{%
+    \AtBeginSubsubsection[]{\addtocounter{framenumber}{1}}
+}{
+    \AtBeginSubsubsection[]{}
+}%
+
+\mode
+<article>
+
+\renewcommand{\sectionpage}[1][]{}
+\renewcommand{\subsectionpage}[1][]{}
+
+\mode
+<all>
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Logo frames
+%% 
+
+\setbeamertemplate{logo page}{%
+    \thispagestyle{empty}%
+    \begin{tikzpicture}[remember picture, overlay]
+    %\fill[fill=bg] (current page.south west) rectangle (current page.north east);
+    \node[anchor=center,line width=0mm, inner sep=0mm] at (current page.center) {
+        \color{fg}%
+        \jkubeamer@logo%
+    };
+    \end{tikzpicture}%
+}
+
+% Command \jkulogo[light | dark | gray | black, FACULTY]: add JKU logo slide using the given color mode (mode defaults to global default color mode)
+\newcommand{\jkulogo}[1][]{
+    \ifbool{beamer@inframe}{%
+        \usebeamertemplate{logo page}%
+    }{%
+        \begingroup%
+        \framecolormode{#1}%
+        \usebeamercolor[fg]{background canvas}%
+        \begin{frame}[plain,noframenumbering]%
+        \usebeamertemplate{logo page}%
+        \end{frame}
+        \endgroup%
+    }%
+}
+
+% DEPRECATED command \jkulogoblack: see \jkulogo[black]
+\newcommand{\jkulogoblack}{
+    \PackageWarning{beamerthemejku}{Command `\string\jkulogoblack' deprecated, use `\string\jkulogo[dark]' instead!}%
+    \jkulogo[black]%
+}
+
+% DEPRECATED command \jkulogogrey: see \jkulogo[dark]
+\newcommand{\jkulogogrey}{
+    \PackageWarning{beamerthemejku}{Command `\string\jkulogogrey' deprecated, use `\string\jkulogo[dark]' instead!}%
+    \jkulogo[dark]%
+}
+
+% DEPRECATED command \jkulogowhite: see \jkulogo[light]
+\newcommand{\jkulogowhite}{
+    \PackageWarning{beamerthemejku}{Command `\string\jkulogowhite' deprecated, use `\string\jkulogo[light]' instead!}%
+    \jkulogo[light]%
+}
+
+% DEPRECATED environment jkufinalgrey: a final frame just like any other frame
+\newenvironment<>{jkufinalgrey}{%
+    \PackageWarning{beamerthemejku}{Environment `jkufinalgrey' deprecated, use `\string\jkulogo' as your end frame instead!}%
+    \begin{frame}#1
+}{%
+    \end{frame}
+}
+
+% DEPRECATED environment jkufinalwhite: a final frame just like any other frame
+\newenvironment<>{jkufinalwhite}{%
+    \PackageWarning{beamerthemejku}{Environment `jkufinalwhite' deprecated, use `\string\jkulogo' as your end frame instead!}%
+    \begin{frame}#1
+}{%
+    \end{frame}
+}
+
+\mode
+<handout>
+
+\renewcommand{\jkulogo}[1][]{}
+
+\mode
+<article>
+
+\renewcommand{\jkulogo}[1][]{}
+
+\mode
+<all>
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Image frames
+%% 
+
+\newcommand{\jkubeamer@frameimage}{}
+
+\setbeamertemplate{image title page}{%
+    \thispagestyle{empty}%
+    \begin{tikzpicture}[remember picture, overlay]
+    \fill[fill=fg] (current page.south west) rectangle (current page.north east);
+    %\fill[fill=red,opacity=0.5] ($(current page.south west) + (0.3\paperwidth, 0)$) rectangle (current page.north east);
+    \node[anchor=north east,line width=0mm, inner sep=0mm] at ($(current page.north east)$) {
+        \color{bg}%
+        \expandafter\notblank\expandafter{\jkubeamer@frameimage}{%
+            \resizebox{!}{\paperheight}{\mbox{\jkubeamer@frameimage}}%
+        }{}%
+    };
+    \fill[fill=bg] (current page.south west) rectangle ($(current page.north west) + (0.3\paperwidth, 0)$);
+    \node[anchor=south west,line width=0mm, inner sep=0mm] at ($(current page.south west) + (.75\beamer@leftmargin, .75\jkubeamer@margin)$) {
+        \color{fg}%
+        \resizebox{.4\jkubeamer@Klogo@width}{!}{\jkubeamer@Klogo}%
+    };
+    \node[anchor=north west,line width=0mm, inner sep=0mm] at ($(current page.north west) + (.75\beamer@leftmargin, -.75\jkubeamer@margin)$) {%
+        \begin{minipage}[t]{\dimexpr.3\paperwidth-1.5\jkubeamer@margin\relax}%
+            \raggedright%
+            \linespread{0.9}%
+            \setlength{\parindent}{0pt}%
+            \setlength{\parskip}{0pt}%
+            \usebeamerfont{frametitle}%
+            \usebeamercolor[fg]{frametitle}%
+            \begingroup%
+            \expandafter\notblank\expandafter{\insertframetitle}{%
+                \vphantom{Gg}%
+                \ifbool{jkubeamer@frametitlecaps}{%
+                    \MakeUppercase{\insertframetitle}%
+                }{%
+                    \protect\insertframetitle%
+                }
+                \vphantom{Gg}%
+                \par%
+                \vspace*{.75\jkubeamer@margin}%
+            }{}%
+            \expandafter\notblank\expandafter{\insertframesubtitle}{%
+                \begingroup%
+                \usebeamerfont{framesubtitle}%
+                \usebeamercolor[fg]{framesubtitle}%
+                \vphantom{Gg}%
+                \protect\insertframesubtitle%
+                \vphantom{Gg}%
+                \endgroup%
+                \par% with baselineskip of outer font (frametitle)
+            }{}%
+            \endgroup%
+        \end{minipage}%
+    };
+    \end{tikzpicture}%
+}
+
+% Command \imageframe[light | dark | gray | black, FACULTY]{title}{subtitle}{graphic}: add full screen image slide with title sidebar using the given color mode (mode defaults to global default color mode)
+\newcommand{\imageframe}[4][]{
+    \ifbool{beamer@inframe}{%
+        \PackageError{beamerthemejku}{Command `\string\imageframe' is not allowed within a frame!}{}%
+    }{%
+        \begingroup%
+        \setbeamertemplate{frametitle}{}%
+        \framecolormode{#1}%
+        \usebeamercolor[fg]{background canvas}%
+        \begin{frame}[plain]%
+        \frametitle{#2}%
+        \framesubtitle{#3}%
+        \renewcommand{\jkubeamer@frameimage}{#4}
+        \usebeamertemplate{image title page}%
+        \end{frame}
+        %\addtocounter{framenumber}{-1}
+        \endgroup%
+    }%
+}
+
+\mode
+<article>
+
+\renewcommand{\imageframe}[4][]{}
+
+\mode
+<all>
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Frame title/footer
+%% 
+
+\setbeamertemplate{frametitle}{%
+    \nointerlineskip%
+    \linespread{0.95}%
+    \setlength{\parindent}{0pt}%
+    \setlength{\parskip}{0pt}%
+    \usebeamerfont{frametitle}%
+    \usebeamercolor[fg]{frametitle}%
+    \begin{beamercolorbox}[wd=\textwidth,left,ht=4.5ex,dp=1ex,ignorebg]{frametitle}%
+        \vphantom{Gg}%
+        \ifbool{jkubeamer@frametitlecaps}{%
+            \MakeUppercase{\insertframetitle}%
+        }{%
+            \protect\insertframetitle%
+        }%
+        \vphantom{Gg}%
+    \end{beamercolorbox}%
+}
+
+% No navigation symbols
+\usenavigationsymbolstemplate{}
+
+\setbeamertemplate{footline}{%
+    \linespread{0.95}%
+    \setlength{\parindent}{0pt}%
+    \setlength{\parskip}{0pt}%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \ifbool{jkubeamer@framefooter}{%
+        \begin{beamercolorbox}[wd=\paperwidth,ht=\jkubeamer@footerheight,dp=0mm,ignorebg=\ifbool{jkubeamer@framefooterjku}{false}{true}]{footline}%
+        \end{beamercolorbox}%
+        \begin{tikzpicture}[remember picture, overlay]
+        %\fill[fill=bg] (current page.south west) rectangle ($(current page.south east) + (0mm, \jkubeamer@footerheight)$);
+        %\fill[fill=red,opacity=0.5] ($(current page.south west) + (\beamer@leftmargin, 0mm)$) rectangle ($(current page.south west) + (\beamer@leftmargin + .50\paperwidth, \jkubeamer@footerheight)$);
+        \node[anchor=south west,line width=0mm, inner sep=0mm] at ($(current page.south west) + (\beamer@leftmargin, 0mm)$) {%
+            \begin{minipage}[b][\jkubeamer@footerheight][b]{.50\paperwidth}%
+                \raisebox{.5\dimexpr\jkubeamer@footerheight - \jkubeamer@footerlogo@height\relax}{%
+                    \ifbool{jkubeamer@framefooterjku}{%
+                        \jkubeamer@footerlogo%
+                        \hspace*{\jkubeamer@footerlogo@spacer}%
+                    }{}%
+                    \jkubeamer@footerlogo@partner%
+                }%
+            \end{minipage}%
+        };
+        %\fill[fill=green,opacity=0.5] ($(current page.south west) + (\beamer@leftmargin + .50\paperwidth - 1.5\jkubeamer@footerheight, 0mm)$) rectangle ($(current page.south west) + (\beamer@leftmargin + .50\paperwidth, \jkubeamer@footerheight)$);
+        \node[anchor=south west,line width=0mm, inner sep=0mm] at ($(current page.south west) + (\beamer@leftmargin + .50\paperwidth - 1.5\jkubeamer@footerheight, .5\jkubeamer@footerheight - .5\jkubeamer@footerlogo@height)$) {%
+            \begin{minipage}[b]{1.5\jkubeamer@footerheight}%
+                \raggedright%
+                \linespread{0.95}%
+                \setlength{\parindent}{0pt}%
+                \setlength{\parskip}{0pt}%
+                \usebeamerfont{date in head/foot}%
+                \usebeamercolor[fg]{date in head/foot}%
+                \vphantom{Gg}%
+                \jkubeamer@insertfooterdate%
+                \vphantom{Gg}%
+                \par%
+                \linespread{1.0}\selectfont%
+                \vspace*{\dimexpr\f@size\p@ - \baselineskip\relax}%
+            \end{minipage}%
+        };
+        %\fill[fill=blue,opacity=0.5] ($(current page.south west) + (\beamer@leftmargin + .50\paperwidth, 0mm)$) rectangle ($(current page.south west) + (\paperwidth - \beamer@leftmargin - \jkubeamer@footerheight, \jkubeamer@footerheight)$);
+        \node[anchor=south west,line width=0mm, inner sep=0mm] at ($(current page.south west) + (\beamer@leftmargin + .50\paperwidth, .5\jkubeamer@footerheight - .5\jkubeamer@footerlogo@height)$) {%
+            \begin{minipage}[b]{\dimexpr .50\paperwidth - 2\beamer@leftmargin - \jkubeamer@footerheight\relax}%
+                \raggedright%
+                \linespread{0.95}%
+                \setlength{\parindent}{0pt}%
+                \setlength{\parskip}{0pt}%
+                \usebeamerfont{section in head/foot}%
+                \usebeamercolor[fg]{section in head/foot}%
+                \vphantom{Gg}%
+                \jkubeamer@insertfooter%
+                \vphantom{Gg}%
+                \par%
+                \linespread{1.0}\selectfont%
+                \vspace*{\dimexpr\f@size\p@ - \baselineskip\relax}%
+            \end{minipage}%
+        };
+        %\fill[fill=red,opacity=0.5] ($(current page.south east) - (\jkubeamer@footerheight + \beamer@leftmargin, 0mm)$) rectangle ($(current page.south east) + (-\beamer@leftmargin, \jkubeamer@footerheight)$);
+        \node[anchor=south east,line width=0mm, inner sep=0mm] at ($(current page.south east) + (-\beamer@leftmargin, .5\jkubeamer@footerheight - .5\jkubeamer@footerlogo@height)$) {%
+            \begin{minipage}[b]{\jkubeamer@footerheight}%
+                \raggedleft%
+                \linespread{0.95}%
+                \setlength{\parindent}{0pt}%
+                \setlength{\parskip}{0pt}%
+                \usebeamerfont{page number in head/foot}%
+                \usebeamercolor[fg]{page number in head/foot}%
+                \vphantom{Gg}%
+                \ifbool{jkubeamer@framenumber}{%
+                    \insertframenumber%
+                    \ifbool{jkubeamer@totalframenumber}{%
+                        \jkubeamer@frameofframes%
+                        \ifbool{beamer@inappendix}{%
+                            \ifbool{jkubeamer@appendixframenumber}{%
+                                \inserttotalframenumber%
+                            }{%
+                                \insertmainframenumber%
+                            }%
+                        }{%
+                            \insertmainframenumber%
+                        }%
+                    }{\ifbool{jkubeamer@appendixframenumber}{%
+                        \jkubeamer@frameofframes%
+                        \inserttotalframenumber%
+                    }{}}%
+                }{}%
+                \vphantom{Gg}%
+                \par%
+                \linespread{1.0}\selectfont%
+                \vspace*{\dimexpr\f@size\p@ - \baselineskip\relax}%
+            \end{minipage}%
+        };
+        \end{tikzpicture}%
+    }{}%
+}
+
+\renewcommand{\footnoterule}{\hrule height 0pt}
+\setbeamertemplate{footnote}{%
+    \parindent 1em%
+    \hangafter=1%
+    \hangindent 0.8em%
+    \noindent%
+    \raggedright%
+    \hskip -1em%
+    \hbox to 1.8em{\hfil\insertfootnotemark}\insertfootnotetext\par%
+}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Itemization and enumeration
+%% 
+
+\mode
+<presentation>
+
+\setbeamertemplate{itemize item}{\rule[0.20ex]{0.95ex}{0.95ex}\hspace*{0.25em}}
+\setbeamertemplate{itemize subitem}{%
+    \raisebox{0.675ex}{%
+        \mbox{%
+            \setlength\unitlength{1ex}%
+            \begin{picture}(1,1)(0,0)%
+            \put (0,0){\circle*{1}}%
+            \end{picture}%
+        }%
+        \hspace*{-0.5ex}%
+        \hspace*{0.25em}%
+    }%
+}
+\setbeamertemplate{itemize subsubitem}{\rule[0.575ex]{0.95ex}{0.20ex}\hspace*{0.25em}}
+\setlength{\leftmargini}{1.25em}
+\setlength{\leftmarginii}{1.25em}
+\setlength{\leftmarginiii}{1.25em}
+\setlength{\labelsep}{0.3em}
+\setlength{\parskip}{0.5em}
+
+% Environment tightlist: Tighter line spacing for itemize/enumerate lists (wrap any list within this environment)
+\newenvironment{tightlist}{%
+    \begingroup%
+    \def\@listi{\leftmargin\leftmargini
+                \topsep  0\p@ \@plus\p@
+                \parsep  0\p@ \@plus\p@
+                \itemsep \parsep}%
+    \let\@listI\@listi%
+    \def\@listii{\leftmargin\leftmarginii
+                 \topsep  0\p@ \@plus\p@
+                 \parsep  0\p@ \@plus\p@
+                 \itemsep 0\p@ \@plus\p@}%
+    \def\@listiii{\leftmargin\leftmarginii
+                  \topsep  0\p@ \@plus\p@
+                  \parsep  0\p@ \@plus\p@
+                  \itemsep 0\p@ \@plus\p@}%
+    \ifhmode\par\nointerlineskip\fi%
+}{%
+    \nointerlineskip%
+    \endgroup%
+}
+
+\mode
+<article>
+
+\newenvironment{tightlist}{}{}%
+
+\mode
+<all>
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Table of contents
+%% 
+
+\mode
+<presentation>
+
+\defbeamertemplate{section in toc}{items}{%
+    \@listi%
+    \leavevmode\leftskip=\leftmargini%
+    \llap{{%
+        \usebeamerfont{itemize item}%
+        \usebeamercolor{itemize item}%
+        \usebeamertemplate{itemize item}%
+        \hskip\labelsep%
+    }}%
+    \inserttocsection\par%
+    \vspace*{-\parskip}%
+    \vspace*{\itemsep}%
+}
+\defbeamertemplate{subsection in toc}{items}{%
+    \@listiii%
+    \leavevmode\leftskip=\dimexpr\leftmargini + \leftmarginii\relax%
+    \llap{{%
+        \usebeamerfont{itemize subitem}%
+        \usebeamercolor{itemize subitem}%
+        \usebeamertemplate{itemize subitem}%
+        \hskip\labelsep%
+    }}%
+    \inserttocsubsection\par%
+    \vspace*{-\parskip}%
+    \vspace*{\itemsep}%
+}
+\defbeamertemplate{subsubsection in toc}{items}{%
+    \@listiii%
+    \leavevmode\leftskip=\dimexpr\leftmargini + \leftmarginii + \leftmarginiii\relax%
+    \llap{{%
+        \usebeamerfont{itemize subsubitem}%
+        \usebeamercolor{itemize subsubitem}%
+        \usebeamertemplate{itemize subsubitem}%
+        \hskip\labelsep%
+    }}%
+    \inserttocsubsubsection\par%
+    \vspace*{-\parskip}%
+    \vspace*{\itemsep}%
+}
+
+\setbeamertemplate{section in toc}[items]
+\setbeamertemplate{subsection in toc}[items]
+\setbeamertemplate{subsubsection in toc}[items]
+
+% Tweaks: Eliminate (huge/stretch) vertical spacing in TOC sections
+\def\beamer@sectionintoc#1#2#3#4#5{%
+    \ifnum\c@tocdepth>0%
+    \ifnum#4=\beamer@showpartnumber%
+    {
+        \beamer@saveanother%
+        \gdef\beamer@todo{}%
+        \beamer@slideinframe=#1\relax%
+        \expandafter\only\beamer@tocsections{\gdef\beamer@todo{%
+            \beamer@tempcount=#5\relax%
+            \advance\beamer@tempcount by\beamer@sectionadjust%
+            \ifnum\beamer@tempcount>0
+                \edef\inserttocsectionnumber{\the\beamer@tempcount}%
+            \else
+                \def\inserttocsectionnumber{}%
+            \fi%
+            \def\inserttocsection{\hyperlink{Navigation#3}{#2}}%
+            \beamer@tocifnothide{\ifnum\c@section=#1\beamer@toc@cs\else\beamer@toc@os\fi}%
+            {%
+                \ifbeamer@pausesections\pause\fi%
+                \def\beamer@breakhere{\\}%
+                \beamer@tocact{\ifnum\c@section=#1\beamer@toc@cs\else\beamer@toc@os\fi}{section in toc}%
+            }%
+        }}%
+        \beamer@restoreanother%
+    }
+    \beamer@todo%
+    \fi\fi%
+}
+
+\mode
+<all>
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Bibliography
+%% 
+
+\setbeamertemplate{bibliography item}[text]
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Blocks
+%% 
+
+\setbeamertemplate{block begin}{
+    \usebeamerfont{block body}%
+    \setbeamercolor{item}{parent=block body}%
+    \par\vskip\medskipamount%
+    \begin{beamercolorbox}[sep=.6ex,leftskip=.4ex,rightskip=.1ex]{block title}%
+        \linespread{1.0}%
+        \setlength{\parindent}{0pt}%
+        \setlength{\parskip}{0pt}%
+        \usebeamerfont{block title}%
+        \usebeamercolor[fg]{block title}%
+        \par\vskip-.4ex%
+        \vphantom{Gg}%
+        \insertblocktitle%
+        \vphantom{Gg}%
+    \end{beamercolorbox}%
+    \nointerlineskip
+    \begin{beamercolorbox}[sep=1ex,vmode]{block body}%
+        \usebeamerfont{block body}%
+        \setlength{\leftmargini}{\dimexpr\leftmargini + 1ex + 0.125em\relax}%
+        \begin{minipage}{\dimexpr\textwidth-2ex\relax}%
+}
+\setbeamertemplate{block end}{%
+        \end{minipage}%
+    \end{beamercolorbox}%
+    \vskip\smallskipamount%
+}
+
+\setbeamertemplate{block example begin}{
+    \usebeamerfont{block body example}%
+    \setbeamercolor{item}{parent=block body example}%
+    \par\vskip\medskipamount%
+    \begin{beamercolorbox}[sep=.6ex,leftskip=.4ex,rightskip=.1ex]{block title example}%
+        \linespread{1.0}%
+        \setlength{\parindent}{0pt}%
+        \setlength{\parskip}{0pt}%
+        \usebeamerfont{block title example}%
+        \usebeamercolor[fg]{block title example}%
+        \par\vskip-.4ex%
+        \vphantom{Gg}%
+        \insertblocktitle%
+        \vphantom{Gg}%
+    \end{beamercolorbox}%
+    \nointerlineskip
+    \begin{beamercolorbox}[sep=1ex,vmode]{block body example}%
+        \usebeamerfont{block body}%
+        \setlength{\leftmargini}{\dimexpr\leftmargini + 1ex + 0.125em\relax}%
+        \begin{minipage}{\dimexpr\textwidth-2ex\relax}%
+}
+\setbeamertemplate{block example end}{%
+        \end{minipage}%
+    \end{beamercolorbox}%
+    \vskip\smallskipamount%
+}
+
+\setbeamertemplate{block alerted begin}{
+    \usebeamerfont{block body alerted}%
+    \setbeamercolor{item}{parent=block body alerted}%
+    \par\vskip\medskipamount%
+    \begin{beamercolorbox}[sep=.6ex,leftskip=.4ex,rightskip=.1ex]{block title alerted}%
+        \linespread{1.0}%
+        \setlength{\parindent}{0pt}%
+        \setlength{\parskip}{0pt}%
+        \usebeamerfont{block title alerted}%
+        \usebeamercolor[fg]{block title alerted}%
+        \par\vskip-.4ex%
+        \vphantom{Gg}%
+        \insertblocktitle%
+        \vphantom{Gg}%
+    \end{beamercolorbox}%
+    \nointerlineskip
+    \begin{beamercolorbox}[sep=1ex,vmode]{block body alerted}%
+        \usebeamerfont{block body}%
+        \setlength{\leftmargini}{\dimexpr\leftmargini + 1ex + 0.125em\relax}%
+        \begin{minipage}{\dimexpr\textwidth-2ex\relax}%
+}
+\setbeamertemplate{block alerted end}{%
+        \end{minipage}%
+    \end{beamercolorbox}%
+    \vskip\smallskipamount%
+}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

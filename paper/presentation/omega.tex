@@ -1,0 +1,61 @@
+\documentclass{article}
+
+\setlength{\parindent}{0cm}
+
+\begin{document}
+    Um Schreibarbeit und Diagonalmatrizen zu vermeiden sei:
+
+    $$y_i^p = p_i y_i, \quad x_{ij}^p = p_i x_{ij} \quad \text{etc.} $$
+
+\section{Demand Side}
+    E gilt:
+    $$y_i = \sum_j x_{ij} + c_i$$
+    Wobei $y_i$ die produzierte Menge in Sektor $i$ ist, $x_{ij}$ die Menge an Intermediärgütern von $i$ nach $j$ und $c_i$ der final demand ist.
+
+    Diese Gleichung gilt auch nominell:
+
+    $$y_i^p = \sum_j x_{ij}^p + c_i^p \left( = \sum_j p_i x_{ij} + p_i c_i \right)$$
+
+    \subsection{Mengen}
+    Definieren wir die technischen Koeffizienten für die Menge wollen wir dass gilt:
+    $a_{ij} y_j = x_{ij}$, also
+    
+    $$a_{ij} = \frac{x_{ij}}{y_j}$$
+
+    Durch einfaches einsetzen folgt also:
+
+    y_i = \sum_{j} a_{ij} y_j + c_i$
+
+    oder eben 
+    $$y = A y + c$$
+
+    \subsection{Preise}
+
+    Wie schon bei den Mengen wollen wir $\omega$ so definieren, dass gilt
+
+    $\omega_{ij} y_j^p = x_{ij}^p$
+
+    Also $$\omega_{ij} = \frac{x_{ij}^p}{y_j^p} = \frac{p_i x_{ij}}{p_j y_j}.$$
+
+    Es gilt also wieder:
+    $$y_i^p = \sum_j \omega_{ij} y_j^p + c_i^p.$$
+    
+    \section{Supply side}
+
+    Es gilt;
+    $$y_i^p = \sum x_{ji}^p + v_i^p,$$
+    wobei $v_i$ die Value-Added in Sektor $i$ ist
+
+    Wir wollen wieder einen technischen Koeffizienten $\psi$ einführen, sodass
+
+    $$\psi_{ij} y_j^p = x_{ji}^p$$
+    gilt.
+    Um zu verdeutlichen, dass das jetzteinmal nicht das gleiche wie $\omega$ ist habe ich $\psi$ gewählt.
+    Also $$\psi_{ij} = \frac{x_{ji}^p}{y_j^p} = \frac{x_{ji}}{y_j}$$
+
+    Und damit 
+
+    $$y_i^p = \sum_j \psi_{ij} y_j^p + v_i^p$$
+    
+    
+ \end{document}

@@ -1,0 +1,746 @@
+\documentclass{article}
+
+% Language setting
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{parskip}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{authblk}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{makecell}
+
+\usepackage{amsthm}
+\usepackage[english]{babel}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{pgfplots}
+\usepackage{nicefrac}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{lmodern,textcomp}
+% pgfplots settings ===========================
+\pgfplotsset{width=10cm,compat=1.9}
+
+% We will externalize the figures
+\usepgfplotslibrary{external}
+\tikzexternalize
+%================================================
+
+\newcommand{\hbf}[1]{\hat {\mathbf #1}}
+\newcommand{\costf}{\mathscr{C}}
+\newcommand{\prices}{\mathbf{p}}
+\newcommand{\quant}{\mathbf{y}}
+\newcommand{\wages}{\mathbf{w}}
+\newcommand{\cons}{\mathbf{c}}
+\newcommand{\wagef}{\mathscr{W}}
+\newcommand{\demandf}{\mathscr{D}}
+\newcommand{\post}[1]{#1^*}
+
+\usepackage[
+backend=biber,
+style=authoryear-icomp,
+isbn=false, url=false, natbib=true
+]{biblatex}
+
+
+\addbibresource{BandF.bib}
+
+
+%==============================================
+%=====      Math Theorems and operators   =====
+%==============================================
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{axiom}{Axiom}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\setlength\parindent{0pt}
+
+\title{A pluralist perspective on input-output modeling:\break 
+searching for commensurability\thanks{This paper has benefited from funding provided by the \textit{Hans Böckler Foundation} under grant number 2021-544-2, by the \textit{Linz Institute for Transformational Change (LIFT\_C)} under grant number 2022-1-114 as well as by \textit{Dezernat Zukunft}. Moreover, we thank Lukas Cserjan and Bernhard Schütz for their extensive feedback as well as David Baqaee, Anna Hornykewycz, Stefan Steinerberger, Rafael Wildauer and Jan David Weber for their responses to our queries and the comments on specific aspects of this manuscript. All remaining errors are our own.}}
+
+\author[1]{Jakob Kapeller}
+\author[2]{Franz Scharnreitner}
+\affil[1]{University of Duisburg-Essen, Institute for Socio-Economics and Johannes Kepler University Linz, Institute for Comprehensive Analysis of the Economy (ICAE), \href{mailto:jakob.kapeller@uni-due.de}{jakob.kapeller@uni-due.de}}
+\affil[2]{Johannes Kepler University Linz, Institute for Comprehensive Analysis of the Economy (ICAE)}
+
+% \thanks{This paper has benefited from funding provided by the \textit{Hans Böckler Foundation} under grant number 2021-544-2, by the \textit{Linz Institute for Transformational Change (LIFT\_C)} under grant number 2022-1-114 as well as by \textit{Dezernat Zukunft}. Moreover, we thank Lukas Cserjan and Bernhard Schütz for their extensive feedback as well as David Baqaee, Anna Hornykewycz, Stefan Steinerberger, Rafael Wildauer and Jan David Weber for their responses to our queries and the comments on specific aspects of this manuscript. All remaining errors are our own.}
+
+\begin{document}
+\maketitle
+
+\section*{Abstract}
+
+This paper revisits paradigmatic differences in economics with a focus on input-output modeling. We show that such differences represent deep divides in economic theorizing that impact strongly on estimated effects. However, estimates from input-output models are crucial for understanding the economic impacts of additional investment undertaken in the course of a socio-ecological transformation. Taking the transformation of the German housing sector as an example this paper illustrates the divergence between typical results obtained and explores two central axiomatic variations in CGE-models -- the introduction of CES-functions as well as labor slack -- that promise to explore some middle ground.
+
+\textbf{Keywords:} input-output modeling, general equilibrium, Leontief Inverse, economic pluralism, socio-ecological transformation
+
+\textbf{JEL-Codes:} C67, C68, D57 
+
+\newpage
+
+\section{Introduction: Kuhnian cleavages and input-output models}
+
+In his classic account on the “Structure of Scientific Revolutions” Thomas Kuhn \citetext{\citealp{Kuhn1962}, see also \citealt{Fleck1935}} emphasized that paradigms reflected different foundational perspectives taken by researchers. Consequently, scientists associated with different paradigms often cannot agree on basic theoretical assumptions or the interpretation of some observational data. These cleavages arise from different pre-analytical conceptions, which shape researchers’ intuitions and lead them to correspondingly different judgments.
+
+In his tract, Kuhn illustrates this instance graphically with reference to so-called ambiguous pictures that show different images when viewed from different perspectives, i.e. with a different mind-set. Taking this analogy into the realm of the history of science Kuhn asserts that there exist no bridges between such different perspectives as they inherently lack commensurability: researchers are ultimately captured in a certain “style of thought” \citep{Fleck1935}.
+
+While one can suppose that paradigms in a Kuhnian sense do indeed exist in past and contemporary economics, these paradigms, or ‘schools of thought’, partly defy the ideal-typical description on incommensurability leveraged by Kuhn: although they often feature seemingly irreconcilable views, most of these schools of thought are based on a recombination of often already existing theoretical beliefs and assumptions, that are sometimes shared across schools in unexpected ways \citep[e.g.][]{Kaldor1961,Lawson1985}.
+
+As a consequence, paradigmatic cleavages in economics often focus on specific conceptual disagreements: is the profit share a measure for the contribution of capital or for the degree of exploitation? Do higher wages lead to growth or stagnation? Does money rely on an exogenous source or is it created endogenously through social relations? Do environmental constraints pose a maximization problem or, rather, a maximin problem \citep{Costanza.1989}? Are results in behavioral economics, that systemically deviate from rational choice predictions, due to deficiencies of the subjects under study \citep{Gintis.2010} or do they point to the need for alternative conceptions of purposeful behavior based on evolutionary stable instincts and heuristics \citep{gigerenzer1999simple}? Some historians of economic thought have framed these reoccurring disagreements as diverging “base orientations” that “are like rivers on limestone which sometimes disappear underground, [before] they come to light again, when nobody expects it.“ \citep[][p. 9]{Screpanti2005}.
+
+As indicated, individual schools of thought often recombine distinct elements from these rivers and, hence, occasionally defy the rather dichotomous vision of Kuhn that sometimes suggests that there cannot be common ground across such paradigms. Additionally, and of special interest to this paper, we observe that constructive communication and interaction across paradigms is indeed possible and sometimes there even exist explicit attempts to build bridges across said rivers. Although it is not ex-ante clear, whether such bridges truly provide fertile ground for original research efforts, they provide an opportunity for tracing the impact differences in foundational assumptions exert on the obtained results. Hence, these bridges can be seen as a natural starting point for a pluralist inquiry \citep[see also][]{Dobusch.2012}.
+
+This paper aims to explore such a bridge for the case of economic models that use empirical input-output data to model the overall state or development of a given economy. The practical motivation for doing so arises from the expectation that additional investments in foundational infrastructures and production technologies will be required in the near future to better accommodate ecological requirements \citep[e.g.][]{Creutzig.2018,He.2023,Hornykewycz.2025}. While the economic impacts of such additional investments can be assessed by employing input-output data and related models, the results of such analyses are typically contested in theoretical as well as political terms. This outcome is not only due to differences in assumptions, but also because the estimates obtained of such investment are strongly contingent on the modeling philosophy and concrete modeling approach employed. 
+
+At the heart of such contestation -- that basically concerns all applied models based on input-output data of various sorts -- resides a paradigmatic cleavage: does an expansion of investment lead to an expansion of output (by mobilizing additional productive factors) or will it simply lead to a, possibly sub-optimal, reallocation of scarce resources? In model terms, the first option is represented by the classic Leontief-Inverse \citep{Leontief.1936,leontief1986input,BlairMiller}, where additional investments are represented by linearly extrapolating current proportions of intermediary inputs and factors, whereas the canonical computable general equilibrium (CGE) models represent an alternative vision on how to conceptualize an exogenous expansion of investment within a neoclassical equilibrium framework.
+
+To better advance a focused comparison between these approaches this paper takes recent developments in mainstream approaches to input-output modeling into account \citep{BF2019,Baqaee.2021,BF2022} that explicitly try to incorporate heterodox arguments on constraints to gross substitutability \citep[e.g.][]{davidson1994}, labor market slack \citep[e.g.][]{lavoie2014} or the peculiar role of energy provisioning \citep[e.g.][]{Keen.2018}, but still hold on to the basic vision of rational behavior and fully competitive markets. 
+By juxtaposing these approaches with more traditional applications following Leontief we aim to trace the most relevant single assumptions leading to differences in obtained estimates, explore their relative impact on the results and thereby illuminate a concrete case of a paradigmatic cleavage to better understand the possibilities and constraints for building bridges across rivers of paradigmatic confinement. 
+By combining models building on input-output data as analytical venues with an applied focus on specific transformation requirements in the German housing sector \citep[largely based on][]{Hornykewycz.2025} we are able to illustrate the consequences of the underlying paradigmatic cleavage with reference to an example of great practical and political importance. Moreover, by focusing on two major "axiomatic variations" \citep{Kapeller.2013} in the main assumptions guiding neoclassical input-output models (see Table \ref{tab:overview}), we explore a case in the recent literature that holds some potential for bridging the underlying cleavage.
+
+\begin{table}
+\label{tab:overview}
+\centering
+\scriptsize
+\begin{tabular}{|c|c|c|c|} 
+\hline
+\textbf{Axiomatic variation} & \textbf{Challenged concepts} & \makecell{\textbf{Alternative}\\ \textbf{operationalization}} & \textbf{Related heterodox intuition}  \\ 
+\hline
+\makecell{Decreasing substitution\\elasticities} & \makecell{Optimism regarding\\substitution / Cobb-Douglas\\production function} & \makecell{CES production\\function} & Leontief production function       \\ 
+\hline
+\makecell{Introducing labor\\market slack} & Full utilization of resources & \makecell{New factors become\\spontaneously available} & Underutilized factors endowment \\ 
+\hline
+\end{tabular}
+\caption{Axiomatic variation in the context of input-output models}
+
+\end{table}
+
+In the remainder of the paper we have tried to use a consistent notation that builds on the standard conventions: accordingly, we write vectors in lower-case bold letters (e.g. $\mathbf{x}$), matrices in standard capital letters (e.g. $A$) and vectors embedded in a diagonal matrix as $\hat{\mathbf{x}}$. When referring to elements of matrices that represent inter-sectoral relationships and interdependencies, we will generally use $s$ as an index for the sector that is \textit{supplying} something and $u$ for the sector that is \textit{using} something. Hence, we denote intermediate goods as $x_{su}$ (instead of the standard convention to use $x_{ij}$), where dropping one index means the sum over all elements (i.e. $x_s=\sum_{u=1}^n x_{su}$), while vectorized indices are again written in bold (i.e. $\mathbf{x}_{\mathbf{s},u}=(x_{1u},x_{2u}, \dots , x_{nu})^T$).
+
+\section{Representation of Input-Output tables in basic economic models} \label{sec:IO_models}
+
+Input-output tables (IO-tables) -- and corresponding models utilizing such tables as an empirical anchor -- are effectively derived from general accounting principles that reflect inter-sectoral relations and dependencies within the economy. One such basic principle is that effective output of each sector $s$ has to correspond to gross demand for $s$, i.e.,
+
+\begin{align}
+  \label{eq:_goods_clear}
+  p_sy_s = \sum_{u = 1}^n p_s x_{su} + p_s c_s,
+\end{align}
+where $p_s$ is the price of goods produced in sector $s$, $x_{su}$ is the amount of intermediate goods used in sector $u$, that is supplied by sector $s$, whereas $c_s$ gives the amount of final sales originating from sector $s$. Note that price $p_s$ is redundant in the above formulation, as both production and demand refer only to goods of type $s$. As a consequence, equation \eqref{eq:_goods_clear} also holds in material terms (i.e., $y_s = \sum_{u = 1}^n x_{su} + c_s$).
+
+By defining $a_{su} := \frac{x_{su}}{y_u}$ as  the amount of inputs from sector $s$ required to produce one output in sector $u$, we can express equation~\eqref{eq:_goods_clear} by means of the following canonical representation
+
+\begin{align}
+  \label{eq:_goods_clear_a}
+  p_s y_s = \sum_{u = 1}^n p_s a_{su} y_u + p_s c_s,
+\end{align}
+that can be nicely summarized to cover all sectors in a single matrix expression of the form
+
+\begin{align}
+  \label{eq:_goods_clear_a_matrix}
+\hbf{p} \mathbf{y} = \hbf{p} A   \mathbf{y} + \hbf{p} \mathbf{c}.
+\end{align}
+
+Based on a similar reasoning total revenues of each sector, here denoted as, $p_u y_u$, have to correspond to total costs for intermediate goods and production factors, i.e. $\sum_{s=1}^n p_s x_{su} + v_u$. The latter expression includes costs for intermediate goods ($\sum_{s=1}^n p_s x_{su}$) as well as total incomes received, which are equal to the value-added $v_u$ in the respective sector $u$. Hence, for this mapping between revenues and costs the respective identity is given by.
+
+\begin{align}
+    \label{eq:supply_clear}
+    p_u y_u = \sum_{s=1}^n p_s x_{su} + v_u = \sum_{s=1}^n p_s a_{su} y_u + v_u
+\end{align}
+
+We observe that in the above formulation quantity $y_u$ will become redundant, if we assume that $v_u$ scales linearly with $y_u$, so that a constant share $\alpha_u$ of unit costs is devoted to factor incomes.
+
+This setup indicates that in the basic logic of IO-tables prices and quantities are separable: prices adjust depending on costs, while quantities change in order to satisfy effective demands for intermediate and final goods as specified in equations \eqref{eq:_goods_clear} to \eqref{eq:_goods_clear_a_matrix}. Following this logic we can apply simple model closures to equations \eqref{eq:_goods_clear} and \eqref{eq:supply_clear} to explore pure quantity or price dynamics, by assuming that one side of the equation is given exogenously. In this setup, assuming that gross production (i.e. supply) adapts to effective demand of final goods will lead to the classic Leontief model \citep[][see also section \ref{subsec:Leontief}]{leontief1986input}, while assuming that price increases in inputs translates into price increases of outputs will lead to the somewhat less well known Leontief price model (see \citealp{Weber.2023}, \citealp{Weber.2024} or \citealp{Nikiforos.2024} for recent applications). In more general Kuhnian terms, we can also say that equation \eqref{eq:_goods_clear}, which makes the components of effective demand explicit, suggests 'demand-led' solutions associated with Keynesian and other heterodox approaches, while the cost-focused equation \eqref{eq:supply_clear} is the starting point for analyzing sector-specific cost-structures, which provides the focal point of neoclassical approaches, where constraints from scarcity on the supply side feed back on prices.
+
+From a formal perspective we can again rewrite equation \eqref{eq:supply_clear} in matrix form so that
+\begin{align}
+     \hat {\mathbf p} \mathbf y = \hat {\mathbf y} A^T \mathbf p + \mathbf v,
+\end{align}
+
+where $A$ serves a shared conceptual anchor between this formulation and the canonical expression shown in equation \eqref{eq:_goods_clear_a_matrix}. It can easily be seen that, dividing equation~\eqref{eq:_goods_clear_a} by total production $p_s y_s$ gives demand shares, while applying the same operation to equation~\eqref{eq:supply_clear} with $p_u y_u$ gives cost shares. 
+Focusing on the core matrix of production coefficients $A$, we can show that the demand and cost shares derived from this setup are effectively transposed mirror-images of each other as
+
+\begin{align}
+    \label{eq:unity}
+    (\hat {\mathbf p} A \hbf{y} \cdot \hat {\mathbf z})^T = \hat {\mathbf z} \cdot  \hat {\mathbf y} A^T \hbf{p} =: \Omega_{p},
+\end{align}
+
+where ${\mathbf z}$ is a vector containing the inverse of total production $p_u y_u$ for each sector $u$ and $\Omega_p$ represents final cost shares associated with all intermediate goods $s$ used in that sector $u$.
+Hence, the elements of $\Omega_p$ are defined as $\omega_{us}=\frac{p_sx_{su}}{p_uy_u}=\frac{p_sa_{su}y_u}{p_uy_u}=\frac{p_s}{p_u}a_{su}$ so that $\Omega_p$ captures in each row the relative contributions to the production of some sector $u$ in monetary terms.\footnote{From equation \eqref{eq:unity} the identity $A = \hbf{p}^{-1} \Omega_p^T \hbf{p}$ follows (as $\hbf {p}$ is invertible). In practical work one often starts from standard notation with $a_{su}$ and arrives at an expression for cost shares by dividing each element $p_sx_{su}$ by the total output of sector $u$, i.e., by taking the column sum as a divisor (dividing by row sums would give demand shares instead). 
+If we proceed along these lines and transpose the result, we similarly will arrive at $\Omega_p$.}
+The relationship as posited in equation \eqref{eq:unity} makes exceptionally clear that different paradigmatic perspectives indeed start from the same (accounting) identities to structure observational data in IO-tables, but quite immediately diverge when it comes to providing a first representation of these data in conceptual terms.
+
+In both cases, $\Omega_p$ eventually represents all inter-sectoral dependencies, but without explicitly accounting for production factors (and associated incomes) and final demands for each good. However, those aspects can be incorporated in the same basic representation by adding additional rows and columns that represent final demand and factor incomes to provide an exhaustive representation of the economy. 
+
+In analogy to the construction of $\Omega_p$ demand for final goods can be expressed as $\omega_{0s}=\frac{p_s c_s}{p_s y_s}$, and incomes associated with production factors are given as $\omega_{uf}=\frac{v_{uf}}{p_u y_u}$ where $v_{uf}$ represents the value-added of some factor $f$, which, by accounting convention, directly corresponds to the income this factor receives. Put succinctly, incomes as well as final demand are normalized with respect to total sector output. 
+
+If IO-Tables are extended by these additional row (for final consumption) and column vectors (for production factors) the flow of goods between sectors, production factors and consumers can be represented exhaustively. 
+Taking the example of only one production factor, labor $l$, such an exhaustive representation can be depicted as $\Omega \in \mathbb R^{(n+1) \times (n+1)}_+$ with
+
+\begin{align}
+  \label{eq:iomatrix}
+  \Omega = \left( \begin{array}{@{}ccccc|c@{}}
+    \omega_{01} &\dots &\omega_{0s} &\dots &\omega_{0n} &  \\ \hline
+    \omega_{11} & \dots & \omega_{1s} & \dots &\omega_{1n} & \omega_{1l}\\ 
+    \vdots &\ddots &\vdots  &\ddots & \vdots & \vdots\\ 
+    \omega_{u1} & \dots & \omega_{us} & \dots &\omega_{un} & \omega_{ul}\\ 
+    \vdots &\ddots &\vdots  &\ddots & \vdots & \vdots\\ 
+    \omega_{n1} & \dots &\omega_{ns} & \dots & \omega_{nn} & \omega_{nl}    
+    \end{array} \right) = 
+    \left( \begin{array}{c|c}
+    \Omega_0 & \\ \hline
+    \Omega_p & \Omega_l\\ 
+  \end{array} \right)
+\end{align}
+
+Note that in this formulation we still remain agnostic about two main aspects, where variations across different traditions occur. One is related to the exact production technology, which has not been specified precisely as, in principle, we can restrict the validity of the linear representations presented so far to provide only static representation of the economy at some point in time, but is not suitable to extrapolate changes. Another blind spot refers to the role of factor endowments, where assumptions on the utilization of such endowments may differ: while in some traditions all endowments are flexible, others assume such flexibility is constrained, either fully or partially. 
+
+In what follows, we will first review classic responses to these questions in the remainder of this section. In a second step, sections \ref{sec:ces} and \ref{sec:labor}  inspect how more recent mainstream literature employs "axiomatic variation" \citep{Kapeller.2013}, i.e., slight modifications of standard neoclassical setups. to arrive at more flexible answers to these issues. Moreover, we analyze and discuss whether the so modified approaches provide suitable vantage points for constructing inter-paradigmatic bridges.
+
+\subsection{A 'Keynesian' approach: The Leontief-Inverse}\label{subsec:Leontief}
+\label{sec:leontief}
+The classical approach to using input-output tables for purposes of prediction and, relatedly, planning is associated with \citetext{\citealp{Leontief.1936}, see also \citealt{leontief1986input}}, who suggests extrapolating current inter-sectoral dependencies to estimate the effect of an expansion in the consumption of final goods, i.e., a demand shock. 
+
+As already indicated, this approach has certain 'Keynesian' features as it takes exogenous changes in final demand as a key input and traces the impact of such spending across supply chains to assess how much gross output is needed to arrive at the desired final output. In an expanded model, based on $\Omega$ instead of $\Omega_p$, an additional feedback loop between income and consumption emerges in analogy to traditional simple macro models based on the Keynesian cross, where exogenous spending triggers a multiplier-process. In addition, the basic model setup treats prices as being determined by production costs and abstracts from capacity constraints. When final demand changes, the change in production costs is simply extrapolated from current costs as technical coefficients $a_{su}$ and prices remain constant. This setup implies the absence of substitution effects or technical change, which amounts to assuming a Leontief production function, where outputs are based on fixed and constant proportions of inputs, i.e., to produce one unit of good $u$ exactly $a_{su} $ parts of all goods $s$ are needed.\footnote{This latter assumption can be relaxed even with a traditional Leontief framework when making additional assumptions on "dynamic substitution", that is, how technical coefficient respond to price changes over time, see e.g. \citet{Labini.1995}.}
+
+As this setup is somewhat rigid, the only relevant condition for obtaining efficient production is that firms will not waste any inputs, be it intermediate goods or factors. Hence, employing a Leontief production function is, in principle, compatible with assuming that firms produce efficiently as a cost-minimizing strategy can be derived in such a setup. This observation points to an often overlooked shared feature of different paradigmatic perspectives on input-output models. Taking up the general idea, that we can model the production in each sector by referring to some functions $f_u: \mathbb R^n_+ \times \mathbb R^m \to \mathbb R_+$, that relate production factors -- like labor, capital or energy -- and intermediary inputs $x_{su}$ to final output $y_u$, a general solution for this setup is given by sector-specific cost minimization problems for each sector $k$,
+
+\begin{align}
+  \label{eq:costmin}
+  \begin{split}
+        \min_{\mathbf x_{\mathbf{s},k},l_k}  &  \sum_{s = 1}^n p_s x_{sk}  + w_k l_k\\
+  \text{subject to }  f_k(\mathbf x) & = \sum_{u=1}^n x_{ku} + \bar c_k \quad \text{for all } 0 \leq k \leq n
+  \end{split}
+\end{align}
+
+with given prices $\mathbf p$, wages $\mathbf w$ and final consumption $\bar{\mathbf c}$. Employing this notation accounts for the double role of each sector $k$ as user of inputs in the objective function (where $k=u$) and supplier of inputs in the constraint (where $k=s$).
+
+The production function in the Leontief-Model is therefore given by a linear combination of inputs as in $f_u(\mathbf x) = \min_s(\frac {x_{su}}{a_{su}})$ with optimal demand $x_{su}^* = a_{su} y_u$.
+This means, total production is directly given by equation \eqref{eq:_goods_clear_a_matrix}, which we can rewrite by using $\Omega_p$ as
+
+\begin{align}
+    \hbf p \mathbf y =\Omega_p^T \hbf{p} \mathbf y + \hbf p \mathbf  c
+\end{align}
+
+As both, $\hbf{p}$ and $(I - \hbf p^{-1} \Omega_p^T \hbf{p}) = (I - A)$, are invertible due to to the Perron–Frobenius theorem guaranteeing $1$ is not an eigenvalue of $A$ in a productive economy, this can be rewritten as
+\begin{align} \label{eq:leontief_effect}
+  \mathbf y = (I - A)^{-1} \mathbf c.
+\end{align}
+
+This gives a straightforward representation to model demand shocks. Assume $\Delta c = c_{\text{new}} - c_{\text{old}}$ is the change in demand, then the required change in production to accommodate is given as 
+\begin{align}
+   \Delta \mathbf{y} = (I - A)^{-1} \Delta c.
+\end{align}
+
+The model can be expanded in various ways, for example by incorporating labour, capital, energy or emissions into the matrix $\Omega_p$.
+
+As indicated by matrix \eqref{eq:iomatrix} households are often treated as an additional sector $(n+1)$ supplying labour to all other sectors, while purchasing consumption goods from all other sectors. In practical terms this simply implies using $\Omega$, instead of $\Omega_p$, thus reducing the initial $\mathbf c$ to $\mathbf c^*$ representing final demand outside of routine household spending, that is exports, government spending or exogenous shocks to household consumption. Thereby the 'routine' implicitly specified for households is to spend income according to a 'rule-of-thumb', which exactly replicates past spending behaviour. Hence, some share greater zero of incomes is saved before the remainder is distributed as final consumption across sectors in proportion to the shares found in the underlying data.
+
+Thus total production is always given as
+
+\begin{align}\label{eq:leontief_final}
+  \mathbf{y} =  (I -   \hbf{p}^{-1} \Omega^T \hbf{p})^{-1}  \mathbf c^*.
+\end{align}
+
+We find that the classic Leontief approach solves the problem of demand shock by direct quantity adjustment. It has three characteristic assumptions, that makes it paradigmatically distinct from the General Equilibrium approach discussed in the next section, namely (a) the use of a Leontief production function, (b) the absence of capacity constraints and (c) a linear dependence of real consumption on income, that produces a Keynesian multiplier effect when it is incorporated in the respective model (as, e.g., suggested by equation \eqref{eq:leontief_final}). However, the final assumption is contingent on an expansion of real income, which is implicitly captured by condition (b). Hence, in the remainder of the paper we will focus on the first two conditions mentioned here.
+
+\subsection{A 'classical' approach: Computable General Equilibrium} \label{subsec:CGE}
+
+In contrast to Leontief-Models, where changes in production are strictly determined by corresponding changes in demand, Computable General Equilibrium models assume that consumption and production are mutually interdependent \citep[see][for a general introduction]{cardeneteAppliedGeneralEquilibrium2017}.
+Hence, changes in final demand will lead to a re-allocation of scarce factor endowments, that impacts on both, quantities as well as prices.
+
+Following the basic Walrasian approach, the model is thus given by a $2n \times 2n$ system of equations for relative prices $\mathbf{p}$ and quantities $\mathbf{y}$: 
+
+\begin{align}
+\label{eq:equilibrium}
+  p_s y_s &= \costf_s (\prices,\wagef(\prices,\quant), \quant) \\
+ y_s &=  \sum_{u=1}^n \frac{\partial \costf_u (\prices,\wagef(\prices,\quant),\quant)}{\partial p_s} + \demandf_s(\prices,\mathscr W(\prices,\quant)),
+\end{align}
+for each $1 \leq  k \leq n$ .
+The functions $\mathscr{C} \colon \mathbb R^{3n}_+ \to \mathbb R^n_+,\, \mathscr{W}: \mathbb R^{2n}_+ \to \mathbb R^n_+$ and $\mathscr{D}: \mathbb R^{2n}_+ \to \mathbb R^n_+$ serve to calculate key variables of the underlying model, namely total costs, wages and final demand. More specifically, $\costf_k(\prices,\wages,\quant)$ represents the total costs associated with good $k$ ,
+$\wagef_k(\prices,\wages,\quant)$ represents the wages in sector $k$
+and $\demandf_k(\prices,\wages)$ represents the final demand for good $k$. Hence, assuming that the functions $\costf, \wagef$ and $\demandf$ provide a valid description of sectoral production is at the core of neoclassical argumentation and the following section is devoted to illustrating and deriving these functions.
+
+In this framework every household $h$ possesses a utility function $u_h$, that it seeks to maximize under the budget constraint that income must suffice to finance consumption, i.e.,
+\begin{equation}
+  \sum_{h = 1}^H p_s c_{sh} \leq \sum_{u=1}^n w_{u} l_{hu},
+\end{equation}
+where $c_{sh}$ is the household's $h$ consumption of good $s$ and $l_{hu}$ is the labor supplied by household $h$ to some sector $u$.
+
+To aggregate over households the framework is typically kept as parsimonious as possible by assuming that every household offers the same amount of labor $l_{hu} = \frac{l_u}{H_u}$, where $H_u$ is the number of households working in sector $u$. Furthermore, households have a unitary utility function $u_h(\mathbf c) = u(\mathbf c)$ with constant returns to scale. Hence, any change in individual purchasing power (whether due to changes in budget or prices) is reflected by a proportional change in utility. As social welfare is also defined as a constant returns to scale function over all individual $u_h$ it follows that aggregate utility is given by the sum of individual utility over all $h$. By arranging the assumptions in this way, aggregate utility (i.e. social welfare) is simply a linear function of total final consumption, independent of any distributional considerations. In the most straightforward case real consumption is directly equated with individual utility, which implies that maximizing social welfare is equivalent to maximizing real GDP. Against this backdrop, we can define $\mathcal D(\mathbf c)$ to represent both, social welfare as well as final demand, which requires homogeneity of degree one $\mathcal D(\mathbf c)$ in $\mathbf c$ (i.e., $\mathcal D$ is a "constant returns to scale aggregator", see \citealp{BF2019}, p. 1159).
+
+\begin{align}
+  \mathcal D(\mathbf c) := \sum_{h  = 1}^H \mathcal U_h(\mathbf{c}_{\mathbf{s} h}), 
+\end{align}
+
+which for our purposes simplifies to $\mathcal D(\mathbf c) =  H \mathcal U(\frac{\mathbf c}{H}) = \mathcal U(\mathbf c).$
+A key implication that arises from this setup is that maximizing $\mathcal D$ is equivalent to maximizing each $\mathcal U_h$ individually, where the relevant budget constraint is also formulated on an aggregate level. Taking these observations into account we arrive at a standard utility maximization problem incorporating a budget constraint, i.e.
+
+\begin{gather}
+  \label{eq:cgutilitymax}
+  \begin{split}
+  \max_{c \in \mathbb R^n} & \, \mathcal D(\mathbf c)  \\
+  \text{subject to } &\sum_{s=1}^n  p_s c_s  \leq \sum_{u=1}^n w_u l_u  \\
+  \end{split}
+\end{gather}
+
+If $\mathcal U$ is strictly concave \eqref{eq:cgutilitymax} possesses a unique solution for all $\prices \in \mathbb R^n_+$ and $\wages \in \mathbb R^n_+$.
+We can thus define the $\demandf$ from above, as the function that maps $\prices$ and $\wages$ to the consumption bundle $\cons$ that solves \eqref{eq:cgutilitymax}. 
+
+While the considerations above provide a minimal model for deriving final demands, we have not yet addressed issues of production. 
+It is notable that most CGEs start from the core motive of profit maximization and assume perfect competition, which implies that all overall outcomes satisfy the efficiency properties as stated by the first theorem of welfare economics. 
+For simplicity, we again employ only labor as a production factor to focus on the role of intermediate goods. Typically, each sector $k$ is represented by a single firm that seeks to maximize profit under the condition that sectoral production can satisfy intermediate as well as final demands for the sector's output.
+
+\begin{align}
+  \label{eq:profitmaxproblem}
+  \begin{split}
+    \max_{\mathbf x_{\mathbf{s},k},\mathbf l}  \, \pi_{k}(\mathbf x,\mathbf l)  :=p_k f_k(\mathbf x,\mathbf l) &- \sum_{s = 1}^ n p_s x_{sk} - w_k l_{hk}  \\
+  \text{subject to } f_k(\mathbf x, \mathbf l) &\geq y_k \\
+  l_k &\leq  l^{\text{max}}_k\\
+\end{split}
+\end{align}
+which again accounts for the fact the each sector $k$ uses and supplies goods at the same time. 
+
+Following standard conventions the problem represented by equation \eqref{eq:profitmaxproblem} can be split into two parts \citep[][p.~146]{jehleAdvancedMicroeconomicTheory2011}:
+it is equivalent to first finding the cost function $\costf_k(\prices,\wages,\quant)$ and then deriving the optimal production level for each sector from \textit{Shephard's Lemma}.
+
+We thus define the cost minimization problem as 
+\begin{align}
+  \label{eq:pricemin}
+  \begin{split}
+    \min_{\mathbf x_{\mathbf{s},k},\mathbf l}  \, \sum_{s = 1}^ n p_s x_{sk} - w_k l_{hk}  \\
+  \text{subject to } f_k(\mathbf x, \mathbf l) &\geq y_k \\
+  l_k &\leq  l^{\text{max}}_k\\
+\end{split}
+\end{align}
+
+and observe, that \eqref{eq:pricemin} has a unique solution if $f_k$ is convex.
+In this case we can define the cost function $\costf$ for a sector $k$ as the function that maps prices, quantities and wages to solution of \eqref{eq:pricemin}. 
+
+From a formal perspective the cost function has a few well-known, but important properties:
+it is continuous, concave and homogeneous of degree 1 in $\mathbf p$ and $w$, while the degree of homogeneity in $y$ is determined by the returns to scale encapsulated by the respective production function (if the latter scales with $\alpha$, the cost function will scale with $\frac{1}{\alpha}$). 
+Importantly, if some basic restrictions on the production function\footnote{Specifically. that $f_u$ is continuous, convex, and strictly increasing and $f_u(\mathbf 0) = 0$} are satisfied, \textit{Shephard's lemma} will hold which allows for deriving optimal demand $x_{\mathbf{s},u}$ directly by differentiating the cost-function by intermediate good prices $\mathbf{p}$.
+
+As in this setup the production of $y$ is subject to constant returns to scale, $\mathscr C$ is homogeneous of degree 1 in $ y$. Using \textit{Shephard's Lemma} we can derive the optimal demand for intermediate goods, as 
+\begin{align}
+  x_{su} = \frac{\partial \costf_u(\mathbf p,\mathbf w,\mathbf y)}{\partial p_s},
+\end{align}
+or, in matrix form
+\begin{align}
+  X = \nabla_p \costf(\mathbf p,\mathbf w,\mathbf y).
+\end{align}
+
+We can thus rewrite the market clearing conditions \eqref{eq:_goods_clear} as
+\begin{align}
+\label{eq:market_clearing_sheppard}
+  y_s = \sum_{u = 1}^n \frac{\partial \costf_u(\mathbf p,\mathbf w,\mathbf y)}{\partial p_s} + \demandf_s(\prices,\wages,\quant).
+\end{align}
+
+In equilibrium all prices correspond to the marginal utility or marginal revenues accruing from the respective goods and factors. One consequence is that wages are given directly as the marginal product of labor times the price of the produced good, i.e. $w_{s} =  p_s \frac{\partial f_s}{\partial l_s}(\mathbf x, l) $.
+If we can rewrite $ p_s \frac{\partial f_s}{\partial l_s}(\mathbf x, l) $ as a function, that only depends on $f(\mathbf x,l)$ and $l$ and not $\mathbf x$ itself (because in an equilibrium $f_s(\mathbf x,l) = y_s$), we can interpet $p_s \frac{\partial f_s}{\partial l_s}(\mathbf x, l)$ as a function that maps prices and quantities to wages.
+This  representation is thus the wage function $\wagef(\prices,\quant)$ from above.
+Similarly, prices for intermediate goods are given by $p_{s} =  p_u \frac{\partial f_u}{\partial x_{su}} = \frac{\partial \mathcal D}{\partial c_s}$.\footnote{However here it is not possible to express $p_u \frac{\partial f_u}{\partial x_{su}}$ independent from $x_{su}$.}
+With these components we can reproduce the definition of general equilibrium. In this vision competition among economic agents acting in a profit and utility maximizing manner leads to a stable and pareto-optimal allocation of resources, where markets clear, profits and utility are maximal and marginal costs always correspond to marginal benefits or revenues.
+In formal terms this means the following:
+
+\begin{definition}[General Equilibrium]
+  A consumption vector $\mathbf c$, a price vector $\mathbf p$, wages $\mathbf w $ and a allocation matrix $ X$ form a General Equilibrium if the following three conditions hold for every sector:
+  \begin{enumerate}
+    \item $\mathbf c$ maximizes social welfare by solving the utility maximization problem encapsulated by equation \eqref{eq:cgutilitymax}.
+        \item $ \mathbf{x}_{\mathbf{s},u }$ solves the profit maximisation problem as given in equation \eqref{eq:profitmaxproblem} for all firm and sectors, respectively allowing to derive optimal production $\bar {\mathbf{y}}$ across all sectors. 
+    \item  Revenues and costs have to coincide in all sectors, i.e. 
+$ p_u y_u = \sum_{s=1}^N p_s x_{su} +  w_u l_u$ holds for all sectors $u$.
+  \end{enumerate}
+\end{definition}
+We see that for a solution to equation~\eqref{eq:equilibrium}, prices equal production costs and markets clear. As the consumption bundle $\mathbf c$ maximizes utility and \textit{Shephard's Lemma} guarantees that each $x_{su}$ is optimal, the resulting equilibrium carries the usual efficiency properties.
+
+Eventually, the question emerges how to link such a setup with the Input-Output tables introduced in the beginning of section \ref{sec:IO_models}. For this purpose, it is important to distinguish the unconditional cost-share matrix $\Omega_p$ introduced above from the conditional intermediate-input shares used inside the production nest. Let $\alpha_u:=\omega_{ul}:=v_u/(p_u y_u)$ denote sector $u$'s factor share and define
+\begin{align}
+  \widetilde\omega_{us}:=\frac{p_sx_{su}}{\sum_{r=1}^n p_rx_{ru}}, \qquad \sum_{s=1}^n\widetilde\omega_{us}=1.
+\end{align}
+Thus $\widetilde\Omega$ has using sectors in rows and supplying sectors in columns. The corresponding unconditional intermediate cost shares are $\Omega_p=\operatorname{diag}(1-\boldsymbol\alpha)\widetilde\Omega$. This is also the convention used in the quantitative implementation of \citet{BF2019}: because the German input-output table reports supplying products in rows and using production sectors in columns, its intermediate-use block is first transposed and then each row is divided by its sum. In the following production equations, $\omega_{us}$ denotes the conditional share $\widetilde\omega_{us}$.
+
+For a Cobb-Douglas function, these conditional shares are interpreted as the output elasticities within the intermediate-input bundle, while $\alpha_u$ governs the outer factor share. This translates into
+
+\begin{equation}
+  \label{eq:cobbdouglasprodfun}
+  f_u(l,\mathbf x) = \mathcal A_u \left(l_u^{\omega_{ul}} \left(\prod_{s=1}^n x_{su}^{\omega_{us}}\right)^{1-\omega_{ul}}\right)
+\end{equation}
+to model production.
+
+Here $\mathbf{\mathcal A}$ is a productivity parameter, $\omega_{ul}$ is taken to be the output elasticity of labor, and $\omega_{us}$ is assumed to represent the output elasticities of good $s$. It is often assumed, that production has constant returns to scale, thus $\sum_{s=1}^N \omega_{su} = 1$. In contrast, mapping an IO-table on a constant elasticity of substitution (CES) production function would use $\Omega$ to calibrate the share parameters that indicate the relative contribution of each (intermediate) factor as in 
+
+\begin{align}
+  f_u(\mathbf x) = \left( \sum_{s = 1}^n \omega_{su} x_{su}^{\frac{\theta - 1}{\theta}}\right)^{\frac{\theta}{\theta - 1}}.
+\end{align}
+
+When applying this setup  to practical questions, the standard procedure is to envisage a stable 'pre-shock' equilibrium, while the relevant changes to the system are framed as external shock. Formally, the former assumption implies that we can normalize prices and quantities, so that in the pre-shock state prices all equal one and quantities are equal to the \textit{Domar weights}, that are defined as the ratio between \textit{gross} output in some sector and GDP \citep[see][]{Hulten.1978}.
+
+\begin{definition}[Domar Weights]
+  The Domar weight $\lambda_s$ of sector $s$ is given as 
+  \begin{align}
+    \lambda_s := \frac{p_s y_s}{\sum_{u=1}^n p_u c_u}.
+  \end{align}
+The Domar weights thus capture the relative size of a sector in relation to GDP. Summing up these weights across all sectors in turn shows the relation between gross and net output for the whole economy.
+\end{definition}
+
+In addition to the Domar weights, which represent the relative importance of specific sectors for gross production, we can also calculate each sector's contribution to final demand, which is simply given by the share of each sector in final consumption as given by total expenditures $\sum_{u=1}^n p_u c_u$.
+
+\begin{definition}[Consumption Share]
+  The consumption share of sector $s$ is given as 
+  \begin{align}
+    \beta_s := \frac{p_s c_s}{\sum_{u=1}^n p_u c_u}.
+  \end{align}
+\end{definition}
+
+At this point it is important to note that Domar weights as well as consumption shares are solely determined by $y_s$ (Domar weights) and $c_s$ (consumption share) in the pre-shock equilibrium as all other relevant variables, prices as well as GDP, are normalized to one. 
+
+As all prices are initially normalized to one, any subsequent price changes due to shocks must be interpreted relative to a chosen numeraire. There are two common approaches to define meaningful post-shock prices. The first is to fix a specific numeraire and then to re-normalize the post-shock prices relative to the numeraire $N$. The second approach explicitly specifies the numeraire as some constant value in the system of equations to avoid confusion between nominal and real values. Using the former approach, we define the relative post-shock prices as
+
+
+\begin{align}
+  \post  { \tilde \prices} := \frac{1}{N} \post \prices
+\end{align}
+
+
+and choose the CES consumer price index as the numeraire:
+\begin{align}
+\text{CPI} = \left( \sum_{s=1}^n \beta_s p_s^{1-\sigma} \right)^{\frac{1}{1-\sigma}}.
+\end{align}
+Calculating GDP directly using post-shock prices would yield a nominal GDP measure.
+With stable homothetic final demand, real GDP can equivalently be measured by the constant-returns final-demand aggregator or by deflating nominal expenditure with its ideal CES price index. In our application, however, the shock changes the composition of final demand. Following \citet{BF2022}, we therefore measure the finite change in real GDP with the T\"ornqvist approximation to the Divisia quantity index. Let
+\begin{align}
+  s_{st}:=\frac{p_{st}c_{st}}{\sum_{r=1}^n p_{rt}c_{rt}}
+\end{align}
+denote sector $s$'s share in final expenditure in equilibrium $t\in\{0,1\}$. The real-GDP index is
+\begin{align}
+  \log\left(\frac{Y_1}{Y_0}\right)
+  =\sum_{s=1}^n \frac{s_{s0}+s_{s1}}{2}
+  \log\left(\frac{c_{s1}}{c_{s0}}\right).
+\end{align}
+This chain-weighted measure removes changes in prices while allowing expenditure weights to adjust between equilibria. Because the composition of final demand changes, it should be interpreted as a positive measure of real activity rather than as an exact welfare index.
+While this basic formal setup obviously differs from the Leontief model presented in Section~\ref{sec:leontief} in many details,
+a major practical difference in applying these models also emerges from the underlying paradigmatic perspectives:
+loosely spoken, the Leontief model follows a 'demand-side view', where production structures are assumed constant and final demands change exogenously. In contrast, general equilibrium approaches will start from a 'supply-side view', where economic changes arise from changes in the exogenous parameters -- like production functions, technology or endowments -- and demand will respond.   
+
+\section{Data and exploratory empirical setup} \label{sec:data}
+
+To see and compare how competing model variants based on IO-tables differ in terms of outcomes, one obvious approach is to impose some exogenous shock and compare the reactions of different models to these shocks. However, given the different paradigmatic perspectives associated with different model variants, it is not too surprising to observe, that the archetypical understanding of what, exactly, constitutes an exogenous shock also differs across traditions. From the perspective of a classic Leontief model the most obvious form of an exogenous shock is given by a shift in final demand (which, in turn, leads to restructuring of the supply side). While the Leontief framework can, in principle, also be applied to simulate the effects of other types of shocks -- such as shocks to prices (e.g., by using the Leontief price equation, i.e. equation \eqref{eq:supply_clear}) or technological shocks (e.g. by manipulating the technical coefficients collected in $A$), the most widely used application focuses on simulating the impacts of a change in final demand. Such an approach is obviously based on a specific "output-adjustment" model closure \citep{Taylor1990}, that is characteristic for typical applications of the model, not only because of the Keynesian features emphasized in section \ref{subsec:Leontief}, but also because this type of analysis is suitable to cover basic scenarios for policy-analysis evaluating different types of public investments or prospective changes in public spending.
+
+Similarly, the archetypical understanding of an exogenous shock in a more supply-side driven neoclassical vision is best conceived as a sudden change in aggregate productivity as captured by $\mathbf{\mathcal A}$. This approach is most intuitive as production is seen as inherently constraining final demand, which is, in principle, conceptualized as open-ended as more is always deemed better in such a framework. The technology parameter $\mathbf{\mathcal A}$ affects these crucial production conditions in an exhaustive way and, thereby, emerges as a preferred entry point for exogenous shocks in neoclassical models. Nonetheless, the basic structure of the model is, again, able to accommodate a greater variety of shocks, including exogenous changes to final demand, in principle, if suitable additional conditions and parameters are introduced.
+
+These aspects are essential as in our application the type of shock is derived from the core research interest, namely to assess how paradigmatic differences translate into different estimates on the economic impacts associated with additional investments undertaken to confront climate warming in particular and ecological degradation in general. Hence, we start from a shift in final demand as this adequately represents our conceptualization of an exogenous shock, when asking for the economic impacts of ecologically motivated investments.
+
+To provide a concrete and reliable empirical example for such investment requirements, we take the German residential housing sector as our main case of analysis. When doing so we base our analysis and discussion on a specific estimate of the costs associated with a transformation of the German housing sector towards carbon neutrality as supplied by \citet{Hornykewycz.2025}. This study estimates expected costs by proportionally scaling past renovations costs under the assumption that an increase in the renovation intensity takes place, that is sufficient to meet Germany's climate goals. Specifically, the study at hand finds that renovation efforts will have to be more than doubled, if Germany is set to comply with its overall goal to achieve carbon neutrality till 2050. Such a shift would amount to yearly costs of about 40.3 bn. € in 2019 prices\footnote{We assumed a deflator of 1.46 based on price indices for construction costs as specified in \citet{Hornykewycz.2025}. In 2023 prices the shock amounts to about 58 bn. €.}, which would represent a substantial shift in final demand. As the study also details how these costs should be mapped on different sectors, it provides sufficient information to construct a concrete and directly applicable specification for the sector-specific annual changes in final demand imposed by such a reorientation. This specification shocks final demand in seven sectors, where sectors are sorted by the relative increase associated with these shocks (as given in brackets): 
+Glass and glassware (+50.3\%), ceramic products and processed stones (+37,3 \%), specialized construction work (+27,8\%), rubber and plastic products (+13.4\%), chemicals and chemical products (+3.7\%), machinery (+1.2\%) and electrical equipment (+1.0\%).
+In terms of the data used, we apply the so estimated shock vector as proposed by \citet{Hornykewycz.2025} with official German input-output data for 2019, the most recent year available \citep[see][]{IOTabelle}.
+
+In this study we exploit the opportunity to draw on a well-researched suggestions for how a specific transformation strategy impacts on final demands across sectors, which perfectly resembles our envisioned scenario of an exogenous shock to final demands. As both modeling approaches introduced can cope with such a simulated change in final demands, this provides a clear-cut case for illustrating \textit{what difference the choice of modeling philosophy makes} when approaching practical issues related to the ambition to speed up socio-ecological transformation by additional public or private investment.
+
+% HIER KÖNNTEN WIR BERNI FRAGEN, OB ER WAS SCHREIBEN MAG. WIR KÖNNTEN AUCH ÜBERLEGEN, DIE SCHIENENAPPLICATION MIT AUFZUNEHMEN.
+
+\section{CGE models with CES functions as an intermediate approach towards modeling production} \label{sec:ces}
+
+Traditionally, many CGE models build on a Cobb-Douglas function to model consumption and production, where some nested applications also combine a Cobb-Douglas function for modeling substitution between intermediate goods and factors with a (nested) Leontief production function to capture constraints on the substitution among intermediates \citep[e.g.][]{GAMS.IO}. However, in the past decades the use of constant elasticity of substitution (CES) functions has become more common to model production as well as consumption in such frameworks \citep{Taylor1990,Klump.2012,Kim.2017}.
+
+As indicated, these CES functions are used to model three types of trade-offs: while a CES utility function is employed to represent substitution between different consumption goods (captured by the substitution elasticity $\sigma$, see equation \eqref{eq:cesdemand}), a \textit{nested} CES production function can capture both, substitution between intermediates and factors (with elasticity $\theta$) as well as substitution between different intermediate goods in the nested part (with elasticity $\epsilon$) as shown in equation \eqref{eq:cesprodfun}.
+
+An integral property of CES functions is the introduction of these explicit substitution parameters, which endow related models with additional flexibility. Specifically, these parameters provide a conceptual bridge between a Leontief production function and a Cobb-Douglas function: with low elasticities CES functions behave similar to the former and eventually converge to a Leontief function in the asymptotic limit (i.e., for $\varepsilon \to 0$), while an elasticity $\varepsilon$ equal to one coincides with the Cobb-Douglas case.
+
+Hence, in Kuhnian terms such CES models are more general insofar as they capture not only both archetypical representations of production processes associated with different paradigmatic perspectives, but also the relevant middle ground or paradigmatic gap, that arises from competing assumptions. In this context, the Leontief production function is interpreted as a heterodox archetype for modeling production in the short run that originates in the works of classical economists like Smith or Ricardo \citep[e.g.][]{Blecker2019}, whereas the Cobb-Douglas case is taken to represent the archetypical neoclassical approach. This interpretation also follows from section~\ref{sec:IO_models}, where the choice of production function was identified as a key paradigmatic wedge. Hence, an approach based on CES-functions allows for exploring the consequences of this major conceptual difference.
+
+In what follows we compare the effect of a sectoral shock to final demand as defined in section \ref{sec:data} across different modeling strategies and specifications. The aim of this exercise is to better assess how the choice of model translates into different predictions of the economic effects of transformational policies building on increased public investment. In our view, this aspect is a key factor for assessing whether and to what extent the use of CES functions may contribute to bridging paradigmatic gaps that separate different modeling traditions.\footnote{Note that to initialize the demand shock formally, we can simply enter additional investment as gross sums in the standard Leontief model as indicated in equation \eqref{eq:leontief_effect}. As already indicated in section \ref{sec:data}, for the general equilibrium model, which is formulated in normalized terms, changes in final demands have to be entered relative to current final spending in affected sectors.}
+
+\subsection{Basic properties of CGE models with (nested) CES functions} \label{subsec:introducingCES}
+
+In line with other related applications, \citet{BF2019, BF2022} employ CES functions in various contexts. In what follows we focus on the treatment as presented in \citet{BF2019}, which not only makes consistent use of CES-functions, but also suggests specific values for the elasticities of substitution based on empirical considerations, namely $(\varepsilon,\theta,\sigma) = (0.001,0.5,0.9)$. Thereby, the low elasticity between intermediate goods is of particular interest as this choice implies that the CES production function mimics a Leontief production function in the nested part of equation \eqref{eq:cesprodfun} shown below. Although this can be interpreted as taking one step towards a more heterodox perspective on modeling production, the full implications of this modification are not ex ante clear, however, also because the final results obtained also depend on the other elasticities employed in a specific application.
+
+\citet{BF2019} employ the following constant returns to scale CES function for modeling final demand, which aligns closely with the exposition in section \ref{subsec:CGE}, especially equation \eqref{eq:cgutilitymax}.
+
+\begin{equation}
+    \label{eq:cesdemand}
+    \mathcal D(\mathbf c)= \left( \sum_{i=0}^N \omega_{i0}^{\frac 1 \sigma} c_i^{\frac {\sigma-1}{\sigma}} \right)^{\frac {\sigma}{\sigma-1}}
+\end{equation}
+
+For the production side the authors also retain the assumption of constant returns to scale. As indicated before and in line with the standard use of nested CES functions they assume specific elasticities for modeling substitution across intermediate goods ($\epsilon$) as well as substitution between production factors and intermediates ($\theta$). 
+
+Doing so they arrive at the formulation
+
+\begin{equation}
+    \label{eq:cesprodfun}
+    f_u(l_u, \mathbf x_{\mathbf{s} u}) =  \mathcal A_u \left(\omega_{lu}^{\frac{1}{\theta}} l_u^{\frac {\theta-1}{\theta}} + (1- \omega_{lu})^{\frac{1}{\theta}} \left( \left(\sum_{k=1}^N \omega_{ku}^{\frac{1}{\epsilon}} x_{ku}^{\frac{\varepsilon - 1}{\varepsilon}} \right)^{\frac{\varepsilon}{\varepsilon - 1}} \right)^{\frac{\theta-1}{\theta}} \right)^{\frac{\theta}{\theta - 1}}.
+\end{equation}
+
+Taken together with the market clearing conditions for goods markets (equation \eqref{eq:_goods_clear}) and the labor market clearing conditions as employed in problems \eqref{eq:profitmaxproblem} and \eqref{eq:costmin} these formulations allow for the derivation of new equilibrium configurations obtained after imposing specific shocks.\footnote{While most standard textbook representations of the CES-function do not include the substitution elasticities as exponents of the share parameters, ours does. Intuitively, incorporating the substitution elasticities in that way reflects a possible adjustment process, because it not only allows for the substitution of inputs, but also for the change in effective contribution of each input. Adding this exponent is in line with most practical applications of the model \citep[e.g.][]{Kim.2017}, including the implementation of the model in \cite{BF2019}, which, in this instance, deviates from the equations presented in the paper.} When doing so, combinations of efficient prices and quantities have to be calculated iteratively until a stable solution is attained, which then represents the new equilibrium.\footnote{In standard textbooks \citep[e.g.][]{cardeneteAppliedGeneralEquilibrium2017} the existence of equilibria is usually motivated by convergence theorems of fixed-point iterations like Bowers' fixed point theorem. In practice however, nonlinear root finding methods like modifications of Newton's method are employed to find new equilibria. In our implementation we used the Nonlinearsolve.jl package \citep[][]{palNonlinearSolvejlHighPerformanceRobust2025} implemented in Julia \citep{bezansonJuliaFreshApproach2017}. There also exist generalized methods, where the cost function and demand function do not have to be specified algebraically \citep[e.g.][]{choiComplementarityApproachSolving2014}.} When substituting the concrete expressions for the cost function, the wage function, and the demand function into equation~\eqref{eq:equilibrium}, projections for efficient prices and quantities are provided by the following pair of equations for each $1 \leq u \leq n$.
+
+\begin{gather}
+\begin{split}    
+  p_u = \biggl( \mathcal A_u^{\varepsilon - 1} \left( \omega_{ul} w_u ^ {1 - \varepsilon} + (1 - \omega_{ul})  q_u ^ {1 - \varepsilon} \right) \biggr) ^ {\frac{1}{1 - \varepsilon}} \\
+  y_u = p_u^{-\theta} \left(\sum_{s=1}^n \omega_{su}  p_s ^ {\varepsilon}  \mathcal A_s ^ {\varepsilon - 1} q_s ^ {\theta - \varepsilon}  (1 - \omega_{ls} )  y_s \right) +  c_u,
+  \end{split}
+\end{gather}
+where 
+\begin{gather}
+\begin{split}
+  q_u = \left( \sum_{s=1}^n \omega_{us}  p_s ^ {1 - \theta} \right) ^ {\frac{1}{1 - \theta}}. \\
+  w_u = p_u \mathcal A_u ^ {\frac {\varepsilon - 1}{\varepsilon}} \omega_{lu} ^ {\frac{1}{\varepsilon}} y_u ^ {\frac{1}{\varepsilon}} l_u ^ {\frac {-1}{\varepsilon}} \\
+  c_u = D_u \left( \frac{p_u}{\text{CPI}} \right)^ {-\theta} \omega_{0u} \sum_{s=1}^n w_s l_s. \\ CPI = \left( \sum_{u=1}^n \omega_{0uu} p_u^{\theta  -1} \right)^{\frac{1}{1\theta - 1}}.
+  \end{split}
+\end{gather}
+
+Note that, in this formulation $\mathbf{q}$ represent the prices of intermediary goods. Taken together with equation~\eqref{eq:market_clearing_sheppard}, we observe from the above system of equations that new equilibrium prices are given by a fixed point of the cost function at which the new quantities satisfy the market clearing conditions. Figuratively speaking this implies that the above equations represent an iterative algorithm, which mimics the intuition underlying the Walrasian auctioneer, who successively adjusts prices until an efficient allocation is reached \citep{cardeneteAppliedGeneralEquilibrium2017}.
+
+Following the descriptions in section \ref{subsec:CGE} post shock relative prices are obtained by the normalization with the chosen numeraire and increase in real GDP is calculated with the Laspeyres index, via the consumption side.  Nominal GDP, which is of little interest to us in this application can be either obtained from the demand side via $\sum_{s = 1}^n \post {\tilde p_s }\post c_s$ or from the supply side via $\sum_{s = 1}^n \post {\tilde w_s } l_s$. Moreover the sectoral composition of intermediate or final demand can be assessed and compared to the pre-shock equilibrium by comparing the Domar weights and consumption shares.
+
+ \subsection{To what extent do elasticities matter?}\label{subsec:CGE_elasticity}
+
+To assess the implications of this setup and the variation in outcomes associated with changing assumptions on substitution elasticities, we compare the estimated reaction of real GDP to a transformational demand shock as specified in section \ref{sec:data} for a variety of scenarios. Specifically we vary individual elasticities between 0 and 1, while holding all other elasticities constant at some pre-specified level to explore the full range of possible outcomes associated with this specific axiomatic variation.
+
+In this vein, the panel in Figure \ref{fig:elasticity-gradient} shows estimated GDP for varying elasticities of all types assuming that all other elasticities are held constant at $0.9$ (upper left corner), $0.5$ (upper right corner), $0.2$ (bottom left corner) and $0.1$ (bottom right corner). For purposes of comparison these graphical representations also include estimates taken from a traditional Leontief model (as explained in section \ref{sec:leontief}) as well as a standard Cobb Douglas approach  to assess what difference the introduction of more flexible and heterogenous assumptions on substitutability properties eventually brings. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{pictures/impulse.png}
+    \caption{Effect of different elasticities on real GDP}
+    \label{fig:elasticity-gradient}
+\end{figure}
+
+An overall inspection of the results shows that in this comparison the standard Leontief approach delivers the largest GDP estimate -- on this basis GDP is expected to grow by about 1.5\%, which is equivalent to a multiplier of 1.15 given that the initial investment impulse was specified to be 40.337 bn. €, about 1.3\% of GDP. In contrast, the Cobb-Douglas specification predicts virtually no change in real GDP (about 0.005\%). With sector-specific primary-factor supplies fixed, the imposed green investment reallocates intermediates and final demand and changes relative prices, but it does not materially expand aggregate factor input. The main macroeconomic impact of the demand shock in this closure is therefore sector-specific price pressure rather than aggregate real growth.
+
+With regard to how assumptions on substitution elasticities affect final outcomes, Figure \ref{fig:elasticity-gradient} shows that the aggregate response remains close to zero over most of the parameter space. There is no common monotonic relationship between easier substitution and the T\"ornqvist real-GDP index. Sensitivity becomes visible mainly when several elasticities are simultaneously very low; in particular, stronger complementarity in final demand can then increase the measured quantity response. Thus, changing substitution elasticities alone does not generally move the CGE estimate close to the IO result.
+
+Against this backdrop we concede that the introduction of Leontief-like properties in the production function helps bridging paradigmatic cleavages on a level of conceptual foundations -- e.g. with respect to the question how to adequately represent production processes. In terms of predicted aggregate outcomes, however, the effects are neither large nor uniformly directed. Some highly complementary specifications move the estimate modestly towards the IO result, but for most parameter values the binding capacity constraint keeps aggregate growth close to zero and far below the IO result. Before turning to this key aspect in section \ref{sec:labor} further below, we first inspect structural differences between model outcomes on a more granular level.
+
+\subsection{The effect of a demand-shock in inter-paradigmatic comparison?}
+
+To facilitate a comparative discussion on characteristic patterns associated with the imposition of exogenous demand shocks we use the opportunity to illuminate some structural differences in model responses between the two types of applications.
+
+First and foremost, we note that in the standard Leontief model the initial change in final demand expenditures is, somewhat unsurprisingly, fully reflected by an expansion of final demand $\mathbf{c}$ with all prices staying constant.\footnote{On top of the initial stimulus, the Leontief model also features an induced demand effect arising from the growth in income resulting from the original expansion. However, these effects are too small to be visible in figure~\ref{fig:comparison-sec4}.} This pure quantity expansion reflects the output adjustment logic employed in the underlying model closure and stands in contrast to the more heterogeneous results provided by the CGE approach. In this setup an exogenous demand shock is accommodated by adjusting total revenues to the (net) change in monetary expenditure, which can happen through an expansion of either quantities or prices. And, indeed, in those sectors in which the exogenous shock hits, (relative) prices show a substantial increase and contribute significantly to match the demand stimulus. Quantities, on the other hand, only rise in five out of seven shocked sectors as is indicated by the left panel in Figure \ref{fig:comparison-sec4}. Moreover, in all shocked sectors the combined changes of prices and quantities do not suffice to fully reflect the imposed expansion in expenditures so that a third component is required to eventually accommodate the external stimulus. This third component takes the form of a crowding-out effect, i.e., a decrease of final consumption net of the additional stimulus. These sectoral crowding-out effects, which appear mainly in sectors primarily affected from the exogenous shock, is complemented by aggregate crowding-out effect driven by the overall scarcity of production factors ($l^{max}$ in our model setup), which implies that even sectors relatively unaffected from the exogenous shock in terms of their own production or intermediate good relationships will show a slight decrease in gross output (as shown in Figure \ref{fig:sectoral-changes} below).
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=0.95\textwidth]{pictures/panel.png}
+  \end{center}
+  \caption{Changes in prices and consumption for shocked sectors (left panel) and quantities and prices for all sectors (right panel). Outputs are based on a model run using the standard specification from \citet{BF2019} with $(\varepsilon,\theta,\sigma) = (0.001, 0.5, 0.9)$. Error bars indicate the range of outcomes that can be achieved for extreme parameter values (specifically, $(\varepsilon,\theta,\sigma) = (0.001, 0.1, 0.6)$ and $(\varepsilon,\theta,\sigma) = (0.99, 0.99, 0.99)$).}
+  \label{fig:comparison-sec4}
+\end{figure} 
+
+In general, we observe the theoretically expected positive correlation between quantity and price changes in the response of the CGE model as shown in the right panel of Figure \ref{fig:comparison-sec4}. This pattern is consistent with rationalizing the exogenous shock in direct analogy to positive demand shocks as employed in standard microeconomics, which shift demand curves outwards. Hence, relative prices of those goods, that are in high demand, increase, while prices for the remaining goods fall, delivering a correlation that runs counter the usual notion of the law of demand\footnote{Shifting a curve invokes an exception from the standard law of demand, which effectively represents a recourse on a ceteris paribus clause, see \citet{Hausman.1990}}. In our application this pattern holds not only for five out of seven sectors subject to the exogenous demand shock (colored as red), but also for the large majority of remaining sectors (shown in pink). Important outliers to this overall development are five specific sectors appearing in the second quadrant in the right panel of Figure \ref{fig:comparison-sec4}, where two belong to the shocked sectors (again in red), whereas three others are not directly affected from the shock.\footnote{The five sectors in the second quadrant are \textit{Lumber and Wood}, \textit{Metal ores and Mining} and \textit{Coke and refined petroleum products} as well as \textit{Chemicals and chemical products} and \textit{Electrical equipment} (shocked; in red).} Those sectors instead mimic the law of demand when showing rising prices and decreasing quantities. Also, these sectors show a stronger average decline in terms of quantity then the remaining sectors, that are not subject to the exogenous shock. This pattern occurs because of a 'cost-shock', where higher prices for intermediate goods originating in the shocked sectors translate into a net price increase for these five sectors that coins aggregate outcomes. The very same reason explains, why these sectors show an over-proportional reduction in quantities as they are not only subject to the aggregate crowding out effects (due to scarcity of labor), but also more sensitive to the transmission of sectoral crowding out effects occurring in shocked sector (which leads to shortage of intermediate goods). 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{pictures/diff_lambda_imp.png}
+    \caption{Change in outputs, based on a model run using the standard specification  from \citet{BF2019}   with $(\varepsilon,\theta,\sigma) = (0.001, 0.5, 0.9)$. Shocked sectors remain unshaded.}
+    \label{fig:sectoral-changes}
+\end{figure}
+
+Finally, by assessing changes in sectoral production after the demand shock in Figure \ref{fig:sectoral-changes}, we find that the output adjustment approach will lead to an expansion of almost all sectors, while the general equilibrium approach leads to a reduction of gross output in the large majority of sectors that are not directly affected by the demand shock. Moreover, the shock also depresses gross output and final consumption associated with two of the shocked sectors (in line with Figure \ref{fig:comparison-sec4} above, which focuses on final demand only). These heterogeneous sectoral movements largely offset one another in the T\"ornqvist aggregate, producing the near-zero real-GDP response reported above. Notwithstanding this overall pattern, the complex substitution dynamics implied by the CGE approach lead to exceptional outcomes in specific sectors. The most obvious idiosyncratic outcome occurs in two sectors that are not shocked –– \textit{building construction works (sector 33 )} and \textit{civil engineering works (sector 34)} --, but, rather, massively expand their intermediate goods production at the expense of final outputs, which represents an over-proportional intersectoral crowding-out effect. In other words, intermediary goods from these sectors are in extremely high demand due to the enforced shift in final expenditures. For both of these sectors the expansion in intermediate goods production is so strong, that these sectors expand more strongly than in the Leontief case and thereby partially compensate for the lack of freely available workers in shocked sectors.
+
+As already indicated, we observe that the change in assumptions with regard to production technology, that does represent a step towards a more heterodox perspective, does not contribute to closing the paradigmatic gap in terms of results. As this exemplary analysis shows, the neoclassical outcome is mostly characterized by the generally constraining scarcity of factors that rationalizes any directed exogenous demand shock as an additional burden, requiring the potentially costly or inefficient reallocation of scarce production factors. By moving towards a more Leontief-like understanding of production processes such adaption and reallocation actually becomes harder to accomplish. Hence, this axiomatic variation in isolation has the curious effect to increase paradigmatic distance in terms results, although it reduces the same distance on the level of assumptions.
+
+\section{Hacking demand: varieties of labor market slack} \label{sec:labor}
+
+Based on the preliminary findings of the preceding section we now move on to consider the impact of a second major \textit{axiomatic variation} \citep{Kapeller.2013} proposed in the papers of Baqaee and Farhi, especially in \citet{Baqaee.2021,BF2022}, which relates to the introduction of underutilized factor markets, that is, slack on labor markets. This variation allows for integrating the notion of (involuntary) unemployment, which affects (capacity) constraints on production factors. These constraints play, as we have seen, a key role for determining the overall magnitude of the results presented so far. Similar to other classic examples of axiomatic variation in economics (like the "market for lemons" in the early 1970s), the authors provide an overall narrative or story (akin to the reference to the market for used cars) to create legitimacy for looking at ideas running counter to established convictions and conventions (like asymmetric information and adverse selection; see \cite{Akerlof.1970}). In this application the narrative legitimizing the consideration of such labor market slack is given by the context of Corona-related lockdowns that partially required people to abstain from work due to social distancing regulations.\footnote{The attentive reader will identify a second source of unemployment mentioned in \citet{BF2022}, which follows from the assumption of minimum wages leading to market inefficiencies. However, this form of unemployment does not relax capacity constraints, which is why we disregard this aspect in our analysis.}
+
+The introduction of such a labor slack in this simple model setup implies -- also because the model features only one production factor -- a fundamental relaxation of the crucial capacity constraint, i.e., the conceptual source of scarcity in the model. Against this backdrop, it does not come as a great surprise that the general magnitude of observed outcomes in terms of GDP crucially depend on the amount of labor slack allocated in the first place, while the sector-specific reactions in terms of prices and strongly depend on the sectoral allocation of labor slack. 
+
+Conceptually, it is important to note that the introduction of such a labor slack by itself is to be conceived and interpreted as the advent of an exogenous shock: in model terms the economy is at some variant of full employment already in the pre-shock state, whereas the assumption of labor slack kicks in \textit{jointly} with other assumed shocks and effectively implies the arrival or emergence of additional labor inputs, which are, in turn, absorbed by efficient markets to produce additional outputs. Hence, even in the absence of other shocks -- like the demand shock in our application -- the introduction of labor slack would imply the search for a equilibrium as it effectively represents a spontaneous expansion of the labor force.
+
+In what follows, we employ two different rationales to be potentially applied to the case at hand: first, we consider a theoretical rationale in section \ref{subsec:capconstraint1} that starts from assuming that labor markets can mobilize workers to match the necessary expansion in a case of a demand shock. For doing so, we take the labor market expansion as predicted by the simple Leontief model as a benchmark to guarantee an adequate degree of slack to be imposed in a CGE-context. Second we consider a naive empirical calibration approach that employs (some fraction of) current unemployment as a proxy for existing slack on labor markets in section \ref{subsec:capconstraint2}. In both applications we specify the relevant expansion of the labor force on a sectoral level (i.e., as a vector), which either mimics the impact of the shock as predicted by the Leontief model (as in section \ref{subsec:capconstraint1}) or increases the labor force allocated to all sectors by some constant growth rate (as in section \ref{subsec:capconstraint2}).
+
+\subsection{Abstracting from capacity constraints I: a demand-driven CGE model?} \label{subsec:capconstraint1}
+
+To explore the practical implications of labor slack, we use a CES-based CGE model as outlined in section \ref{subsec:introducingCES} that calibrates labor slack by taking the labor market expansion associated with a traditional Leontief approach as a benchmark This procedure allocates labor in accordance with projected sectoral requirements and leads to an aggregate employment growth of 1.7\%. 
+
+When inspecting the model results we observe at first glance that the theoretical intuition outlined above -- namely that capacity constraints prove crucial for output adjustment -- is immediately confirmed. Indeed, we find that by approaching the problem this way the results of the CGE model for real GDP growth are much more in line with the traditional Leontief outcome, even surpassing the latter slightly. While the impact of the exact choices of elasticities remains negligible for the larger part of possible parameter values, we find that the introduction of labor slack -- or more generally slack on factor markets -- indeed provides a preliminary vantage point for constructing meaningful conceptual connections between both modeling traditions. Crucially, the general magnitude of overall GDP is seemingly governed by the amount of additional labor allocated, where the former estimate is close to, but generally (slightly) below, the size of the imposed labor slack.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{pictures/impulse_ls.png}
+    \caption{Effect of different elasticities on GDP with labor slack (Leontief calibration). Note that, in the visual display there is a strong overlay between all scenarios associated using a CES-function and the Cobb-Douglas model.}
+    \label{fig:elasticity-gradient2}
+\end{figure}
+
+In contrast to this significant overlap in terms of aggregate outcomes, a key difference between a classic Leontief input-output model and the CGE-version, that mimics the overall growth and employment effects of the former, is that the latter also allows for greater heterogeneity of sectoral outcomes in terms of both, quantities and prices. Overall we find that -- similar to the Leontief-case -- all sectors in the economy will expand their production, whereas price changes are somewhat idiosyncratic. Specifically, we find that quantity adjustments across sectors are largely governed by the additional labor allocated to those sectors. Relative prices, however, do not correlate strongly with allocated labor, but rather indicate the presence of trade-offs. For the shocked sectors a stronger quantity expansion tends to co-occur with a greater price increase (with one exceptional outlier, see the right panel in Figure \ref{fig:panel_ls}). In contrast, the inverse pattern emerges for sectors not affected from the shock (see the right panel in Figure \ref{fig:panel_ls}). In this context, increasing prices again imply crowding-out effects for shocked sectors in terms of quantity produced, while those shocked sectors that find prices decreasing are also subject to a corresponding crowding-in effect in terms of quantity to match the desired output adjustment.
+
+These differences in post-shock relative equilibrium prices and quantities across sectors are thereby driven by the distinct use of intermediate goods: for shocked sectors the startling exception is glass, which combines a strong quantity expansion with a price decrease. This outcome is due to its somewhat distinct structure of intermediates as compared to the other shocked sectors, which lets it profit from cheap relative prices. Similarly, the sector with the strongest price increase -- ceramics -- needs inputs in the form of primary goods, that are seemingly originating from sectors more difficult to expand, which in turn leads to over-proportional price increases.
+
+Overall the origin of the observed changes in relative prices have to be interpreted against the backdrop that the additional labor allocated on a sectoral level is taken from an extrapolation based on a Leontief-projection. This 'enforced' sectoral allocation of labor governs quantities that seemingly deviate from a general equilibrium allocation and translate into an oversupply of labor in some sectors (leading to lower prices) and a shortage in others (which raises prices). This misalignment leads to small losses in terms of efficiency, which is why growth estimates fall slightly behind the allocate amount of labor slack.
+
+However, we nonetheless observe that in this scenario, where labor market slack is aligned with the exogenous shock, volatility in relative prices is much smaller and more symmetric than in all other scenarios analyzed in this paper. In other words, the release of additional labor supply incorporated by the labor slack assumptions effectively prevents any substantial overheating of the economy and has rather symmetric effects on sectorial efficiency. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{pictures/panel_ls.png}
+    \caption{Changes in prices and consumption for shocked sectors (left panel) and quantities and prices for all sectors (right panel). Outputs are based on a model run using the standard specification from \citet{BF2019}, i.e., $(\varepsilon,\theta,\sigma) = (0.001, 0.5, 0.9)$, with added labor slack from the Leontief approximation. Error bars indicate the range of outcomes that can be achieved under for extreme parameter values (specifically, $(\varepsilon,\theta,\sigma) = (0.001, 0.1, 0.6)$ and $(\varepsilon,\theta,\sigma) = (0.99, 0.99, 0.99)$).}
+    \label{fig:panel_ls}
+\end{figure}
+
+When comparing the expected adjustments in gross output implied by the Leontief projection and the CGE model with labor slack across all sectors as shown in Figure \ref{fig:sectoral-changes_ls} we observe that the latter version more strongly expands the production of intermediate goods \textit{on average}, but not consistently across all sectors. The reason is for this seemingly unsystematic outcome is that the CGE model identifies primarily those sectors as constrained in their expansion that are either associated with the provision of primary goods, like oil and gas and metallic ores, or services (large remainder). In other words, the CGE shows two major qualitative differences in its projection: first, it substitutes away from some primary sectors and compensates this with a significant expansion of intermediary goods in related sectors (especially building construction work, civil engineering work, cars and trucks, refined metals of various sorts as well as machinery). Second, it implicitly assumes a much smaller or qualitatively different reaction of consumers to receiving additional income, which leads to comparatively smaller expenditures for large parts of the service sectors.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{pictures/diff_lambda_imp_ls.png}
+    \caption{Change in outputs, based on a model run using the standard specification from \citet{BF2019}, i.e., $(\varepsilon,\theta,\sigma) = (0.001, 0.5, 0.9)$ with added labor slack from the Leontief approximation. Shocked sectors remain unshaded.}
+    \label{fig:sectoral-changes_ls}
+\end{figure}
+
+\subsection{Abstracting from capacity constraints II: adopting an empirical calibration?}\label{subsec:capconstraint2}
+
+As already indicated, in this second application we again assume that the shock to the economy has two components: the imposed shift in final demand as well as the advent of additional labor, that was previously unavailable, thereby increasing the total available labor force. However, in this application the allocation of additional labor mimics the existing sectoral allocation, i.e., the additional labor is transferred uniformly to the sectors, so the new labor supply is simply given by $\mathbf l_\text{new} = (1 - \mu)^{-1} \mathbf l$. While the choice of $\mu$ is flexible in our baseline application $\mu$ is equal to the rate of unemployment.\footnote{Unemployment in Germany in 2019 according stood at 3.2 \% according to the ILO definition of unemployment, which corresponds to roughly 60\% of registered unemployment in Germany as provided by Federal employment statistics  (\cite{LabourMarketInformation}).}
+
+Hence, this second empirical application is based on a different -- and conceptually somewhat more independent -- reaction of labor markets, where the sectoral expansion of workers is not directly tied to (estimated) requirements of the respective demand shock. At the same time the assumed reaction is more sizeable as total employment expands by 3.1\%, whereas in the former application the total expansion of the labor force was only at 1.7\%.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{pictures/impulse_ls_empirical.png}
+    \caption{Effect of different elasticities on GDP with labor slack (empirical labor slack)}
+    \label{fig:elasticity-gradient3}
+\end{figure}
+
+
+Again we observe that the overall magnitude of growth estimated by the CGE model is largely governed by the allocated labor slack as is illustrated by Figure \ref{fig:panel_ls_emp}. However, the misalignment between exogenous changes in final demand and available factors is reflected by the fact that GDP results are more sensitive to parameter choices on elasticities as compared to the application in section \ref{subsec:capconstraint1}. Also this misalignment reappears on a sectoral level, so that the corresponding results reproduce the patterns already found in section \ref{sec:ces} .
+
+Nonetheless, on a general level this example again illustrates how the introduction of labor slack can lead to more optimistic results in terms of GDP growth. The key requirement is the willingness to assume that such an expansion of the labor force is indeed a plausible reaction -- either due to labor market considerations or as a general response to increased effective demand. While this feature is not truly surprising it shows how modifying dominant convictions on the role and modeling of capacity constraints indeed opens up a shared realm, in which the simplistic juxtaposition of an 'expansionary' Leontief approach and a near-zero-growth CGE perspective becomes subject to a more nuanced perspective that allows for pragmatically interpreting labor slack as a moderating variable to explore some shared ground between these two competing visions of the economy.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{pictures/panel_ls_empirical.png}
+    \caption{Changes in prices and final consumption for shocked sectors (left panel) and quantities and prices for all sectors (right panel). Outputs are based on a model run using the standard specification  from \citet{BF2019}, i.e. $(\varepsilon,\theta,\sigma) = (0.001, 0.5, 0.9)$, with added labor slack (3.1\% per sector). Error bars indicate the range of outcomes that can be achieved under for extreme parameter values (specifically, $(\varepsilon,\theta,\sigma) = (0.001, 0.1, 0.6)$ and $(\varepsilon,\theta,\sigma) = (0.99, 0.99, 0.99)$).}
+    \label{fig:panel_ls_emp}
+\end{figure}
+
+A deeper analysis of the results of this application shows that the underlying assumption on how exactly additional labor is allocated matters greatly for the sectoral outcomes predicted by the CGE-approach. In subsection \ref{subsec:capconstraint1} assigning large segments of the additional labor force explicitly to shocked sectors led to a complex reconfiguration of the economy that shifted intersectoral relationships substantially and in heterogeneous ways, but managed to accompany the shock in final demand quite well (as is evidenced by the moderate price increase in shocked sectors). In contrast, in this application the economy now expands more homogeneously across sectors (see Figure \ref{fig:sectoral-changes_ls_emp} for an overview), but falls short in terms of final outputs produced in shocked sectors, which also see relative prices increase strongly. These sectoral bottlenecks in turn create an overall pattern of quantity and price effects similar to the original application without labor slack (see especially the right panel in Figure \ref{fig:panel_ls_emp} in comparison with the right panel of Figure \ref{fig:comparison-sec4} in section \ref{subsec:CGE_elasticity}) that is, however, coined by an overall expansion of production, which is in large parts governed by the amount of labor slack allocated. 
+
+The much more symmetric expansion in output across all sectors is very close to the result observed in section \ref{subsec:CGE_elasticity} (e.g. in Figure \ref{fig:panel_ls_emp}), where no labor slack has been imposed at all. Hence, we observe that the allocating additional labor supply in strict proportion to current employment across sector will uniformly increase produced quantities, but will, otherwise, only show a minimal impact on prices. A shock on final demand, on the other hand, might easily have a stronger impact on prices than quantities even in the case of labor slack (see the left panel in Figure \ref{subsec:CGE_elasticity}), if some sectorial misalignment remains.
+
+This latter observation also translates into a sectorial view as indicated by Figure \ref{fig:sectoral-changes_ls_emp}. Here we observe that the expansion of total production falls behind the predictions of the Leontief model for the shocked sectors, while most other sectors show a significantly greater expansion than before. A few exceptions are again found in sectors, which focus on the provision of primary goods, like ores, wood and refined petroleum and which are substituted by alternative intermediaries in the new equilibrium.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{pictures/diff_lambda_imp_ls_empirical.png}
+    \caption{Change in outputs, based on a model run using the standard specification from \citet{BF2019}, i.e. $(\varepsilon,\theta,\sigma) = (0.001, 0.5, 0.9)$, with added labor slack (3.1\% per sector). Shocked sectors remain unshaded.}
+    \label{fig:sectoral-changes_ls_emp}
+\end{figure}
+
+
+\section{Bridging paradigms in CGE modeling? A preliminary assessment} \label{sec:conclusion}
+
+In sum, this paper observes and analyzes two axiomatic variations of the standard neoclassical approach towards input-output modeling. The first relates to the more long-standing tradition of modeling some substitution processes as rather inflexible, which can be mimicked by the use of a CES-framework with appropriate parameter values. In this case the underlying CES function allows for establishing a plausible theoretical continuum between different paradigmatic perspectives on the level of assumption, but when applied in isolation does not contribute to closing paradigmatic gaps in terms of outcomes. Moreover, as indicated by Figure \ref{fig:labour_camp}, which summarizes outcomes from all scenarios analyzed, variations in the imposed elasticity have little to no impact on final results for large parts of the relevant parameter space.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1\linewidth]{pictures/comparison_between_labor_slacks.png}
+    \caption{Different estimates of the impact of shock on final demand focused on investments towards a carbon-neutral residential sector. Note that, in the visual display there is a strong overlay between all scenarios associated with using a CES-function for the case of calibrated labor slack as already shown in Figure \ref{fig:elasticity-gradient2}.}
+    \label{fig:labour_camp}
+    \end{figure}
+
+The second variation -- the introduction of labor slack -- on the other hand is useful for creating outcomes that align more closely with those achieved by the traditional Leontief approach. However, the assumption of positive labor slack in this context plays the role of a \textit{deus ex machina} that implicitly governs the GDP-expansion achieved as increases in input map roughly one-to-one on increases in aggregate output. Hence, on this level a fundamental cleavage in terms of assumptions remains as the Leontief model conceives new equilibria as essentially demand-driven, which is a feature that cannot be reproduced in a general equilibrium context by simply adding slack on factor markets. Rather, in this framework equilibria are driven by supply-considerations, which are modified ad-hoc to provide alternative outcomes. This latter aspect as is also evident from the fact that typical output expansions predicted in Figure \label{fig:labour_camp} for the relevant scenarios perfectly match the respective amount of labor slack, i.e., the increase in labor inputs. This latter feature makes it hard to achieve a common ground as the effects of a demand stimulus on exact allocation of labor remains fundamentally contested.
+
+In terms of policy-relevance our results indicate that especially the latter variation of introducing labor slack, opens some leeway to generate intermediate results, that can be situated in-between traditional approaches. However, for doing so one must somehow specify, how many hitherto unutilized factor resources can be mobilized in case of an exogenous demand shock, as well as accept that these assumptions on additional factor resources -- their total amount as well as their allocation across sector --, will play a more decisive role in coining final results, than the exogenous demand shock, that is employed as an original stimulus.
+
+\section*{Data availability statement}
+The input-output data for Germany employed in this paper is publicly available \citep[see][]{IOTabelle}.
+
+\section*{Funding statement}
+
+This paper has benefited from funding provided by the \textit{Hans Böckler Foundation} under grant number 2021-544-2, by the \textit{Linz Institute for Transformational Change (LIFT\_C)} under grant number 2022-1-114 as well as by \textit{Dezernat Zukunft}.
+
+\section*{Conflict of Interest Disclosure}
+
+The authors report no conflicts of interest associated with the content of this paper.
+
+\printbibliography
+\newpage
+\section*{Appendix}
+
+\subsection*{Sector names}
+\begin{multicols}{2}
+\begin{enumerate}[leftmargin=*,itemsep=0pt,parsep=0pt]
+\item Products of agriculture, hunting and related services
+\item Products of forestry, logging and related services
+\item Fish, aquaculture products, support services to fishing
+\item Coal
+\item Crude petroleum and natural gas
+\item Metal ores, other mining and quarrying products, services
+\item Food products, beverages, tobacco products
+\item Textiles, wearing apparel, leather and leather products
+\item Wood, cork (exc. furniture), articles of straw and plaiting materials
+\item Paper and paper products
+\item Printing services, recorded sound, image and data carriers
+\item Coke and refined petroleum products
+\item Chemicals and chemical products
+\item Pharmaceutical products
+\item Rubber and plastics products
+\item Glass and glassware
+\item Ceramic products, processed stone and clay
+\item Pig iron, steel, products of the first processing of steel
+\item Non-ferrous metals and semi-finished products
+\item Foundry products
+\item Metal products
+\item Computer, electronic and optical products
+\item Electrical equipment
+\item Machinery
+\item Motor vehicles, trailers and semi-trailers
+\item Other transport equipment
+\item Furniture and other manufactured goods n.e.c.
+\item Repair, maintenance, installation of machinery and equipment
+\item Electric current, supply of electricity, steam, air conditioning
+\item Manufactured gases, distribution services of gaseous fuels
+\item Natural water, water treatment and supply services
+\item Sewage, waste disposal, material recovery services
+\item Building construction works
+\item Civil engineering works
+\item Specialised construction works
+\item Wholesale, retail trade, repair of motor vehicles, motorcycles
+\item Wholesale trade services (exc. motor vehicles and motorcycles)
+\item Retail trade services (exc. motor vehicles and motorcycles)
+\item Land transport services and transport services via pipelines
+\item Water transport services
+\item Air transport services
+\item Warehousing and other services for transportation
+\item Postal and courier services
+\item Accommodation and food services
+\item Publishing services
+\item Audio-visual media, music publishing, broadcasting
+\item Telecommunication services
+\item Computer programming, consultancy, information services
+\item Financial services
+\item Insurance and pension funding services
+\item Services related to financial and insurance services
+\item Real estate services
+\item Legal, accounting, management consultancy services
+\item Architectural and engineering services, technical testing
+\item Scientific research and development services
+\item Advertising and market research services
+\item Other professional, scientific, technical, veterinary services
+\item Rental and leasing services
+\item Employment services
+\item Travel agency, tour operator, other reservation services
+\item Investigation, security, administrative support services n.e.c.
+\item Public administration and defence services
+\item Compulsory social security services
+\item Education services
+\item Human health services
+\item Residential care and social work services
+\item Arts, culture and gambling services
+\item Sporting, amusement and recreation services
+\item Services of membership organisations
+\item Repair of data processing equipment and durables
+\item Other personal service activities
+\end{enumerate}
+
+\end{multicols}
+\end{document}

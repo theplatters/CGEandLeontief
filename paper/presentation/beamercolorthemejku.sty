@@ -1,0 +1,425 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% LaTeX Beamer Color Palette for Johannes Kepler University Linz
+%% 
+%% Copyright (C) 2021  Michael Roland
+%% 
+%% This is a rewrite of the JKU theme originally by
+%% Susanne Hametner, Doris Pargfrieder, and Pieter-Jan Hoedt.
+%% 
+%% This Source Code Form is subject to the terms of the Mozilla Public
+%% License, v. 2.0. If a copy of the MPL was not distributed with this
+%% file, You can obtain one at https://mozilla.org/MPL/2.0/.
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NeedsTeXFormat{LaTeX2e}[1995/12/01]
+
+\ProvidesPackage{beamercolorthemejku}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Dependencies
+%% 
+
+\RequirePackage{etoolbox}
+\RequirePackage{xkeyval}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Options & Parameters
+%% 
+
+% Option darkmode: use dark color mode by default
+\newbool{jkubeamer@darkmode}
+\DeclareOptionBeamer{darkmode}[true]{\setbool{jkubeamer@darkmode}{#1}}
+
+% Option mac: use adapted color palette for screen display on Mac
+\newbool{jkubeamer@maccolors}
+\DeclareOptionBeamer{mac}[true]{\setbool{jkubeamer@maccolors}{#1}}
+
+% DEPRECATED options: these options no longer have any effect
+\DeclareOptionBeamer{greyText}{%
+    \PackageWarning{beamercolorthemejku}{Option `greyText' deprecated, option has no effect!}%
+}
+
+\ProcessOptionsBeamer
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% JKU base colors
+%% 
+\ifbool{jkubeamer@maccolors}{%
+    %TODO: Where do those color values come from? Are they still correct?
+    
+    %BLUE
+    \definecolor{jkuBlue}{RGB}{0,120,170}
+    %CYAN
+    \definecolor{jkuCyan}{RGB}{100,180,190}
+    \colorlet{jkuLightBlue}{jkuCyan}
+    %YELLOW
+    \definecolor{jkuYellow}{RGB}{230,195,35}
+    %GREY
+    \definecolor{jkuGrey}{RGB}{125,130,140}
+    \colorlet{jkuGray}{jkuGrey}
+    %DARKGREY
+    \definecolor{jkuDarkGrey}{RGB}{51,51,51}
+    \colorlet{jkuDarkGray}{jkuDarkGrey}
+    %LIGHTGREEN
+    \definecolor{jkuLightGreen}{RGB}{195,215,75}
+    %GREEN
+    \definecolor{jkuGreen}{RGB}{115,180,85}
+    %PURPLE
+    \definecolor{jkuPurple}{RGB}{145,75,130}
+    %RED
+    \definecolor{jkuRed}{RGB}{205,90,80}
+}{%
+    %BLUE
+    \definecolor{jkuBlue}{RGB}{4,110,152}
+    %CYAN
+    \definecolor{jkuCyan}{RGB}{92,207,203}
+    \colorlet{jkuLightBlue}{jkuCyan}
+    %YELLOW
+    \definecolor{jkuYellow}{RGB}{251,186,0}
+    %GREY
+    \definecolor{jkuGrey}{RGB}{128,130,136}
+    \colorlet{jkuGray}{jkuGrey}
+    %DARKGREY
+    \definecolor{jkuDarkGrey}{RGB}{90,90,90}
+    \colorlet{jkuDarkGray}{jkuDarkGrey}
+    %LIGHTGREEN
+    \definecolor{jkuLightGreen}{RGB}{187,208,50}
+    %GREEN
+    \definecolor{jkuGreen}{RGB}{76,172,78}
+    %PURPLE
+    \definecolor{jkuPurple}{RGB}{156,71,123}
+    %RED
+    \definecolor{jkuRed}{RGB}{231,55,41}
+}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% JKU base colors commands
+%% 
+
+\newcommand{\crBlue}{\color{jkuBlue}}
+\newcommand{\cBlue}[1]{{\crBlue{#1}}}
+\newcommand{\cjkuBlue}[1]{{\crBlue{#1}}}
+
+\newcommand{\crCyan}{\color{jkuCyan}}
+\newcommand{\cCyan}[1]{{\crCyan{#1}}}
+\newcommand{\cjkuCyan}[1]{{\crCyan{#1}}}
+\newcommand{\crLightBlue}{\crCyan}
+\newcommand{\cLightBlue}[1]{{\crCyan{#1}}}
+\newcommand{\cjkuLightBlue}[1]{{\crCyan{#1}}}
+
+\newcommand{\crYellow}{\color{jkuYellow}}
+\newcommand{\cYellow}[1]{{\crYellow{#1}}}
+\newcommand{\cjkuYellow}[1]{{\crYellow{#1}}}
+
+\newcommand{\crGrey}{\color{jkuGrey}}
+\newcommand{\cGrey}[1]{{\crGrey{#1}}}
+\newcommand{\cjkuGrey}[1]{{\crGrey{#1}}}
+\newcommand{\crGray}{\crGrey}
+\newcommand{\cGray}[1]{{\crGrey{#1}}}
+\newcommand{\cjkuGray}[1]{{\crGrey{#1}}}
+
+\newcommand{\crDarkGrey}{\color{jkuDarkGrey}}
+\newcommand{\cDarkGrey}[1]{{\crDarkGrey{#1}}}
+\newcommand{\cjkuDarkGrey}[1]{{\crDarkGrey{#1}}}
+\newcommand{\crDarkGray}{\crDarkGrey}
+\newcommand{\cDarkGray}[1]{{\crDarkGrey{#1}}}
+\newcommand{\cjkuDarkGray}[1]{{\crDarkGrey{#1}}}
+
+\newcommand{\crLightGreen}{\color{jkuLightGreen}}
+\newcommand{\cLightGreen}[1]{{\crLightGreen{#1}}}
+\newcommand{\cjkuLightGreen}[1]{{\crLightGreen{#1}}}
+
+\newcommand{\crGreen}{\color{jkuGreen}}
+\newcommand{\cGreen}[1]{{\crGreen{#1}}}
+\newcommand{\cjkuGreen}[1]{{\crGreen{#1}}}
+
+\newcommand{\crPurple}{\color{jkuPurple}}
+\newcommand{\cPurple}[1]{{\crPurple{#1}}}
+\newcommand{\cjkuPurple}[1]{{\crPurple{#1}}}
+
+\newcommand{\crRed}{\color{jkuRed}}
+\newcommand{\cRed}[1]{{\crRed{#1}}}
+\newcommand{\cjkuRed}[1]{{\crRed{#1}}}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Color palettes
+%% 
+\setbeamercolor*{palette primary}{bg=white,fg=black}
+\setbeamercolor*{palette jku}{bg=white,fg=jkuGrey}
+\setbeamercolor*{palette med}{bg=white,fg=jkuYellow}
+\setbeamercolor*{palette re}{bg=white,fg=jkuRed}
+\setbeamercolor*{palette sowi}{bg=white,fg=jkuGreen}
+\setbeamercolor*{palette tnf}{bg=white,fg=jkuBlue}
+\setbeamercolor*{palette lit}{parent=palette tnf}
+\setbeamercolor*{palette soe}{bg=white,fg=jkuPurple}
+\setbeamercolor*{palette bus}{bg=white,fg=jkuLightGreen}
+\setbeamercolor*{palette secondary}{parent=palette jku}
+\setbeamercolor*{palette tertiary}{bg=white,fg=jkuGrey}
+\setbeamercolor*{palette jku highlight}{bg=jkuDarkGrey,fg=jkuPurple}
+\setbeamercolor*{palette med highlight}{bg=jkuDarkGrey,fg=jkuGreen}
+\setbeamercolor*{palette re highlight}{bg=jkuDarkGrey,fg=jkuBlue}
+\setbeamercolor*{palette sowi highlight}{bg=jkuDarkGrey,fg=jkuPurple}
+\setbeamercolor*{palette tnf highlight}{bg=jkuDarkGrey,fg=jkuPurple}
+\setbeamercolor*{palette lit highlight}{parent=palette tnf highlight}
+\setbeamercolor*{palette soe highlight}{bg=jkuDarkGrey,fg=jkuYellow}
+\setbeamercolor*{palette bus highlight}{bg=jkuDarkGrey,fg=jkuPurple}
+\setbeamercolor*{palette quaternary}{parent=palette jku highlight}
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Normal style
+%% 
+\setbeamercolor*{normal text}{parent=palette primary}
+\setbeamercolor*{structure}{parent=normal text}
+\setbeamercolor*{alerted text}{parent=normal text,fg=jkuRed}
+\setbeamercolor*{example text}{parent=normal text,fg=jkuGreen}
+\setbeamercolor*{emphasized text}{parent=normal text}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Title frames
+%% 
+\setbeamercolor*{title}{parent=normal text}
+\setbeamercolor*{series title}{parent=title}
+\setbeamercolor*{subtitle}{parent=normal text}
+\setbeamercolor*{subsubtitle}{parent=subtitle}
+
+\setbeamercolor*{author}{parent=subtitle}
+\setbeamercolor*{institute}{parent=subsubtitle}
+\setbeamercolor*{date}{parent=subsubtitle}
+\setbeamercolor*{agenda}{parent=subtitle}
+\setbeamercolor*{agenda title}{parent=agenda}
+
+\setbeamercolor*{imprint}{parent=normal text}
+\setbeamercolor*{imprint name}{parent=imprint}
+\setbeamercolor*{imprint address}{parent=imprint}
+\setbeamercolor*{imprint url}{parent=imprint}
+
+\setbeamercolor*{section title}{parent=title}
+\setbeamercolor*{subsection title}{parent=subtitle}
+\setbeamercolor*{subsubsection title}{parent=subsubtitle}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Frame title/footer
+%% 
+\setbeamercolor*{frametitle}{parent=normal text}
+\setbeamercolor*{framesubtitle}{parent=frametitle}
+\setbeamercolor*{footline}{bg=white,fg=black}
+\setbeamercolor*{section in head/foot}{parent=footline}
+\setbeamercolor*{page number in head/foot}{parent=section in head/foot}
+\setbeamercolor*{date in head/foot}{parent=section in head/foot}
+\setbeamercolor*{footnote}{parent=normal text}
+\setbeamercolor*{footnote mark}{parent=normal text}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Itemization and enumeration
+%% 
+\setbeamercolor*{itemize item}{parent=normal text}
+\setbeamercolor*{itemize subitem}{parent=itemize item}
+\setbeamercolor*{itemize subsubitem}{parent=itemize subitem}
+\setbeamercolor*{enumerate item}{parent=normal text}
+\setbeamercolor*{enumerate subitem}{parent=enumerate item}
+\setbeamercolor*{enumerate subsubitem}{parent=enumerate subitem}
+\setbeamercolor*{description item}{parent=normal text}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Table of contents
+%% 
+\setbeamercolor*{section in toc}{parent=structure}
+\setbeamercolor*{subsection in toc}{parent=section in toc}
+\setbeamercolor*{subsubsection in toc}{parent=subsection in toc}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Bibliography
+%% 
+\setbeamercolor*{bibliography item}{parent=normal text}
+\setbeamercolor*{bibliography entry author}{parent=normal text}
+\setbeamercolor*{bibliography entry title}{parent=normal text}
+\setbeamercolor*{bibliography entry location}{parent=normal text}
+\setbeamercolor*{bibliography entry note}{parent=normal text}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Captions
+%% 
+\setbeamercolor*{caption}{parent=normal text}
+\setbeamercolor*{caption name}{parent=caption}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Blocks
+%% 
+\setbeamercolor*{block title}{bg=jkuDarkGrey,fg=white}
+\setbeamercolor*{block body}{use=block title,bg=block title.bg!20,fg=black}
+\setbeamercolor*{block title example}{bg=jkuGreen,fg=white}
+\setbeamercolor*{block body example}{use=block title example,bg=block title example.bg!20,fg=black}
+\setbeamercolor*{block title alerted}{bg=jkuPurple,fg=white}
+\setbeamercolor*{block body alerted}{use=block title alerted,bg=block title alerted.bg!20,fg=black}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Color mode switching commands
+%% 
+
+% color palette switches
+\xdef\jkubeamer@currentfaculty{\jkubeamer@faculty}
+\define@key{jkubeamer@kv@colorpalette}{jku}[]{%
+    \setbeamercolor*{palette secondary}{parent=palette jku}%
+    \setbeamercolor*{palette quaternary}{parent=palette jku highlight}%
+    \renewcommand{\jkubeamer@currentfaculty}{jku}%
+}
+\define@key{jkubeamer@kv@colorpalette}{bus}[]{%
+    \setbeamercolor*{palette secondary}{parent=palette bus}%
+    \setbeamercolor*{palette quaternary}{parent=palette bus highlight}%
+    \renewcommand{\jkubeamer@currentfaculty}{bus}%
+}
+\define@key{jkubeamer@kv@colorpalette}{lit}[]{%
+    \setbeamercolor*{palette secondary}{parent=palette lit}%
+    \setbeamercolor*{palette quaternary}{parent=palette lit highlight}%
+    \renewcommand{\jkubeamer@currentfaculty}{lit}%
+}
+\define@key{jkubeamer@kv@colorpalette}{med}[]{%
+    \setbeamercolor*{palette secondary}{parent=palette med}%
+    \setbeamercolor*{palette quaternary}{parent=palette med highlight}%
+    \renewcommand{\jkubeamer@currentfaculty}{med}%
+}
+\define@key{jkubeamer@kv@colorpalette}{re}[]{%
+    \setbeamercolor*{palette secondary}{parent=palette re}%
+    \setbeamercolor*{palette quaternary}{parent=palette re highlight}%
+    \renewcommand{\jkubeamer@currentfaculty}{re}%
+}
+\define@key{jkubeamer@kv@colorpalette}{soe}[]{%
+    \setbeamercolor*{palette secondary}{parent=palette soe}%
+    \setbeamercolor*{palette quaternary}{parent=palette soe highlight}%
+    \renewcommand{\jkubeamer@currentfaculty}{soe}%
+}
+\define@key{jkubeamer@kv@colorpalette}{sowi}[]{%
+    \setbeamercolor*{palette secondary}{parent=palette sowi}%
+    \setbeamercolor*{palette quaternary}{parent=palette sowi highlight}%
+    \renewcommand{\jkubeamer@currentfaculty}{sowi}%
+}
+\define@key{jkubeamer@kv@colorpalette}{tnf}[]{%
+    \setbeamercolor*{palette secondary}{parent=palette tnf}%
+    \setbeamercolor*{palette quaternary}{parent=palette tnf highlight}%
+    \renewcommand{\jkubeamer@currentfaculty}{tnf}%
+}
+
+% frame color mode switches
+\newcommand{\jkubeamer@currentcolormode}{default}
+\define@key{jkubeamer@kv@framecolormode}{light}[]{%
+    \setbeamercolor*{background canvas}{parent=palette secondary}%
+    \setbeamercolor*{normal text}{parent=palette primary}%
+    \renewcommand{\jkubeamer@currentcolormode}{light}%
+}
+\define@key{jkubeamer@kv@framecolormode}{dark}[]{%
+    \setbeamercolor*{background canvas}{use=palette secondary,bg=palette secondary.fg,fg=palette secondary.bg}%
+    \setbeamercolor*{normal text}{use=palette primary,bg=palette primary.fg,fg=palette primary.bg}%
+    \renewcommand{\jkubeamer@currentcolormode}{dark}%
+}
+\define@key{jkubeamer@kv@framecolormode}{black}[]{%
+    \setbeamercolor*{background canvas}{use=palette primary,bg=palette primary.fg,fg=palette primary.bg}%
+    \setbeamercolor*{normal text}{use=palette primary,bg=palette primary.fg,fg=palette primary.bg}%
+    \renewcommand{\jkubeamer@currentcolormode}{black}%
+}
+\define@key{jkubeamer@kv@framecolormode}{grey}[]{%
+    \setbeamercolor*{background canvas}{use=palette tertiary,bg=palette tertiary.fg,fg=palette tertiary.bg}%
+    \setbeamercolor*{normal text}{use=palette tertiary,bg=palette tertiary.fg,fg=palette tertiary.bg}%
+    \renewcommand{\jkubeamer@currentcolormode}{grey}%
+}
+\define@key{jkubeamer@kv@framecolormode}{gray}[]{\KV@jkubeamer@kv@framecolormode@grey{#1}}
+\define@key{jkubeamer@kv@framecolormode}{default}[]{%
+    \ifbool{jkubeamer@darkmode}{%
+        \KV@jkubeamer@kv@framecolormode@dark{#1}%
+    }{%
+        \KV@jkubeamer@kv@framecolormode@light{#1}%
+    }%
+    \renewcommand{\jkubeamer@currentcolormode}{default}%
+}
+
+% Command \framecolormode{light | dark | gray | black, FACULTY}: changes the current frame color mode (if color mode is absent, use the current theme color mode)
+\newcommand{\framecolormode}[1]{%
+    % convert param to lowercase
+    \begingroup\edef\@temp{\lowercase{\endgroup\def\noexpand\@temp@lcparam{#1}}}\@temp%
+    % preset default color palette
+    \setkeys{jkubeamer@kv@colorpalette}{\jkubeamer@currentfaculty}%
+    % update color palette according to params
+    \begingroup\edef\@temp{\endgroup\noexpand\setkeys*{jkubeamer@kv@colorpalette}{\@temp@lcparam}}\@temp%
+    % update frame color mode according to params (presetting default frame color mode)
+    \begingroup\edef\@temp{\endgroup\noexpand\setkeys{jkubeamer@kv@framecolormode}{\jkubeamer@currentcolormode,\XKV@rm}}\@temp%
+}
+
+% Command \setcolormode[light | dark | gray | black, FACULTY]: changes the theme color mode (if color mode is absent, reset to the global default color mode)
+\newcommand{\setcolormode}[1][]{%
+    % convert param to lowercase
+    \begingroup\edef\@temp{\lowercase{\endgroup\def\noexpand\@temp@lcparam{#1}}}\@temp%
+    % preset default color palette
+    \setkeys{jkubeamer@kv@colorpalette}{\jkubeamer@faculty}%
+    % update color palette according to params
+    \begingroup\edef\@temp{\endgroup\noexpand\setkeys*{jkubeamer@kv@colorpalette}{\@temp@lcparam}}\@temp%
+    % update frame color mode according to params (presetting default frame color mode)
+    \begingroup\edef\@temp{\endgroup\noexpand\setkeys{jkubeamer@kv@framecolormode}{default,\XKV@rm}}\@temp%
+    \setbeamercolor*{background canvas}{parent=palette secondary}%
+    \setbeamercolor*{normal text}{parent=palette primary}%
+}
+
+\setcolormode%
+
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,525 @@
+% !TeX program = pdflatex
+% !TeX encoding = UTF-8
+% !TeX spellcheck = en_US
+% !BIB program = biber
+%% 
+%% The above lines help editors like TeXstudio to automatically choose the right tools
+%% to compile your LaTeX source file. If your tool does not support these magic comments,
+%% you will need to make appropriate manual choices.
+%% 
+%% You can safely use "pdflatex" instead of "xelatex" if you prefer the pdfLaTeX toolchain.
+%% However, pdfLaTeX will not be able to deliver the professional font experience that you
+%% will get with XeLaTeX.
+%% 
+%% _Important_: These magic comments should be on the first lines of your source file.
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%%            JJJJ   K                         K   UUUU         UUUU  
+%%            JJJJ   KKKK                   KKKK   UUUU         UUUU  
+%%            JJJJ   KKKKKK               KKKKKK   UUUU         UUUU  
+%%            JJJJ      KKKKKK         KKKKKK      UUUU         UUUU  
+%%            JJJJ         KKKKKK   KKKKKK         UUUU         UUUU  
+%%            JJJJ            KKKKKKKKK            UUUU         UUUU  
+%%    JJ     JJJJJ               KKK               UUUUU       UUUUU  
+%%  JJJJJJJJJJJJJ    KKKKKKKKKKKKKKKKKKKKKKKKKKK    UUUUUUUUUUUUUUU   
+%%    JJJJJJJJJ      KKKKKKKKKKKKKKKKKKKKKKKKKKK      UUUUUUUUUUU     
+%% 
+%% This is an example file for using the JKU LaTeX Beamer Theme.
+%% 
+%% Template created by Susanne Hametner and Doris Pargfrieder
+%% Template altered by Pieter-Jan Hoedt (2020)
+%% Template rewritten by Michael Roland (2021)
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  
+%% Document class: This is a LaTeX beamer presentation.
+%% 
+\documentclass[utf8,aspectratio=169,ngerman,english]{beamer}
+%% 
+%% The comma-separated list in square brackets are class options.
+%% Useful options that you might want to use:
+%% 
+%% Define the aspect ratio of the slide layout:
+%%  * aspectratio=169  ... 16:9 aspect ratio
+%%  * aspectratio=43   ... 4:3 aspect ratio
+%%  * aspectratio=1610 ... 16:10 aspect ratio
+%% 
+%% Define document languages:
+%%  * ngerman ... German
+%%  * english ... English
+%%  * ...
+%% 
+%% Note that adding multiple document languages allows you to switch between these languages
+%% within the document (using e.g. the `otherlanguage' environment). The last language in
+%% the class options will be used as the default document language.
+%% 
+%% Switch to handout mode:
+%%  * handout ... A compact mode that allows you to remove animation and skips slides for
+%%                efficient printing.
+%% 
+%% Other options:
+%%  * utf8 ... Treat input files as UTF-8 encoded. Make sure to always provide that option
+%%             when you use pdfLaTeX so that pdfLaTeX knows how to read and interpret
+%%             characters this source file.
+%%  * c    ... Vertically center text on slides by default. You should avoid using this
+%%             option. Only use this to restore the behavior of older versions of this theme.
+%% 
+%% _Important_: The document class should be the first line of LaTeX code in your main
+%% source file. Do not place anything but comments / magic comments above that line (unless
+%% you really know what you are doing).
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Use the JKU LaTeX beamer theme for this presentation.
+%% 
+%\usetheme[TNF,nosectionpage]{jku}
+\usetheme[sowi,darkmode,fancyfonts,totalframenumber,mathastext]{jku}
+%% 
+%% The comma-separated list in square brackets are theme options. Useful options that you
+%% might want to use:
+%% 
+%% Color scheme selection options:
+%%  * JKU  ... Use JKU (gray) color scheme (this is the default if no scheme is selected).
+%%  * BUS  ... Use Business School color scheme.
+%%  * LIT  ... Use Linz Institute of Technology color scheme.
+%%  * MED  ... Use MED faculty color scheme.
+%%  * RE   ... Use RE faculty color scheme.
+%%  * SOE  ... Use School of Education color scheme.
+%%  * SOWI ... Use SOWI faculty color scheme.
+%%  * TNF  ... Use TNF faculty color scheme.
+%% 
+%% Color mode selection options:
+%%  * darkmode ... Use dark color mode (where title and logo frames have a dark background).
+%% 
+%% Frame numbering options:
+%%  * framenumber         ... Insert frame number into the frame footer.
+%%  * totalframenumber    ... Insert frame number and total frame number into the frame footer
+%%                            (only frames in the main part are counted).
+%%  * appendixframenumber ... Similar to `totalframenumber', but count the overall total frame
+%%                            number of main part and appendix.
+%% 
+%% Note that combining `totalframenumber' and `appendixframenumber' options will show the total
+%% number of frames for the main part on frames in the main part and the overal total number of
+%% frames for frames in the appendix.
+%% 
+%% Sectioning options:
+%%  * nosectionpage       ... Supress section frames (see \section{<title>} command).
+%%  * nosubsectionpage    ... Supress subsection frames (see \subsection{<title>} command).
+%%  * nosubsubsectionpage ... Supress subsubsection frames (see \subsubsection{<title>} command).
+%%  * partpage            ... Insert part frames (see \part{<title>} command).
+%% 
+%% Note that `nosectionpage' automatically sets `nosubsectionpage' and `nosubsubsectionpage'.
+%% You could still e.g. show only subsubsection pages by using `nosectionpage,subsubsectionpage'.
+%% 
+%% Space-efficient monospace font options (requires XeTeX):
+%%  * compactmono   ... Use condensed fixed-width font everywhere.
+%%  * nocompactverb ... Do not use condensed fixed-width font for verbatim and listings.
+%% 
+%% Style-breaking options:
+%%  * nojkufooter    ... Do not insert JKU/partner logos into the frame footer.
+%%  * nofooter       ... Do not display a frame footer.
+%%  * noimprint      ... Do not insert imprint on title pages.
+%%  * frametitlecaps ... Set frame titles in capital letters (like in eariler theme versions).
+%%  * nofancyfonts   ... Do not use custom TTF fonts with XeTeX / supress pdfLaTeX warning.
+%%  * mac            ... Use adapted color palette for screen display on Mac.
+%% 
+%% Experimental options:
+%%  * mathastext ... Use standard document fonts (and default to sans-serif font) in math mode
+%% 
+%% Advanced options:
+%%  * nooptpackages     ... Do not load additional convenience packages (which are only there
+%%                          to provide interoperability to the behavior of previous versions of
+%%                          this theme but are not actually required for the current version).
+%%  * logopath={<path>} ... Set the path where the theme can find its own logo resources. This
+%%                          should typically be a relative path and the default is `./logos'.
+%%  * fontpath={<path>} ... Set the path where the theme can find its own font resources. This
+%%                          should typically be a relative path and the default is `./fonts'.
+%% 
+%% Hint: Boolean options can be used in the forms `option' or `option=true' the enable the
+%% option and `nooption' or `option=false' to disable the option.
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% This is the place where you can load additional packages. If you want to load
+%% a package `booktabs', you would use the command `\usepackage{booktabs}'.
+%% 
+
+\usepackage{tabularx}
+%\usepackage{pifont}
+%\newcommand{\cmark}{\ding{51}}
+%\newcommand{\xmark}{\ding{55}}
+%\newcommand{\rarr}{\ding{212}}
+%\newcommand{\larr}{\raisebox{\depth}{\rotatebox{180}{\rarr}}}
+\usepackage{csquotes}
+\usepackage[backend=biber,citestyle=authoryear,sortcites=true,style=ACM-Reference-Format]{biblatex}
+\graphicspath{.}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Set reasonable defaults for biblatex.
+%% 
+
+\preto{\bibsetup}{\providecommand*{\insertbiblabel}{}}
+\DeclareFieldFormat*{title}{#1}
+\DeclareFieldFormat*{booktitle}{#1}
+\DeclareFieldFormat*{journaltitle}{#1}
+\setcounter{biburlnumpenalty}{100}
+\setcounter{biburllcpenalty}{100}
+\setcounter{biburlucpenalty}{100}
+
+%% Add bibligraphy source files
+\addbibresource{../BandF.bib}
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\hbf}[1]{\hat {\mathbf #1}}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%% Presentation information and title page
+%% 
+
+%% Command \series{series title}: sets the series title
+%\series{Space for your lecure title}
+
+%% Command \title[short title]{title}: sets the presentation title
+%% Command \titlesmall{text}: switches to small font size inside title
+\title{A Pluralist Perspective on IO-Modeling: the Search for Commensurability}
+
+%% Command \subtitle[short subtitle]{subtitle}: sets the presentation subtitle
+\subtitle{Project presentation}
+
+%% Command \author[short authors]{authors}: sets the presentation authors (multiple authors may be separated with \and)
+\author{Franz Scharnreitner}
+
+%% Command \institute{name}: sets the institute / author affiliation
+\institute{ICAE}
+
+%% Command \institutecode{CODE}: sets the institute abbreviation/initials (used to load the institute logo file, if present)
+\institutecode{ICAE}
+
+%% Command \date[short date]{date}: sets the presentation date (short date is used in the footer by default)
+\date{\today}
+
+%% Command \partnerlogo[white=filename]{filename}: use filename as partner logo (leave filename blank to disable the partner logo), the optional argument ``white='' defines a separate file for use on dark background
+%\partnerlogo{our_partner_logo}
+
+%% Command \footer{text}: sets the footer field
+%\footer{\insertshortsectiontitle} % the default
+%\footer{\insertshorttitle}        % a good alternative
+
+%% Command \footerdate{text}: sets the footer date field
+%\footerdate{\insertshortdate} % the default
+
+%% Command \footerpartnerlogo{filename}: use a different partner logo in the footer (e.g. a logo with a different form factor or no filename to disable the partner logo in the footer)
+%\footerpartnerlogo{our_partner_logo}
+
+%% Command \agenda[caption]{text}: sets the agenda (and optional caption) to display on the next title or section page
+%\agenda[caption]{text}
+
+
+%% Finally, print the title page using the above information:
+%% 
+%% \maketitle[options]
+%%     Inserts a title page. The current standard faculty color theme and color
+%%     mode are used by default, you may modify this using any of the following
+%%     options:
+%%      * light ... use light color theme
+%%      * dark  ... use dark color theme
+%%      * gray  ... use JKU gray color theme
+%%      * black ... use black background
+%%     In addition, options may contain a faculty name (see theme options) to
+%%     use the faculty's color theme, e.g. `\maketitle[LIT,dark]'.
+%% 
+\maketitle
+%% 
+%% Note that you can even change the presentation information and print another
+%% title page (with that updated information) ANYWHERE in your presentation.
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% 
+%% You can split your presentation into sections, subsections, and subsubsections,
+%% just like you would do with any other LaTeX document. Depending on the chosen
+%% theme options, frames showing the section titles will be inserted for each
+%% sectioning command. You can use the starred versions of these commands (e.g.
+%% `\section*{<title>}') to suppress specific section title frames.
+%% 
+\section{IO-Models: The Basics}
+
+%% 
+%% You create a new slide using the `frame' environment:
+%% 
+\begin{frame}
+\frametitle{Why IO Models?}
+
+\begin{itemize}
+  \item IO models can be a useful tool to model growth and employment impact of discretionary investments
+  \begin{itemize}
+      \item Can be either public or private – important is that expenditures are additional and do not depress other spending categories – increased relevance in the context of socio-ecological transformation
+  \end{itemize}
+  
+  \item Three approaches to IO-modeling
+ \begin{itemize}
+      \item Marxian-Keynesian: Leontief Inverse – extrapolation of current patterns
+      \item Neoclassical: CGE approach – prices and quantities as a result of perfect competition – finding a new equilibrium
+      \item Evolutionary-empirical: explore the impact of price change based on past observations (elasticity of substitution $\sigma$) - can be married with Leontief models (dynamic substitution, i.e. updating $a_{ij}$ based on some estimate of $\sigma$)
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Why IO Models?}
+
+\begin{itemize}
+  \item IO models can be a useful tool to model growth and employment impact of discretionary investments
+  \begin{itemize}
+      \item Can be either public or private – important is that expenditures are additional and do not depress other spending categories – increased relevance in the context of socio-ecological transformation
+  \end{itemize}
+  
+  \item Our current focus
+ \begin{itemize}
+      \item Marxian-Keynesian: Leontief Inverse – extrapolation of current patterns.
+      \item Neoclassical: CGE approaches by Baquee \& Farhi – axiomatic variations (Kapeller 2013) that supposedly shift standard models and base them on more 'heterodox' assumptions.
+      \item Key changes: \textit{elasticity of substitution} and \textit{labor market slack} as epicycles
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{IO Models: Basics}
+\begin{itemize}
+  \item Economy consists of $N$ sectors, the output $y_s$ of sector $s$ either is used by other sectors as intermediarys $x_{s \to u}$\footnote{We omit the arrow from now on.}, or used by consumers $c_s$.
+    \begin{equation}
+    p_sy_s = \sum_{u = 1}^n p_s x_{su} + p_s c_s,
+      \label{eq:1}
+    \end{equation}
+  \item For a fixed point in time, we can introduce $a_{su}$, such that $a_{su} y_u = x_{su}.$ $a_{su}$ is the demand for $y_s$ induced by $y_u$. 
+  \item Equation \eqref{eq:1} becomes
+     \begin{equation}
+       \hbf p \mathbf y  = \hbf p A \mathbf  y + \hbf p \mathbf c
+     \end{equation}
+     in matrix form.
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Factors}
+  \begin{itemize}
+      \item In contrast to intermediary goods, that are produced by some sector, factors can not be produced (in the short run)
+      \item We restrict ourself to one factor namely labour. The demand for this factor in sector $i$ will be denoted with $l_i$ and the wages with $w_i$.
+      \item Adding more factors  could be relevant for future applications. Possibilities include adding CO² and energy or disaggregatingg labour into more specific types.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{IO Models: Introducing $\Omega$}
+  \begin{itemize}
+    \item We want to tackle two problems:
+      \begin{itemize}
+        \item We need to express $A$ in monetary terms.    
+        \item Do we want the demand side or the supply side?
+      \end{itemize}
+    \item We therefore introduce $\omega_{us} := \frac{p_s a_{su}}{p_u}$.
+    \item With $\omega_{ij} y_j = \frac{p_i x_{ij}}{p_j y_j}$ we see, that $\omega_{ij}$ captures the relative contribution of sector $i$ to sector $j$.
+    \item Thus    
+      $$\hbf p \mathbf y = \Omega^T \hbf p \mathbf y + \hbf p \mathbf c$$
+  \end{itemize}
+\end{frame}
+\section{Leontief model}
+\begin{frame} 
+  \frametitle{Leontief model}
+  \begin{itemize}
+    \item  We assume production is so, that costs are minimal i.e intermediaries are given as the solution to
+      \begin{gather}
+          \label{eq:costmin}
+          \min_{\mathbf x_{\mathbf s, u} \in \mathbb R^N_+} \sum_{s=1}^n p_s x_{s,u} \\
+          \text{subject to }  y_s(\mathbf x) = \sum_{u=1}^N x_{su} + \bar c_ s \quad \text{for all } u=s
+      \end{gather}
+    and consumption is exogenuously given.
+    \item The Leontief production function takes the form $y_u(\mathbf x) = \min_{s}(\frac{x_{su}}{a_{us}})$. Outputs are based on a fixed proportion of inputs.
+    \item Thus Intermediary demand is given as $x_{su} = a_{su} y_u$.
+    \item Prices are assumed to be consant. We shall not worry about them for now.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Leontief Model}
+\begin{itemize}
+  \item For a given consumption vector $\bar c$, the required production is then given as 
+    $$\hbf p \mathbf y = (I - \Omega^T)^{-1}  \hbf p \mathbf c$$
+  \item This model can be easily extended to include factors, by expanding $\Omega$ and $y$:
+\begin{align}
+  \label{eq:iomatrix}
+  \Omega = \left( \begin{array}{@{}ccc|c@{}}
+    \omega_{01} &\dots &\omega_{0n} &  \\ \hline
+    \omega_{11} & \dots &\omega_{1n} & \omega_{1l}\\ 
+    \vdots &\ddots &\vdots & \vdots\\ 
+    \omega_{n1} & \dots & \omega_{nn} & \omega_{nl}    
+    \end{array} \right) = 
+    \left( \begin{array}{c|c}
+    \Omega_0 & \\ \hline
+    \Omega_p & \Omega_l\\ 
+  \end{array} \right).
+\end{align}
+$\omega_{0i}$ gives the consumption share of factor $0$ from sector $i$, and $\omega_{il}ω$ factor share in sector $i$. 
+\end{itemize}
+\end{frame}
+
+\section{CGE Model}
+
+\begin{frame} 
+  \frametitle{CGE Model}
+  \begin{itemize}
+    \item Making consumption and production mutually independent.
+    \item It is assumed production and supply have an equilibrium where consumer utility and profits are maximised and markets clear.
+      For our context that means:
+      \begin{itemize}
+        \item Assume $\mathcal D(u)$ is a constant returns to scale utility aggregator. 
+        \item Assume every sector has a production function $y_i(\mathbf x)$.
+        \item Production $\bar y$, prices $\bar p$ and consumption $\bar c$ are given with the following conditions
+          \begin{itemize}
+            \item  $y$ maximised profit 
+            \item $c$ maximises utility und budget constraints
+            \item  $ \bar {p_i} \bar{y_i} = \sum_{j=1}^N p_j x_{ji} + w_i l_i$ holds for all sectors
+          \end{itemize}
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{CGE Model}
+       \begin{figure}
+          \begin{center}
+            \includegraphics[width=0.40\textwidth]{pictures/cge.png}
+          \end{center}
+          \caption{Different cycles}\label{fig:cge}
+
+        \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Cobb Douglas and CES production functions }
+\begin{itemize}
+  \item A Cobb-Douglas production function takes the form 
+    $$y(\mathbf x,l) = A \left(x^\alpha l^{1 - \alpha} \right).$$ 
+    $\alpha \in (0,1)$ is the output elasticty and $A$ is some technology parameter.
+  \item A CES production function takes the form 
+    $$y_u(x) = \left(\sum_{s=1}^N \omega_{su} x_{su}^{\frac{\epsilon - 1}{\epsilon}} \right)^{\frac{\epsilon}{1 - \epsilon}},$$ 
+    where $\epsilon$ is the elasticity of substitution.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+       \begin{figure}
+          \begin{center}
+            \includegraphics[width=0.55\textwidth]{pictures/prodfun.png}
+          \end{center}
+          \caption{Different production functions}\label{fig:prodfuns}
+
+        \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{CES and Elasticities}
+  \begin{itemize}
+    \item In \cite{baqaeeMacroeconomicImpactMicroeconomic2019} a CGE framework is used, however the production function takes an interresting form.
+    \item $$y_u(l_u, \mathbf x_{\mathbf s,u}) =  A_u \left(\omega_{lu} l_u^{\frac {\theta-1}{\theta}} + (1- \omega_{lu}) X^{\frac{\theta-1}{\theta}}(\mathbf x_{\mathbf s,u}) \right)^{\frac{\theta}{\theta - 1}},$$
+    with 
+  \[
+    X(\mathbf x_{\mathbf s, u}) = \left(\sum_{s=1}^N \omega_{su} x_{su}^{\frac{\varepsilon - 1}{\varepsilon}} \right)^{\frac{\varepsilon}{\varepsilon - 1}},
+  \]
+  where $\varepsilon$ is the substitution elasticity of intermediary goods and $\theta$ is the substitution elasticty between labour and goods.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{What Makes this Special?}
+\begin{itemize}
+  \item \cite{baqaeeMacroeconomicImpactMicroeconomic2019} propose $\epsilon = 0.001$ and $\theta = 0.5$.
+  \item The limit of a CES function, when the substitution elasticty goes to $0$ is a Leontief production function.
+    The limit of $\epsilon \to 1$ is a Cobb-Douglas production function.
+  \item The small value of $\epsilon$ reflects an introduction of assumptions found in Marxist/Keynsian economics into neoclassic literature.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Labour Market Slack?}
+  \begin{itemize}
+    \item In CGE models, like in \cite{baqaeeMacroeconomicImpactMicroeconomic2019} factors are assumed to have limited supply, that is fully utilised in an equilibrium.
+    \item In contrast, the Leontief model assumes factors are abundant.
+  \item We extended the model to allow for labour market slack, so some additional supply of factor $l$ can be allocated.
+   \end{itemize}
+\end{frame}
+
+\section{Implementations and Results}
+
+\begin{frame}
+  \frametitle{Implementations and Results}
+  \begin{itemize}
+    \item Implementation of the \cite{baqaeeMacroeconomicImpactMicroeconomic2019} model, a simple Cobb-Douglas model and a Leontief model in Julia.
+    \item The data stems from German Input-Output table from 2019.
+    \item Comparing different elasticities:
+
+         
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+       \begin{figure}
+          \begin{center}
+            \includegraphics[width=1.0\textwidth]{pictures/elastictiy_gradient_no_ls.png}
+          \end{center}
+          \caption{Effect of different elasticities on GDP}\label{fig:elasticities1}
+
+        \end{figure}
+\end{frame}
+
+\begin{frame}
+       \begin{figure}
+          \begin{center}
+            \includegraphics[width=1\textwidth]{pictures/elastictiy_gradient_ls.png}
+          \end{center}
+          \caption{Effect of different elasticities on GDP}\label{fig:elasticities2}
+
+        \end{figure}
+\end{frame}
+
+
+\begin{frame}
+       \begin{figure}
+          \begin{center}
+            \includegraphics[width=0.75\textwidth]{pictures/labor_slack_gradient.png}
+          \end{center}
+          \caption{Effect of different levels of labour slack ($1$ means no slack)}\label{fig:labour}
+
+        \end{figure}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{References}
+%\setbeamerfont{bibliography item}{size={\footnotesize}}
+%\AtNextBibliography{\footnotesize}
+\printbibliography
+\end{frame}
+
+
+\end{document}
+\endinput

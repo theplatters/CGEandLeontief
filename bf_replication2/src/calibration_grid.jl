@@ -24,7 +24,7 @@ export solve_cell, run_calibration_grid, default_t_grid
 # ─────────────────────────────────────────────────────────────
 default_t_grid(elasticity::Int, loop::Int=1) = elasticity == 1 ?
     (loop == 1 ? vcat([0.0], collect(0.1:0.05:0.9), [0.95, 0.98, 0.99, 0.995, 1.0]) :
-                 [0.0, 0.001, 0.01, 0.5, 0.98, 0.99, 0.995, 1.0]) :
+                 [0.0, 0.001, 0.01, 0.5, 0.75, 0.98, 0.99, 0.995, 1.0]) :
     vcat([0.0], collect(0.1:0.1:0.9), [0.99, 1.0])
 
 # Elasticity calibration (Master_file_3.m lines 253–275)
@@ -142,7 +142,32 @@ function solve_cell(io, shocks, sf;
                        m_base.mu, m_base.in_mu, A_t, B_t,
                        m_base.init_lambda, m_base.init_p, m_base.chi)
 
-        p, λ, conv, iters = solve_equilibrium(m_t, z0=z0, tol=1e-10, maxiter=1000)
+        p = fill(NaN, D)
+        λ = fill(NaN, D)
+        conv = false
+        iters = 0
+        try
+            p, λ, conv, iters = solve_equilibrium(m_t, z0=z0, tol=1e-10, maxiter=1000)
+        catch
+            # Solver threw an exception (e.g. NaN evaluation) — will try refinement below
+        end
+
+        # If solver fails, try inserting an intermediate step (continuation refinement)
+        if !conv && ti > 1
+            t_prev = t_grid[ti - 1]
+            t_mid = (t_prev + t) / 2
+            A_mid, B_mid = apply_shocks(m_base, shocks, t_mid, ti, shock_type, Trunc_A)
+            m_mid = MCPModel(D, N, m_base.Omega_re, m_base.factor, m_base.keynes,
+                             m_base.theta, m_base.cobb_douglas, m_base.phi, m_base.phi_htm,
+                             m_base.mu, m_base.in_mu, A_mid, B_mid,
+                             m_base.init_lambda, m_base.init_p, m_base.chi)
+            try
+                p_mid, λ_mid, _, _ = solve_equilibrium(m_mid, z0=z0, tol=1e-8, maxiter=500)
+                p, λ, conv, iters = solve_equilibrium(m_t, z0=vcat(p_mid, λ_mid), tol=1e-10, maxiter=1000)
+            catch
+                @warn "Continuation refinement also failed at t=$t (htm_share=$(m_base.phi_htm[3*m_base.N+2]))" maxlog=1
+            end
+        end
 
         # Store
         GDP[ti]         = λ[1] / p[1]

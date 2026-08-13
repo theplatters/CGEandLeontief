@@ -120,7 +120,8 @@ function solve_cell(io, shocks, sf;
     c_shares     = zeros(N, n_t)       # consumption shares
     lambda_full  = zeros(D, n_t)
     A_labor      = zeros(N, n_t)       # labor A rows (3N+2:4N+1)
-    Trunc_A      = trunc_A === nothing ? zeros(N, n_t) : trunc_A
+    Trunc_A = trunc_A === nothing ? zeros(N, n_t) : 
+       (size(trunc_A, 2) == n_t ? trunc_A : zeros(N, n_t))
     retcodes     = zeros(Int, n_t)
 
     # Domar weights for labor (used in unemployment measures)

@@ -106,16 +106,11 @@ function build_standard_form(io::IOData)
     keynes[D] = 0                     # tomorrow's consumption = flexible
     keynes[(3*N+2):(4*N+1)] .= -1    # labor = sticky
 
-    # Chi: ownership of factors (random, but restricted per MATLAB)
+    # Chi: ownership of factors.
+    # MATLAB: chi = (factor==0).*rand(D,1), then labor/capital/tomorrow rows are
+    # explicitly zeroed → chi ≡ 0 deterministically. We set it directly.
     chi = zeros(Float64, D)
-    for i in 1:D
-        if factor[i] == 0 && i <= D-3  # factors are owned (not consumers/tomorrow)
-            chi[i] = rand()
-        end
-    end
-    chi[D] = 0.0                       # tomorrow's consumption → Ricardian
-    chi[(4*N+2):(5*N+1)] .= 0.0       # capital → not owned by HtM
-    chi[(3*N+2):(4*N+1)] .= 0.0       # labor → not owned by HtM
+    # (All factor rows are zeroed in MATLAB, so chi is identically zero.)
 
     # Phi: factor supply elasticity (all 0 in this model)
     phi = zeros(Float64, D)

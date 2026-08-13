@@ -9,7 +9,7 @@
 using LinearAlgebra, Printf, Statistics
 using NLsolve
 
-export MCPModel, make_theta, equilibrium_residual!, solve_equilibrium, eq_continuation
+export MCPModel, make_theta, make_cobb_douglas, make_model, equilibrium_residual!, solve_equilibrium, eq_continuation
 
 """
     MCPModel
@@ -122,6 +122,68 @@ function make_cobb_douglas(N, D, factor; benchmark=true)
     end
     return cd_vec
 end
+
+"""
+    make_model(sf::StandardForm; htm_share=0.0, benchmark=true,
+               sigma=1.0, epsilon=0.6, eta=0.6, theta1=0.2, rho=1.0) -> MCPModel
+
+Build a base `MCPModel` from the standard-form network, replicating the
+MATLAB driver's calibration block (`Master_file_3.m` lines 328–335) exactly.
+
+# Initial lambda (MATLAB-faithful)
+The raw first row of `Psi_re` is *not* the AMPL initial point. MATLAB sets:
+- `init_lambda[1]      = 1`          (consumption today)
+- `init_lambda[D-2]    = (Psi_re[1,:]·chi)·λ[1]`   (HtM; chi ≡ 0 → 0)
+- `init_lambda[D-1]    = 2·(1-Psi_re[1,:]·chi)·λ[1]` (Ricardian; → 2)
+- `init_lambda[D]      = 0.5·λ[D-1]`  (tomorrow's consumption; → 1)
+
+Note: `chi = (factor==0).*rand(D,1)` in MATLAB, but rows labor/capital/
+tomorrow are then explicitly zeroed, so `chi ≡ 0` deterministically.
+
+# HtM insurance
+`phi_htm[labor] = 1 - htm_share` (0 = no insurance, 1 = full insurance).
+The benchmark (Figure 2) uses `htm_share = 0` → full insurance; Figure 4
+sweeps `htm_share ∈ {0, 0.2, …, 1}`.
+"""
+function make_model(sf::StandardForm; htm_share::Float64=0.0, benchmark::Bool=true,
+                    sigma=1.0, epsilon=0.6, eta=0.6, theta1=0.2, rho=1.0)
+    N = sf.N
+    D = sf.D
+
+    theta = make_theta(N; sigma=sigma, epsilon=epsilon, eta=eta, theta1=theta1, rho=rho)
+    cd_vec = make_cobb_douglas(N, D, sf.factor; benchmark=benchmark)
+
+    # A and B at t=0: no shock
+    A = ones(D)
+    B = ones(D, D)
+
+    # Initial prices: all 1
+    init_p = ones(D)
+
+    # Initial lambda per MATLAB (Master_file_3.m lines 331–335)
+    init_lambda = vec(sf.Psi_re[1, :])
+    init_lambda[1] = 1.0
+    Psi_chi = sum(sf.Psi_re[1, :] .* sf.chi)   # ≡ 0 because chi ≡ 0
+    init_lambda[D-2] = max(Psi_chi * init_lambda[1], 1e-10)             # HtM
+    init_lambda[D-1] = 2.0 * (1.0 - Psi_chi) * init_lambda[1]           # Ricardian
+    init_lambda[D]   = 0.5 * init_lambda[D-1]                            # tomorrow
+    for i in 1:D
+        if init_lambda[i] ≤ 0
+            init_lambda[i] = 1e-10
+        end
+    end
+
+    # HtM social insurance: labor gets 1 - htm_share, everything else full insurance
+    phi_htm = ones(D)
+    phi_htm[(3*N+2):(4*N+1)] .= 1.0 - htm_share
+
+    return MCPModel(D, N, sf.Omega_re, sf.factor, sf.keynes,
+                    theta, cd_vec, sf.phi, phi_htm,
+                    ones(D), ones(D),          # mu, in_mu
+                    A, B,
+                    init_lambda, init_p, sf.chi)
+end
+
 
 """
     equilibrium_residual!(F, z, m::MCPModel)
@@ -237,7 +299,22 @@ function equilibrium_residual!(F, z, m::MCPModel)
     # 2. Lambda equations (F[D+1:2D])
     # ──────────────────────────────────────────────
     for k in 1:D
-        if f[k] < 2
+        if k == D
+            # Special case: tomorrow's consumption (row D = 5N+4) has keynes=0,
+            # so the AMPL model pins λ[D] via factor_clearing0:
+            #   λ[D] = p[D] · (p[D]/p[1])^φ[D] · λ̄[D] · A[D]
+            # With the numeraire p[D]=1, φ=0, A[D]=1 this gives λ[D] = λ̄[D].
+            # Using the free lambda propagation here creates a degenerate
+            # self-reference (λ[D] enters the HtM/Ricardian equations, which
+            # in turn determine λ[D] through propagation) — the solver then
+            # drifts and GDP collapses. AMPL imposes BOTH constraints
+            # (factor_clearing0 AND lambda_equation) and finds a feasible point
+            # via KNITRO; our square system needs exactly one, and
+            # factor_clearing0 is the well-posed choice.
+            floor_mult = (p[D] / p[1])^φ[D]
+            F[D + k] = λ[k] - p[k] * floor_mult * λ̄[k] * A[k]
+
+        elseif f[k] < 2
             # Standard lambda propagation
             # λ_k = Σ_{j: f[j]>0} λ_j · μ_j⁻¹ · B_jk^θ · Ω_jk · (p_k/p_j)^(1-θ) · (μ_j/in_μ_j)^(1-θ) · A_j^(θ-1)
             sum_val = 0.0
@@ -358,17 +435,21 @@ function eq_continuation(m_base::MCPModel,
         A_shock = copy(m_base.A)
         B_shock = copy(m_base.B)
 
-        # Labor supply shock: A[3N+2:4N+1] = (1 - t * BLS_shock)
-        A_shock[(3*N+2):(4*N+1)] .= 1.0 .- t .* shock_A
+        # Labor supply shock: A[3N+2:4N+1] = 1 + t * BLS_shock
+        # (MATLAB: shock = -BLS_shock; A = 1 - t*shock = 1 + t*BLS_shock)
+        A_shock[(3*N+2):(4*N+1)] .= 1.0 .+ t .* shock_A
 
         # Sectoral demand: B[1, 2:N+1] = (1-t*0.66) + t*0.66*(1+PCE_shock)
         B_shock[1, 2:(N+1)] .= (1 - t * 0.66) .+ t * 0.66 .* (1.0 .+ shock_B)
-        # Renormalize
-        B_shock[1, :] ./= sum(m_base.Omega_re[1, :] .* B_shock[1, :]')
+        # Renormalize: Ω_re[1,:]·B[1,:] must = 1 (see Master_file_3.m line 394)
+        # NOTE: Julia broadcasting — Omega_re[1,:] is Vector, B[1,:]' is 1×N Adjoint;
+        # .* between them creates a matrix, not a dot product. Use dot() or sum(.*) on
+        # same-shaped operands.
+        B_shock[1, :] ./= sum(m_base.Omega_re[1, :] .* B_shock[1, :])
 
         # Aggregate demand shock: B[5N+3, D] = 1 + min(ti-1,1) * 0.105
         B_shock[5*N+3, D] = 1.0 + min(ti - 1, 1) * 0.105
-        B_shock[5*N+3, :] ./= sum(m_base.Omega_re[5*N+3, :] .* B_shock[5*N+3, :]')
+        B_shock[5*N+3, :] ./= sum(m_base.Omega_re[5*N+3, :] .* B_shock[5*N+3, :])
 
         # Build the model for this t
         m_t = MCPModel(

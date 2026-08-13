@@ -2,6 +2,7 @@ name = "BFAEA2022"
 uuid = "b368ba25-1f6e-4a71-a5ec-44ea7785ec7b"
 
 [deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 JuMP = "4076af6c-e467-56ae-b986-b466b2749572"
 MAT = "23992714-dd62-5051-b70f-ba57cb901cac"
@@ -9,6 +10,7 @@ NLsolve = "2774e3e8-f4cf-5e23-947b-6d7e65073b56"
 XLSX = "fdbf4ff8-1666-58a4-91e7-1b58723a45e0"
 
 [compat]
+CSV = "0.10.16"
 DataFrames = "1.8.2"
 JuMP = "1.31.1"
 MAT = "0.12.1"

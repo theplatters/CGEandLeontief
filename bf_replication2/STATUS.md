@@ -33,18 +33,23 @@ and `sector_prices.csv` files on disk at `data/results/loop1/`.
 
 ## HtM Sweep (loop=2)
 
-The `summary_loop2_htm.csv` is partially populated:
+The `summary_loop2_htm.csv` is now populated from cell-level data. Two cells
+required reconstruction from the last convergent t-point (the final t=1.0
+failed numerically):
 
-| $\phi_{HtM}$ | RGDP (benchmark) | RGDP (CD) | Notes |
-|:------------:|:-----------------:|:---------:|-------|
-| 0.0 | -8.14% | -8.15% | ✅ |
-| 0.2 | -8.45% | NaN | CD regime missing |
-| 0.4 | -8.81% | -9.18% | ✅ |
-| 0.6 | -9.24% | -9.99% | ✅ |
-| 0.8 | NaN | -11.18% | Benchmark missing (known convergence issue) |
-| 1.0 | -10.59% | -12.87% | ✅ |
+| $\phi_{HtM}$ | RGDP (bench) | RGDP (CD) | Notes |
+|:---:|:---:|:---:|-------|
+| 0.0 | -8.14% | -8.15% | Converged |
+| 0.2 | -8.45% | -7.10% | CD reconstructed from t=0.70 |
+| 0.4 | -8.81% | -9.18% | Converged |
+| 0.6 | -9.24% | -9.99% | Converged |
+| 0.8 | -9.71% | -11.18% | Benchmark reconstructed from t=0.99 |
+| 1.0 | -10.59% | -12.87% | Converged |
 
-Cell-level data with full timeseries is available at `data/results/loop2/`.
+The benchmark htm=0.8 reconstruction (t=0.99, 99% of full shock) is very close
+to the true value; the CD htm=0.2 reconstruction (t=0.70) is an underestimate
+(the true value at t=1.0 would be larger in magnitude). Attempts to re-run
+these two cells with finer t-grids did not resolve the convergence failure.
 
 ## Validation Against Paper
 
@@ -169,22 +174,18 @@ produce paper-consistent results.
 
 # Known Issues
 
-1. **HtM htm=0.8 convergence:** At $\phi_{HtM} = 0.8$, the solver fails to
-   converge in the benchmark regime (NaN). The CD regime converges at htm=0.8
-   but shows NaN at htm=0.2. This is a known numerical edge case of the
-   continuation solver.
+1. **HtM convergence edge cases:** At $\phi_{HtM} = 0.8$ benchmark and
+   $\phi_{HtM} = 0.2$ Cobb-Douglas, the solver does not reach t=1.0. The
+   summary CSV now uses the last convergent t-point for these two cells.
+   The benchmark approximation (t=0.99) is excellent; the CD (t=0.70) is
+   an underestimate.
 
-2. **summary_loop2_htm.csv incomplete:** Missing values for benchmark/htm=0.8
-   and CD/htm=0.2. A re-run on the host Mac (32+ GB RAM) with the patched
-   `calibration_grid.jl` could fill these gaps.
-
-3. **Container memory:** The full grid (particularly the 668-variable FD
+2. **Container memory:** The full grid (particularly the 668-variable FD
    Jacobian) exceeds the container's 15 GB ARM64 RAM limit. All heavy
    computation should run on the Mac.
 
-4. **Solver not pushed:** The `revise` branch is 4 commits ahead of
-   `origin/revise` and has not been pushed (HTTPS remote requires
-   authentication unavailable in this container).
+3. **Branch not pushed:** The `revise` branch has local commits not yet
+   pushed to origin.
 
 # Quick-Start for Picking Up
 

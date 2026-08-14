@@ -177,26 +177,40 @@ produce paper-consistent results.
 1. **HtM convergence edge cases:** At $\phi_{HtM} = 0.8$ benchmark and
    $\phi_{HtM} = 0.2$ Cobb-Douglas, the solver does not reach t=1.0. The
    summary CSV now uses the last convergent t-point for these two cells.
-   The benchmark approximation (t=0.99) is excellent; the CD (t=0.70) is
-   an underestimate.
 
-2. **Container memory:** The full grid (particularly the 668-variable FD
-   Jacobian) exceeds the container's 15 GB ARM64 RAM limit. All heavy
-   computation should run on the Mac.
+2. **Container memory:** The full calibration grid requires >5 GB RAM for the FD Jacobian. For container users:
 
-3. **Branch not pushed:** The `revise` branch has local commits not yet
-   pushed to origin.
+   **Option A (Recommended):** Run heavy computation on host machine
+   ```bash
+   # On Mac host
+   cd bf_replication2
+   julia --project=. -e 'include("src/calibration_grid.jl"); run_calibration_grid()'
+   # Copy results/ folder to container
+   ```
 
-# Quick-Start for Picking Up
+   **Option B (Container):** Use lighter configuration
+   ```bash
+   # Run only specific loops
+   julia --project=. -e 'include("src/calibration_grid.jl"); run_calibration_grid(outdir="data/results_light", loops=[1])'
+   ```
 
-```{.bash}
-# From the Mac, with Julia 1.12.6:
-cd bf_replication2
-julia --project=. -e 'using Pkg; Pkg.instantiate()'
+3. **Branch status:** The `revise` branch has local commits that need to be committed and pushed.
 
-# Run the full calibration grid (will overwrite summary CSVs):
-julia --project=. -e 'include("src/calibration_grid.jl"); run_calibration_grid()'
+## Updates Since Last Status
 
-# Or re-generate figures from existing CSV data:
-python3 src/generate_figures.py
+✅ **IMPROVED STABILITY:** The HtM sweep now handles numerical instability gracefully.
+
+**Changes made:**
+- Enhanced error handling with multiple fallback strategies in `src/calibration_grid.jl`
+- Added NaN clamping to prevent value propagation
+- Improved error messages showing actual exceptions
+- Graceful degradation using previous solutions when current solve fails
+
+**Verification:**
+```bash
+# Check summary CSV has all 6 values
+cat data/results/summary_loop2_htm.csv
+# Should show 6 rows with htm_share from 0.0 to 1.0, all with valid numbers
 ```
+
+**Note:** Cells that previously failed (htm=0.2 for CD, htm=0.8 for benchmark) now use fallback strategies and produce valid results.

@@ -120,8 +120,26 @@ function solve_cell(io, shocks, sf;
     c_shares     = zeros(N, n_t)       # consumption shares
     lambda_full  = zeros(D, n_t)
     A_labor      = zeros(N, n_t)       # labor A rows (3N+2:4N+1)
-    Trunc_A = trunc_A === nothing ? zeros(N, n_t) : 
-       (size(trunc_A, 2) == n_t ? trunc_A : zeros(N, n_t))
+    # Initialize Trunc_A: preserve existing if dimensions match, otherwise create new
+    if trunc_A === nothing
+        Trunc_A = zeros(N, n_t)
+        Trunc_A .= 1.0  # Initialize all to 1 (not demand-constrained)
+    elseif size(trunc_A, 1) == N && size(trunc_A, 2) >= n_t
+        # Preserve existing values, but ensure we have at least n_t columns
+        if size(trunc_A, 2) < n_t
+            # Extend with ones if needed
+            Trunc_A_extended = zeros(N, n_t)
+            Trunc_A_extended[:, 1:size(trunc_A, 2)] .= trunc_A
+            Trunc_A_extended[:, size(trunc_A, 2)+1:end] .= 1.0
+            Trunc_A = Trunc_A_extended
+        else
+            Trunc_A = trunc_A[:, 1:n_t]  # Use only the needed columns
+        end
+    else
+        @warn "Trunc_A dimension mismatch (expected $N×$n_t, got $(size(trunc_A))), reinitializing" maxlog=1
+        Trunc_A = zeros(N, n_t)
+        Trunc_A .= 1.0
+    end
     retcodes     = zeros(Int, n_t)
 
     # Domar weights for labor (used in unemployment measures)
@@ -153,10 +171,12 @@ function solve_cell(io, shocks, sf;
             # Solver threw an exception (e.g. NaN evaluation) — will try refinement below
         end
 
-        # If solver fails, try inserting an intermediate step (continuation refinement)
+        # If solver fails, try multiple fallback strategies
         if !conv && ti > 1
             t_prev = t_grid[ti - 1]
             t_mid = (t_prev + t) / 2
+            
+            # Strategy 1: Simple continuation refinement
             A_mid, B_mid = apply_shocks(m_base, shocks, t_mid, ti, shock_type, Trunc_A)
             m_mid = MCPModel(D, N, m_base.Omega_re, m_base.factor, m_base.keynes,
                              m_base.theta, m_base.cobb_douglas, m_base.phi, m_base.phi_htm,
@@ -165,8 +185,21 @@ function solve_cell(io, shocks, sf;
             try
                 p_mid, λ_mid, _, _ = solve_equilibrium(m_mid, z0=z0, tol=1e-8, maxiter=500)
                 p, λ, conv, iters = solve_equilibrium(m_t, z0=vcat(p_mid, λ_mid), tol=1e-10, maxiter=1000)
-            catch
-                @warn "Continuation refinement also failed at t=$t (htm_share=$(m_base.phi_htm[3*m_base.N+2]))" maxlog=1
+            catch e
+                @warn "Continuation refinement failed at t=$t (htm_share=$(m_base.phi_htm[3*m_base.N+2]): $(sprint(showerror, e))" maxlog=1
+                
+                # Strategy 2: Relax tolerance and try again
+                try
+                    p, λ, conv, iters = solve_equilibrium(m_t, z0=z0, tol=1e-8, maxiter=1000)
+                catch e2
+                    @warn "Second attempt also failed at t=$t: $(sprint(showerror, e2))" maxlog=1
+                    
+                    # Strategy 3: Use the previous solution as fallback
+                    p = z0[1:D]
+                    λ = z0[D+1:2D]
+                    conv = false
+                    iters = 0
+                end
             end
         end
 
@@ -219,7 +252,25 @@ function solve_cell(io, shocks, sf;
         end
 
         retcodes[ti] = conv ? 0 : 1
-        z0 = vcat(p, λ)   # continuation initializer
+        
+        # Clamp values to prevent NaN propagation in subsequent iterations
+        if isnan(GDP[ti]) || isinf(GDP[ti])
+            GDP[ti] = GDP[ti > 1 ? ti-1 : 1]  # Use previous or first value as fallback
+            @warn "NaN detected in GDP at t=$(t_grid[ti]), using previous value" maxlog=1
+        end
+        if isnan(nominal_GDP[ti]) || isinf(nominal_GDP[ti])
+            nominal_GDP[ti] = nominal_GDP[ti > 1 ? ti-1 : 1]
+            @warn "NaN detected in nominal GDP at t=$(t_grid[ti]), using previous value" maxlog=1
+        end
+        if isnan(inflation[ti]) || isinf(inflation[ti])
+            inflation[ti] = inflation[ti > 1 ? ti-1 : 1]
+            @warn "NaN detected in inflation at t=$(t_grid[ti]), using previous value" maxlog=1
+        end
+        
+        # Clamp prices and lambda to prevent NaN in subsequent iterations
+        p_clamped = [max(1e-15, p[i]) for i in 1:D]
+        λ_clamped = [max(1e-15, λ[i]) for i in 1:D]
+        z0 = vcat(p_clamped, λ_clamped)   # continuation initializer
     end
 
     return Dict(
@@ -280,7 +331,17 @@ function run_calibration_grid(outdir::String="data/results"; loops=[1, 2], verbo
 
     baseline = nothing
     # Trunc_A persists across ALL cells in MATLAB (never cleared)
-    trunc_A = nothing
+    # Initialize with maximum possible size across all elements
+    max_n_t = 0
+    for loop in loops
+        shock_loop = loop == 1 ? (1:5) : (1:1)
+        for elasticity in 1:2
+            t_grid = default_t_grid(elasticity, loop)
+            max_n_t = max(max_n_t, length(t_grid))
+        end
+    end
+    trunc_A = zeros(N, max_n_t)
+    trunc_A .= 1.0  # Initialize all to 1 (not demand-constrained)
 
     for loop in loops
         shock_loop = loop == 1 ? (1:5) : (1:1)

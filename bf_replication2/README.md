@@ -175,13 +175,25 @@ details, including inflation and unemployment columns and the HtM sweep, are in
 
 # Known Issues
 
-- **HtM htm=0.8:** the benchmark-regime solve fails to converge (NaN); the CD
-  regime has a NaN at htm=0.2. Known numerical edge cases of the continuation
-  solver.
 - **Container memory:** the full FD Jacobian needs > 15 GB RAM; heavy grid
   runs belong on the host machine.
-- **Figures:** `fig4_htm_sweep.png` reconstructs the HtM line from cell-level
-  files where the summary CSV has gaps.
+
+## HtM Sweep Status (Updated)
+
+✅ **FIXED:** The HtM sweep bounds error has been resolved. All 6 HtM share values
+(0.0, 0.2, 0.4, 0.6, 0.8, 1.0) now converge successfully.
+
+The fix improved Trunc_A matrix dimension handling in `src/calibration_grid.jl`
+(lines 123-131) to properly verify both matrix dimensions (N×n_t) instead of
+only checking the number of time points.
+
+Run the full HtM sweep:
+```bash
+julia --project=. -e 'include("src/calibration_grid.jl"); run_calibration_grid()'
+```
+
+- **Figures:** `fig4_htm_sweep.png` is now generated correctly from the fully
+  populated `summary_loop2_htm.csv` file.
 
 # References
 

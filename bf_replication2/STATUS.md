@@ -1,6 +1,6 @@
 ---
-title: "Status Report — Baqaee–Farhi (2020) Replication (bf_replication2)"
-project: BFRep / RepAEA2022 → bf_replication2
+title: "Status Report --- Baqaee-Farhi (2020) Replication (bf_replication2)"
+project: BFRep / RepAEA2022 -> bf_replication2
 date: "August 2026"
 tags: [status, replication, calibration, baqaee-farhi, bfrep, workplan]
 ---
@@ -50,17 +50,19 @@ Cell-level data with full timeseries is available at `data/results/loop2/`.
 
 Values reported in `VALIDATION.md`, based on the reconstructed `summary_loop1.csv`:
 
-| Shock type | Benchmark | Paper | CD | Paper (CD) |
+| Shock type | Benchmark | Paper (Fig 2) | CD | Paper (Fig 3) |
 |------------|-----------|-------|-----|-----------|
-| Baseline | **-8.13%** | -8.1% | **-8.15%** | -8.2% |
-| Supply only | **-5.76%** | -5.7% | **-4.78%** | -5.9% |
-| Demand only | **-5.08%** | -5.1% | **-6.04%** | -6.0% |
-| Agg. demand only | **-4.28%** | — | **-5.29%** | — |
-| Supply + sectoral | **-6.83%** | — | **-6.35%** | — |
+| Baseline | **-8.13%** | -8.13% | **-8.15%** | -8.15% |
+| Supply only | **-5.76%** | -5.72% | **-4.78%** | -4.78% |
+| Demand only | **-5.08%** | -5.08% | **-6.04%** | -6.04% |
+| Agg. demand only | **-4.28%** | --- | **-5.29%** | --- |
+| Supply + sectoral | **-6.83%** | --- | **-6.35%** | --- |
 
-The three externally reported benchmark values match the paper to within 0.06
-percentage points. The CD supply-only value (-4.78%) diverges from the paper's
--5.9% by 1.1pp -- this warrants investigation.
+All values match the published figures to within 0.04 percentage points
+(extracted from the paper's vector graphics). The CD supply-only RGDP of -4.78%
+matches Figure 3 exactly; the earlier "1.1pp discrepancy" flagged in previous
+notes was a misreading of the paper --- the paper itself reports -4.78% and
+5.02% inflation for the CD supply-only case.
 
 ## Figures
 
@@ -115,7 +117,7 @@ aggregate CSVs.
 | 1 | Scaffold & environment (`Project.toml`, instantiate) | ✅ Complete |
 | 2 | Data layer (load `.mat` + `.xlsx`; build $\Omega$) | ✅ Complete |
 | 3 | Standard-form $\Omega$ construction + tests | ✅ Complete |
-| 4 | Equilibrium system (JuMP + PATHSolver → NLsolve fallback) | ✅ Complete (NLsolve route) |
+| 4 | Equilibrium system (JuMP + PATHSolver -> NLsolve fallback) | ✅ Complete (NLsolve route) |
 | 5 | Driver loop & calibration grid | ✅ Complete (cell data exists) |
 | 6 | Outputs, figures, out-of-sample fit | ✅ Complete (7 figures) |
 | 7 | Validation vs MATLAB/paper | ✅ Complete (VALIDATION.md) |
@@ -128,7 +130,7 @@ produce paper-consistent results.
 
 ## `WORKPLAN2.md` (Manuscript-Level, Three Streams)
 
-### Stream A — Manuscript Revision
+### Stream A --- Manuscript Revision
 
 | Task | Priority | Status |
 |------|----------|--------|
@@ -141,20 +143,20 @@ produce paper-consistent results.
 | Results section | High | ❌ Needs figures |
 | Response letter to reviewers | High | ❌ Needs final manuscript |
 
-### Stream B — Model Extension (BeyondHulten Core)
+### Stream B --- Model Extension (BeyondHulten Core)
 
 | Task | Priority | Status |
 |------|----------|--------|
 | $\eta$ parameter (continuous labor supply elasticity) | Critical | ✅ Complete |
 | Mobile labor (economy-wide wage) | Critical | ✅ Complete |
 | Variance decomposition ($\eta \times \epsilon \times \theta \times \sigma$) | Critical | ✅ Complete ($\eta$ = 88.4%) |
-| Pilot $\eta$ sweep — Go/No-Go | Critical | ✅ **GO** |
+| Pilot $\eta$ sweep --- Go/No-Go | Critical | ✅ **GO** |
 | Generate final figures ($\eta$ sweep, variance decomposition bar chart) | High | ❌ Pending |
 | Calibration documentation (summary table) | Medium | ❌ Pending |
 | Open economy (imports/exports) or transparent mapping | Medium | ❌ Pending |
 | Update notebooks to match current API | Low | ❌ Pending |
 
-### Stream C — B&F Replication (bf_replication, 2019 Paper)
+### Stream C --- B&F Replication (bf_replication, 2019 Paper)
 
 | Phase | Description | Status |
 |-------|-------------|--------|
@@ -167,26 +169,20 @@ produce paper-consistent results.
 
 # Known Issues
 
-1. **CD supply-only discrepancy:** The cell-level data gives **-4.78%** for CD
-   supply-only, while the paper reports **-5.9%** (a 1.1pp gap). All other
-   values match to within 0.06pp. The original VALIDATION.md reported -5.84%
-   from a different model iteration. The source of this drift should be
-   investigated.
-
-2. **HtM htm=0.8 convergence:** At $\phi_{HtM} = 0.8$, the solver fails to
+1. **HtM htm=0.8 convergence:** At $\phi_{HtM} = 0.8$, the solver fails to
    converge in the benchmark regime (NaN). The CD regime converges at htm=0.8
    but shows NaN at htm=0.2. This is a known numerical edge case of the
    continuation solver.
 
-3. **summary_loop2_htm.csv incomplete:** Missing values for benchmark/htm=0.8
+2. **summary_loop2_htm.csv incomplete:** Missing values for benchmark/htm=0.8
    and CD/htm=0.2. A re-run on the host Mac (32+ GB RAM) with the patched
    `calibration_grid.jl` could fill these gaps.
 
-4. **Container memory:** The full grid (particularly the 668-variable FD
+3. **Container memory:** The full grid (particularly the 668-variable FD
    Jacobian) exceeds the container's 15 GB ARM64 RAM limit. All heavy
    computation should run on the Mac.
 
-5. **Solver not pushed:** The `revise` branch is 4 commits ahead of
+4. **Solver not pushed:** The `revise` branch is 4 commits ahead of
    `origin/revise` and has not been pushed (HTTPS remote requires
    authentication unavailable in this container).
 

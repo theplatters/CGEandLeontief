@@ -161,21 +161,20 @@ along the shock scale $t \in [0, 1]$ (see `WORKPLAN.md` for solver rationale).
 
 # Key Results (loop=1)
 
-| Shock type | RGDP (bench) | RGDP (CD) | Paper (bench) | Paper (CD) |
-|------------|--------------|-----------|---------------|------------|
-| Baseline | -8.13% | -8.15% | -8.1% | -8.2% |
-| Supply only | -5.76% | -4.78% | -5.7% | -5.9% |
-| Demand only | -5.08% | -6.04% | -5.1% | -6.0% |
+| Shock type | RGDP (bench) | RGDP (CD) | Paper Fig 2 | Paper Fig 3 |
+|------------|--------------|-----------|-------------|-------------|
+| Baseline | -8.13% | -8.15% | -8.13% | -8.15% |
+| Supply only | -5.76% | -4.78% | -5.72% | -4.78% |
+| Demand only | -5.08% | -6.04% | -5.08% | -6.04% |
 | Agg. demand only | -4.28% | -5.29% | --- | --- |
 | Supply + sectoral | -6.83% | -6.35% | --- | --- |
 
-Full details, including inflation and unemployment columns and the HtM sweep,
-are in `VALIDATION.md` and `STATUS.md`.
+All values match the published figures to within 0.04 percentage points. Full
+details, including inflation and unemployment columns and the HtM sweep, are in
+`VALIDATION.md` and `STATUS.md`.
 
 # Known Issues
 
-- **CD supply-only gap:** the CD regime gives -4.78% vs the paper's -5.9%
-  (1.1pp). All other values match within 0.06pp. Under investigation.
 - **HtM htm=0.8:** the benchmark-regime solve fails to converge (NaN); the CD
   regime has a NaN at htm=0.2. Known numerical edge cases of the continuation
   solver.

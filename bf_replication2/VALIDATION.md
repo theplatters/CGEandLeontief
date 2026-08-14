@@ -29,8 +29,8 @@ Results from `summary_loop1.csv` versus paper and MATLAB:
 | Shock type | Julia (benchmark) | Paper | MATLAB | Julia (CD) | Paper (CD) |
 |------------|-------------------|-------|--------|------------|------------|
 | Baseline (all) | **-8.13%** | -8.1% | — | -8.15% | -8.2% |
-| Supply only | **-5.76%** | -5.7% | — | -5.84% | -5.9% |
-| Demand only | **-5.08%** | -5.1% | — | -6.04% | -6.0% |
+| Supply only | **-5.76%** | -5.7% | — | **-4.78%** | -5.9% |
+| Demand only | **-5.08%** | -5.1% | — | **-6.04%** | -6.0% |
 | Agg. demand only | **-4.28%** | — | — | -5.29% | — |
 | Supply + sectoral | **-6.83%** | — | — | -6.35% | — |
 
@@ -122,7 +122,8 @@ Notebooks:
 - [x] Supply-only: **-5.76%** (paper: -5.7%)
 - [x] Demand-only: **-5.08%** (paper: -5.1%)
 - [x] CD regime baseline: **-8.15%**
-- [ ] HtM sweep summary CSV populated (re-run with fixed bounds)
+- [x] Loop-1 summary CSV populated (reconstructed from cell-level data)
+- [x] HtM sweep summary CSV partially populated (5/6 values; htm=0.8 NaN known issue)
 - [x] All figures generated from CSV data
 - [ ] Fully automated `make all` pipeline
 

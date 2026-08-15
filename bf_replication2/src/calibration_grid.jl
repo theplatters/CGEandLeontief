@@ -340,7 +340,7 @@ function run_calibration_grid(outdir::String="data/results"; loops=[1, 2], verbo
             max_n_t = max(max_n_t, length(t_grid))
         end
     end
-    trunc_A = zeros(N, max_n_t)
+    trunc_A = zeros(sf.N, max_n_t)
     trunc_A .= 1.0  # Initialize all to 1 (not demand-constrained)
 
     for loop in loops

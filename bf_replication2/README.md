@@ -47,9 +47,10 @@ bf_replication2/
     ---- 03_calibration_grid.ipynb Full calibration driver + summary tables
 ---- figures/                      Generated figures (Fig 2-4, Appendix A1-A3)
 ---- data/results/                 CSV outputs (summary + per-cell timeseries)
----- WORKPLAN.md                   Detailed work plan
+---- archive/WORKPLAN.md (archived 2026-08-15)                   Detailed work plan
+---- POTENTIAL_OUTLOOK.md          Forward-looking strategies for remaining HtM NaN cells
 ---- VALIDATION.md                 Validation report vs paper / MATLAB
----- STATUS.md                     Intermediate status and open items
+---- archive/STATUS.md (archived 2026-08-15)                     Intermediate status and open items
 ```
 
 # Data
@@ -157,7 +158,7 @@ Five shock types; HtM share swept over $\{0, 0.2, ..., 1.0\}$.
 
 The equilibrium is solved with NLsolve using a Fischer-Burmeister
 reformulation of the sticky-labor complementarity, with a continuation method
-along the shock scale $t \in [0, 1]$ (see `WORKPLAN.md` for solver rationale).
+along the shock scale $t \in [0, 1]$ (see `archive/WORKPLAN.md` for solver rationale).
 
 # Key Results (loop=1)
 
@@ -171,7 +172,7 @@ along the shock scale $t \in [0, 1]$ (see `WORKPLAN.md` for solver rationale).
 
 All values match the published figures to within 0.04 percentage points. Full
 details, including inflation and unemployment columns and the HtM sweep, are in
-`VALIDATION.md` and `STATUS.md`.
+`VALIDATION.md` and `archive/STATUS.md`.
 
 # Known Issues
 

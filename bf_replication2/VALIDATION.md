@@ -129,34 +129,6 @@ Key design choices:
 | $\chi$ parameter | Not used (blank parameter) | `rand()` seeded | Fixed to explicit `0.0` |
 | **Trunc_A dimensions** | Persists across all cells | Only checked n_t dimension | Now checks both N and n_t dimensions |
 
-## Dependency Status
-
-```{.text}
-Julia project: bf_replication2/src/
-  model.jl          --- MCP model, solver, calibration
-  network.jl         --- Network matrices (IO data loading)
-  test_model.jl      --- Unit tests (data layer + equilibrium)
-  calibration_grid.jl--- Main driver (Phase 5)
-  generate_figures.py--- Figure generation (Python/matplotlib)
-
-Notebooks:
-  01_data_layer.ipynb    --- Data loading verification
-  02_equilibrium.ipynb   --- Solver walkthrough + CSV export
-  03_calibration_grid.ipynb --- Full calibration driver
-  04_figures.ipynb        --- Figure generation
-```
-JuMP/PATHSolver), keeping dependencies minimal.
-
-Key design choices:
-
-- **Continuation method**: The shock is scaled by $t \in [0, 1]$ and the solver
-  walks along the grid, using the previous solution as the next initial guess.
-- **Continuation refinement**: If the solver fails at a grid point, a midpoint
-  $t_{mid}$ is inserted and solved first.
-- **Trunc_A persistence**: Following the MATLAB driver, the labor-demand Trunc_A
-  matrix persists across all shock_type cells and determines demand-constrained
-  sectors.
-
 # Verification Checklist
 
 - [x] Data layer loads correctly (all 5 checks pass)
@@ -179,6 +151,9 @@ Key design choices:
 2. **Reconstruction is not convergence**: The two reconstructed cells above are marked "⚠ Reconstructed", not "✅ Converged". All other HtM shares (0.0, 0.4, 0.6, 1.0) converge cleanly for both regimes.
 3. **Container memory**: The full grid requires >5 GB RAM. Run on the host Mac.
 
+
+- **Forward-looking strategies:** see `POTENTIAL_OUTLOOK.md` for candidate solver and mathematical approaches (homotopy continuation, regularization, Route B restoration, and others) to turn the two reconstructed cells into genuine converged solutions.
+- **Status / work-plan archived:** `STATUS.md` and `WORKPLAN.md` were moved to `archive/` on 2026-08-15; this document and `VALIDATION.md` remain the live references.
 # References
 
 Baqaee, David Rezza, and Emmanuel Farhi. "Network Effects and Sectoral

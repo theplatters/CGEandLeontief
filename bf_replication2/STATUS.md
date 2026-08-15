@@ -29,7 +29,7 @@ top-level `WORKPLAN2.md`).
 
 All 10 cells of the main calibration grid (loop=1: 2 elasticities $\times$ 5
 shock types) completed successfully (retcode=0) and have their `timeseries.csv`
-and `sector_prices.csv` files on disk at `data/results/loop1/`.
+have their `timeseries.csv` and `sector_prices.csv` files on disk at `data/results/loop1/el{1,2}/st{1..5}/s1/` (note the extra `s1` HtM-index folder).
 
 ## HtM Sweep (loop=2)
 
@@ -89,7 +89,7 @@ Seven figures generated at `figures/`:
 |----------|----------|--------|
 | Work plan | `WORKPLAN.md` | ✅ Present and up to date |
 | Validation report | `VALIDATION.md` | ✅ Present; corrected with actual cell-level data |
-| README | `README.md` | ❌ Not yet created |
+| README | `README.md` | ✅ Present (verified) |
 | Notebook (data layer) | `notebooks/01_data_layer.ipynb` | ✅ Present |
 | Notebook (calibration grid) | `notebooks/03_calibration_grid.ipynb` | ✅ Present |
 
@@ -113,6 +113,12 @@ Python. All 7 figures regenerated from the now-populated CSV.
 all requested loops complete. Partial runs should not overwrite existing
 aggregate CSVs.
 
+✅ **Persisted (2026-08-15):** `summary_loop1.csv` has been regenerated from the
+10 loop-1 cell-level CSVs via the Divisia decomposition, restoring the real
+RGDP/inflation/unemployment values that match the paper. A partial-run guard in
+`calibration_grid.jl` (`write_summary_csv(; loops=...)`) now prevents a
+`loops=[2]` run from re-zeroing it.
+
 # Work Plan Status
 
 ## `bf_replication2/WORKPLAN.md` (Replication-Specific)
@@ -132,45 +138,6 @@ The original work plan specified **JuMP + PATHSolver.jl** (Route B). The actual
 implementation uses **NLsolve with Fischer-Burmeister** (Route A, the fallback)
 because of container memory constraints. The solver is verified to converge and
 produce paper-consistent results.
-
-## `WORKPLAN2.md` (Manuscript-Level, Three Streams)
-
-### Stream A --- Manuscript Revision
-
-| Task | Priority | Status |
-|------|----------|--------|
-| New introduction (drop Kuhnian preamble) | High | ❌ Pending |
-| Rewrite Section 2 (sign error, remove supply vs demand) | High | ❌ Pending |
-| Write Section 5 (endogenous labor supply with $\eta$) | High | ❌ Results ready, needs writing |
-| Write Section 6 (variance decomposition) | High | ❌ Results ready, needs writing |
-| Rewrite Section 4 (CES framing) | High | ❌ Pending |
-| Literature integration (Robinson, Rose, Dervis, McGregor, Shoven/Whalley) | High | ❌ Pending |
-| Results section | High | ❌ Needs figures |
-| Response letter to reviewers | High | ❌ Needs final manuscript |
-
-### Stream B --- Model Extension (BeyondHulten Core)
-
-| Task | Priority | Status |
-|------|----------|--------|
-| $\eta$ parameter (continuous labor supply elasticity) | Critical | ✅ Complete |
-| Mobile labor (economy-wide wage) | Critical | ✅ Complete |
-| Variance decomposition ($\eta \times \epsilon \times \theta \times \sigma$) | Critical | ✅ Complete ($\eta$ = 88.4%) |
-| Pilot $\eta$ sweep --- Go/No-Go | Critical | ✅ **GO** |
-| Generate final figures ($\eta$ sweep, variance decomposition bar chart) | High | ❌ Pending |
-| Calibration documentation (summary table) | Medium | ❌ Pending |
-| Open economy (imports/exports) or transparent mapping | Medium | ❌ Pending |
-| Update notebooks to match current API | Low | ❌ Pending |
-
-### Stream C --- B&F Replication (bf_replication, 2019 Paper)
-
-| Phase | Description | Status |
-|-------|-------------|--------|
-| R1 | Data pipeline (BFdata.csv loading) | ✅ Complete |
-| R2 | Core solver (Newton-Raphson, verified against MATLAB) | ✅ Complete |
-| R3 | Shock simulation (Monte Carlo, 50k draws from stfp.csv) | ❌ Pending |
-| R4 | Elasticity gradient (sweep $\epsilon$, $\theta$, $\sigma$) | ❌ Pending |
-| R5 | Mobile labor variant (reallocation) | ❌ Already implemented in Stream B |
-| R6 | Second-order effects | ❌ Pending |
 
 # Known Issues
 
@@ -213,4 +180,4 @@ cat data/results/summary_loop2_htm.csv
 # Should show 6 rows with htm_share from 0.0 to 1.0, all with valid numbers
 ```
 
-**Note:** Cells that previously failed (htm=0.2 for CD, htm=0.8 for benchmark) now use fallback strategies and produce valid results.
+**Note:** Two cells (htm=0.2 CD, htm=0.8 benchmark) do **not** converge at t=1.0 and are **reconstructed** from the last convergent t-point (t=0.70 and t=0.99); they are flagged as reconstructed in the tables. The CD htm=0.2 value is an underestimate. A partial-run guard now prevents `loops=[2]` from re-zeroing `summary_loop1.csv`.

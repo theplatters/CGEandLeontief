@@ -397,7 +397,8 @@ function run_calibration_grid(outdir::String="data/results"; loops=[1, 2], verbo
 
     # Summary CSVs
     write_summary_csv(outdir, RGDP_graph, Inflation_graph, Unemp_graph,
-                      RGDP_graph_htm, Inflation_graph_htm, Unemp_graph_htm)
+                      RGDP_graph_htm, Inflation_graph_htm, Unemp_graph_htm;
+                      loops=loops)
 
     if baseline !== nothing && 1 in loops
         write_baseline_fit(outdir, baseline, io, shocks)
@@ -443,29 +444,35 @@ function write_cell_csv(cell_dir::String, res::Dict, io)
     CSV.write(joinpath(cell_dir, "sector_prices.csv"), DataFrame(rows))
 end
 
-function write_summary_csv(outdir::String, RGDP, InfG, UnempG, RGDP_htm, InfG_htm, UnempG_htm)
+function write_summary_csv(outdir::String, RGDP, InfG, UnempG, RGDP_htm, InfG_htm, UnempG_htm; loops=[1,2])
     shock_names = ["baseline", "supply_only", "demand_only", "agg_demand_only", "supply_sectoral"]
 
     # loop=1: elasticity × shock_type matrices
-    df_el1 = DataFrame(shock_type = shock_names,
-                       RGDP_benchmark = RGDP[1, :],
-                       Inflation_benchmark = InfG[1, :],
-                       Unemp_benchmark = UnempG[1, :],
-                       RGDP_cd = RGDP[2, :],
-                       Inflation_cd = InfG[2, :],
-                       Unemp_cd = UnempG[2, :])
-    CSV.write(joinpath(outdir, "summary_loop1.csv"), df_el1)
+    # Guard: only write when loop 1 was actually run, so a `loops=[2]` run
+    # cannot overwrite (and zero) the existing summary_loop1.csv.
+    if 1 in loops
+        df_el1 = DataFrame(shock_type = shock_names,
+                           RGDP_benchmark = RGDP[1, :],
+                           Inflation_benchmark = InfG[1, :],
+                           Unemp_benchmark = UnempG[1, :],
+                           RGDP_cd = RGDP[2, :],
+                           Inflation_cd = InfG[2, :],
+                           Unemp_cd = UnempG[2, :])
+        CSV.write(joinpath(outdir, "summary_loop1.csv"), df_el1)
+    end
 
     # loop=2: htm sweep (elasticity × s)
-    htm_shares = 0.0:0.2:1.0
-    df_htm = DataFrame(htm_share = collect(htm_shares),
-                       RGDP_benchmark = RGDP_htm[1, :],
-                       Inflation_benchmark = InfG_htm[1, :],
-                       Unemp_benchmark = UnempG_htm[1, :],
-                       RGDP_cd = RGDP_htm[2, :],
-                       Inflation_cd = InfG_htm[2, :],
-                       Unemp_cd = UnempG_htm[2, :])
-    CSV.write(joinpath(outdir, "summary_loop2_htm.csv"), df_htm)
+    if 2 in loops
+        htm_shares = 0.0:0.2:1.0
+        df_htm = DataFrame(htm_share = collect(htm_shares),
+                           RGDP_benchmark = RGDP_htm[1, :],
+                           Inflation_benchmark = InfG_htm[1, :],
+                           Unemp_benchmark = UnempG_htm[1, :],
+                           RGDP_cd = RGDP_htm[2, :],
+                           Inflation_cd = InfG_htm[2, :],
+                           Unemp_cd = UnempG_htm[2, :])
+        CSV.write(joinpath(outdir, "summary_loop2_htm.csv"), df_htm)
+    end
 end
 
 function write_baseline_fit(outdir::String, res::Dict, io, shocks)

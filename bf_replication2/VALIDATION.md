@@ -77,13 +77,13 @@ sectors, consistent with the paper's Appendix.
 | φ_HtM | RGDP (bench) | RGDP (CD) | Status |
 |-------|--------------|-----------|--------|
 | 0.0   | -8.14%       | -8.15%    | ✅ Converged |
-| 0.2   | -8.45%       | -7.10%    | ✅ Converged (with fallback) |
+| 0.2   | -8.45%       | -7.10%    | ⚠ Reconstructed (last t) |
 | 0.4   | -8.81%       | -9.18%    | ✅ Converged |
 | 0.6   | -9.24%       | -9.99%    | ✅ Converged |
-| 0.8   | -9.71%       | -11.18%   | ✅ Converged (with fallback) |
+| 0.8   | -9.71%       | -11.18%   | ⚠ Reconstructed (last t) |
 | 1.0   | -10.59%      | -12.87%   | ✅ Converged |
 
-**Note:** All 6 HtM share values now produce valid results. Cells that previously failed (htm=0.2 for CD, htm=0.8 for benchmark) now use fallback strategies:
+**Note:** All 6 HtM share values are now **populated**. Two cells did **not** converge at t=1.0 and are **reconstructed** from the last convergent t-point — htm=0.2 (CD, t=0.70) and htm=0.8 (benchmark, t=0.99). The CD htm=0.2 value is an **underestimate** of the true t=1.0 magnitude. The other 4 cells (htm=0.0, 0.4, 0.6, 1.0, both regimes) converged cleanly. Fallback strategies (continuation refinement, relaxed tolerance, previous-solution fallback, NaN clamping) used:
 - Continuation refinement with relaxed tolerance
 - Previous solution as fallback
 - NaN clamping to prevent propagation
@@ -157,32 +157,6 @@ Key design choices:
   matrix persists across all shock_type cells and determines demand-constrained
   sectors.
 
-## Corrections Applied During Translation
-
-| Issue | MATLAB behaviour | Initial Julia bug | Fix |
-|-------|------------------|-------------------|-----|
-| Sign of shock | `1 - t .* shock_A` | Typo `1 - t .* shock_A` sign | Changed to `1 + t .* shock_A` for absolute sign |
-| $\lambda$ initialisation | Uses calibrated initial point | Self-referential $\lambda$ assignment | Fixed to `factor_clearing0` calculation |
-| B renormalisation | Row vector $\Omega \cdot B$ | Transpose broadcasting | Removed transpose |
-| $\chi$ parameter | Not used (blank parameter) | `rand()` seeded | Fixed to explicit `0.0` |
-
-## Dependency Status
-
-```{.text}
-Julia project: bf_replication2/src/
-  model.jl          --- MCP model, solver, calibration
-  network.jl         --- Network matrices (IO data loading)
-  test_model.jl      --- Unit tests (data layer + equilibrium)
-  calibration_grid.jl--- Main driver (Phase 5)
-  generate_figures.py--- Figure generation (Python/matplotlib)
-
-Notebooks:
-  01_data_layer.ipynb    --- Data loading verification
-  02_equilibrium.ipynb   --- Solver walkthrough + CSV export
-  03_calibration_grid.ipynb --- Full calibration driver
-  04_figures.ipynb        --- Figure generation
-```
-
 # Verification Checklist
 
 - [x] Data layer loads correctly (all 5 checks pass)
@@ -195,18 +169,14 @@ Notebooks:
 - [x] CD supply-only: **-4.78%** (paper: -4.78%)
 - [x] CD demand-only: **-6.04%** (paper: -6.04%)
 - [x] Loop-1 summary CSV populated (reconstructed from cell-level data)
-- [x] HtM sweep summary CSV partially populated (5/6 values; htm=0.8 NaN known issue)
+- [x] HtM sweep summary CSV fully populated; 2 of 6 cells (htm=0.2 CD, htm=0.8 benchmark) reconstructed from last convergent t-point (NOT converged at t=1.0)
 - [x] All figures generated from CSV data
 - [ ] Fully automated `make all` pipeline
 
 # Known Issues
 
-1. **HtM sweep incomplete**: The bounds error in `calibration_grid.jl` at the
-   transition from complementarity to CD regimes (Trunc_A dimension mismatch)
-   has been patched but the full loop=2 has not been re-run.
-2. **htm=0.8 convergence**: At $t \approx 1.0$, the solver struggles for
-   $\phi_{HtM} = 0.8$. This is a known numerical edge case --- the other 5
-   values ($0.0, 0.2, 0.4, 0.6, 1.0$) converge cleanly.
+1. **HtM convergence edge cases (reconstructed, not converged)**: Two cells — htm=0.2 (CD, t=0.70) and htm=0.8 (benchmark, t=0.99) — do not reach t=1.0. Both are **reconstructed** from the last convergent t-point and flagged in the tables; the CD htm=0.2 value is an underestimate. The earlier Trunc_A dimension-mismatch bounds error is patched.
+2. **Reconstruction is not convergence**: The two reconstructed cells above are marked "⚠ Reconstructed", not "✅ Converged". All other HtM shares (0.0, 0.4, 0.6, 1.0) converge cleanly for both regimes.
 3. **Container memory**: The full grid requires >5 GB RAM. Run on the host Mac.
 
 # References

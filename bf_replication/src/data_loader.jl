@@ -56,7 +56,8 @@ Processing steps (matching MATLAB getData.m / GDP_Simulation_88sectorKLEMS.m):
   8. Compute λ = (I - diag(1-α)·Ω)⁻¹' · β (Domar weights)
   9. Compute L = λ ⊙ α (baseline labor allocation)
 """
-function load_bf_data(csvpath::String; year::Int=1980)
+function load_bf_data(csvpath::String = joinpath(@__DIR__, "..", "..", "Replication Files",
+                              "GDP Simulatin -- 88 Sector", "BFdata.csv"); year::Int=1980)
     raw = readdlm(csvpath, ',')
 
     n_sectors_raw = 88
@@ -163,19 +164,21 @@ end
     load_tfp_data(csvpath) -> (stfp::Matrix{Float64}, Sigma::Matrix{Float64}, mu::Vector{Float64})
 
 Load sectoral TFP growth rates from stfp.csv.
-stfp.csv: 76 rows (sectors), each row is a time series of TFP growth rates.
+
+IMPORTANT: the stfp.csv shipped in this replication is ALREADY cleaned -- it is
+a 76 x T matrix (sectors x years) with NO header and NO extra year/private-
+household column/row. It is aligned row-for-row with the 76 sectors kept by
+`load_bf_data` (same BEA ordering, government/zero-sales sectors removed). So
+we read it as-is; do NOT drop a column or a row here (those removals belong to
+the raw MATLAB stfp.csv format and would misalign / shrink the matrix).
 """
-function load_tfp_data(csvpath::String)
+function load_tfp_data(csvpath::String = joinpath(@__DIR__, "..", "..", "Replication Files",
+                              "GDP Simulatin -- 88 Sector", "stfp.csv"))
     raw = readdlm(csvpath, ',')
-    stfp = Float64.(raw)
+    stfp = Float64.(raw)          # 76 x T, rows = sectors (aligned with IO)
 
-    # MATLAB: stfp(:,1) = [] (remove first year, which is blank)
-    stfp = stfp[:, 2:end]
-    # MATLAB: stfp(end,:) = [] (remove private household sector)
-    stfp = stfp[1:end-1, :]
-
-    Sigma = cov(stfp, dims=2)
-    mu = vec(mean(stfp, dims=2))
+    Sigma = cov(stfp, dims = 2)  # 76 x 76 (each row is a sector variable)
+    mu = vec(mean(stfp, dims = 2))
 
     return stfp, Sigma, mu
 end

@@ -45,8 +45,8 @@ summary_loop1 = pd.read_csv(DATA / 'summary_loop1.csv')
 summary_htm   = pd.read_csv(DATA / 'summary_loop2_htm.csv')
 baseline      = pd.read_csv(DATA / 'baseline_fit.csv')
 
-SHOCK_LABELS = ['Baseline\n(all shocks)', 'Supply\nonly', 'Demand\nonly',
-                'Agg. demand\nonly', 'Supply +\nsectoral demand']
+SHOCK_LABELS = ['Baseline', 'Supply\nonly', 'Demand\nonly',
+                'Agg.\ndemand', 'Supply+\nsectoral']
 
 print("✓ Data loaded")
 print(f"  Loop1: {summary_loop1.shape[0]} shock types")
@@ -80,28 +80,30 @@ def style_bar_ax(ax, title, ylabel='Real GDP change (%)', ylim=None):
 def fig2_benchmark():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.5))
     
-    rgdp = summary_loop1['RGDP_benchmark'].values * -1  # back to +ve loss
+    rgdp = summary_loop1['RGDP_benchmark'].values  # negative = decline
     unemp = summary_loop1['Unemp_benchmark'].values
     
     x = np.arange(5)
     width = 0.55
     
-    # RGDP bar chart
+    # RGDP bar chart (negative = decline, faithful to B&F)
     bars = ax1.bar(x, rgdp, width, color=PALETTE, edgecolor='white', linewidth=0.5)
     ax1.set_xticks(x)
-    ax1.set_xticklabels(SHOCK_LABELS, fontsize=9)
+    ax1.set_xticklabels(SHOCK_LABELS, fontsize=9, rotation=20, ha='right')
     style_bar_ax(ax1, 'Figure 2: Real GDP change (benchmark)', ylim=(-11, 1))
     
-    # Value labels on bars
+    # Value labels on bars (sign-aware: below tip for declines)
     for bar, val in zip(bars, rgdp):
-        ax1.text(bar.get_x() + bar.get_width()/2,
-                bar.get_height() + 0.15,
-                f'{val:.1f}%', ha='center', va='bottom', fontsize=8.5, fontweight='bold')
+        h = bar.get_height()
+        off = 0.15 if h >= 0 else -0.5
+        va = 'bottom' if h >= 0 else 'top'
+        ax1.text(bar.get_x() + bar.get_width()/2, h + off,
+                f'{val:.1f}%', ha='center', va=va, fontsize=8.5, fontweight='bold')
     
     # Unemployment chart
     ax2.bar(x, unemp, width, color=PALETTE, edgecolor='white', linewidth=0.5)
     ax2.set_xticks(x)
-    ax2.set_xticklabels(SHOCK_LABELS, fontsize=9)
+    ax2.set_xticklabels(SHOCK_LABELS, fontsize=9, rotation=20, ha='right')
     style_bar_ax(ax2, 'Unemployment change (benchmark)',
                  ylabel='Unemployment (pp)', ylim=(-2, 12))
     for i, v in enumerate(unemp):
@@ -119,7 +121,7 @@ def fig2_benchmark():
 def fig3_cd():
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4.5))
     
-    rgdp = summary_loop1['RGDP_cd'].values * -1
+    rgdp = summary_loop1['RGDP_cd'].values  # negative = decline
     unemp = summary_loop1['Unemp_cd'].values
     
     x = np.arange(5)
@@ -127,18 +129,20 @@ def fig3_cd():
     
     bars = ax1.bar(x, rgdp, width, color=PALETTE, edgecolor='white', linewidth=0.5)
     ax1.set_xticks(x)
-    ax1.set_xticklabels(SHOCK_LABELS, fontsize=9)
+    ax1.set_xticklabels(SHOCK_LABELS, fontsize=9, rotation=20, ha='right')
     style_bar_ax(ax1, 'Figure 3: Real GDP change (Cobb–Douglas)', ylim=(-11, 1))
     for bar, val in zip(bars, rgdp):
-        ax1.text(bar.get_x() + bar.get_width()/2,
-                bar.get_height() + 0.15,
-                f'{val:.1f}%', ha='center', va='bottom', fontsize=8.5, fontweight='bold')
+        h = bar.get_height()
+        off = 0.15 if h >= 0 else -0.5
+        va = 'bottom' if h >= 0 else 'top'
+        ax1.text(bar.get_x() + bar.get_width()/2, h + off,
+                f'{val:.1f}%', ha='center', va=va, fontsize=8.5, fontweight='bold')
     
     # Handle negative zero
     unemp_display = np.where(np.abs(unemp) < 0.01, 0.0, unemp)
     ax2.bar(x, unemp_display, width, color=PALETTE, edgecolor='white', linewidth=0.5)
     ax2.set_xticks(x)
-    ax2.set_xticklabels(SHOCK_LABELS, fontsize=9)
+    ax2.set_xticklabels(SHOCK_LABELS, fontsize=9, rotation=20, ha='right')
     style_bar_ax(ax2, 'Unemployment change (Cobb–Douglas)',
                  ylabel='Unemployment (pp)', ylim=(-2, 14))
     for i, v in enumerate(unemp_display):
@@ -384,8 +388,8 @@ def fig_combined():
     """Side-by-side comparison of benchmark vs CD across shock types."""
     fig, ax = plt.subplots(figsize=(9, 5))
     
-    rgdp_b = summary_loop1['RGDP_benchmark'].values * -1
-    rgdp_c = summary_loop1['RGDP_cd'].values * -1
+    rgdp_b = summary_loop1['RGDP_benchmark'].values  # negative = decline
+    rgdp_c = summary_loop1['RGDP_cd'].values
     
     x = np.arange(5)
     width = 0.35
@@ -407,12 +411,17 @@ def fig_combined():
     ax.tick_params(labelsize=10)
     ax.set_ylim(-11, 1)
     
-    # Value labels
+    # Value labels (sign-aware: below tip for declines)
     for i in range(5):
-        ax.text(i - width/2, rgdp_b[i] + 0.15, f'{rgdp_b[i]:.1f}%',
-               ha='center', va='bottom', fontsize=7.5, fontweight='bold', color=BLUE)
-        ax.text(i + width/2, rgdp_c[i] + 0.15, f'{rgdp_c[i]:.1f}%',
-               ha='center', va='bottom', fontsize=7.5, fontweight='bold', color=RED)
+        hb, hc = rgdp_b[i], rgdp_c[i]
+        ob = 0.15 if hb >= 0 else -0.5
+        oc = 0.15 if hc >= 0 else -0.5
+        vb = 'bottom' if hb >= 0 else 'top'
+        vc = 'bottom' if hc >= 0 else 'top'
+        ax.text(i - width/2, hb + ob, f'{hb:.1f}%',
+               ha='center', va=vb, fontsize=7.5, fontweight='bold', color=BLUE)
+        ax.text(i + width/2, hc + oc, f'{hc:.1f}%',
+               ha='center', va=vc, fontsize=7.5, fontweight='bold', color=RED)
     
     plt.tight_layout()
     path = FIGS / 'fig_combined.png'

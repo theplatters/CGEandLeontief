@@ -9,7 +9,7 @@
 
 function run_oil_shock(data;
         A_shock_val::Float64 = 0.9,
-        ϵ::Float64 = 0.02,
+        ε::Float64 = 0.02,
         θ::Float64 = 0.25,
         σ::Float64 = 0.25,
         sector::Int = 7)
@@ -17,13 +17,13 @@ function run_oil_shock(data;
     A = ones(data.N)
     A[sector] = A_shock_val
 
-    sol = solve_bf(A, data.Ω, data.α, data.β, data.L, ϵ, θ, σ)
+    sol = solve_bf(A, data.Ω, data.α, data.β, data.L, ε, θ, σ)
     if !sol.converged
         @warn "Oil-shock solver did not converge (residual: $(sol.residual_norm))"
     end
 
     # GDP = real_gdp_mc formula (matching MATLAB line)
-    gdp = real_gdp_mc(sol, A, data.α, data.L, ϵ)
+    gdp = real_gdp_mc(sol, A, data.α, data.L, ε)
 
     # New Domar weight at shocked equilibrium
     λ_new = sol.p .* sol.y ./ gdp

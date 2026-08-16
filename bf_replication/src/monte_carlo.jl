@@ -73,3 +73,40 @@ function run_monte_carlo(data, Cov::AbstractMatrix{Float64};
     return (n_converged = n_converged, n_correct = n_correct,
             moments = moments_loggdp(loggdp), log_gdp = loggdp)
 end
+
+# ---------------------------------------------------------------------------
+# R5 — Monte-Carlo with MOBILE LABOR (reallocation)
+# Ports GDP_Simulation_88sectorKLEMS_reallocation.m.
+#   * w = 1 (common wage); only N price equations are solved.
+#   * Parameters: ε = 0.6, θ = 0.2, σ = 0.9 (per the MATLAB's overwritten values)
+#   * GDP = CES consumption index: (β'·p^(1-σ))^(1/(σ-1))
+#   * Same diagonal covariance, same "correct" filter as the fixed-labor MC.
+# ---------------------------------------------------------------------------
+function run_monte_carlo_realloc(data, Cov::AbstractMatrix{Float64};
+        trials::Int = 1000,
+        seed::Int = 12345)
+    N = data.N
+    ε, θ, σ = 0.6, 0.2, 0.9       # reallocation calibration (MATLAB lines)
+    Random.seed!(seed)
+
+    loggdp = Float64[]
+    n_converged = 0
+    n_correct   = 0
+
+    for k in 1:trials
+        A_shock = exp.(draw_logA(Matrix(Cov); n = 1)[:, 1])
+
+        sol = solve_bf_realloc(A_shock, data.Ω, data.α, data.β, ε, θ, σ)
+        if sol.converged
+            n_converged += 1
+            g = sol.real_gdp
+            if g > 0 && -0.4 < log(g) < 0.3
+                push!(loggdp, log(g))
+                n_correct += 1
+            end
+        end
+    end
+
+    return (n_converged = n_converged, n_correct = n_correct,
+            moments = moments_loggdp(loggdp), log_gdp = loggdp)
+end

@@ -238,7 +238,95 @@ function _build_solution(X, A, Ω, α, β, L, ϵ, θ, σ, N, converged, r)
 end
 
 # ----------------------------------------------------------------------------
-# GDP / price measures (match eg.m and the MC driver)
+# Reallocation (mobile labor) solver — w = 1, only N price equations
+# ----------------------------------------------------------------------------
+struct BFReallocSolution
+    p::Vector{Float64}       # equilibrium prices (N)
+    real_gdp::Float64        # CES consumption index (β'·p^(1-σ))^(1/(σ-1))
+    converged::Bool
+    residual_norm::Float64
+end
+
+# Residual for the reallocation case: w = 1, only N price equations.
+#   p_u = (A_u^(ϵ-1) · (α_u · 1^(1-ϵ) + (1-α_u) · q_u^(1-ϵ)))^(1/(1-ϵ))
+function bf_realloc_residual!(out::Vector{Float64}, p::Vector{Float64},
+                              A::Vector{Float64}, Ω::Matrix{Float64}, α::Vector{Float64},
+                              ϵ::Float64, θ::Float64)
+    N = length(p)
+    q = (Ω * (p .^ (1 - θ))) .^ (1 / (1 - θ))
+    # Zero-profit with w = 1: p_u = RHS
+    rhs = (A .^ (ϵ - 1)) .* (α .* 1.0 .+ (1 .- α) .* (q .^ (1 - ϵ)))
+    rhs = max.(rhs, 1e-300)
+    rhs = rhs .^ (1 / (1 - ϵ))
+    out[1:N] .= p .- rhs
+    return nothing
+end
+
+function solve_bf_realloc(A::Vector{Float64}, Ω::Matrix{Float64}, α::Vector{Float64},
+                          β::Vector{Float64}, ϵ::Float64, θ::Float64, σ::Float64;
+                          max_iter::Int=300, tol::Float64=1e-10)
+    N = length(A)
+    # Initial guess: p₀ from the Cobb-Douglas approximation (good_init but only p)
+    M = I - Diagonal(1 .- α) * Ω
+    p = exp.(-M \ log.(A))
+    p = max.(p, 1e-10)
+
+    F  = zeros(N)
+    J  = zeros(N, N)
+    Fp = zeros(N)
+
+    for iter in 1:max_iter
+        bf_realloc_residual!(F, p, A, Ω, α, ϵ, θ)
+        r = norm(F)
+        if r < tol
+            real_gdp = (dot(β, p .^ (1 - σ)))^(1 / (σ - 1))
+            return BFReallocSolution(p, real_gdp, true, r)
+        end
+        # Numerical Jacobian (N×N)
+        h = 1e-7
+        for j in 1:N
+            s = h * max(abs(p[j]), 1.0)
+            pj = copy(p); pj[j] += s
+            bf_realloc_residual!(Fp, pj, A, Ω, α, ϵ, θ)
+            J[:, j] .= (Fp .- F) ./ s
+        end
+        # Newton step with LM fallback
+        local Δ
+        try
+            Δ = J \ F
+        catch
+            JTJ = J' * J
+            local solved = false
+            for λ in (1e-8, 1e-4, 1e-1, 1.0, 1e3, 1e6)
+                try
+                    Δ = (JTJ + λ * I) \ (J' * F)
+                    solved = true
+                    break
+                catch
+                    continue
+                end
+            end
+            if !solved
+                real_gdp = (dot(β, p .^ (1 - σ)))^(1 / (σ - 1))
+                return BFReallocSolution(p, real_gdp, false, r)
+            end
+        end
+        improved = false
+        for d in (1.0, 0.5, 0.25, 0.1, 0.01)
+            pn = max.(p - d .* Δ, 1e-10)
+            bf_realloc_residual!(Fp, pn, A, Ω, α, ϵ, θ)
+            if norm(Fp) < r
+                p = pn; F .= Fp; improved = true; break
+            end
+        end
+        if !improved
+            p = max.(p - Δ, 1e-10)
+        end
+    end
+    bf_realloc_residual!(F, p, A, Ω, α, ϵ, θ)
+    real_gdp = (dot(β, p .^ (1 - σ)))^(1 / (σ - 1))
+    return BFReallocSolution(p, real_gdp, false, norm(F))
+end
 #   * gdp_nominal = C = w'L            (used by R3 and R4)
 #   * gdp_welfare = C * sum(beta .* p^-sigma)   (used by the single-sector test)
 #   * mean_price  = sum(y .* p) / sum(y)  (Domar-weighted, eg.m)

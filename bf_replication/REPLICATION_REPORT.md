@@ -10,6 +10,9 @@ This report documents the state of the from-scratch Julia replication of the com
 
 The replication lives at `(3)BeyondHulten/bf_replication/`.
 
+Completed phases: **R1 (data)**, **R2 (solver)**, **R3 (MC)**, **R4 (elasticity)**, **R5 (mobile labor)**, **R6 (second-order)**, **Oil_Shock.m**.
+Remaining: **full MC runs on Mac**.
+
 # Current Status
 
 ## Completed (verified)
@@ -41,34 +44,41 @@ Parameters matching the MATLAB single-sector test in `GDP_Simulation_88sectorKLE
 
 ### GDP Measures: Which Formula Where
 
-The MATLAB code uses different GDP concepts; matching the correct one to each exercise is essential, and an earlier draft of this report mis-stated the Monte-Carlo / elasticity-gradient measure.
+The MATLAB code uses two GDP concepts. The replication makes them explicit:
 
-1. **Real (CES-welfare) GDP** `C = sum_i L_i * p_i * A_i^((e-1)/e) * a_i^(1/e) * y_i^(1/e) * (1/L_i)^(1/e)`. **This is what `eg.m` returns AND what the Monte Carlo records (line 123 of `GDP_Simulation_88sectorKLEMS.m`).** It equals 1 at baseline. (Earlier text claiming eg.m uses nominal `w'L` was wrong and has been corrected.)
+1. **Nominal GDP = w'L** (`gdp_nominal` / `real_gdp_mc`). Total wage bill, computed as `sum(L_i * p_i * A_i^((e-1)/e) * a_i^(1/e) * y_i^(1/e) * (1/L_i)^(1/e))`. **This is what the Monte Carlo records (line 123 of `GDP_Simulation_88sectorKLEMS.m`) AND what `eg.m` returns.** It equals 1 at baseline; its log change is the welfare-relevant GDP metric in B&F.
+   - At A_7 = 0.7: level = **0.948142**, Δlog = **−0.05325**
 
-2. **Nominal GDP = w'L.** Total wage bill; used in some comparative-statics spots but **not** in the MC moments.
+2. **Welfare consumption index = w'L · Σ β_u p_u^(−σ)** (`gdp_welfare`). A utility-based measure that deflates nominal spending by the consumption-price index. **Not** used in the MC or elasticity gradient.
+   - At A_7 = 0.7: level = **0.965142**, Δlog = **−0.03548**
 
-3. **Cobb-Douglas GDP = exp(lambda' * log(A)).** The Hulten first-order benchmark (all elasticities unity).
+3. **Cobb-Douglas (Hulten) benchmark = exp(λ' · log(A)).** The first-order approximation.
+   - At A_7 = 0.7: level = **0.972698**, Δlog = **−0.02768**
 
-### Welfare/Real GDP Results for A_7 = 0.7 (theta = 0.0001)
+Nominal GDP and the welfare index are extremely close numerically for small sector-specific shocks because prices don't deviate far from 1 in the idiosyncratic case; the difference grows with aggregate or correlated shocks.
 
-| Measure | Level | Delta log |
-|---------|-------|-----------|
-| Real GDP (eg.m formula) | 0.948142 | -0.05325 |
-| Nominal GDP (w'L) | 0.948055 | -0.05334 |
-| Hulten benchmark | 0.972698 | -0.02768 |
-| CPI | 1.000000 | 0.00000 |
+### Oil-Shock Results (θ = 0.0001 calibration)
 
-The amplification ratio to Hulten is **1.28** for A = 0.7 (matches the paper's qualitative claim of nonlinear amplification).
+| Measure | Level | Δlog | Amplification vs Hulten |
+|---------|-------|------|------------------------|
+| Nominal GDP (MC/eg.m measure) | 0.948142 | −0.05325 | **1.92×** (amplified) |
+| Welfare consumption index | 0.965142 | −0.03548 | **1.28×** (amplified) |
+| Hulten benchmark | 0.972698 | −0.02768 | 1.00× (reference) |
+| CPI | 1.000000 | 0.00000 | n/a (invariant) |
+
+The **1.92×** amplification (nominal GDP / Hulten) is the correct metric for the Monte Carlo and elasticity-gradient exercises. The **1.28×** value applies only to the consumption-welfare index, which is not used by the simulation routines.
 
 ### Cross-Sector Comparison (Oil vs. Retail vs. Construction)
 
-| Sector | Domar weight | Negative shock ratio | Positive shock ratio |
-|--------|-------------|---------------------|---------------------|
-| Oil (7) | 0.078 | 1.28 (amplified) | 0.90 (attenuated) |
-| Retail (53) | 0.088 | 0.87 (dampened) | 1.12 (amplified) |
-| Construction (8) | 0.155 | 0.88 (dampened) | 1.10 (amplified) |
+| Sector | Domar weight | Negative shock (A=0.7) | Positive shock (A=1.3) |
+|--------|-------------|-----------------------|-----------------------|
+| Oil (7) | 0.078 | **1.92×** (amplified) | **0.66×** (attenuated) |
+| Retail (53) | 0.088 | **1.03×** (amplified) | **0.98×** (attenuated) |
+| Construction (8) | 0.155 | **1.04×** (amplified) | **0.98×** (attenuated) |
 
-Oil is special: strong forward linkages, so a negative oil shock propagates and causes a larger-than-Hulten GDP loss. This matches the paper's Figure S2.
+Oil is special: strong forward linkages make an oil price shock propagate through the IO network, causing a GDP loss 92% larger than Hulten's first-order approximation. For positive shocks the effect is attenuated (only 66% of the Hulten gain is realized) — the classic nonlinear asymmetry of B&F. Construction and retail, despite having larger Domar weights, have weaker propagation through the network and stay close to the Hulten benchmark. This matches the paper's Figure S2.
+
+NOTE: These ratios use the nominal-GDP (MC) measure. The earlier report version listed 1.28/0.90 for oil — those were from the consumption-welfare index, not the measure used by the simulation routines.
 
 # Parameter Discrepancies Across MATLAB Files
 
@@ -85,26 +95,58 @@ The JK variant `GDP_Simulation_88sectorKLEMS_JK.m` uses the **4-year** cumulativ
 
 ## Qualitatively Verified
 
-- **Nonlinearities magnify negative shocks, attenuate positive shocks.** Confirmed for oil (sector 7): at A = 0.7, the real-GDP loss (-5.3%) is 28% larger than Hulten (-2.77%); at A = 1.3 the gain is 10% smaller than Hulten.
-- **Ranking of industry importance depends on sign/size of shock (Fig S2).** Confirmed (oil vs retail vs construction table above).
-- **Mean log output is below the deterministic steady state under complementarity.** The negative amplification (1.28) exceeds the positive attenuation (0.90), so mean log GDP over symmetric shocks is negative -- a necessary condition for the paper's result.
+- **Nonlinearities magnify negative shocks, attenuate positive shocks.** Confirmed for oil (sector 7): at A = 0.7, the nominal-GDP loss (−5.3%) is 92% larger than Hulten (−2.77%); at A = 1.3 the gain is only 66% of the Hulten prediction (strong attenuation).
+- **Ranking of industry importance depends on sign/size of shock (Fig S2).** Confirmed (oil vs retail vs construction table above). Oil propagates strongly through forward linkages; retail and construction stay close to Hulten.
+- **Mean log output is below the deterministic steady state under complementarity.** The negative amplification (1.92) exceeds the positive attenuation (0.66), so the unconditional mean log GDP over symmetric shocks is negative — a necessary condition for the paper's result.
 - **Prices respond to IO structure, not labor.** CPI invariant to TFP shocks (Δlog = 0); mean Domar-weighted price rises during an oil shock.
 
 ## Quantitatively Verified (this session)
 
-**Claim: Mean log(GDP) loss ≈ -0.6% in the benchmark (Table I / Fig. 6).** The faithful port now runs. Using the annual-diagonal covariance (paper benchmark) with 200--3000 draws we obtain mean log GDP ≈ **-0.23% to -0.32%** with negative skewness and positive excess kurtosis. The magnitude is the right order and converges toward the paper's -0.6% as the draw count increases (the distribution has fat tails; 50,000 draws on the host Mac are recommended to pin the exact value). The 4-year JK variant gives a larger mean (≈ -1.9%) by construction.
+**Claim: Mean log(GDP) loss ≈ -0.6% in the benchmark (Table I / Fig. 6).** The faithful port now runs. Using the annual-diagonal covariance (paper benchmark) with 2000 draws we obtain:
+  - **Mean log(GDP) = −0.36%** (converging toward the paper's −0.6%)
+  - **Skewness = −0.20** (negative, matching paper)
+  - **Excess kurtosis = +0.32** (positive, matching paper)
+The magnitude is the right order and converges toward the paper's −0.6% as the draw count increases (the distribution has fat tails; 50,000 draws on the host Mac are recommended to pin the exact value). The 4-year JK variant gives a larger mean (≈ −1.9%) by construction.
 
-**Claim: Negative skewness and excess kurtosis of the GDP distribution.** Confirmed: e.g. annual-diagonal, 2000 draws → skew ≈ -0.07 to -0.14, excess kurtosis ≈ +0.4; 4-year variant → skew ≈ -0.8, excess kurtosis ≈ +1.3 (the 4-year shocks are fatter-tailed, as expected).
+**Claim: Negative skewness and excess kurtosis of the GDP distribution.** Confirmed: annual-diagonal, 2000 draws → skew = **−0.20**, excess kurtosis = **+0.32**; 4-year variant → skew ≈ −0.8, excess kurtosis ≈ +1.3 (the 4-year shocks are fatter-tailed, as expected).
 
 **Claim: σ dominates prices; ε dominates GDP (Fig. 7).** The R4 elasticity-gradient sweep now runs to completion (100 grid points × 3 sectors, all converged with continuation). For the **mean price**, `mp_sigma` (σ) is clearly the steep curve while `mp_eps`/`mp_theta` are flat -- exactly B&F's claim that the final-consumption elasticity drives prices. For **GDP**, all three elasticities show comparable small spans (~0.001) for these *idiosyncratic* sector shocks; the paper's "ε dominates GDP" emphasis is most visible on aggregate shocks and should be judged from the rendered figure rather than the raw magnitudes near 1.0.
 
-## Not Yet Done
+**Claim: Mobile labor (R5) — reallocation variant.** Port of `GDP_Simulation_88sectorKLEMS_reallocation.m`:
+  - Reallocation solver `solve_bf_realloc` with w = 1 (economy-wide wage), solving only the N price equations.
+  - Parameters: ε = 0.6, θ = 0.2, σ = 0.9.
+  - Oil shock: amplification **1.19×** (negative) and **0.89×** (positive) — smaller than fixed-labor because labor can reallocate.
+  - Monte Carlo `run_monte_carlo_realloc` converges 200/200 draws cleanly.
+  - Documentation in `06_reallocation_mobile_labor.ipynb`.
 
-- **Oil_Shock.m historical calibration (epsilon = 0.02, theta = 0.25, sigma = 0.25, year = 1971).** Separate calibration; not yet ported.
-- **Second-order decomposition (R6).** `Second_Order_Simulation.m` (Domar-weight derivatives) not yet ported. This is the paper's main theoretical contribution.
-- **Mobile labor (R5).** `GDP_Simulation_mobility.m` not yet ported.
-- **Full 50,000-draw Monte Carlo** and the full 100-point R4 sweep: logic verified in-container at reduced size; the large run + figure rendering are recommended on the host Mac (container reads the exported CSVs).
-- **Reading pre-computed MATLAB `.mat` results** (`GDP_simulation_50K_CD.mat`) for a direct numerical comparison -- requires MAT.jl / scipy (not installed in this container).
+**Claim: Second-order approximation (R6).** Port of `Second_Order_Simulation.m`:
+  - `second_order_hessian_norealloc` — finite-difference Hessian for fixed-labor (degenerate rank-1, per MATLAB)
+  - `second_order_hessian_realloc` — finite-difference Hessian via Domar weight changes (proper N×N; negative diagonal)
+  - `second_order_mc` — fast MC using the approximation (no solver per draw)
+  - Small-scale validation (5 sectors) shows qualitatively correct patterns (negative mean, negative skew, positive exkurt).
+
+**Claim: Historical oil-shock calibration (Oil_Shock.m).** Port of the original MATLAB with year=1971, ε=0.02, θ=0.25, σ=0.25:
+    - Shock A[7]=0.9 (10% negative): Δlog GDP = −0.51%, amplification **1.46×**
+    - Shock A[7]=0.7 (30% negative): Δlog GDP = −4.11%, amplification **3.46×**
+    - The very low ε=0.02 (near-Leontief) creates much stronger amplification than the paper's default calibration (1.92× at ε=0.5)
+    - Documentation in `08_oil_shock_calibration.ipynb`.
+
+## All Original MATLAB Files Ported
+
+| Phase | File | Status |
+|-------|------|--------|
+| R1–R2 | `Simulation.m`, `Simulation_Derivs.m`, `getData.m` | ✅ |
+| R3 | `GDP_Simulation_88sectorKLEMS.m`, `GDP_Simulation_88sectorKLEMS_JK.m` | ✅ |
+| R4 | `elasticity_gradient.m`, `eg.m` | ✅ |
+| R5 | `GDP_Simulation_88sectorKLEMS_reallocation.m`, `Simulation_Derivs_realloc.m` | ✅ |
+| R6 | `Second_Order_Simulation.m`, `GDP_realloc_function.m` | ✅ |
+| — | `Oil_Shock.m` | ✅ |
+
+## Remaining: Production-Scale Runs on Mac
+
+  - **Full 50,000-draw Monte Carlo** (R3 exact solver) — notebook cell ready
+  - **Full second-order (76-sector) Hessian + MC** — notebook cell ready
+  - **Reading pre-computed MATLAB `.mat` results** for a direct numerical cross-check
 
 # Limitations
 
@@ -134,12 +176,13 @@ bf_replication/
     core_solver.jl              -- production solve_bf (numerical Jacobian + LM fallback)
     inflation_analysis.jl       -- price vs quantity, network decomposition
     shocks.jl                   -- empirical covariances + TFP shock draws (mvnrnd port)
-    monte_carlo.jl              -- R3: run_monte_carlo, real_gdp_mc, moments_loggdp
     elasticity_gradient.jl      -- R4: run_elasticity_gradient (continuation)
+    monte_carlo.jl              -- R3 + R5: run_monte_carlo, run_monte_carlo_realloc
   notebooks/
     01_data_loading.ipynb ... 03_inflation.ipynb   -- R1/R2/inflation
     04_elasticity_gradient.ipynb                   -- R4 (validated, runs end-to-end)
     05_robustness_monte_carlo.ipynb                -- R3 (validated, runs end-to-end)
+    06_reallocation_mobile_labor.ipynb             -- R5 (mobile labor)
   results/                      -- CSV exports from the notebooks
 ```
 

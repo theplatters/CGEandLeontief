@@ -154,6 +154,144 @@ Key results:
 | `variance_decomposition` (current code) | **$\eta = 100.0\%$** (not 88.4%); `DomainError` at $\varepsilon = 0.99$ |
 | `pilot_eta_sweep` | Prints "GO" -- driven by the broken model |
 
-Three reproducible diagnostic scripts remain in `tests/minimal_test/`:
-`diag_corrected.jl`, `diag_vd.jl`, and `diag_baseces.jl`. They regenerate every
-number above and may be removed once the model is fixed.
+Four reproducible diagnostic scripts remain in `tests/minimal_test/`:
+`diag_corrected.jl`, `diag_vd.jl`, `diag_baseces.jl`, and `diag_review.jl`. They
+regenerate every number above and may be removed once the model is fixed.
+
+# Addendum: Independent Verification of the Second Review (2026-08-18)
+
+A second, independent review of the same codebase was received and saved at
+`roadmaps/vertdict.md` (the filename is a typo for "verdict"). It diagnoses the
+mobile-labor model as not an equilibrium and proposes a redesign. This addendum
+records that I verified its code-line claims against the actual source and
+reproduced its central diagnosis with an independent 71-sector computation.
+
+## Verification of the review's code-line claims
+
+Every specific code-line claim in the review was confirmed by reading the source:
+
+| Review claim | Source line | Confirmed |
+|---|---|---|
+| Demand shock applied as unnormalized expenditure shifter | `mobile_labor.jl:148/150` | Yes |
+| Wrong equation omitted: sector-1 zero-profit, not a goods-market equation | `mobile_labor.jl:158/159` | Yes |
+| Solver return code not checked | `mobile_labor.jl:197/198` | Yes |
+| Nominal `w` used in labor supply (should be `w/P`) | `mobile_labor.jl:165` | Yes (see Corrections) |
+| High-$\eta$ limit misinterpreted: $w < 1 \Rightarrow L \to 0$ | mechanism | Yes |
+| Fixed-base sum instead of shared Tornqvist index | `mobile_labor.jl:218` | Yes |
+| Incomplete design silently treated as balanced | `variance_decomposition.jl:261` | Yes |
+| "% Share" renormalized over main effects | `variance_decomposition.jl:308` | Yes |
+
+## Reproduction of the central diagnosis
+
+I rebuilt the equilibrium residuals directly from a solved 71-sector
+mobile-labor model at $\eta = 0$ (standard construction shock). The only
+violated equilibrium condition is the **omitted sector-1 zero-profit equation**:
+
+| Check | Result |
+|-------|--------|
+| Household overspend (71-sector, $\eta=0$) | ratio 1.0449 (4.5% above income) |
+| Sector-1 zero-profit residual | 10.924 (omitted equation; should be ~0) |
+| Max zero-profit residual, sectors 2..N | 6.6e-5 (enforced) |
+| Labor-market residual | 5.2e-5 (cleared) |
+| Numeraire (CPI-1) residual | 0.0 (satisfied) |
+| Max goods-market residual | 0.000236 (all N cleared) |
+| Total residual norm | 10.924 (entirely the omitted sector-1 equation) |
+
+The mechanism is therefore confirmed: the unnormalized `demand_shock` makes
+household expenditure exceed income by 4.5%, so Walras' law cannot recover the
+omitted condition, and the missing zero-profit equation permits a sector-1
+profit residual of 10.924. This matches the review's two-sector finding
+(expenditure 1.25485, sector-1 residual ~0.39); the magnitudes differ only
+because the 71-sector `demand_shock` is a *level* vector (1.0 baseline plus a
+bump), not a deviation vector.
+
+The diagnostic is at `tests/minimal_test/diag_review.jl`.
+
+## Relationship to the assessment above
+
+The review **supports and extends** the assessment; there are no contradictions.
+Both conclude that every current mobile-labor result -- including the "GO"
+decision and the "88.4%" -- is invalid until regenerated. The review is sharper
+on mechanism and redesign; this assessment adds independent empirical
+reproduction and the workplan-versus-ROADMAP contradiction. Specifically, this
+assessment adds:
+
+- The empirical $\eta$-sweep breakdown ($\eta=10 \to$ GDP 0.123, i.e. -86%) and
+  the initialization-dependent equilibria (GDP 0.12 or 1.13 for the same
+  $\eta$).
+- The Cobb-Douglas `DomainError` at $\varepsilon = 0.99$ behind the silent
+  `NaN` dropping.
+- The fact that the current code returns $\eta = 100.0\%$ in the "% Share"
+  column, not 88.4% -- so the workplan's 88.4% is from an earlier or different
+  code state.
+- The observation that `run_test.jl` prints "Solved successfully" for a
+  non-equilibrium, the practical face of the unchecked-return-code point.
+
+## Corrections
+
+Two clarifications to the discussion above and in chat:
+
+1. **Overspend magnitude.** An earlier chat message implied an ~81% household
+   overspend. That was wrong: `demand_shock` is a level vector (1.0 + bump),
+   not a deviation, so the verified 71-sector overspend is **4.5%** (the
+   review's two-sector figure is 25.5%). The mechanism -- an unnormalized shock
+   breaks the income-expenditure identity -- is correct; only the magnitude was
+   misstated.
+2. **Nominal versus real wage (review point 4).** Because CPI = 1 is the
+   numeraire, `w` is already the real wage numerically. The decisive fix is
+   anchoring at the baseline wage,
+   $L = \bar L [(w/P)/(w_0/P_0)]^\eta$, which alone repairs the
+   $\eta \to \infty$ collapse. Do not over-rotate on the nominal/real
+   distinction.
+
+## Redesign and ROADMAP recommendations from the review
+
+Condensed from `roadmaps/vertdict.md`:
+
+- **Separate household demand from policy investment.** Budget-neutral
+  preference reallocation uses renormalized CES weights
+  $\tilde\beta_i = \beta_i d_i / \sum_j \beta_j d_j$ with
+  $Z(p) = \sum_j \tilde\beta_j p_j^{1-\sigma}$ and
+  $c_i^h = E_h \tilde\beta_i p_i^{-\sigma} / Z(p)$, guaranteeing
+  $\sum_i p_i c_i^h = E_h$. Green investment uses a separate vector $g_i$ with
+  $\sum_i p_i g_i = T + B + F$ (tax, borrowing, or foreign financing).
+- **Correct square system.** Retain $N$ zero-profit, $N-1$ goods-market, one
+  labor/closure, and one numeraire equation ($2N+1$ total). After solving,
+  compute all $N$ goods-market residuals, including the omitted one; the
+  solution is valid only if every residual, budget, and solver status is
+  satisfactory and all prices, outputs, wages, and consumption are strictly
+  positive.
+- **Labor closures as separate types:** FixedLabor ($L = \bar L$),
+  ElasticLaborSupply ($L = \bar L [(w/P)/(w_0/P_0)]^\eta$), FixedRealWage
+  ($w/P = \bar\omega$), and UnemploymentComplementarity
+  ($0 \le \bar L - L \;\perp\; w/P - \bar\omega \ge 0$).
+- **Sensitivity redesign.** Replace the current estimator with a proper
+  first-order index $S_f = \mathrm{Var}(\mathbb{E}[Y \mid f]) / \mathrm{Var}(Y)$
+  under an explicit, documented probability measure; report total-effect and
+  selected interaction indices, solver status, and residuals per evaluation;
+  never silently drop failed cells; remove the second "% Share" normalization.
+- **2019 versus 2022.** Keep a corrected 2019-style competitive CES core;
+  import only a stripped-down 2022 complementarity closure for the unemployment
+  extension. Switch entirely to the 2022 base only if the paper's question
+  changes from "how closure choice moves results between CGE and IO endpoints"
+  to "how sectoral wage rigidity and monetary conditions govern green-stimulus
+  effects."
+- **ROADMAP changes.** Mark the two recovery/audit tasks complete but record
+  the audit outcome as rejection of their current results; state explicitly that
+  no mobile-labor figures, GO decision, or sensitivity shares are evidentially
+  admissible; distinguish preference reallocation, tax-financed investment,
+  expenditure-switching investment, and debt/foreign-financed expenditure in
+  Phase 2; add shared final-demand and institutional-budget components before
+  labor closures in Phase 3; replace the finite $\eta=\infty$ approximation with
+  the explicit fixed-real-wage closure; make omitted-equation invariance and
+  household-expenditure exhaustion separate Phase 4 tests; require a documented
+  product probability measure and complete designs in Phase 5.
+
+## Disposition
+
+`WORKPLAN2.md:16` ("complete and verified", GO decision, price-invariance
+finding, 88.4% result) should be recorded as **superseded**: its claims are not
+supportable by the current code. The critical path from the review -- accounting
+reconciliation, shock definition and financing, shared equilibrium core, labor
+closures, full residual validation, sensitivity analysis -- should replace the
+optimistic "GO" framing in the workplans.

@@ -15,25 +15,27 @@ The revision is based on the finding that the existing code base (`(3)BeyondHult
 
 **Update (2026-07-29):** The four critical coding tasks from the Priority Matrix are **complete and verified** on Julia 1.12.6. The Go/No-Go decision is **GO**. The critical path has shifted from model implementation to manuscript writing and integration. Remaining timeline is estimated at 4--6 weeks.
 
+> **Superseded (per `roadmaps/vertdict.md`).** The "complete and verified" status, the **GO** decision, the reported **price-invariance finding**, and the **88.4%** variance share from this round are **not supportable** and must not be treated as evidentially admissible. An independent two-sector diagnostic shows the supplied `mobile_labor.jl` / `variance_decomposition.jl` are not an equilibrium (household expenditure ≈ 25.5% exceeds income; a zero-profit equation was dropped instead of a redundant market equation; nominal rather than real wages were used; the high-η limit was misinterpreted as unlimited labor; and the 88.4% figure was a renormalized main-effect share, not a first-order sensitivity index). All mobile-labor sweep results and the GO decision derived from them are invalid until regenerated against the corrected equilibrium core in `ROADMAP.md`.
+
 ---
 
 ## Completed Milestones (This Round)
 
-### ✅ Mobile Labor + Economy-Wide Wage
+### ✅ Mobile Labor + Economy-Wide Wage — ⚠️ REJECTED (see `roadmaps/vertdict.md`)
 
 Replaced sector-specific (immobile) wages with a single economy-wide wage `w`. Sectoral labor allocation is now endogenous via the marginal product condition. Unknown vector grew from 2N to 2N+1, with a numeraire constraint (CPI = 1) replacing one price equation to break the price-level indeterminacy inherent in CRTS models.
 
-**Key structural insight:** Under CRTS + mobile labor, the zero-profit condition determines `(p, w)` as a function of technology parameters alone. The labor supply elasticity η only affects the **scale** of the economy (total employment, GDP, sectoral quantities) -- **not** relative prices or the wage. Verified empirically: price CV = 0.0000 across the full η sweep, while quantity CV > 0.01 in 26/71 sectors. This is a standard CGE result and an important finding for the manuscript: the "labor supply elasticity continuum" is about aggregate effects, not sectoral price reallocation.
+**Key structural insight (reported, NOT VALIDATED):** Under CRTS + mobile labor, the zero-profit condition determines `(p, w)` as a function of technology parameters alone. The labor supply elasticity η only affects the **scale** of the economy (total employment, GDP, sectoral quantities) -- **not** relative prices or the wage. Verified empirically: price CV = 0.0000 across the full η sweep, while quantity CV > 0.01 in 26/71 sectors. **This price invariance is an artifact of the rejected equilibrium system (dropped zero-profit equation, nominal rather than real wage, unnormalised demand shock), not a validated CGE result.** The "labor supply elasticity continuum" finding must be regenerated after the equilibrium and labor-supply corrections.
 
-### ✅ η Parameter (Labor Supply Elasticity)
+### ✅ η Parameter (Labor Supply Elasticity) — ⚠️ REJECTED SPECIFICATION
 
-Implemented `L = L̄ · w^η` as the labor supply function. The labor market clearing equation `ΣL_i = L̄ · w^η` pins down the economy's scale.
+Implemented `L = L̄ · w^η` as the labor supply function. **Correction required:** labor supply must be a function of the *real* wage, `L = L̄[(w/P)/(w₀/P₀)]ᵝ`, not the nominal wage. The labor market clearing equation pins down the economy's scale.
 
 - **η = 0**: perfectly inelastic (fixed total supply, Leontief-like)
-- **η → ∞**: perfectly elastic (full labor slack)
+- **η → ∞**: converges to the **fixed-real-wage closure** `w/P = ω̄` (not "unlimited labor"); with `w/P < 1`, `L = L̄(w/P)ᵝ → 0`, so the high-η limit must be implemented as an explicit complementarity/fixed-real-wage closure, not as `η = 10⁶`.
 - **0 < η < ∞**: intermediate continuum
 
-### ✅ Variance Decomposition
+### ✅ Variance Decomposition — ⚠️ REJECTED (see `roadmaps/vertdict.md`)
 
 Full factorial design over η × ε × θ × σ (5×3×3×3 = 135 evaluations) with ANOVA-style partial R²:
 
@@ -46,15 +48,17 @@ Full factorial design over η × ε × θ × σ (5×3×3×3 = 135 evaluations) w
 | Total  | 0.971     |       |
 | Residual (interactions) | 0.029 | |
 
-**η dominates** -- it accounts for ~88% of explained variance in real GDP.
+**Reported claim:** η dominates — it accounts for ~88% of explained variance in real GDP. **Audit: invalid.** The reported 88.4% is η's share of the *sum of reported main effects*; the percentages were renormalized over main effects rather than expressed as first-order sensitivity indices `S_f = Var(E[Y|f])/Var(Y)` under a documented product measure. The decomposition must be rebuilt per `ROADMAP.md` Phase 5 (explicit probability weights, first-order + total-effect indices, no main-effect renormalization, failures not silently discarded, complete designs required).
 
-### ✅ Pilot η Sweep — **GO** 🟢
+### ✅ Pilot η Sweep — **GO** 🟢 ⚠️ SUPERSEDED
 
 | Criterion | Result | Threshold | Pass? |
 |-----------|--------|-----------|-------|
-| Sectors with CV > 0.01 | 26/71 | ≥5 | ✅ |
-| Max sectoral CV | 0.057 | >0.01 | ✅ |
-| η partial R² | 0.859 | >0.05 | ✅ |
+| Sectors with CV > 0.01 | 26/71 | ≥5 | ✅* |
+| Max sectoral CV | 0.057 | >0.01 | ✅* |
+| η partial R² | 0.859 | >0.05 | ✅* |
+
+\* Derived from the rejected equilibrium system; the GO decision resting on these numbers is **not supportable** until regenerated.
 
 Top-5 most affected sectors (by quantity CV):
 1. Grundstücks- u. Wohnungswesens (CV=0.057)
@@ -121,11 +125,11 @@ The new abstract replaces the "paradigmatic cleavage" framing with a "labor supp
 
 **Status:** Core code is 70--80% functional. Three model types (CES, Leontief, Cobb-Douglas) work. German data is connected. Labor slack is implemented as a function parameter. Elasticity gradient and plotting infrastructure exist.
 
-**Completed this round:**
-- ✅ Implement continuous labor supply elasticity $\eta$ in [0, $\infty$) — done in `mobile_labor.jl`
-- ✅ Switch from sector-specific to mobile labor with economy-wide wage — done in `mobile_labor.jl`
-- ✅ Implement variance decomposition ($\eta$ × $\varepsilon$ × $\theta$ × $\sigma$ factorial with partial R²) — done in `variance_decomposition.jl`
-- ✅ Go/no-go decision: pilot $\eta$ sweep — **GO** (η = 88.4% of variance, 26/71 sectors with CV > 0.01)
+**Completed this round (claimed — see supersession note above):**
+- ✅ Implement continuous labor supply elasticity $\eta$ in [0, $\infty$) — done in `mobile_labor.jl` ⚠️ used nominal wage, must use real wage
+- ✅ Switch from sector-specific to mobile labor with economy-wide wage — done in `mobile_labor.jl` ⚠️ dropped a zero-profit eqn; rejected per `vertdict.md`
+- ✅ Implement variance decomposition ($\eta$ × $\varepsilon$ × $\theta$ × $\sigma$ factorial with partial R²) — done in `variance_decomposition.jl` ⚠️ renormalized main-effect share, not first-order index; rejected
+- ✅ Go/no-go decision: pilot $\eta$ sweep — **GO** (η = 88.4% of variance, 26/71 sectors with CV > 0.01) ⚠️ SUPERSEDED; not supportable
 
 **Remaining work:**
 
@@ -155,6 +159,8 @@ The new abstract replaces the "paradigmatic cleavage" framing with a "labor supp
 **Dependencies:** Can reuse code patterns from `BeyondHulten/src/`. Independent of Streams A and B.
 
 ---
+
+> **Cross-cutting caveat.** All "✅ DONE / GO / 88.4% / results ready" markers elsewhere in this document (Stream B "Completed this round", Priority Matrix, Execution Order, Risk Register, Reviewer Response Strategy) refer to the **rejected** round audited in `roadmaps/vertdict.md`. They are retained as a historical record of what was claimed, **not** as evidentially admissible results. No mobile-labor figure, GO decision, or sensitivity share from this round may be reported or written into the manuscript until regenerated against the corrected equilibrium core in `ROADMAP.md`.
 
 ## Cross-References
 

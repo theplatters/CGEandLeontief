@@ -49,6 +49,7 @@ The manuscript must not report a variance share such as “88.4% explained” un
 - [x] Add tests for the real-GDP index and run the Julia test suite.
 - [x] Regenerate the existing GDP-dependent figures with the corrected measure.
 - [ ] Obtain and review the co-author's claimed `mobile_labor.jl`, `variance_decomposition.jl`, and related replication code. These files are not present in the current repository and their reported results are therefore provisional.
+- [x] Audit the supplied `mobile_labor.jl` and `variance_decomposition.jl` once obtained. **Audit outcome: rejected.** The two-sector diagnostic shows the reported mobile-labor system is not an equilibrium (shock-weighted household expenditure ≈ 1.25485 > 1; Walras' law cannot recover the omitted goods-market condition; a zero-profit equation was dropped instead of a redundant market equation; the solver accepted convergence without checking residuals or its own return code; labor supply used nominal rather than real wages; the high-η limit was misinterpreted as unlimited labor instead of L → 0; and the mobile model used a fixed-base sum instead of the shared Törnqvist index). All current mobile-labor sweep results—including the apparent price invariance and the 88.4% claim—are invalid until regenerated. See `roadmaps/vertdict.md`.
 
 The current implementation in `src/` is the reproducible baseline. Work reported in external summaries is not part of the evidentiary record until it has been added, reviewed, and tested here.
 
@@ -74,6 +75,7 @@ These requirements are acceptance conditions for the revised quantitative analys
   \]
 
   rather than as a function of the nominal wage.
+
 - Preserve every sector's zero-profit/unit-cost condition.
 - If a price index is used as numeraire, remove a redundant market-clearing equation justified by Walras' law; do not replace a zero-profit equation merely to balance the equation count.
 - Verify homogeneity: changing the nominal unit must not alter real allocations.
@@ -176,15 +178,22 @@ This extension becomes mandatory if the one-factor model is presented as a polic
 - [ ] Define at least one alternative financing closure for robustness.
 - [ ] State whether the experiment represents construction-phase demand, operating-phase effects, or both.
 - [ ] Confirm that the IO and CGE models receive economically comparable shocks.
+- [ ] **Distinguish the four admissible experiment types explicitly:**
+  - **preference reallocation** — a budget-neutral household compositional shift; renormalize CES weights as `β̃ᵢ = βᵢ dᵢ / Σⱼ βⱼ dⱼ` so `Σᵢ pᵢ cᵢʰ = Eʰ`, and do **not** describe it as an autonomous investment multiplier;
+  - **tax-financed public investment** — an autonomous `gᵢ` financed by an explicit tax rule `Σᵢ pᵢ gᵢ = T`;
+  - **expenditure-switching investment** — a reallocation of existing public expenditure across sectors; and
+  - **debt/foreign-financed net expenditure** — financed by `B` (borrowing) or `F` (foreign) with a defined saving–investment or current-account rule.
+  A single unnormalized `demand_shock` vector must not serve two economically different experiments. The financing closure (principal + robustness) must be decided here, before any labor closures are implemented.
 
 **Exit criterion:** summing all institutional budgets and commodity accounts leaves no unexplained source of purchasing power.
 
 ### Phase 3 — Implement mobile-labour closures
 
 - [ ] Add model types and options without duplicating the common CES core unnecessarily.
+- [ ] **First build the shared final-demand and institutional-budget core** (household demand `cᵢʰ = Eʰ β̃ᵢ pᵢ⁻ᵃ / Z(p)`, government/investment budget `Σᵢ pᵢ gᵢ = T + B + F`, and all institutional balances) before implementing any labor closure. This core is what makes the four Phase-2 experiment types separately executable.
 - [ ] Implement Closure A and show that it reproduces the fixed-total-labour benchmark.
-- [ ] Implement Closure B using the real wage.
-- [ ] Implement Closure C with an explicit wage/unemployment rule.
+- [ ] Implement Closure B using the real wage: `L = L̄[(w/P)/(w₀/P₀)]ᵝ`.
+- [ ] Implement Closure C with an explicit wage/unemployment rule, using a complementarity formulation `0 ≤ L̄ − L ;⊥; w/P − ω̄ ≥ 0` rather than approximating the fixed-real-wage endpoint with `η = 10⁶`. The 2022 Baqaee–Farhi complementarity machinery may be adapted, but its N-sector sticky-labor structure must not be copied unchanged.
 - [ ] Implement Closure D and document its exact IO-equivalence conditions.
 - [ ] Use warm starts only as a numerical optimization; results must not depend on path or starting value.
 - [ ] Expose residual diagnostics and solver termination status in analysis scripts.
@@ -228,19 +237,24 @@ Add automated tests for:
 - [ ] convergence of the high-`η` model to the fixed-real-wage closure;
 - [ ] exact or qualified equivalence of Closure D and the IO model;
 - [ ] consistency of real-GDP, nominal-GDP, employment, and price indices.
+- [ ] **omitted-equation invariance** — repeat the diagnostic while omitting each possible commodity market in turn; real allocations must be invariant to that arbitrary choice, and every omitted goods-market residual must be small.
+- [ ] **household expenditure exhaustion** — verify `Σᵢ pᵢ cᵢʰ = Eʰ` (or the appropriate institutional total) exactly, for every experiment type.
 
-**Red-flag diagnostic:** if normalized prices and the real wage do not change across `η` but employment does, stop and identify the violated equation before using the results.
+**Red-flag diagnostic:** if normalized prices and the real wage do not change across `η` but employment does, stop and identify the violated equation before using the results. (Note: the earlier reported "price invariance with changing employment" was an artifact of the rejected mobile-labor system, not a valid CGE finding.)
 
 **Exit criterion:** `julia --project=. -e 'using BeyondHulten'` and `julia --project=. -e 'using Pkg; Pkg.test()'` pass from a clean environment, and an independent accounting/residual report passes.
 
 ### Phase 5 — Run sensitivity analysis
 
 - [ ] Define literature-based or empirically estimated ranges/distributions for `η`, `ϵ`, `θ`, and `σ`.
+- [ ] **Document the assumed product probability measure** for the factorial design; require complete designs for factorial (first-order and total-effect) indices. For a complete factorial product distribution, compute first-order indices exactly as `S_f = Var(E[Y|f]) / Var(Y)` under the specified weights; with equal weights, describe it as a "first-order sensitivity index under a discrete uniform distribution over the selected levels."
 - [ ] Use a bounded transformation such as `η / (1 + η)` for plotting the continuum, but do not treat a uniform distribution over that transformation as an empirical prior without justification.
 - [ ] Pre-register the main parameter grid or sampling distributions in the repository before inspecting final results.
 - [ ] Run a transparent factorial design for diagnostic response surfaces.
-- [ ] Run a variance-based global sensitivity analysis with first-order and total-effect indices.
-- [ ] Report interactions rather than forcing all variation into four main-effect shares.
+- [ ] Run a variance-based global sensitivity analysis with first-order and total-effect indices; **report interactions rather than forcing all variation into four main-effect shares**, and **do not renormalize the percentage shares over main effects** (the earlier "88.4%" was η's share of the *sum of reported main effects*, not 85.9% of total variance under the chosen discrete distribution).
+- [ ] Replace the old `VarianceDecompositionResult` with a sensitivity result containing: explicit factor levels and probability weights; first-order indices; total-effect indices; selected interaction indices; solver status and residuals for every evaluation; and the assumed parameter probability measure.
+- [ ] Do not silently discard solver failures: retry with independent initial values and continuation; if any required factorial cell remains invalid, abort the decomposition; report the failed region as part of the feasible parameter domain. Use an unbalanced regression/ANOVA only as a separately named analysis with an explicitly chosen sum-of-squares convention.
+- [ ] Add essential sensitivity tests: a purely additive analytical function; a pure interaction function; nonuniform factor weights; a deliberately missing factorial cell (must raise an error); a solver result with a failed return code but finite `.u`; and invariance to grid traversal and warm-start order.
 - [ ] Repeat the analysis for alternative financing closures and reasonable shock magnitudes.
 - [ ] Assess solver failures as part of the feasible parameter domain, not as observations to discard silently.
 
@@ -353,17 +367,17 @@ Generated figures should normally be committed separately from the model change 
 
 ## 10. Indicative schedule
 
-| Stage | Indicative duration | Main output |
-|---|---:|---|
-| Recover proposed code and audit | 2–3 days | Reproducible baseline or rejection report |
-| Accounting and shock closure | 1–2 weeks | Reconciled calibration and financed experiment |
-| Labour closures and validation | 1–2 weeks | Tested model variants and endpoint results |
-| Sensitivity analysis | 1 week | Response surfaces and global sensitivity indices |
-| Scope decision and extensions | 3–7 days | Final one-factor or heterogeneous-factor design |
-| Manuscript rewrite | 2 weeks | Complete revised manuscript |
-| Response letter and replication pass | 1 week | Submission package |
+| Stage                                | Indicative duration | Main output                                      |
+| ------------------------------------ | ------------------: | ------------------------------------------------ |
+| Recover proposed code and audit      |            2–3 days | Reproducible baseline or rejection report        |
+| Accounting and shock closure         |           1–2 weeks | Reconciled calibration and financed experiment   |
+| Labour closures and validation       |           1–2 weeks | Tested model variants and endpoint results       |
+| Sensitivity analysis                 |              1 week | Response surfaces and global sensitivity indices |
+| Scope decision and extensions        |            3–7 days | Final one-factor or heterogeneous-factor design  |
+| Manuscript rewrite                   |             2 weeks | Complete revised manuscript                      |
+| Response letter and replication pass |              1 week | Submission package                               |
 
-The critical path is accounting consistency → shock financing → correct labour closure → validation → sensitivity analysis → writing. A replication of unrelated productivity shocks is not on the critical path.
+The critical path is accounting consistency → definition and financing of the policy shock → shared equilibrium core → labor closures → full residual validation (including omitted-equation invariance and expenditure exhaustion) → sensitivity analysis → writing. A replication of unrelated productivity shocks is not on the critical path.
 
 ## 11. Definition of done
 
@@ -376,7 +390,8 @@ The paper is ready for submission only when:
 - [ ] all unit-cost, market-clearing, institutional-budget, and numeraire tests pass;
 - [ ] the IO endpoint is reproduced or its failure is explained analytically;
 - [ ] real GDP uses the common documented quantity index;
-- [ ] sensitivity shares are conditional on stated parameter distributions and include interactions;
+- [ ] sensitivity shares are conditional on stated parameter distributions and include interactions, computed from a documented complete product probability measure with no renormalization over main effects;
+- [ ] residual validation includes omitted-equation invariance and household-expenditure exhaustion for every experiment type;
 - [ ] aggregate and sectoral conclusions are reported separately;
 - [ ] the manuscript no longer claims to discover the IO–CGE bridge or the use of CES functions;
 - [ ] the limitations of a static, aggregated-factor model are explicit;

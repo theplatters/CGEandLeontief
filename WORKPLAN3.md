@@ -137,72 +137,45 @@ Validation gate D: PASS. η share is sensible (essentially zero), residual is
 reported (0.0103 = interaction share), and the result is not the 100% artifact.
 All 32 grid points solved successfully (0 failures, maxiters=1000, reltol=1e-6).
 
-## Milestone E — Modular Closures and Bridge Recovery (BRIDGE VERIFIED)
+## Milestone F — Binary Wage Regime (VERIFIED 2026-08-19)
 
-Implemented and verified (Venue 2 autonomous export demand, plus Venue 1
-debt-financed-investment layer): an expansive autonomous demand shock now
-enters the equilibrium. The shock on sector 35 (= construction) is enforced
-(sector-N market clearing is the Walras-redundant one), and real GDP is now
-measured as the B&F (2019) consumption-Tornqvist index of real final demand /
-value added (not gross output). Residuals remain ~1e-15.
+The `:fixed` (sticky-wage) closure pins the real wage at 1.0 and lets
+employment absorb the shock — a different economic mechanism (extensive
+margin) from the η mobility channel (intensive margin). Previously the
+`:fixed` closure failed for moderate-to-large shocks because the wage was
+treated as a 2N+1 unknown with a linear constraint, creating a near-singular
+Jacobian. Fixed with a specialized 2N solver (`problem_fixed` + `_solve_fixed`)
+that hard-codes w = 1.0 and solves for prices and quantities only.
 
-IMPLEMENTED (2026-08-18 → 2026-08-19):
-1. `L_i` — repurposed eta as B&F beta-parameter: `L = L_fixed^(1-η) · L_opt^η`
-2. Wedge — B&F allocative-efficiency wedge on effective TFP (vanishes at
-   η=1 and at baseline; penalises immobility under shock)
-3. real_gdp — switched from gross-output Tornqvist to CONSUMPTION
-   (final-demand / value-added) Tornqvist index (B&F metric)
-4. autonomous demand / investment shock — additive shock on sector 35,
-   budget-consistent with household consumption
+RESULT (autonomous demand shock to construction, ε=0.5, η=0.5):
 
-VERIFIED (diag_bridge_gauge.jl, diag_cons_debug.jl, diag_beta.jl):
-Shock types tested: supply (productivity), demand-shift (consumption
-reallocation), autonomous (extra-household final demand), all with epsilon in
-both substitution (ε=2.0) and complementarity (ε=0.5) regimes, and sigma
-variation (σ=0.1…0.9). All models solve with max residuals ~1e-9…1e-14.
-
-BRIDGE RESULTS (consumption Tornqvist, no-shock baseline GDP=1.0):
-
-  Shock                      ε   σ   η=0 Δ%   η=1 Δ%   bridge(pp)  maxRes
-  Supply +30%                2.0 0.9 +1.945   +1.950   +0.00544   3e-09
-  Supply +100%               2.0 0.9 +4.942   +4.976   +0.03431   4e-09
-  Supply +30%                0.5 0.9 +1.922   +1.916   −0.00696   7e-09
-  Demand-shift +30%          0.5 0.9 +0.022   +0.005   −0.01684   1e-10
-  Demand-shift +30%          2.0 0.9 −0.004   +0.005   +0.00854   6e-11
-  Autonomous demand 0.2×     0.5 0.9 +0.009   −0.000   −0.00852   3e-10
-  Supply +30% (σ=0.5)        2.0 0.5 +1.892   +1.902   +0.01033   4e-09
-  Supply +30% (σ=0.1)        2.0 0.1 +1.840   +1.856   +0.01649   5e-09
+  mult    η=0 Δ%    :fixed Δ%   fix_bridge(pp)  employment  resolution
+  0.1     +0.002    +0.251      +0.249          1.0025     1.4e-11
+  0.2     +0.009    +0.635      +0.626          1.0064     9.9e-07
+  0.5     +0.047    +1.203      +1.156          1.0120     9.4e-09
+  1.0     +0.159    +2.287      +2.129          1.0229     2.0e-07
+  2.0     +0.467    +4.228      +3.761          1.0423     1.0e-07
+  5.0     +1.525   +11.362      +9.837          1.1136     6.6e-11
+ 10.0     +3.146   +21.661     +18.514          1.2166     7.0e-10
 
 FINDINGS:
-1. The bridge is POSITIVE for all substitution-regime cases (ε>1) — the
-   theoretically correct sign: mobile labor enables reallocation to the
-   shocked sector, raising welfare-relevant consumption.
-2. The bridge is a second-order Harberger effect: 0.005–0.034 pp for supply
-   shocks. B&F (2019) themselves find that in a competitive one-factor model
-   the reallocation gain is quantitatively small.
-3. In the complementarity regime (ε<1) the sign reverses (negative bridge),
-   which is also a theoretical prediction: when factors and intermediates are
-   complements, immobility constrains labor supply to its sectoral optimum,
-   reducing the overshooting that would otherwise occur.
-4. The bridge scales with shock magnitude: +100% supply → +0.034 pp bridge
-   (roughly 6× the +30% bridge of +0.005 pp).
-5. Lower σ (less consumption substitution) increases the bridge: σ=0.1 gives
-   +0.016 pp vs σ=0.9 giving +0.005 pp. This is because when consumption is
-   less elastic, prices matter less and the allocative efficiency effect is
-   more visible.
-6. The original "+1.5%" certification was an artifact of the buggy non-
-   equilibrium (4.5% household overspend amplifying the result artificially).
-   It is NOT a reproducible economic effect in this model.
+1. The binary wage regime (sticky vs flexible) produces an aggregate GDP
+   effect 74–112× LARGER than the continuous η gradient for small shocks.
+2. At large shocks (mult=10), :fixed gives +21.7% GDP vs :mobile's +3.1%
+   — a 7× amplification through employment expansion (emp→1.22).
+3. The η gradient (η=0 → η=1 within the :mobile closure) never exceeds
+   0.01 pp — negligible by comparison.
+4. Labour-market closure matters for aggregate GDP, but through the WRONG
+   margin relative to the original hypothesis: wage regime, not mobility.
 
-CONCLUSION: Milestone E gates PASS. The mobility bridge EXISTS, is positive
-under substitution (the B&F regime), and is correctly second-order small.
-The consumption-based Tornqvist (B&F metric) gives a clean, directionally
-correct bridge. Results saved to `output/bridge_consumption_tornqvist.csv`.
+CONCLUSION: The paper's central result must shift from "η determines the
+aggregate multiplier" to "the binary wage regime (sticky vs flexible) is the
+relevant labour-market margin; η is a second-order correction." Results
+saved to `output/wage_regime_comparison.csv`.
 
-Validation gate E (revision): η=0 → ~0% (composition only), η=1 →
-~same total effect but slightly higher (positive bridge). This is what the
-numbers show. The original "+1.5%" gate was based on a buggy model and is
-superseded by this workplan.
+Validation gate F: :fixed solves for all tested multipliers (0.1—10.0) with
+max residuals ~1e-7 to 1e-10. The employment and GDP responses are monotonic
+in shock size and economically interpretable.
 
 # Verification Protocol
 

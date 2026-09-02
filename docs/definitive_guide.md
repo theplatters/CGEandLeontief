@@ -89,6 +89,29 @@ bridge, by contrast, never exceeds 0.01 pp.
 **Key finding: labour-market closure matters, but through the wage regime
 (flexible vs sticky) — not through the intersectoral mobility parameter (η).**
 
+### Status after §4.1 data integration (2026-09-02)
+
+The §4.1 transformation was wired into `src/interface.jl` (domestic `Ω`, basic-price
+gross output, standard Domar `λ`, decomposed value added). The Part I results were
+re-run under the new data via `rerun_results.jl`. Findings:
+
+- **η (mobility) remains negligible.** The η=0 (mobile) autonomous-demand response
+  reproduces and is small (0.18%–3.08% across mult 0.1–10); the mobility *bridge*
+  is still ≈0. §4.1 does **not** overturn Result 2.
+- **The wage-regime (`:fixed`) result is currently NOT reproducible.** Under the new
+  data the sticky-wage (`:fixed`) closure **stalls** (NonlinearSolve `Stalled`) for
+  every autonomous-demand shock, and η≥1 (mobile) stalls at mult≥0.5. The 5–7×
+  amplification table above is therefore **pre-§4.1** and must be re-verified once the
+  `:fixed`/high-η solver robustness is restored. This is a calibration/solver issue
+  introduced by §4.1, not a reversal of the economic conclusion — it is flagged for
+  investigation before the manuscript quotes the amplification factor.
+- **Sobol (§2) is pending** — the factorial grid includes η=1,2 which stall, so the
+  post-§4.1 Sobol indices are not yet final.
+
+Net: the qualitative story (η negligible; wage-regime material) is intact, but the
+*quantitative* wage-regime numbers are blocked by a §4.1-induced solver regression
+and should not be quoted from the table above until fixed.
+
 ### 4. Substitution elasticities (θ, σ) drive aggregate GDP
 
 Within each wage regime, the aggregate response is determined by production

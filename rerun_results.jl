@@ -11,8 +11,12 @@
 #
 # Outputs: rerun_results.log (incremental), output/variance_decomposition_sobol.csv
 
-using Pkg
-Pkg.activate(@__DIR__)   # activate the BeyondHulten project (Project.toml at repo root)
+# NOTE: run this from an activated BeyondHulten environment:
+#   terminal:  julia --project=. rerun_results.jl
+#   REPL:      ] activate .   then   include("rerun_results.jl")
+# (This script only needs CSV/DataFrames/LinearAlgebra/Statistics/NonlinearSolve/
+#  ProgressMeter/ThreadsX — NOT IJulia/Plots/GR, so notebook-plotting precompile
+#  errors in the full project are irrelevant here.)
 using CSV, DataFrames, LinearAlgebra, Statistics, NonlinearSolve, ProgressMeter, ThreadsX
 include("src/interface.jl"); include("src/solution.jl"); include("src/ces.jl")
 include("src/mobile_labor.jl"); include("src/util.jl"); include("src/variance_decomposition.jl")

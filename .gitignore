@@ -6,3 +6,5 @@ open questions/
 .DS_Store
 */.DS_Store
 RepAEA2022/
+# Generated diagnostic output (written by tests/minimal_test scripts)
+output/

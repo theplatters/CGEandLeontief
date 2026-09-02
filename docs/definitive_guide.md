@@ -210,11 +210,11 @@ Mapping from ROADMAP §7, updated for the new findings:
 
 | Requirement | Status | Action |
 |-------------|--------|--------|
-| §4.1 Accounting consistency | Not yet reconciled | Phase 1 (new work) |
+| §4.1 Accounting consistency | **Reconciled — standalone notebook; interface integration pending** | Phase 1 (done 2026-09-02) |
 | §4.3 Financing closure documented | Partially | Autonomous demand implemented, but not as a distinct tax/borrowing |
 | §4.4 Labour closure taxonomy | Partially | `:mobile` and `:fixed` exist; `:unemployment` complementarity not implemented |
 | §5 Closure D (IO endpoint) | Not implemented | Requires `:fixed` + CES→Leontief limit |
-| §6 Phase 1 (account reconciliation) | Not started | Separate workstream |
+| §6 Phase 1 (account reconciliation) | **Done — notebook + output/AC_*.csv** | Reintegrated into §4.1 (done) |
 | §6 Phase 2 (policy experiment) | Not started | Separate workstream |
 
 ---
@@ -232,9 +232,10 @@ Mapping from ROADMAP §7, updated for the new findings:
 ### Medium-term (implementation work, 1–2 weeks)
 
 4. **Phase 1 — Accounting reconciliation** (ROADMAP §6, Phase 1)
-   - Benchmark accounting report from the German IO table
-   - Separate domestic vs imported intermediate/final uses
-   - Treatment of taxes and subsidies
+   - **Done 2026-09-02** — deliverables: `Notebooks/AccountingConsistency.ipynb`, `docs/accounting_consistency_plan.md`, `output/AC_*.csv`
+   - Separates domestic vs imported intermediate/final uses; decomposes value-added into wages / other-prod-tax / depreciation / net-op-surplus
+   - Reconciles the three GDP sides (GDP(P)=GDP(I) exact; |GDP(P)−GDP(E)|=0.81%)
+   - `src/interface.jl` integration deferred to a later phase
 5. **Phase 2 — Policy experiment** (ROADMAP §6, Phase 2)
    - Fix the sectoral investment vector
    - Choose and implement the principal financing closure
@@ -274,6 +275,3 @@ original "η-dominance" narrative and replace it with a **three-part story**:
 (i) a corrected methodological baseline, (ii) a precise negative result about
 the mobility channel, and (iii) a positive result about the wage-regime channel
 and the dominance of substitution elasticities.
-
-For the canonical closure taxonomy and migration notes, see
-[`labor_closures.md`](labor_closures.md).

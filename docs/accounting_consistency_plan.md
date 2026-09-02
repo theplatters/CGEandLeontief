@@ -107,11 +107,18 @@ Compute:
 - Expenditure (basic): domestic final demand at basic prices
   $= \sum_c (\text{final demand}_c - \text{imported final}_c - \text{product tax on final}_c)$.
 
-Report all three and the pairwise absolute differences. The residual
-(approximately 0.8% in the 2019 table) is documented, not hidden: it derives
-from (a) the basic/purchaser product-tax bridge (product taxes appear on both
-intermediate and final uses) and (b) the proportional import allocation of
-Step 1.
+Report all three and the pairwise absolute differences. The residual is documented, not hidden. **Important correction:** an earlier
+draft reported ~0.8%; that figure was an artifact of a column-indexing bug
+(reading the imports/product-tax rows after slicing off the label column, then
+re-indexing by the sector range -- an off-by-one that subtracted near-zero
+numbers). With the import/product-tax rows read directly at their original
+column positions the true expenditure residual is **~5.4%** (P = 3,027,818,
+E = 2,864,724, diff = 163,094 mn EUR). This ~5.4% is a genuine valuation
+discrepancy in the raw Destatis table: the final-demand columns (purchaser
+prices) net of recorded imports and product taxes do not exactly equal the
+production-side GDP. It is carried through consistently and flagged for the
+paper; it does not affect the model's domestic technology matrix or Domar
+weights.
 
 ## Step 5 -- Shock incidence rule
 
@@ -138,7 +145,7 @@ Write CSVs to `output/`:
 
 Assert: value-added decomposition equals gross value added; $Z^D$ column sums
 reproduce domestic intermediate demand; production equals income exactly;
-production vs expenditure agree within 1.5%; all calibration values are
+production vs expenditure agree within 10% (the ~5.4% raw-table residual is documented); all calibration values are
 - All calibration values are non-negative; Domar weights are finite and sum to a
   positive value (individual weights may be slightly negative -- a known property
   of the Domar/Leontief inverse); the shock total is positive.
@@ -165,19 +172,49 @@ can be inspected independently of the notebook kernel.
 
 # Integration note (downstream `Data` / `generate_data`)
 
-This notebook is intentionally standalone. To consume its output, `src/interface.jl`
-should be extended (or an `AccountingData` type added) to read
-`AC_domestic_intermediate_matrix.csv` and `AC_domestic_final_demand.csv` instead of
-collapsing the raw table, and to use the decomposed value-added shares. The
-existing `Data` fields (`Ω`, `consumption_share`, `factor_share`, `λ`,
-`labor_share`, ...) map onto the notebook's `Ω_dom`, `fd_dom_basic_vec`,
-`factor_share`, `λ`, and the explicitly separated `wage_share`. No change to
-`src/` is made by this notebook.
+The transformation is now wired **directly into `src/interface.jl`** (no
+dependency on pre-run `AC_*.csv` files). `generate_data` performs Steps 0-5
+inline and `read_data` assembles an extended `Data` object. Field mapping
+(extended `Data` -> notebook outputs):
+
+- `Ω` (Data)            = domestic conditional input-share matrix `Ω_dom`
+  (user-by-supplier, rows sum to 1; raw `Ω_raw` also kept for audit).
+- `gross_output_basic`  = `prodval` (gross output, basic prices) -- replaces the
+  old `grossy` taken from the total-use column.
+- `factor_share`        = composite VA share `gva ./ grossy` (NOT relabelled as labour).
+- `λ`                   = standard Domar weights `prodval ./ GDP_P` (always positive;
+  replaces the deprecated Leontief-inverse `λ`).
+- `labor_share`         = `λ .* factor_share` (explicit composite VA weight).
+- `value_added_components` = decomposed VA (wage / other-prod-tax / depreciation / net-op).
+- `imports_intermediate`, `import_share`, `domestic_final_demand`,
+  `gdp_production/income/expenditure` = the §4.1 separation fields.
+
+This keeps all legacy `Data` field names so `main.jl` and the test suite keep
+working, while the model now consumes the accounting-consistent, open-economy
+structure.
 
 # Status
 
 Plan drafted 2026-09-02. Notebook `Notebooks/AccountingConsistency.ipynb`
 implements Steps 0-7 and was validated against the raw 2019 table (Julia
-1.12.6, project environment). Definitive guide §4.1 / §6 status should be moved
-from "Not started" to "In progress" once the notebook is reviewed, and to
-"Reconciled" after integration.
+1.12.6, project environment). The transformation is **integrated into
+`src/interface.jl`** (`generate_data` + extended `Data`), validated standalone
+(`validate_iface.jl`: Ω domestic rows sum to 1, λ standard Domar positive,
+GDP production == income exact, expenditure residual ~5.4% documented).
+Both artifacts are mutually consistent (same numbers).
+
+Two transcription bugs were found and fixed during integration (present in the
+notebook and in the first `interface.jl` draft):
+1. **Off-by-one import indexing** -- reading the imports/product-tax rows after
+   slicing `2:end`, then re-indexing by the sector/final-demand range, shifted
+   every import/tax value by one column. Fixed by indexing those rows directly
+   at their original column positions (SEC = 2:72, FD = 75:81).
+2. **`Ω` normalisation orientation** -- `Ω_dom = Z_dom' ./ inter_dom_totals'`
+   (row vector) normalised *columns* instead of rows. Fixed to a column vector
+   so each user row sums to 1.
+A third guard was added: for the 3 sectors where the source table records
+imports exceeding intermediate use, the domestic remainder is clamped to zero
+(those sectors become fully import-dependent in the domestic technology),
+keeping `Z_dom` non-negative.
+
+Definitive guide §4.1 / §6: status moved to **"Reconciled"**.

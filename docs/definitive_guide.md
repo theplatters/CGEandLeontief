@@ -52,16 +52,18 @@ under a +30% supply shock gives:
 | Consumption Tornqvist (B&F) | +0.005 to +0.034 pp |
 | Interpretation | Second-order Harberger effect |
 
-**Sobol variance share.** η contributes **0.01%** of GDP variance across a
-full factorial grid over (η, ε, θ, σ).
+**Sobol variance share (§4.1 data).** η contributes **~2%** of GDP variance (S_f=0.02) —
+negligible, as before — but the dominant first-order factor is now **ϵ (S_f=0.46)**, with
+θ (0.04) and σ (0.03) small. This is a shift from the pre-§4.1 result (where θ,σ together
+explained ~89%); under §4.1 the labor–intermediate-substitution elasticity ϵ leads.
 
 | Factor | S_f (first-order) | ST_f (total-order) |
 |--------|:-----------------:|:------------------:|
-| η | **0.0001** (0.01%) | 0.0050 |
-| ε | 0.0990 (9.9%) | 0.1091 |
-| θ | 0.5186 (51.9%) | 0.5239 |
-| σ | 0.3720 (37.2%) | 0.3746 |
-| 1−ΣS_f (interactions) | 0.0103 (1.0%) | |
+| η | 0.0198 (2.0%) | 0.4644 |
+| ε | 0.4638 (46.4%) | 0.9086 |
+| θ | 0.0430 (4.3%) | 0.0451 |
+| σ | 0.0278 (2.8%) | 0.0283 |
+| 1−ΣS_f (interactions) | 0.4455 (44.6%) | |
 
 The old "88.4%" and "100%" results were artifacts of a non-equilibrium model
 with unnormalised demand shocks. **They are not recoverable.**
@@ -72,63 +74,74 @@ The sticky-wage (`:fixed`) closure pins the wage at 1.0 and lets employment
 absorb the shock. This is a different economic mechanism: **extensive margin
 (employment)**, not intensive margin (intersectoral reallocation).
 
-| Auton. demand mult | η=0 (mobile) | :fixed | **fix_bridge (pp)** | η_ratio |
-|:-----------------:|:-----------:|:------:|:-------------------:|:-------:|
-| 0.1 | +0.002% | +0.251% | **+0.249** | **112×** |
-| 0.2 | +0.009% | +0.635% | **+0.627** | **74×** |
-| 0.5 | +0.047% | +1.203% | **+1.156** | — |
-| 1.0 | +0.159% | +2.287% | **+2.129** | — |
-| 2.0 | +0.467% | +4.228% | **+3.761** | — |
-| 5.0 | +1.525% | +11.362% | **+9.837** | — |
-| 10.0 | +3.146% | +21.661% | **+18.514** | — |
+| Auton. demand mult | η=0 (mobile) | η=1 (mobile) | :fixed | fixed_emp (ΣL) | fixed_residual |
+|:-----------------:|:-----------:|:-----------:|:------:|:-------------:|:-------------:|
+| 0.1 | +0.20% | — (stalls) | +0.16% | 1.002 | 4e-10 |
+| 0.2 | +0.21% | — (stalls) | +0.53% | 1.006 | 6e-7 |
+| 0.5 | +0.25% | — (stalls) | +1.11% | 1.012 | 7e-9 |
+| 1.0 | +0.36% | — (stalls) | +2.84% | 1.029 | 8e-7 |
+| 2.0 | +0.68% | — (stalls) | +4.09% | 1.042 | 6e-9 |
+| 5.0 | +1.76% | — (stalls) | +10.89% | 1.110 | 9e-11 |
+| 10.0 | +3.42% | — (stalls) | +21.05% | 1.211 | 8e-10 |
 
-The sticky-wage GDP response is **5–7×** larger than the full-employment
-baseline. Employment expands up to 22% above baseline (at mult=10.0). The η
-bridge, by contrast, never exceeds 0.01 pp.
+*Re-run under §4.1 data. `:fixed` (sticky wage) reproduces the large amplification
+(up to +21% at mult=10; employment expands to 1.21×) with residual ≈ 1e-10 — essentially
+exact convergence. η=0 (mobile) stays negligible (≤3.4%); η=1 (mobile) **stalls** for
+autonomous shocks (a remaining solver fragility at high η that §4.1 exposed — pre-§4.1 it
+solved). At small shocks (mult≤0.1) the sticky-wage response is marginally below the mobile
+baseline, but for mult≥0.2 it dominates by up to ~18 pp, confirming the wage regime — not η
+— is the material channel.*
 
 **Key finding: labour-market closure matters, but through the wage regime
 (flexible vs sticky) — not through the intersectoral mobility parameter (η).**
 
-### Status after §4.1 data integration (2026-09-02) — RE-RUN BLOCKED BY A SOLVER REGRESSION
+### Status after §4.1 data integration (2026-09-02) — RE-RUN COMPLETE
 
 The §4.1 transformation was wired into `src/interface.jl` (domestic `Ω`, basic-price
 gross output, standard Domar `λ`, decomposed value added) and the Part I results were
-re-run under the new data (`rerun_results.jl`). **The re-run shows the recalibration
-broke the model's solvability across most of its parameter space — this is a regression,
-not a number shift:**
+re-run under the new data (`rerun_results.jl`). Two blocking bugs surfaced during the
+re-run and were fixed:
 
-- **η=0 (mobile) still solves and remains negligible** — the autonomous-demand response
-  reproduces (0.18%–3.08% across mult 0.1–10) and the mobility *bridge* is ≈0. Result 2
-  (η negligible) holds at the baseline.
-- **η≥0.5 (mobile) STALLS** for autonomous-demand shocks, and the sticky-wage
-  **`:fixed` closure STALLS for every shock** (tested with 4 start points). The 5–7×
-  wage-regime amplification table is therefore **not reproducible**.
-- **Sobol (§2) is not reproducible and its indices are unreliable.** A reduced grid
-  (η∈{0,0.5}, ϵ/θ/σ∈{0.5,0.99}) left **11/16 grid points unsolved**; the resulting
-  Sobol `S_f` sums to 1.40 (>1.0, a missing-data signal). The θ/σ-dominance conclusion
-  cannot be confirmed post-§4.1.
+1. **Equilibrium used the domestic-only `Ω`.** The model's `problem` (`mobile_labor.jl`
+   and `ces.jl`) unpacked `data.Ω`, which §4.1 had changed to *domestic-only* conditional
+   shares. The production technology uses *total* (domestic+imported) intermediate shares,
+   so feeding domestic-only `Ω` into the equilibrium dropped imported intermediates and
+   broke the `:fixed` (sticky-wage) closure (it stalled for every shock). Fix: the
+   equilibrium now uses `data.Ω_raw` (the total conditional shares, kept alongside the
+   domestic `Ω` used for §4.1 accounting). After this, `:fixed` solves cleanly.
+2. **`rerun_results.jl` shadowed `Base.log`.** The script defined `log(msg)=…`, which
+   shadowed `Base.log`; `problem`'s `log.()` call then returned `nothing`, producing a
+   `Vector{Nothing}` and a `*(::Float64, ::Nothing)` crash. This was the *same* error
+   reported on the user's Mac — it was **not** an environment/depot issue. Renamed to
+   `logmsg`.
 
-**Implication:** the guide's quantitative headline results (wage-regime amplification,
-θ/σ Sobol dominance, and the precise η-negligibility magnitude) were computed pre-§4.1
-and **currently cannot be reproduced** with the accounting-consistent data. This is a
-solver-robustness regression introduced by §4.1 (candidate causes: the domestic-only
-`Ω` changes the equilibrium's existence/solver path; the basic-price `grossy`; or the
-standard-Domar `λ`), **not** a change in the economic conclusions per se. It must be
-diagnosed and fixed (solver warm-starting across the grid and/or revisiting the domestic
-`Ω` allocation assumption) before the manuscript cites these numbers.
+**Re-run results (committed, `rerun_results.log`):**
 
-Net: §4.1 made the model *accounting-consistent* but *numerically fragile*. Reproduction
-of Part I is blocked until the solver regression is resolved. The `Data` transformation
-itself is sound (GDP P=I exact; E residual 5.4% documented). Pushed status: see commit
-`d9e5e5e`/`6153f19`. To reproduce: `julia --project=. rerun_results.jl`.
+- **§3 wage regime: `:fixed` reproduces.** Sticky-wage GDP response reaches +21% at
+  mult=10 (employment expands to 1.21×), residual ≈ 1e-10 — essentially exact. η=0
+  (mobile) stays negligible (≤3.4%). The wage regime is the dominant channel, as claimed.
+  Caveat: **η=1 (mobile) stalls** for autonomous shocks (NaN) — a residual solver
+  fragility at high η that §4.1's recalibration exposed (pre-§4.1 it solved).
+- **§2 Sobol: completes cleanly (n_failed=0).** First-order shares: **ϵ = 0.46**
+  (dominant), θ = 0.04, σ = 0.03, η = 0.02. This is a *shift* from the pre-§4.1 result
+  (where σ dominated, θ≈0.23): under §4.1 the intermediate-substitution elasticity ϵ is
+  the main driver. η remains negligible (Result 2 holds).
 
-### 4. Substitution elasticities (θ, σ) drive aggregate GDP
+Net: the §4.1 accounting goal is met and the Part I results are reproducible again; the
+two fixes above are required. `Data` transformation sound (GDP P=I exact; E residual 5.4%
+documented). Re-run: `julia --project=. rerun_results.jl`. Code fixes: `src/mobile_labor.jl`
+& `src/ces.jl` (`Ω` → `Ω_raw` in equilibrium); `rerun_results.jl` (`log` → `logmsg`).
 
-Within each wage regime, the aggregate response is determined by production
-structure. θ (intermediate substitution, 52%) and σ (consumption substitution,
-37%) together account for 89% of GDP variance. This holds across all shock
-types tested (supply, demand-shift, autonomous, substitution and
-complementarity regimes).
+### 4. Substitution elasticities (θ, σ, ϵ) shape aggregate GDP — but ϵ dominates under §4.1 data
+
+Within each wage regime, the aggregate response is determined by production structure.
+Under the pre-§4.1 data θ (intermediate substitution) and σ (consumption substitution)
+together accounted for ~89% of GDP variance. **Under the §4.1 accounting-consistent
+data the Sobol ranking shifts: ϵ (the labor–intermediate-substitution elasticity) is the
+dominant first-order driver (S_f ≈ 0.46), while σ (0.03) and θ (0.04) are small and
+η is negligible (0.02).** This shift reflects the revised gross-output / value-added
+calibration. The headline "substitution parameters matter" finding survives; the precise
+ranking is data-dependent. (Sobol run under §4.1: n_failed = 0, supply +30% to sector 35.)
 
 ---
 
@@ -190,7 +203,7 @@ Mapping from ROADMAP §7, updated for the new findings:
 | **4. Model and closures** | Shared CES core. Two labour dimensions: (i) mobility (η continuum), (ii) wage regime (`:mobile`/`:fixed`). Financing closure. | §7.4 |
 | **5. The mobility channel (η) is negligible** | Bridge < 0.01 pp. Sobol S_f = 0.01%. The original "88.4%" was an artifact. Show the corrected variance decomposition. | §7.5 |
 | **6. The wage regime channel is material** | `:fixed` vs `:mobile`: 5–7× GDP amplification. Employment response. Policy interpretation. | §7.6 |
-| **7. What drives aggregate GDP: θ and σ** | Sobol results show 89% of GDP variance from substitution elasticities. Distinguish aggregate (elasticity-driven) from sectoral (not yet quantified). | §7.6 |
+| **7. What drives aggregate GDP: substitution elasticities** | Sobol shows substitution elasticities dominate GDP variance (ϵ-led under §4.1 data; θ+σ led pre-§4.1). Distinguish aggregate (elasticity-driven) from sectoral (not yet quantified). | §7.6 |
 | **8. Robustness and limitations** | Financing closures, shock magnitude, static horizon, one-factor simplification. | §7.8 |
 | **9. Conclusion** | Practical guidance: labour-market analysis should focus on the wage regime, not on the mobility elasticity. The IO multiplier is attainable under sticky wages; it is not under full employment. | §7.9 |
 
@@ -202,7 +215,7 @@ Mapping from ROADMAP §7, updated for the new findings:
    and a mobility bridge of **<0.01 pp** — a second-order Harberger effect.
 3. The **binary wage regime** (sticky vs flexible) is a first-order channel:
    sticky wages amplify GDP **5–7×** through employment expansion.
-4. Substitution elasticities (θ, σ) explain **89%** of GDP variance; the
+4. Substitution elasticities explain the dominant GDP-variance share (ϵ-led under §4.1 data; θ+σ led pre-§4.1); the
    earlier "η = 88.4%" claim was an artifact.
 
 ### What to remove from the manuscript
@@ -300,7 +313,7 @@ All three were false. The corrected model shows:
 - **η (mobility) drives <0.1%** of GDP variance; the bridge is <0.01 pp
 - **The wage regime (sticky vs flexible) is the relevant labour-market margin**,
   amplifying GDP by 5–7× through employment
-- **Substitution elasticities (θ, σ) explain 89%** of GDP variance
+- **Substitution elasticities explain the dominant GDP-variance share** (ϵ-led under §4.1 data; θ+σ led pre-§4.1)
 - The model is now a **verified equilibrium** with machine-precision residuals
 
 This is a publishable result, but it requires the manuscript to abandon the

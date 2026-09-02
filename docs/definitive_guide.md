@@ -274,3 +274,6 @@ original "η-dominance" narrative and replace it with a **three-part story**:
 (i) a corrected methodological baseline, (ii) a precise negative result about
 the mobility channel, and (iii) a positive result about the wage-regime channel
 and the dominance of substitution elasticities.
+
+For the canonical closure taxonomy and migration notes, see
+[`labor_closures.md`](labor_closures.md).

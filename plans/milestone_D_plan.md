@@ -21,7 +21,7 @@
 
 ## Implementation plan
 - **Step 1**: Improve solver robustness — increase maxiters, use a closer warm start (run ϵ=0.5 first, use its solution as init for ϵ=0.1).
-- **Step 2**: Extend `VarianceDecompositionResult` with total-order indices.
+- **Step 2**: Extend `SobolResult` with total-order indices (`VarianceDecompositionResult` remains a deprecated alias).
 - **Step 3**: Rewrite `_compute_partial_r2` → `_compute_sobol_indices` that returns both S_f and S_Tf.
 - **Step 4**: Rewrite `summary_table` → absolute shares, no renormalization, S_f + S_Tf + interaction strength, residual, CSV export.
 - **Step 5**: Write `diag_vd_honest.jl` — runs the full decomposition, validates, saves CSV.

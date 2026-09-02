@@ -11,6 +11,8 @@
 #
 # Outputs: rerun_results.log (incremental), output/variance_decomposition_sobol.csv
 
+using Pkg
+Pkg.activate(@__DIR__)   # activate the BeyondHulten project (Project.toml at repo root)
 using CSV, DataFrames, LinearAlgebra, Statistics, NonlinearSolve, ProgressMeter, ThreadsX
 include("src/interface.jl"); include("src/solution.jl"); include("src/ces.jl")
 include("src/mobile_labor.jl"); include("src/util.jl"); include("src/variance_decomposition.jl")

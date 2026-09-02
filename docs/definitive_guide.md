@@ -89,28 +89,38 @@ bridge, by contrast, never exceeds 0.01 pp.
 **Key finding: labour-market closure matters, but through the wage regime
 (flexible vs sticky) — not through the intersectoral mobility parameter (η).**
 
-### Status after §4.1 data integration (2026-09-02)
+### Status after §4.1 data integration (2026-09-02) — RE-RUN BLOCKED BY A SOLVER REGRESSION
 
 The §4.1 transformation was wired into `src/interface.jl` (domestic `Ω`, basic-price
-gross output, standard Domar `λ`, decomposed value added). The Part I results were
-re-run under the new data via `rerun_results.jl`. Findings:
+gross output, standard Domar `λ`, decomposed value added) and the Part I results were
+re-run under the new data (`rerun_results.jl`). **The re-run shows the recalibration
+broke the model's solvability across most of its parameter space — this is a regression,
+not a number shift:**
 
-- **η (mobility) remains negligible.** The η=0 (mobile) autonomous-demand response
-  reproduces and is small (0.18%–3.08% across mult 0.1–10); the mobility *bridge*
-  is still ≈0. §4.1 does **not** overturn Result 2.
-- **The wage-regime (`:fixed`) result is currently NOT reproducible.** Under the new
-  data the sticky-wage (`:fixed`) closure **stalls** (NonlinearSolve `Stalled`) for
-  every autonomous-demand shock, and η≥1 (mobile) stalls at mult≥0.5. The 5–7×
-  amplification table above is therefore **pre-§4.1** and must be re-verified once the
-  `:fixed`/high-η solver robustness is restored. This is a calibration/solver issue
-  introduced by §4.1, not a reversal of the economic conclusion — it is flagged for
-  investigation before the manuscript quotes the amplification factor.
-- **Sobol (§2) is pending** — the factorial grid includes η=1,2 which stall, so the
-  post-§4.1 Sobol indices are not yet final.
+- **η=0 (mobile) still solves and remains negligible** — the autonomous-demand response
+  reproduces (0.18%–3.08% across mult 0.1–10) and the mobility *bridge* is ≈0. Result 2
+  (η negligible) holds at the baseline.
+- **η≥0.5 (mobile) STALLS** for autonomous-demand shocks, and the sticky-wage
+  **`:fixed` closure STALLS for every shock** (tested with 4 start points). The 5–7×
+  wage-regime amplification table is therefore **not reproducible**.
+- **Sobol (§2) is not reproducible and its indices are unreliable.** A reduced grid
+  (η∈{0,0.5}, ϵ/θ/σ∈{0.5,0.99}) left **11/16 grid points unsolved**; the resulting
+  Sobol `S_f` sums to 1.40 (>1.0, a missing-data signal). The θ/σ-dominance conclusion
+  cannot be confirmed post-§4.1.
 
-Net: the qualitative story (η negligible; wage-regime material) is intact, but the
-*quantitative* wage-regime numbers are blocked by a §4.1-induced solver regression
-and should not be quoted from the table above until fixed.
+**Implication:** the guide's quantitative headline results (wage-regime amplification,
+θ/σ Sobol dominance, and the precise η-negligibility magnitude) were computed pre-§4.1
+and **currently cannot be reproduced** with the accounting-consistent data. This is a
+solver-robustness regression introduced by §4.1 (candidate causes: the domestic-only
+`Ω` changes the equilibrium's existence/solver path; the basic-price `grossy`; or the
+standard-Domar `λ`), **not** a change in the economic conclusions per se. It must be
+diagnosed and fixed (solver warm-starting across the grid and/or revisiting the domestic
+`Ω` allocation assumption) before the manuscript cites these numbers.
+
+Net: §4.1 made the model *accounting-consistent* but *numerically fragile*. Reproduction
+of Part I is blocked until the solver regression is resolved. The `Data` transformation
+itself is sound (GDP P=I exact; E residual 5.4% documented). Pushed status: see commit
+`d9e5e5e`/`6153f19`. To reproduce: `julia --project=. rerun_results.jl`.
 
 ### 4. Substitution elasticities (θ, σ) drive aggregate GDP
 

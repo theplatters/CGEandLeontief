@@ -40,7 +40,7 @@ million EUR, `;` delimiter, `,` decimal). Layout confirmed by direct inspection
 - Row 82: `Bruttowertschöpfung` (gross value added, basic prices).
 - Row 83: `Produktionswert` (gross output, basic prices).
 
-# The accounting gap in the current pipeline
+# The accounting gap in the pre-integration pipeline
 
 `src/interface.jl` (`generate_data`) builds the model's `Data` object from this
 table but collapses the accounting in five ways that violate §4.1:
@@ -112,8 +112,8 @@ draft reported ~0.8%; that figure was an artifact of a column-indexing bug
 (reading the imports/product-tax rows after slicing off the label column, then
 re-indexing by the sector range -- an off-by-one that subtracted near-zero
 numbers). With the import/product-tax rows read directly at their original
-column positions the true expenditure residual is **~5.4%** (P = 3,027,818,
-E = 2,864,724, diff = 163,094 mn EUR). This ~5.4% is a genuine valuation
+column positions the true expenditure residual is **5.387%** (P = 3,027,818,
+E = 2,864,724, diff = 163,094 mn EUR). This 5.387% is a genuine valuation
 discrepancy in the raw Destatis table: the final-demand columns (purchaser
 prices) net of recorded imports and product taxes do not exactly equal the
 production-side GDP. It is carried through consistently and flagged for the
@@ -145,15 +145,16 @@ Write CSVs to `output/`:
 
 Assert: value-added decomposition equals gross value added; $Z^D$ column sums
 reproduce domestic intermediate demand; production equals income exactly;
-production vs expenditure agree within 10% (the ~5.4% raw-table residual is documented); all calibration values are
-- All calibration values are non-negative; Domar weights are finite and sum to a
-  positive value (individual weights may be slightly negative -- a known property
-  of the Domar/Leontief inverse); the shock total is positive.
+production vs expenditure agree within 10% (the 5.387% raw-table residual is
+documented); all calibration values are non-negative; Domar weights are finite,
+positive, and sum to a positive value; the shock total is positive.
 
 # Outputs
 
 All artifacts are saved under `output/` so results survive container limits and
-can be inspected independently of the notebook kernel.
+can be inspected independently of the notebook kernel. They are **locally
+generated, gitignored artifacts — not durable committed evidence**; regenerate
+them by re-running the notebook rather than treating them as archival outputs.
 
 # Acceptance against ROADMAP §4.1
 
@@ -177,8 +178,10 @@ dependency on pre-run `AC_*.csv` files). `generate_data` performs Steps 0-5
 inline and `read_data` assembles an extended `Data` object. Field mapping
 (extended `Data` -> notebook outputs):
 
-- `Ω` (Data)            = domestic conditional input-share matrix `Ω_dom`
-  (user-by-supplier, rows sum to 1; raw `Ω_raw` also kept for audit).
+- `Data.Ω`              = `Ω_dom`, the domestic conditional input-share matrix retained
+  **for the domestic audit/incidence breakdown only** (not fed into production).
+- `Data.Ω_raw`          = total conditional input-share matrix, used by the equilibrium
+  technology **and** the `consumption_share` calibration.
 - `gross_output_basic`  = `prodval` (gross output, basic prices) -- replaces the
   old `grossy` taken from the total-use column.
 - `factor_share`        = composite VA share `gva ./ grossy` (NOT relabelled as labour).
@@ -198,10 +201,11 @@ structure.
 Plan drafted 2026-09-02. Notebook `Notebooks/AccountingConsistency.ipynb`
 implements Steps 0-7 and was validated against the raw 2019 table (Julia
 1.12.6, project environment). The transformation is **integrated into
-`src/interface.jl`** (`generate_data` + extended `Data`), validated standalone
-(`validate_iface.jl`: Ω domestic rows sum to 1, λ standard Domar positive,
-GDP production == income exact, expenditure residual ~5.4% documented).
-Both artifacts are mutually consistent (same numbers).
+`src/interface.jl`** (`generate_data` + extended `Data`), validated by the
+`tests/` suite (`generate_data` assertions and `tests/test_model.jl`: `Ω_raw`
+rows sum to 1, λ standard Domar positive, GDP production == income exact,
+expenditure residual 5.387% documented). Both artifacts are mutually consistent
+(same numbers).
 
 Two transcription bugs were found and fixed during integration (present in the
 notebook and in the first `interface.jl` draft):

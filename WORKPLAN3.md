@@ -3,12 +3,26 @@ title: "Workplan: Repairing the BeyondHulten Mobile-Labor Core"
 date: "2026-08-18"
 ---
 
+> **Historical note (2026-09-03).** The `tests/minimal_test/` diagnostic scripts
+> referenced below (`diag_review.jl`, `diag_milestoneA.jl`, `diag_B.jl`,
+> `diag_vd.jl`) have since been **deleted** and replaced by the organised test
+> suite (`tests/test_mobile_labor.jl`, `tests/test_fixed_closure.jl`,
+> `tests/test_variance_decomposition.jl`, `tests/test_eta_sweep.jl`). The
+> `output/*.csv` files mentioned are **locally generated, gitignored artifacts**,
+> not committed evidence. The numerical results recorded here (Milestones A–F)
+> predate the 2026-09-03 fixes (log-space mobile allocation, `Ω_raw`
+> calibration/equilibrium alignment, Sobol grid/output validation, `:fixed`
+> scale-indeterminacy guard). The **2026-09-03 re-run is now complete** under the
+> fixed code/data; its current numbers supersede the historical diagnostics below
+> and are summarised in the addendum at the end of this document. No fabricated
+> numbers appear here.
+
 # Scope and Verdict
 
 This workplan repairs the core issues documented in `PRELIMINARY-ASSESSMENT.md`
 and corroborated by `roadmaps/vertdict.md`. It targets the revision-support code
-(`src/`, `tests/minimal_test/`) only. The two `bf_replication/` directories are
-excluded by agreement.
+(`src/`, `tests/test_mobile_labor.jl` and the other `tests/test_*.jl` files) only.
+The two `bf_replication/` directories are excluded by agreement.
 
 Verdict adopted from the second review: build a corrected, budget-complete
 2019-style competitive CES core; make labor and financing closures modular; use
@@ -56,19 +70,21 @@ Changes in `src/mobile_labor.jl`:
 - In `solve()`, assert or return `retcode`; fail loudly on divergence instead
   of silently returning a degenerate solution.
 
-Validation gate A:
+Validation gate A (historical — `diag_review.jl` was deleted; use
+`tests/test_mobile_labor.jl`):
 
 ```bash
-julia --project=tests/minimal_test "tests/minimal_test/diag_review.jl"
+julia --project=. -e 'using Pkg; Pkg.test()'
 ```
 
 Expect: every residual (including the sector-1 zero-profit residual) at $\sim
 10^{-5}$; total residual norm $\approx 0$. Baseline solve: real GDP $\approx
 1$, `sum(labor_share) == 1`.
 
-Status (2026-08-18): VERIFIED. `diag_milestoneA.jl` / `diag_B.jl` show max
-residuals $\sim 10^{-15}$ (machine precision) for $\eta = 0 \dots 50$;
-sector-1 zero-profit satisfied; `solve()` fails loudly on non-convergence.
+Status (2026-08-18): VERIFIED (historical — `diag_milestoneA.jl` / `diag_B.jl`
+were deleted; the same checks now live in `tests/test_mobile_labor.jl`). Residuals
+$\sim 10^{-15}$ (machine precision) for $\eta = 0 \dots 50$; sector-1 zero-profit
+satisfied; `solve()` fails loudly on non-convergence.
 NOTE: with the current composition-only demand shock the model is $\eta$-invariant
 (real GDP $\Delta = +0.0667\%$, wage $= 1.0$ for all $\eta$) -- the bridge is
 absent because no scale/financing channel exists yet. That is Milestone E.
@@ -80,7 +96,8 @@ absent because no scale/financing channel exists yet. That is Milestone E.
   matching `ces.jl`).
 - Validation gate B: baseline real GDP $= 1.0$; a $+81\%$ construction demand
   shock gives a small, correct-sign real-GDP response ($\approx +0.07\%$ under the
-  current composition-only shock -- see `diag_B.jl`). The base-CES $+3.26\%$
+  current composition-only shock -- see the historical `diag_B.jl`, now
+  `tests/test_mobile_labor.jl`). The base-CES $+3.26\%$
   replication (gate as originally written) requires the expansive shock from
   Milestone E, not a composition shock.
 
@@ -93,8 +110,9 @@ baseline $= 1.000000$.
   power (for example `exp(y * log(max(x, eps())))` with proper bracketing), or
   reformulate the aggregator to avoid complex intermediates. Set
   `autodiff = :finite` in `nlsolve`.
-- Validation gate C: `tests/minimal_test/diag_vd.jl` completes the full
-  $\eta \times \varepsilon \times \theta \times \sigma$ sweep without a
+- Validation gate C (historical — `diag_vd.jl` was deleted; use
+  `tests/test_variance_decomposition.jl` and `tests/test_eta_sweep.jl`): the full
+  $\eta \times \varepsilon \times \theta \times \sigma$ sweep completes without a
   `DomainError`; the $\eta$-sweep is monotonic and bounded.
 
 ## Milestone D - Honest Variance Decomposition (VERIFIED 2026-08-19)
@@ -104,7 +122,8 @@ full factorial grid over (η, ε, θ, σ). Method: ANOVA sum-of-squares on a
 balanced full factorial design. S_f = SS_f / SS_total (first-order). ST_f =
 1 − SS_{-f} / SS_total (total-order, captures all interactions involving f).
 Absolute shares reported (no renormalization over main effects). Results saved
-to CSV at `output/variance_decomposition_sobol.csv`.
+to CSV at `output/variance_decomposition_sobol.csv` (locally generated, gitignored
+artifact — not committed; regenerate via `rerun_results.jl` / the test suite).
 
 RESULT (sector-35 construction supply +30%, ε ∈ {0.5, 2.0}, θ ∈ {0.5, 0.99},
 σ ∈ {0.5, 0.99}, η ∈ {0, 0.5, 1, 2}):
@@ -171,7 +190,8 @@ FINDINGS:
 CONCLUSION: The paper's central result must shift from "η determines the
 aggregate multiplier" to "the binary wage regime (sticky vs flexible) is the
 relevant labour-market margin; η is a second-order correction." Results
-saved to `output/wage_regime_comparison.csv`.
+saved to `output/wage_regime_comparison.csv` (locally generated, gitignored
+artifact — not committed; regenerate via `rerun_results.jl` / `tests/test_fixed_closure.jl`).
 
 Validation gate F: :fixed solves for all tested multipliers (0.1—10.0) with
 max residuals ~1e-7 to 1e-10. The employment and GDP responses are monotonic
@@ -179,10 +199,50 @@ in shock size and economically interpretable.
 
 # Verification Protocol
 
-Each milestone ships with a diagnostic under `tests/minimal_test/` and the gate
+Each milestone is validated by the organized test suite (`tests/test_*.jl`),
+superseding the deleted `tests/minimal_test/` diagnostics, and the gate
 listed above. No "GO" is asserted until all gates pass and the equilibrium
 residuals are $\sim 10^{-5}$. The false certifications in `WORKPLAN.md` and
 `WORKPLAN2.md` (line 16 of each) are superseded by this plan.
+
+## 2026-09-03 Current-Rerun Addendum (supersedes the historical Milestone D/F numbers above)
+
+The empirical re-run executed on **2026-09-03** under the fixed code/data
+(`rerun_results.jl` + `tests/`) completed successfully. Its results **supersede**
+the 2026-08-19 Milestone D (Sobol) and Milestone F (wage regime) diagnostics
+recorded above, which were produced before the 2026-09-03 fixes. The reproducible
+local artifacts (`rerun_results.log`, `output/variance_decomposition_sobol.csv`)
+are **gitignored and not committed**; regenerate with
+`julia --project=. rerun_results.jl`.
+
+**Canonical accounting result:** GDP P = 3,027,818; I = 3,027,818; E = 2,864,724;
+residual 5.387% (documented raw-table valuation gap); `sum(λ) = 2.1099`;
+`sum(labor_share) = 1`; reference `ref_gdp = 0.9998546537504605`.
+
+**§3 wage-regime table (autonomous demand to construction; `:fixed` residuals ≤ 1.9e-7):**
+
+| mult | η=0 Δ% | η=1 Δ% | :fixed Δ% | η_bridge (pp) | fix_bridge (pp) | fixed_emp |
+|:----:|:------:|:------:|:---------:|:-------------:|:---------------:|:---------:|
+| 0.1 | -0.045697 | +0.014512 | +0.271460 | +0.060209 | +0.317157 | 1.0026 |
+| 0.2 | -0.051978 | +0.014496 | +0.518147 | +0.066473 | +0.570124 | 1.0050 |
+| 0.5 | -0.090681 | NaN (stalls) | +1.227407 | NaN | +1.318088 | 1.0121 |
+| 1.0 | -0.203714 | NaN (stalls) | +2.318170 | NaN | +2.521884 | 1.0230 |
+| 2.0 | -0.542053 | NaN (stalls) | +4.254413 | NaN | +4.796466 | 1.0424 |
+| 5.0 | -2.009894 | NaN (stalls) | +9.957729 | NaN | +11.967623 | 1.0994 |
+| 10.0 | -5.406077 | NaN (stalls) | +19.344778 | NaN | +24.750854 | 1.1933 |
+
+The flexible η=0 closure turns **increasingly negative** with shock size; the sticky
+`:fixed` closure gives a large **positive** extensive-margin response (employment up
+to 1.19×). Because η=0 is negative, the old "5–7×" / "74–112×" amplification *ratios*
+are **not used**; the comparison is the **percentage-point gap** (fix_bridge above).
+η=1 (mobile) solves only at mult 0.1/0.2 and **stalls** from 0.5 upward (no
+autonomous/investment anchor — the `:fixed` scale-indeterminacy guard).
+
+**§2 Sobol (32/32 grid points, 0 failures):** θ dominant (S_f = 0.3951, ST_f = 0.3972);
+σ second (S_f = 0.2734, ST_f = 0.2744); ε (S_f = 0.1650, ST_f = 0.1719) and η
+(S_f = 0.1571, ST_f = 0.1662) each ~16%. ΣS_f = 0.9907; interaction share = 0.0093.
+**η is material (~15.7% first-order), not negligible and not dominant.** This corrects
+both the original "η = 88.4%/100%" artifact and the 2026-09-02 "~2% negligible" reading.
 
 # Out of Scope
 

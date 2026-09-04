@@ -1,15 +1,28 @@
-# rerun_results.jl — Reproduce the definitive-guide Part I results under the NEW
-# §4.1 data (domestic Ω, basic-price gross output, standard Domar λ).
+# rerun_results.jl — Reproduce the definitive-guide Part I results under the final
+# fixed §4.1 data (Ω_raw total conditional shares for the equilibrium technology and
+# the consumption_share calibration, Ω_dom retained for domestic audit; basic-price
+# gross output; standard Domar λ). The 2026-09-03 re-run completed successfully under
+# this fixed code/data: GDP P=I=3,027,818, E=2,864,724 (residual 5.387%),
+# sum(λ)=2.1099, sum(labor_share)=1, ref_gdp=0.9998546537504605; the :fixed closure
+# converges (residuals ≤ 1.9e-7) and η=1 stalls from mult 0.5 (scale-indeterminacy
+# guard); Sobol 32/32 (0 failures) with θ dominant (S_f≈0.395) and η material
+# (S_f≈0.157).
 # Runs WITHOUT the heavy GLMakie/XLSX/Ipopt deps (includes only core model files),
 # so it precompiles fast. Robust: warm-starts from the no-shock reference and
-# catches solver stalls (η≥1 and :fixed currently STALL under the §4.1 data).
+# catches solver stalls. Note: the :fixed closure at η≈1 with no autonomous/
+# investment additive anchor still throws an explanatory scale-indeterminacy error
+# (the reduced accounting system cannot support the mobile allocative wedge).
+# The generated `rerun_results.log` and `output/variance_decomposition_sobol.csv`
+# are local, gitignored outputs and are NOT committed.
 #
 # Run from the project root:
-#   cd /workspace/BFrep/'(3)BeyondHulten' && julia --project=. rerun_results.jl
+#   cd <project-root> && julia --project=. rerun_results.jl
 # (On a machine with a cached precompile this takes a few minutes; in a cold
 #  container it may be killed by the 10-min foreground cap — run in background.)
 #
-# Outputs: rerun_results.log (incremental), output/variance_decomposition_sobol.csv
+# Outputs: rerun_results.log and output/variance_decomposition_sobol.csv are
+# locally generated, gitignored artifacts — they are NOT committed; regenerate
+# them by running this script.
 
 # NOTE: run this from an activated BeyondHulten environment:
 #   terminal:  julia --project=. rerun_results.jl

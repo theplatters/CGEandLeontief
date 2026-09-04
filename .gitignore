@@ -8,3 +8,9 @@ open questions/
 RepAEA2022/
 # Generated diagnostic output (written by tests/minimal_test scripts)
 output/
+# Editor/tool leftovers and transient artifacts
+*.bak
+*.log
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]

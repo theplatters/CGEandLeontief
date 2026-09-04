@@ -17,6 +17,13 @@ The revision is based on the finding that the existing code base (`(3)BeyondHult
 
 > **Superseded (per `roadmaps/vertdict.md`).** The "complete and verified" status, the **GO** decision, the reported **price-invariance finding**, and the **88.4%** variance share from this round are **not supportable** and must not be treated as evidentially admissible. An independent two-sector diagnostic shows the supplied `mobile_labor.jl` / `variance_decomposition.jl` are not an equilibrium (household expenditure ≈ 25.5% exceeds income; a zero-profit equation was dropped instead of a redundant market equation; nominal rather than real wages were used; the high-η limit was misinterpreted as unlimited labor; and the 88.4% figure was a renormalized main-effect share, not a first-order sensitivity index). All mobile-labor sweep results and the GO decision derived from them are invalid until regenerated against the corrected equilibrium core in `ROADMAP.md`.
 
+> **Historical note (2026-09-03).** The `tests/minimal_test/` harness and
+> diagnostic scripts (`run_test.jl`, `test_full_pilot.jl`, `diag_*.jl`) referenced
+> below have since been **deleted** and replaced by the organised test suite
+> (`tests/test_*.jl`). The claims in this document are retained as a historical
+> record of the rejected round (see the supersession note above), not as
+> evidentially admissible results.
+
 ---
 
 ## Completed Milestones (This Round)

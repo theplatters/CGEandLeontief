@@ -13,6 +13,17 @@ and `bf_replication2/` are explicitly **out of scope**. All empirical claims
 below were reproduced by running the headless test harness under Julia 1.12.6;
 `tests/minimal_test/` is byte-identical to `src/` for every core file.
 
+> **Historical note (2026-09-03).** The `tests/minimal_test/` diagnostic scripts
+> referenced throughout this document (`diag_review.jl`, `diag_milestoneA.jl`,
+> `diag_B.jl`, `diag_vd.jl`, `diag_corrected.jl`, `diag_baseces.jl`,
+> `run_test.jl`, `test_full_pilot.jl`) have since been **deleted** and replaced by
+> the organised test suite (`tests/test_mobile_labor.jl`,
+> `tests/test_fixed_closure.jl`, `tests/test_variance_decomposition.jl`,
+> `tests/test_eta_sweep.jl`). The empirical claims here are retained as a historical
+> assessment of the pre-fix code; they are not evidentially admissible for the
+> corrected model. Regenerate any number via
+> `julia --project=. -e 'using Pkg; Pkg.test()'`.
+
 # The ROADMAP Versus the Workplans
 
 The `ROADMAP.md` is a **sound, review-aware plan**. It correctly reframes the

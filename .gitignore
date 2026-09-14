@@ -14,3 +14,4 @@ output/
 .ipynb_checkpoints/
 __pycache__/
 *.py[cod]
+IDEA.md

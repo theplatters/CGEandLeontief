@@ -4,16 +4,16 @@ author: "Hermes Agent (Lt. Cmdr Data), for Prof. Dr. J. Kapeller"
 date: "2026-09-15"
 project: "BFRep (3)BeyondHulten / Metroeconomica revision"
 tags: [cbase2, pipeline, notebook, workplan, replication]
-version: 1
+version: 2
 last-updated: "2026-09-15"
 ---
 
-This folder is the clean, self-contained pipeline for the Metroeconomica
-revision (workplan Stages 1--2 of `docs/DOCS_ASSESSMENT.md`). It replaces
-the ad-hoc top-level notebooks with one directed pipeline: raw data in,
-5 x 3 evaluation matrix out, every stage leaving auditable artifacts. The
-parent repo stays untouched; `cbase2` reads the parent only for kernel
-drift control.
+This folder is the self-contained pipeline for the Metroeconomica
+revision (workplan Stages 1--2 of `docs/DOCS_ASSESSMENT.md`): raw data
+in, 5 x 3 evaluation matrix out, every stage leaving auditable
+artifacts. Commentary -- findings, corrections, deviations, open
+questions -- lives in `process_comments.md`, organized by notebook
+chapter; this file describes the pipeline as it stands.
 
 # Pipeline map
 
@@ -39,7 +39,8 @@ no separate figures notebook.
 
 ```{.text}
 cbase2/
-|-- documentation.md            this file
+|-- documentation.md            this file (neutral pipeline description)
+|-- process_comments.md         dated observations by notebook chapter
 |-- 01..08*.ipynb               the pipeline (see map above)
 |-- src/
 |   |-- core/                   trimmed kernel, byte-identical copies of ../src files
@@ -78,14 +79,20 @@ julia cbase2/scripts/diff_kernel.jl
 
 `SAME` means the copy matches `../src/` byte-for-byte; `DIFF` is
 legitimate once Stage 1 edits land in the kernel, but every `DIFF` must
-be either backported to the parent or recorded in the notebook that
-introduced it. Run this check before any batch run.
+be either backported to the parent or recorded in `process_comments.md`
+under the notebook that introduced it. Run this check before any batch
+run.
 
 # Execution environment
 
 - Julia 1.9 or newer. Notebooks are authored in the statistics container
-  (`julia` at `/usr/local/bin/julia`); light cells (data wrangling,
-  accounting, small solves) may be smoke-tested there.
+  (`julia` at `/usr/local/bin/julia`, version 1.12.7). Container smoke
+  tests (data wrangling, accounting, small solves) run with **plain
+  `julia`**: the shared depot `/opt/julia-depot` carries the packages in
+  its default environment `v1.12`. The container's Jupyter kernel is
+  registered as `julia-1.12`.
+- Notebooks activate the parent BeyondHulten project only when the
+  active environment lacks CSV.
 - Heavy runs (full 5 x 3 matrix, Sobol batches) execute on the Mac via
   the headless `scripts/run_*.jl`, `julia --project=.` from the parent
   root for kernel dependency resolution, or with a local `Project.toml`
@@ -101,33 +108,36 @@ introduced it. Run this check before any batch run.
   `results_intermediate/` -> `results_final/`. No stage ever writes
   upstream.
 - Pre-registration gate: `05_preregistration.ipynb` pins
-  $\eta^{*} = 0.5$ (pre-registered before any Stage 2 inspection) and the
+  $\eta^{*} = 0.5$ (fixed before any Stage 2 inspection) and the
   expected-signature table of the assessment document into
   `results_intermediate/preregistration.json`, stamped with the git SHA
   and timestamp. `07` refuses to run without that record.
-- The unfinanced autonomous demand shock of the original pipeline is
-  retired here (Foundation II): every matrix cell is financed via F1
-  (preference reallocation), F2 (tax-financed $g_i$ with
-  $\sum_i p_i g_i = T$), or F3 (external debt, $\sum_i p_i g_i = F$).
+- Every experiment is financed through one of the three financing
+  closures (Foundation II): F1 preference reallocation, F2 tax-financed
+  $g_i$ with $\sum_i p_i g_i = T$, or F3 external debt with
+  $\sum_i p_i g_i = F$. Unfinanced autonomous demand is not an
+  admissible experiment in this pipeline.
 - DELTA is computed as the GAMMA + Leontief corner, never as an
   independent equilibrium row.
 - Seeds and pinned package versions are recorded in the header cell of
   each notebook that draws randomness (Sobol) or relies on solver
   tolerance (validation).
+- Assertions are part of the pipeline: every notebook ends with a
+  validation gate, and tolerances (machine-precision residuals per
+  ROADMAP Phase 4) are stated in the notebook that imposes them.
 - Generated artifacts are gitignored except the small CSVs under
-  `results_final/` needed for the paper.
+  `results_final/` needed for the paper. Before committing `.ipynb`
+  files, strip outputs (`nbstripout`).
 
-# Status
+# Pipeline status
 
-- Scaffold created (2026-09-15): directory tree, `data_raw/` copies
-  (SHA-256 recorded below), `src/core/` kernel copies verified `SAME` by
-  `diff_kernel.jl`, drift script tested.
-- Not yet present: notebooks 01--08, `financing.jl`, `closures.jl`,
-  `validation.jl`, batch runners.
-- Next step: build `01_data_wrangling.ipynb` and
-  `02_accounting_consistency.ipynb` from
-  `Notebooks/AccountingConsistency.ipynb` (its steps 0--7 map directly),
-  then the financing core per workplan Stage 1 item 1.
+| Stage | State |
+|---|---|
+| Notebooks 01--02 (data wrangling, accounting consistency) | complete; validated end-to-end; `AC_*` artifacts reproduce the parent pipeline's outputs exactly |
+| Notebooks 03--08 | pending |
+| `src/financing.jl`, `src/closures.jl`, `src/validation.jl` | pending (Stage 1) |
+| `scripts/run_{reference,matrix,sobol}.jl` | pending (Stage 2) |
+| Next | financing core (`03` + `src/financing.jl`), workplan Stage 1 item 1 |
 
 # Raw-input provenance (SHA-256)
 

@@ -109,7 +109,10 @@ function leontief_multiplier(data::Data, g::Vector{Float64}; mode::Symbol = :F3)
 	M = Ω_raw' * Diagonal(1.0 .- factor_share)
 	τ0 = sum(gov_demand)
 	exo = (1.0 .- import_margin) .* (gov_demand + data.exo_demand) .+ data.exports_demand
-	s̃ = mode === :F3 ? (1.0 - τ0) : 1.0     # marginal after-tax share of employment income
+	# F1/F3: FIXED NOMINAL baseline tax T = sum gG -> E = wL - sum gG, i.e. the
+	# marginal after-tax share of employment income is 1 (the saving and import
+	# leaks close the system). F2: balanced-budget rule E = L - sum gG - sum g.
+	s̃ = 1.0
 	gain = M + Diagonal(1.0 .- import_margin) * consumption_share * factor_share' * (1.0 - data.saving_rate) * s̃
 	colsums = vec(sum(gain; dims=1))
 	all(<(1), colsums) || error("finiteness gate failed: gain column sums must be < 1 (max = $(maximum(colsums)))")
@@ -117,11 +120,13 @@ function leontief_multiplier(data::Data, g::Vector{Float64}; mode::Symbol = :F3)
 	const_term = exo .+ (1.0 .- import_margin) .* g
 	if mode === :F2
 		const_term = const_term .- (1.0 .- import_margin) .* consumption_share .* (1.0 - data.saving_rate) .* (sum(gov_demand) + sum(g))
+	else
+		const_term = const_term .- (1.0 .- import_margin) .* consumption_share .* (1.0 - data.saving_rate) .* sum(gov_demand)
 	end
 	y = (I - gain) \ const_term   # equilibrium: y = G y + b  ⟺  (I − G) y = b
 	L = dot(factor_share, y)
 	# domestic household demand (for cross-check only; not used by the model)
-	E = mode === :F3 ? s̃ * L : (L - sum(gov_demand) - sum(g))
+	E = mode === :F3 ? (L - sum(gov_demand)) : (L - sum(gov_demand) - sum(g))
 	c_dom = (1.0 .- import_margin) .* consumption_share .* (1.0 - data.saving_rate) .* E
 	F = sum(import_margin .* g) + sum(import_margin .* (gov_demand + data.exo_demand)) +
 		sum(import_margin .* consumption_share) * (1.0 - data.saving_rate) * E

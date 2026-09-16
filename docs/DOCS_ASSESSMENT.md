@@ -7,6 +7,7 @@ tags: [assessment, docs-audit, revision, beyondhulten, metroeconomica]
 last-updated: September 2026
 ---
 
+**Version 4** \textcolor{revisionV3}{(September 2026)}
 **Version 3** \textcolor{revisionV2}{(September 2026)}
 **Version 2** \textcolor{revisionV1}{(September 2026)}
 **Version 1** (September 2026)
@@ -21,6 +22,12 @@ Governing documents: \texttt{ROADMAP.md} and
 \texttt{roadmaps/vertdict.md}; active references:
 \texttt{definitive\_guide.md}, \texttt{labor\_closures.md}, and
 \texttt{docs/reviews/}.}
+
+\textcolor{revisionV3}{Version 4 reports the intermediate implementation
+results of the notebook pipeline \texttt{cbase2/} (v3 open-economy
+recalibration): the Stage 0 chapter is promoted to its own section with an
+updated status matrix, the remaining stages form the new Workplan section,
+and Stage 1 carries its updated state.}
 
 The document now opens with the two foundation sections whose decisions
 gate everything else -- the labour-market closure (Foundation I) and the
@@ -409,9 +416,7 @@ reallocation-friction dimension anchored at the fixed-supply end; GAMMA
 approaches the IO endpoint from the wage-rigidity direction (GAMMA plus
 Leontief technology). Drafted after the user's sketch.](pictures/paradigmatic_directions.png)
 
-# Workplan \textcolor{revisionV2}{\normalsize [reworked v3]}
-
-## Stage 0: Conceptual decisions \textcolor{revisionV2}{\normalsize [reworked v3]}
+# Stage 0: Conceptual decisions \textcolor{revisionV2}{\normalsize [reworked v3]} \textcolor{revisionV3}{\normalsize [section 4 since v4]}
 
 \textcolor{revisionV2}{Resolved in this round: the labour-closure
 selection (Foundation I: BF, ALPHA, BETA, GAMMA, DELTA), the financing
@@ -463,6 +468,54 @@ open-economy depth beyond the section 4.1 mapping (Armington extension
 optional), B\&F replication off the critical path (confirmed by all
 surviving plans).}
 
+## Intermediate results: the cbase2 pipeline (v3 open-economy recalibration) \textcolor{revisionV3}{\normalsize [added v4]}
+
+\textcolor{revisionV3}{The notebook pipeline \texttt{cbase2/} (see
+\texttt{cbase2/documentation.md} for the neutral description and
+\texttt{cbase2/process\_comments.md} for the dated observations) has
+implemented and verified the v3 open-economy recalibration. Three
+structural findings shaped it. First, the DELTA investigation showed that
+the fixed-wage rows are indeterminate without marginal leakages: with the
+import margin alone, the only solution is the degenerate corner E = 0,
+because the import leak has no offsetting injection. Second, the
+national-accounts identity S = I + X - M forces the saving rate: the
+household's non-consumption share is the accounting partner of the
+exogenous investment and export injections, so the v3 calibration derives
+it from the data (s = 0.398; government share tau0 = 0.214, export share
+0.422, investment share 0.162) instead of assuming it. Third, the
+equilibrium formulation was corrected throughout: ALL N clearing equations
+are enforced (the N-th market is not Walras-redundant once imports leak),
+the F1/F3 tax is the fixed nominal baseline budget T = sum gG (F3 reads
+exactly as "baseline tax unchanged, programme externally financed"), and
+F2 keeps the genuinely balanced-budget rule.}
+
+\textcolor{revisionV3}{Verified results (acceptance test
+\texttt{v2\_verify.jl}): the injection continuation runs in 5.4 s with no
+stalls; the price-explosion branch found by the direct solve is
+eliminated; the F1/F2/F3 mobile rows solve to residuals of at most
+3.7e-7 with EXACT budget identities (sum p c = (1-s)E); the F3 external
+balance is recorded (F = 0.00147 at the m = 1 programme); and the DELTA
+analytic equivalence is EXACT for both F2 and F3 (rel y error 0.0;
+L = 1.1656 and 1.1767 at the m = 1 programme). The updated status matrix,
+same layout as above:}
+
+| Labour closure | F1: preference reallocation | F2: tax-financed | F3: external debt |
+|---|---|---|---|
+| BF (friction, $\eta^{*}=0.5$) | ![](pictures/emoji/1f7e0.png){width=9pt} machinery verified with the composition-only stand-in; the explicit $\tilde\beta$ tilt experiment pending | ![](pictures/emoji/2705.png){width=9pt} implemented and verified (balanced-budget rule; resid 1.1e-7) | ![](pictures/emoji/2705.png){width=9pt} implemented and verified (external balance recorded) |
+| ALPHA (full employment) | ![](pictures/emoji/1f7e0.png){width=9pt} v3 re-run pending ($\eta = 1$) | ![](pictures/emoji/1f7e0.png){width=9pt} v3 re-run pending ($\eta = 1$) | ![](pictures/emoji/1f7e0.png){width=9pt} v3 re-run pending ($\eta = 1$) |
+| BETA (elastic supply) | ![](pictures/emoji/1f7e0.png){width=9pt} implemented ($\eta_s$, continuation solver; elasticity identification verified at the v2 stage); v3 verification pending | ![](pictures/emoji/1f534.png){width=9pt} verification pending | ![](pictures/emoji/1f534.png){width=9pt} verification pending |
+| GAMMA (sticky real wage) | ![](pictures/emoji/1f534.png){width=9pt} v3 run pending | ![](pictures/emoji/1f7e0.png){width=9pt} the DELTA corner (its Leontief limit) verified exact; the CES-elasticity GAMMA run pending | ![](pictures/emoji/1f534.png){width=9pt} v3 run pending |
+| DELTA (IO endpoint, corner) | ![](pictures/emoji/1f534.png){width=9pt} F1 cell pending | ![](pictures/emoji/2705.png){width=9pt} implemented and verified -- EXACT analytic equivalence (rel y error 0.0) | ![](pictures/emoji/2705.png){width=9pt} implemented and verified -- EXACT analytic equivalence (rel y error 0.0) |
+
+\textcolor{revisionV3}{Open items carried into Stage 1: the BETA
+verification (the eta-continuation runtime under v3), the ALPHA and GAMMA
+v3 re-runs at $\eta = 1$ and the CES elasticities, the explicit F1 tilt,
+and the interpretive pass on the v3 baseline units (the wage reads 0.54 in
+the new no-numeraire units while prices stay near 1 -- normalization or
+inconsistency, to be settled in notebook 04).}
+
+# Workplan \textcolor{revisionV3}{\normalsize [section 5 since v4; reworked v3]}
+
 ## Stage 1: Model completion \textcolor{revisionV2}{\normalsize [reworked v3]}
 
 \textcolor{revisionV2}{Ordered by the status matrix -- the financing
@@ -476,21 +529,41 @@ labour closures, then the guards:}
    the explicit preference-reallocation experiment with renormalized
    weights $\tilde\beta_i$ (F1); retire the unfinanced autonomous
    shock (![](pictures/emoji/1f525.png){width=9pt}).
+   \textcolor{revisionV3}{-- DONE in v3, superseded in scope: the v3
+   open-economy calibration implements the government block, investment,
+   exports, import margins, the saving rate and all three financings
+   (see section 4, intermediate results). The F1 experiment currently
+   runs with a composition-only stand-in; the explicit $\tilde\beta$
+   tilt is pending.}
 2. **BETA**: elastic total labour supply on the real wage,
    $L^s = \bar L\,[(w/P)/(w_0/P_0)]^{\eta_s}$, with the labour--leisure
    interpretation and the numerical elasticity test
    $\mathrm{d}\log L / \mathrm{d}\log(w/P) \approx \eta_s$.
+   \textcolor{revisionV3}{-- Implemented ($\eta_s$, eta-continuation
+   solver, single-point elasticity identification verified at the v2
+   stage: 0.5/1.0/2.0 recovered); the v3 verification run is pending
+   (eta-continuation runtime).}
 3. **DELTA corner**: fixed real factor price, unconstrained factor
    quantity, Leontief limit of the CES core; document the exact
    equivalence conditions (R2's own point, answered).
+   \textcolor{revisionV3}{-- DONE: implemented as :fixed + Leontief
+   limit; the analytic equivalence is EXACT for F2 and F3 (rel y error
+   0.0).}
 4. **Pre-register $\eta^{*}$** (proposal: 0.5) before any Stage 2 run.
 5. **Cobb-Douglas limit guard** (Milestone C): sign-safe real powers at
    $\varepsilon \to 1$.
+   \textcolor{revisionV3}{-- Implemented (analytic branch at
+   $\varepsilon = 1$); the continuous-epsilon assertion is pending its
+   v3 re-run.}
 6. **Full residual validation** (ROADMAP Phase 4): omitted-equation
    invariance (rotating the omitted market), household-expenditure
    exhaustion for every experiment type, homogeneity, multi-start
    convergence, Tornqvist consistency. Machine-precision residuals are
    the gate.
+   \textcolor{revisionV3}{-- Partially done: budget identities exact at
+   every solved equilibrium; ALL N clearing equations enforced in both
+   wage regimes; the omitted-equation rotation and multi-start battery
+   are pending.}
 
 ## Stage 2: Simulation and sensitivity \textcolor{revisionV2}{\normalsize [reworked v3]}
 
@@ -590,6 +663,12 @@ and the scope locks. Begin Stage 1 with the financing core ($g_i$, the
 $T$ rule, the external account, the explicit F1 experiment), then BETA,
 then the DELTA corner; pre-register $\eta^{*}$ before any Stage 2 run.}
 
+\textcolor{revisionV3}{Update (v4): the financing core and the DELTA
+corner are done; the remaining Stage 1 items are the BETA verification
+run, the ALPHA/GAMMA v3 re-runs ($\eta = 1$, CES elasticities), the
+explicit F1 tilt experiment, and the interpretive pass on the v3 baseline
+units in notebook 04 -- then pre-register $\eta^{*}$ and open Stage 2.}
+
 \textcolor{revisionV2}{The chronological document map, the
 per-document evaluation of documents 1--10, and the synthesis have been
 moved to \texttt{docs/archive/document\_review\_leftovers.md} at
@@ -665,3 +744,24 @@ evaluation matrix, and the workplan only.}
   reviewer-response maps (R1.1--R1.9, R2.1--R2.14) and the
   two-wedge manuscript structure; chronological review sections moved
   to \texttt{docs/archive/document\_review\_leftovers.md}.
+- **Version 4** \textcolor{revisionV3}{(September 2026)} --- Intermediate
+  implementation results of the \texttt{cbase2/} pipeline reported: the
+  Stage 0 chapter promoted to its own section (section 4) with an updated
+  status matrix; the remaining stages form the Workplan section
+  (section 5). New subsection "Intermediate results" records the three
+  structural findings of the v3 open-economy recalibration (the
+  fixed-wage indeterminacy without leakages and the degenerate E = 0
+  corner; the national-accounts identity S = I + X - M forcing the
+  saving rate s = 0.398, calibrated from the data together with tau0 =
+  0.214, export share 0.422, investment share 0.162; the corrected
+  equilibrium formulation with ALL N clearing equations, the fixed
+  nominal F1/F3 tax and the balanced-budget F2 rule) and the verified
+  results (injection continuation 5.4 s without stalls, price-explosion
+  branch eliminated, F1/F2/F3 mobile rows at resid <= 3.7e-7 with exact
+  budget identities, F3 external balance recorded, DELTA analytic
+  equivalence EXACT for F2 and F3). Stage 1 items annotated with their
+  state (financing core and DELTA corner done; BETA implemented with the
+  verification run pending; CD guard implemented; residual validation
+  partially done); immediate next step updated (BETA verification,
+  ALPHA/GAMMA v3 re-runs, explicit F1 tilt, notebook 04 interpretive
+  pass, then pre-registration).

@@ -230,7 +230,13 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     (; data, options, shocks) = model
     N = length(data.factor_share)
 
-    # Unpack unknowns
+    # FULL FORMULATION (2N+1 unknowns: p1..pN, y1..yN, w). Under the v3 open
+    # economy the N-th market is NOT Walras-redundant, so ALL N clearing
+    # equations are enforced; and with w a free unknown the system is
+    #     N zero-profit + N clearing + labour = 2N+1  (exactly determined)
+    # -- NO numeraire and NO price pin is needed (the fixed-nominal tax
+    # T = sum gG breaks the (p, w) scale homogeneity). The CPI is reported
+    # post-solve, not imposed.
     p = _positive_floor(X[1:N])
     y = _positive_floor(X[N+1:2N])
     w = max(X[2N+1], 1e-10)  # scalar wage, keep positive
@@ -294,27 +300,17 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # ── Cost function (effective TFP includes the reallocation wedge) ──
     cost = _ces_unit_cost(supply_shock .* alloc_wedge, factor_share, w, intermediate_price, ϵ)
 
-    # ── Equation 1: Zero-profit for ALL N sectors (including sector 1) ──
-    # Under CRTS the price level is pinned by the numeraire (Eq. 4), so all N
-    # zero-profit conditions are independent and must be enforced. The previous
-    # code omitted sector 1's condition, leaving a material non-equilibrium
-    # (residual ≈ 10.9 in the 71-sector diagnostic).
+    # ── Equation 1: Zero-profit for ALL N sectors ──
     out[1:N] .= p .- cost
 
-    # ── Equation 2: Market clearing for sectors 1..N-1 (N-1 equations) ──
-    # The LAST sector's market-clearing equation is the redundant one under
-    # Walras' law and is dropped; it clears automatically given the other N-1
-    # markets, all N zero-profit conditions, the labor market (Eq. 3) and the
-    # numeraire (Eq. 4). We drop the LAST (not the first) sector so that a shock
-    # to sector 1 (construction) remains enforced.
-    out[N+1:2N-1] .= y[1:N-1] .- intermediary_demand[1:N-1] .- total_final_demand[1:N-1]
+    # ── Equation 2: Market clearing for ALL N sectors ──
+    # With the v3 import margins the N-th market is NOT Walras-redundant:
+    # dropping it (the pre-v3 form) forced the entire import leak onto sector N
+    # and opened the price-explosion branch found in the continuation diagnostic.
+    out[N+1:2N] .= y .- intermediary_demand .- total_final_demand
 
-    # This is exclusively the flexible-wage system (ALPHA / BETA); fixed wages
-    # are routed to `problem_fixed` by `solve`.
-    out[2N] = labor_market_residual(labor_closure(options), model, sum(L_i), w)
-
-    # ── Equation 4: Numeraire constraint — CPI = 1 ──
-    out[2N+1] = cpi - 1.0
+    # ── Equation 3: Labour market (flexible-wage system: ALPHA / BETA) ──
+    out[2N+1] = labor_market_residual(labor_closure(options), model, sum(L_i), w)
 
     nothing
 end
@@ -339,9 +335,10 @@ function equilibrium_residuals(model::Model{MobileLaborCES}, X::AbstractVector)
         out = zeros(Float64, 2N - 1)
         problem_fixed(out, xr, model)
     else
-        expected = 2N + 1
-        length(X) == expected || throw(DimensionMismatch("closure expects a $expected element vector"))
-        out = zeros(Float64, expected)
+        # Mobile: canonical FULL vector (2N+1: p1..pN, y1..yN, w).
+        length(X) == 2N + 1 || throw(DimensionMismatch(
+            "mobile closure expects a $(2N+1)-element vector"))
+        out = zeros(Float64, 2N + 1)
         problem(out, collect(X), model)
     end
     out
@@ -496,7 +493,7 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
     end
 
     p = vcat(1.0, x[1:N-1])
-    q = x[N:2N-1]
+    q = max.(x[N:2N-1], 0.0)
     w = 1.0  # sticky wage
 
     (; θ, ϵ, σ, η) = options.elasticities
@@ -520,13 +517,11 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
     # Real GDP: consumption Tornqvist (B&F metric). v3 base = the calibrated
     # baseline household block c0_gross (data.household_baseline) -- the exact
     # v3 baseline demand, so the index is 1 at the baseline by construction.
+    # Intermediate homotopy/beta rungs may have E < 0 (negative consumption);
+    # report NaN there -- those points are rejected by the callers anyway.
     base_consumption = data.household_baseline
-    real_gdp_index = tornqvist_quantity_index(
-        p,
-        consumption,
-        ones(N),
-        base_consumption,
-    )
+    real_gdp_index = all(>=(0), consumption) ?
+        tornqvist_quantity_index(p, consumption, ones(N), base_consumption) : NaN
     nominal_gdp = w * sum(L_i)
 
     return Solution(p, q, wages, consumption, numeraire, real_gdp_index, nominal_gdp, model)
@@ -555,9 +550,9 @@ function solve(model::Model{MobileLaborCES};
         return _solve_fixed(model; init=init)
     end
 
-    # ── Standard :mobile path (2N+1 with wage as unknown) ──
+    # ── Standard :mobile path (FULL 2N+1 system: p1..pN, y1..yN, w) ──
     if init === nothing
-        # Default initialization: p=1, y=λ, w=1
+        # Default initialization: p=1, y=λ, wage=1
         init = [ones(N); data.λ; 1.0]
     end
 
@@ -588,8 +583,10 @@ function solve(model::Model{MobileLaborCES};
         x
     end
 
+    # Full unknowns -> Solution fields (clamp solver dust below zero; the
+    # Tornqvist index requires nonnegative quantities)
     p = x[1:N]
-    q = x[N+1:2N]
+    q = max.(x[N+1:2N], 0.0)
     w = x[2N+1]
 
     (; θ, ϵ, σ, η) = options.elasticities
@@ -620,12 +617,8 @@ function solve(model::Model{MobileLaborCES};
     # v3 base = the calibrated baseline household block (data.household_baseline),
     # so the index is 1 at the v3 baseline by construction.
     base_consumption = data.household_baseline
-    real_gdp_index = tornqvist_quantity_index(
-        p,
-        consumption,
-        ones(N),
-        base_consumption,
-    )
+    real_gdp_index = all(>=(0), consumption) ?
+        tornqvist_quantity_index(p, consumption, ones(N), base_consumption) : NaN
     nominal_gdp = w * sum(L_i)
 
     return Solution(p, q, wages, consumption, numeraire, real_gdp_index, nominal_gdp, model)

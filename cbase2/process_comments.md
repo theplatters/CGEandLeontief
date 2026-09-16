@@ -233,6 +233,39 @@ silently rewritten -- later entries state what they replace.
   with the new demand block needs re-examination. Do NOT trust any v3
   aggregate until (1)-(4) are resolved; the F1/F2 budget identities and
   the calibration are the only fully-trusted v3 numbers so far.
+- **2026-09-16 (evening). Mobile reduced-formulation round: ALL SECTIONS
+  THROUGH DELTA NOW PASS.** The unified fix: (a) tau_rate for F1/F3
+  reverted to the FIXED NOMINAL tax T = sum gG (the "constant rate" idea
+  was wrong -- it made the system unsolvable by every algorithm at a
+  5.6e-4 residual floor; the assessment's F3 is exactly "baseline tax
+  unchanged, programme externally financed", and the saving + import
+  leaks close the system without a marginal tax); (b) the analytic F3
+  aligned to the same rule (E = L - sum gG) -- DELTA equivalence now
+  EXACT for BOTH F2 and F3 (L num/ana = 1.165584/1.165584 and
+  1.176709/1.176709, rel y error 0.0); (c) the mobile `problem` keeps the
+  FULL 2N+1 formulation (p1..pN, y, w) with ALL N zero-profit + ALL N
+  clearing + labour -- no numeraire, no pin (the earlier p1-pin silently
+  broke sector 1's zero-profit, letting the wage drift to 0.54); (d)
+  injection continuation (exo_scale, bisection start at s = 0) runs in
+  5.4 s (was 517 s) with max|p-1| = 0.46 at the endpoint -- the price
+  explosion is GONE; (e) F1/F2/F3 mobile rows: resid <= 3.7e-7, budget
+  identities exact, F3 external balance F = 0.001472 recorded; (f)
+  solver hardening: quality gate on the ACTUAL residual + bounded
+  Levenberg-Marquardt polish; q clamped >= 0 post-solve (Tornqvist needs
+  nonneg; beta rungs have solver dust); real_gdp returns NaN when
+  consumption < 0 (beta rungs with E < 0) instead of throwing.
+  REMAINING OPEN (single item): the BETA verification (solve_beta
+  eta-continuation under v3) runs > 25 min without completing -- each
+  rung now potentially triggers the LM polish (2000 iters, 142-dim FD
+  Jacobian) -- needs either a longer timeout run, rung-specific solver
+  tuning, or the exo-continuation applied to the beta ladder. Everything
+  else in v2_verify passes. The v3 aggregate numbers (w* = 0.54,
+  real_gdp = 0.77 at baseline) still need the economic interpretation
+  pass -- in p1-units the wage is 0.54 while prices stay near 1; whether
+  this is the correct new-normalization reading or a remaining
+  inconsistency is the first interpretive question for notebook 04.
+
+
 - **2026-09-16 (cont.). Continuation diagnostic: the price explosion is a
   CONTINUOUS model pathology, not a solver artifact.** Injection
   continuation (exo_scale 0.47 -> 1, s recalibrated endogenously per step,

@@ -92,10 +92,14 @@ struct Data <: AbstractData
 	imports_intermediate::Vector{Float64}
 	import_share::Vector{Float64}
 	domestic_final_demand::Vector{Float64}
+	# ── v2 open-absorption calibration (cbase2, Notebook 03b) ──
+	gov_demand::Vector{Float64}        # exogenous government consumption (real, model units)
+	household_baseline::Vector{Float64} # baseline household block: residual λ − Mλ − gG (exact clearing)
+	import_margin::Vector{Float64}     # sector import share of MARGINAL final demand (0 = v1 closed absorption)
 	gdp_production::Float64
 	gdp_income::Float64
 	gdp_expenditure::Float64
-end
+	end
 
 """
 	conditional_input_shares(intermediate_use)
@@ -138,7 +142,7 @@ function Data(io::DataFrame, Ω::AbstractMatrix, consumption_share::AbstractVect
 	va = Float64.(value_added)
 	Data(io, Ωf, Ωf, Float64.(consumption_share), Float64.(factor_share), Float64.(λ),
 		Float64.(labor_share), Float64.(consumption_share_gross_output), gv, va, gv, DataFrame(),
-		zeros(n), zeros(n), zeros(n), sum(va), sum(va), sum(va))
+		zeros(n), zeros(n), zeros(n), zeros(n), zeros(n), zeros(n), sum(va), sum(va), sum(va))
 end
 
 """
@@ -384,8 +388,8 @@ function read_data(filename::String)::Data
 	d = generate_data(io)
 	# Assemble the Data object from the §4.1 accounting-consistent transformation.
 	return Data(io, d.Ω, d.Ω_raw, d.consumption_share, d.factor_share, d.λ,
-				d.labor_share, d.consumption_share_gross_output, d.grossy, d.value_added,
-				d.gross_output_basic, d.value_added_components, d.imports_intermediate,
-				d.import_share, d.domestic_final_demand, d.gdp_production, d.gdp_income,
-				d.gdp_expenditure)
+			d.labor_share, d.consumption_share_gross_output, d.grossy, d.value_added,
+			d.gross_output_basic, d.value_added_components, d.imports_intermediate,
+			d.import_share, d.domestic_final_demand, zeros(71), zeros(71), zeros(71),
+			d.gdp_production, d.gdp_income, d.gdp_expenditure)
 end

@@ -134,6 +134,84 @@ silently rewritten -- later entries state what they replace.
   of util/variance_decomposition) added to the depot environment via the
   documented runtime `Pkg.add` route.
 
+# Notebook 03b -- Open-absorption recalibration (v2, implemented 2026-09-16)
+
+- **2026-09-16. v2 implemented and mobile rows verified.** Design per user
+  decision (options 2+3, no saving rate, Omega_raw kept): government block
+  gG (domestic government consumption), proportional balanced-budget tax
+  (F2: tau = (sum gG + sum p g)/(w L), so F2 is a genuine balanced-budget
+  multiplier), import margins m_i on household + programme demand (only the
+  domestic content circulates; the import content leaks to the external
+  account -- R2.4 now answered AT the margin AND at baseline). Household
+  block stays the proportional CES (omega = clamped residual shares,
+  sum omega = 1 keeps the numeraire consistent). IMPORTANT design lesson: a
+  fixed-REAL baseline block breaks Walras add-up at p != 1 (first
+  implementation attempt, rejected); the uniform-margin structure is the
+  consistent one. Budget identity sum p*c_gross = E now holds EXACTLY
+  (= 0.0) at every solved equilibrium. Mobile rows: F1 rel real_gdp ~ 0
+  (composition-neutral, eta-invariance diagnostic), F2 -1.70%, F3 +0.057%
+  with external deficit F = 0.00283 (import content). tau0 = 0.2068;
+  household residual clamped to 0 in 10 government-heavy sectors (mass
+  0.0208; parent convention).
+
+- **2026-09-16. MAJOR bug found in the analytic Leontief multiplier (all
+  versions).** `leontief_multiplier` solved G y = b instead of
+  (I - G) y = b. The v1 "10^14 divergence" was this bug compounded with the
+  unit root, not purely the unit root. Exposed by sector 59: an isolated
+  node with (M y)_59 = 0 and zero final demand -- the wrong solve assigned
+  it y = 6.66. Fixed; residual at the analytic point dropped 6.5 -> 6e-4.
+  Finiteness gate (column sums of G < 1) verified: rho(G) = 0.888 (F2),
+  0.820 (F3); Keynesian multipliers ~9 / ~5.5; cond(I-G) ~ 15. The v2
+  fixed-wage rows are FINITE and well-conditioned -- the unit root is gone.
+
+- **2026-09-16. `:fixed` solver closure fix.** With the import margin, the
+  N-th market is no longer Walras-redundant, so `problem_fixed` now retains
+  ALL N clearing equations and pins the price scale with p[1] = 1 (the CPI
+  numeraire is dropped as an equation; checked post-solve). Employment along
+  GAMMA/DELTA is determinate. Remaining open (next session): the corrected
+  analytic still differs from the numeric solve (F2: 0.209 vs 0.748; F3:
+  0.537 vs 0.762) with a 6e-4 residual at the analytic point. Prime
+  suspect: the F2 analytic solution has NEGATIVE income (E = -0.01) -- an
+  economically invalid branch the numeric's positivity floors never visit;
+  the equivalence test may need to be F3-only, or the analytic needs the
+  positivity-respecting branch. Also open: CD-guard Diagonal NaN (0/0 for
+  factor_share ~ 1 sectors at some solver iterates) -- robustness edge.
+
+
+
+- **2026-09-15. Design decisions (user-approved: options 2+3, skip 1, Ω_raw kept).**
+  Purpose: give the fixed-wage rows a marginal leakage so GAMMA/DELTA are
+  determinate, answer R2.4 *at the margin*, and make F2 a genuine
+  balanced-budget multiplier. Specification:
+  - **Technology unchanged**: Ω_raw stays the production structure (BF/Domar
+    comparability). The economy opens only in *absorption*.
+  - **Government baseline**: $gG_i$ = domestic government consumption
+    (AC artifact), exogenous fixed real vector, always financed by a
+    proportional income tax; baseline rate $\tau_0 = \sum_i gG_i / E_0$.
+  - **Exogenous baseline demand**: $X_i$ = domestic equipment investment +
+    construction investment + inventories + exports (all exogenous by
+    construction, non-income-responsive).
+  - **Household**: residual private consumption $c^0 = \lambda - M\lambda -
+    gG - X$ (exact baseline clearing, parent's residual convention retained),
+    $cs = c^0/E_0$; proportional tax $E = (1-\tau)\,w\sum L$.
+  - **Import margins (marginal only)**: household and programme demand carry
+    sector import shares $m_i$ (from the §4.1 proportional import split --
+    the final-demand domestic fractions by category, sector-composition
+    weighted). Marginal domestic content: $dc_i = (1-m_i)\,cs_i\,dE$; the
+    programme bundle enters as $(1-m_i)\,g_i$ domestically. The import
+    content is recorded on the external account. Baseline levels are the
+    calibrated residual (margin applies to changes); documented semantics.
+  - **F2 rule**: the proportional tax finances ALL government purchases
+    (baseline + programme): $\tau = (\sum p_i gG_i + \sum p_i g_i)/(w\sum L)$.
+    F1/F3 keep $\tau_0$. F3's external deficit now records the import
+    content of programme + induced consumption, as the assessment promised.
+  - **Finiteness gate**: the baseline round-gain matrix
+    $M + diag(1-m)\,cs\cdot fs'$ must have all column sums strictly below 1
+    (spectral radius < 1) -- the acceptance test for the whole fix.
+  - **Consequences**: baseline real GDP is re-normalised (new reference
+    solve); notebook 03 smoke numbers must be regenerated under the v2
+    calibration before pre-registration; notebooks 01--02 unchanged.
+
 # Notebook 04 -- Labour Closures (BETA complete; DELTA blocked on a structural finding)
 
 - **2026-09-15. BETA implemented and verified.** Elastic total labour supply

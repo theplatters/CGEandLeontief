@@ -77,30 +77,50 @@ delta_model(data::Data, shocks::Shocks; ε::Real = 1e-4,
 		delta_elasticities(ε).σ, delta_elasticities(ε).η; closure = :fixed, financing = financing)
 
 """
-	leontief_multiplier(data, g; tax = 0.0)
+	leontief_multiplier(data, g; mode = :F3) -> (y, L, c_dom, F)
 
-Analytic DELTA solution: the exact linear Leontief system of the model at
-(θ, ϵ, σ) = 0 under demand-only shocks (A = 1 ⇒ p = 1, CPI = 1). With
-M = Ω_raw' · diag(1 − factor_share) (intermediate demand), household
-consumption c = cs · (ΣL − tax), employment L = Σ fs_i y_i:
+Analytic DELTA solution under the v2 open-absorption calibration: the exact
+linear system of the model at (θ, ϵ, σ) = 0 under demand-only shocks
+(A = 1 ⇒ p = 1, CPI = 1). With M = Ω_raw'·diag(1−fs), marginal consumption
+gains (1−m)·ω per unit of (after-tax) wage income, employment L = fs'y, and
+the reference income E_h0 = 1 − ΣgG:
 
-    y = M·y + cs·(fs'·y − tax) + g   ⇒   y = (I − M − cs·fs')⁻¹ · (g − cs·tax)
+  F3: y = M·y + (1−m)·ω·(1−τ0)·L + gG + (1−m)·g
+  F2: y = M·y + (1−m)·ω·(L − ΣgG − Σg) + gG + (1−m)·g
 
-Returns (y, L, c, F) — quantities, employment, consumption, external balance.
-The notebook 04 equivalence test asserts that the nonlinear DELTA solve
-reproduces this system to O(ε).
+The gain matrix has column sums strictly below 1 (import margins + the
+proportional tax) — the v1 unit root is gone and the multiplier is finite.
+`mode` selects the financing; the notebook 04 equivalence test asserts that
+the nonlinear DELTA solve reproduces this system to O(ε).
 """
-function leontief_multiplier(data::Data, g::Vector{Float64}; tax::Real = 0.0)
-	(; Ω_raw, factor_share, consumption_share) = data
+function leontief_multiplier(data::Data, g::Vector{Float64}; mode::Symbol = :F3)
+	(; Ω_raw, factor_share, consumption_share, import_margin, gov_demand) = data
 	n = length(factor_share)
 	length(g) == n || throw(DimensionMismatch("g must have length $n"))
+	mode in (:F2, :F3) || throw(ArgumentError("mode must be :F2 or :F3"))
+
+	# Uniform-margin structure (matches the model): household demand is the CES
+	# block `consumption_share` (Σ = 1, CPI-normalised) scaled by income E, with
+	# only the domestic content (1 - m_i) circulating; the import content leaks.
+	#   E = (1 - τ0) · L            under F3 (programme untaxed; τ0 = ΣgG)
+	#   E = L - ΣgG - Σg            under F2 (balanced-budget rule)
 	M = Ω_raw' * Diagonal(1.0 .- factor_share)
-	A = I - M - consumption_share * factor_share'
-	y = A \ (g .- tax .* consumption_share)
+	τ0 = sum(gov_demand)
+	s = mode === :F3 ? (1.0 - τ0) : 1.0
+	gain = M + Diagonal(1.0 .- import_margin) * consumption_share * factor_share' * s
+	colsums = vec(sum(gain; dims=1))
+	all(<(1), colsums) || error("finiteness gate failed: gain column sums must be < 1 (max = $(maximum(colsums)))")
+
+	const_term = gov_demand .+ (1.0 .- import_margin) .* g
+	if mode === :F2
+		const_term = const_term .- (1.0 .- import_margin) .* consumption_share .* (sum(gov_demand) + sum(g))
+	end
+	y = (I - gain) \ const_term   # equilibrium: y = G y + b  ⟺  (I − G) y = b
 	L = dot(factor_share, y)
-	c = consumption_share .* (L - tax)
-	F = sum(g)          # p = 1: nominal = real
-	(; y = y, L = L, c = c, F = F)
+	# domestic household demand (for cross-check only; not used by the model)
+	c_dom = (1.0 .- import_margin) .* consumption_share .* (mode === :F3 ? s * L : (L - sum(gov_demand) - sum(g)))
+	F = sum(import_margin .* g) + (mode === :F3 ? sum(import_margin .* consumption_share) * s * (L - 1.0) : 0.0)
+	(; y = y, L = L, c_dom = c_dom, F = F)
 end
 
 """

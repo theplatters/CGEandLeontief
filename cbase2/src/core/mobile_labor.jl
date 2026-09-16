@@ -259,15 +259,22 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # retired; additive demand enters only through `additive_demand(fin, N)`.
     fin = model.financing
     ds_eff = preference_weights(fin, demand_shock)
-    total_income = w * sum(L_i)
+    L_sum = sum(L_i)
+    total_income = w * L_sum
     # NOTE: no positivity guard here — the residual function must tolerate the
     # solver's exploration of negative-income trial points (the legacy code
     # did). The E > 0 check belongs to the post-solve validation in the
     # notebooks (headline assertions verify E = w*L - T > 0 at equilibrium).
-    E = household_expenditure(fin, total_income, p)
+    E = household_expenditure(fin, model, total_income, p, L_sum)
     agg = sum(consumption_share .* ds_eff .* p .^ (1 - σ))
-    final_demand = (consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg
-    total_final_demand = final_demand .+ additive_demand(fin, N)
+    final_demand = (consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg  # gross household demand
+    # v2 open absorption: only the DOMESTIC content circulates; the import content
+    # of household + programme demand leaks to the external account (R2.4 at the
+    # margin AND at baseline). Government demand is exogenous (real, model units).
+    c_dom = (1 .- data.import_margin) .* final_demand
+    total_final_demand = c_dom .+
+                         (1 .- data.import_margin) .* additive_demand(fin, N) .+
+                         data.gov_demand
 
     # ── Intermediary demand ──
     intermediary_demand = p .^ (-θ) .* (Ω_raw' * (p .^ ϵ .* supply_shock .^ (ϵ - 1) .* intermediate_price .^ (θ - ϵ) .* (1 .- factor_share) .* y))
@@ -373,15 +380,22 @@ function problem_fixed(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # Final demand (budget-consistent, financed — same hook as `problem`).
     fin = model.financing
     ds_eff = preference_weights(fin, demand_shock)
-    total_income = w * sum(L_i)
+    L_sum = sum(L_i)
+    total_income = w * L_sum
     # NOTE: no positivity guard here — the residual function must tolerate the
     # solver's exploration of negative-income trial points (the legacy code
     # did). The E > 0 check belongs to the post-solve validation in the
     # notebooks (headline assertions verify E = w*L - T > 0 at equilibrium).
-    E = household_expenditure(fin, total_income, p)
+    E = household_expenditure(fin, model, total_income, p, L_sum)
     agg = sum(consumption_share .* ds_eff .* p .^ (1 - σ))
-    final_demand = (consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg
-    total_final_demand = final_demand .+ additive_demand(fin, N)
+    final_demand = (consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg  # gross household demand
+    # v2 open absorption: only the DOMESTIC content circulates; the import content
+    # of household + programme demand leaks to the external account (R2.4 at the
+    # margin AND at baseline). Government demand is exogenous (real, model units).
+    c_dom = (1 .- data.import_margin) .* final_demand
+    total_final_demand = c_dom .+
+                         (1 .- data.import_margin) .* additive_demand(fin, N) .+
+                         data.gov_demand
 
     # Intermediary demand
     intermediary_demand = p .^ (-θ) .* (Ω_raw' * (p .^ ϵ .* supply_shock .^ (ϵ - 1) .* intermediate_price .^ (θ - ϵ) .* (1 .- factor_share) .* y))
@@ -394,11 +408,16 @@ function problem_fixed(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # 1. Zero-profit (all N sectors)
     out[1:N] .= p .- cost
 
-    # 2. Market clearing (N-1 equations, drop last)
-    out[N+1:2N-1] .= y[1:N-1] .- intermediary_demand[1:N-1] .- total_final_demand[1:N-1]
+    # 2. Market clearing (ALL N sectors). The last sector is NOT dropped: with the
+    # v2 import margin, Walras' law no longer makes the N-th market redundant, so
+    # dropping it would leave a 1-dof manifold (init-dependent employment). Keeping
+    # all N markets fully closes the fixed-wage system and matches leontief_multiplier.
+    out[N+1:2N] .= y .- intermediary_demand .- total_final_demand
 
-    # 3. Numeraire: CPI = 1 (2N-th equation)
-    out[2N] = cpi - 1.0
+    # 3. Price-scale pin (replaces the CPI numeraire): p[1] = 1. Under the v2
+    # calibration the analytic Leontief solution has p ≡ 1, so this is the same
+    # scale choice without leaving the zero-profit homogeneity direction free.
+    out[2N] = p[1] - 1.0
 
     nothing
 end
@@ -459,10 +478,11 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
     numeraire = (data.consumption_share' * p .^ (1 - σ))^(1 / (1 - σ))
     fin = model.financing
     ds_eff = preference_weights(fin, shocks.demand_shock)
-    total_income = w * sum(L_i)
-    E = household_expenditure(fin, total_income, p)
+    L_sum = sum(L_i)
+    total_income = w * L_sum
+    E = household_expenditure(fin, model, total_income, p, L_sum)
     agg = sum(data.consumption_share .* ds_eff .* p .^ (1 - σ))
-    consumption = (data.consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg
+    consumption = (data.consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg  # gross (domestic + import)
 
     # Real GDP: consumption Tornqvist (B&F metric)
     base_income = sum(data.labor_share)
@@ -539,10 +559,11 @@ function solve(model::Model{MobileLaborCES};
     numeraire = (data.consumption_share' * p .^ (1 - σ))^(1 / (1 - σ))
     fin = model.financing
     ds_eff = preference_weights(fin, shocks.demand_shock)
-    total_income = w * sum(L_i)
-    E = household_expenditure(fin, total_income, p)
+    L_sum = sum(L_i)
+    total_income = w * L_sum
+    E = household_expenditure(fin, model, total_income, p, L_sum)
     agg = sum(data.consumption_share .* ds_eff .* p .^ (1 - σ))
-    consumption = (data.consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg
+    consumption = (data.consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg  # gross (domestic + import)
 
     # Real GDP: Tornqvist (Divisia) quantity index of FINAL CONSUMPTION (value-added)
     # — not gross output. In B&F (2019), real GDP is a Divisia index of real final

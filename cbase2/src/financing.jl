@@ -106,21 +106,36 @@ preference_weights(f::PreferenceReallocation, demand_shock::Vector{Float64}) =
 	demand_shock .* f.shift
 
 """
-	household_expenditure(fin, wage_income, p)
+	tau_rate(fin, model, p, w, L_sum)
 
-Household expenditure base E: wage income minus the lump-sum tax
-T(p) = Σ p_i g_i under F2; unchanged otherwise (F1 composition shifts
-operate within E; F3 is externally financed).
+Proportional income-tax rate (v2 open-absorption calibration). All
+financings pay for baseline government purchases
+	au_0 = sum_i gG_i / (wsum L); F2 additionally finances the programme
+bundle, giving the balanced-budget rule
+	au = (sum p_i gG_i + sum p_i g_i)/(wsum L).
 """
-household_expenditure(::AbstractFinancing, wage_income::Real, p) = wage_income
-household_expenditure(f::TaxFinanced, wage_income::Real, p) =
-	wage_income - dot(f.g, p)
+tau_rate(::AbstractFinancing, model::Model{MobileLaborCES}, p, w::Real, L_sum::Real) =
+	sum(model.data.gov_demand) / (w * L_sum)
+tau_rate(::TaxFinanced, model::Model{MobileLaborCES}, p, w::Real, L_sum::Real) =
+	(sum(model.data.gov_demand) + dot(p, model.financing.g)) / (w * L_sum)
+
+"""
+	household_expenditure(fin, model, wage_income, p, L_sum)
+
+Household expenditure base: after-tax wage income
+E = (1 - tau) w sum L. The v2 import margin applies *within* spending
+(the domestic content of each consumption category), not to E itself.
+"""
+household_expenditure(fin::AbstractFinancing, model::Model{MobileLaborCES},
+		wage_income::Real, p, L_sum::Real) =
+	(1 - tau_rate(fin, model, p, wage_income / max(L_sum, eps(Float64)), L_sum)) * wage_income
 
 """
 	additive_demand(fin, N)
 
-Additive real public/investment demand entering market clearing: the bundle
-g under F2/F3, zeros otherwise (F1 shifts composition only).
+Gross programme bundle entering market clearing: g under F2/F3, zeros
+otherwise (F1 shifts composition only). The DOMESTIC content applied by the
+caller is `(1 .- data.import_margin) .* additive_demand(...)`.
 """
 additive_demand(::AbstractFinancing, N::Int) = zeros(N)
 additive_demand(f::Union{TaxFinanced, ExternalDebt}, N::Int) = f.g
@@ -128,20 +143,29 @@ additive_demand(f::Union{TaxFinanced, ExternalDebt}, N::Int) = f.g
 """
 	public_budget(fin, p)
 
-Domestic public budget T(p) = Σ p_i g_i: positive under F2 (levied as a
-lump-sum tax) and F3 (funded externally); zero for F1 and the baseline.
+Government purchases to be financed domestically: baseline gG plus, under
+F2, the programme bundle. Under F3 the programme is externally financed and
+enters the external balance instead.
 """
-public_budget(::AbstractFinancing, p) = 0.0
-public_budget(f::Union{TaxFinanced, ExternalDebt}, p) = dot(f.g, p)
+public_budget(::AbstractFinancing, model::Model{MobileLaborCES}, p) =
+	sum(model.data.gov_demand)
+public_budget(f::TaxFinanced, model::Model{MobileLaborCES}, p) =
+	sum(model.data.gov_demand) + dot(f.g, p)
 
 """
-	external_balance(fin, p)
+	external_balance(fin, model, p)
 
-External balance F = Σ p_i g_i: positive only under F3 (externally financed
-resources entering via net imports); zero otherwise.
+External balance: import content of the programme plus the import leakage of
+the induced consumption response -- recorded post-solve under F3; zero
+otherwise (F2's programme is domestically financed and the baseline
+government is tax-financed).
 """
-external_balance(::AbstractFinancing, p) = 0.0
-external_balance(f::ExternalDebt, p) = dot(f.g, p)
+external_balance(::AbstractFinancing, model::Model{MobileLaborCES}, p) = 0.0
+function external_balance(f::ExternalDebt, model::Model{MobileLaborCES}, p)
+	dom_prog = (1 .- model.data.import_margin) .* f.g
+	import_prog = dot(p, f.g) - dot(p, dom_prog)
+	import_prog  # consumption-side leakage is reported separately by the notebooks
+end
 
 """
 	has_additive_anchor(fin)
@@ -155,5 +179,5 @@ has_additive_anchor(::AbstractFinancing) = false
 has_additive_anchor(::Union{TaxFinanced, ExternalDebt}) = true
 
 export AbstractFinancing, NoFinancing, PreferenceReallocation, TaxFinanced,
-	ExternalDebt, preference_weights, household_expenditure, additive_demand,
-	public_budget, external_balance, has_additive_anchor
+	ExternalDebt, preference_weights, tau_rate, household_expenditure,
+	additive_demand, public_budget, external_balance, has_additive_anchor

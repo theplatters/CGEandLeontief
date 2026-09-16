@@ -267,14 +267,18 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # notebooks (headline assertions verify E = w*L - T > 0 at equilibrium).
     E = household_expenditure(fin, model, total_income, p, L_sum)
     agg = sum(consumption_share .* ds_eff .* p .^ (1 - σ))
-    final_demand = (consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg  # gross household demand
-    # v2 open absorption: only the DOMESTIC content circulates; the import content
-    # of household + programme demand leaks to the external account (R2.4 at the
-    # margin AND at baseline). Government demand is exogenous (real, model units).
-    c_dom = (1 .- data.import_margin) .* final_demand
+    # v3 open economy: the household consumes (1-s)E gross (saving s·E leaks);
+    # only the DOMESTIC content circulates -- the import content of household,
+    # government, investment and programme demand is supplied by the external
+    # account. Exports are exogenous domestic sales (no margin). The leakages
+    # s·E + M now balance the injections I + X -- the identity S = I + X - M
+    # holds at every equilibrium (validated in the notebooks).
+    c_dom = (1 .- data.saving_rate) .* (1 .- data.import_margin) .*
+            (consumption_share .* ds_eff) .* E .* p .^ (-σ) ./ agg
     total_final_demand = c_dom .+
                          (1 .- data.import_margin) .* additive_demand(fin, N) .+
-                         data.gov_demand
+                         (1 .- data.import_margin) .* (data.gov_demand .+ data.exo_demand) .+
+                         data.exports_demand
 
     # ── Intermediary demand ──
     intermediary_demand = p .^ (-θ) .* (Ω_raw' * (p .^ ϵ .* supply_shock .^ (ϵ - 1) .* intermediate_price .^ (θ - ϵ) .* (1 .- factor_share) .* y))
@@ -315,16 +319,29 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     nothing
 end
 
-"""Return the exact residual vector for either mobile-labor closure."""
+"""Return the exact residual vector for either mobile-labor closure.
+
+For the `:fixed` closure the canonical vector is the REDUCED form (2N-1:
+p2..pN, y1..yN); a full (p, y) or (p, y, w) vector is also accepted and
+reduced internally (p1 is pinned by construction).
+"""
 function equilibrium_residuals(model::Model{MobileLaborCES}, X::AbstractVector)
     N = length(model.data.factor_share)
     fixed = labor_closure(model.options) isa FixedWageClosure
-    expected = fixed ? 2N : 2N + 1
-    length(X) == expected || throw(DimensionMismatch("closure expects a $expected element vector"))
-    out = zeros(Float64, expected)
     if fixed
-        problem_fixed(out, collect(X), model)
+        if length(X) == 2N - 1
+            xr = collect(X)
+        elseif length(X) == 2N || length(X) == 2N + 1
+            xr = vcat(collect(X)[2:N], collect(X)[N+1:2N])   # drop pinned p1 (and wage)
+        else
+            throw(DimensionMismatch("fixed closure expects a $(2N-1)-element reduced vector"))
+        end
+        out = zeros(Float64, 2N - 1)
+        problem_fixed(out, xr, model)
     else
+        expected = 2N + 1
+        length(X) == expected || throw(DimensionMismatch("closure expects a $expected element vector"))
+        out = zeros(Float64, expected)
         problem(out, collect(X), model)
     end
     out
@@ -361,8 +378,13 @@ function problem_fixed(out::Vector, X::Vector, model::Model{MobileLaborCES})
     N = length(data.factor_share)
     w = 1.0  # sticky wage
 
-    p = _positive_floor(X[1:N])
-    y = _positive_floor(X[N+1:2N])
+    # REDUCED FORMULATION (2N-1 unknowns): p[1] = 1 is pinned BY CONSTRUCTION
+    # (removed from the unknowns), so the price-scale direction cannot collide
+    # with a clearing equation. Sector 1's zero-profit becomes a post-solve
+    # check. All N clearing equations are enforced -- with the v3 import
+    # margins, Walras' law no longer makes the N-th market redundant.
+    p = vcat(1.0, _positive_floor(X[1:N-1]))
+    y = _positive_floor(X[N:2N-1])
 
     (; supply_shock, demand_shock) = shocks
     (; consumption_share, Ω_raw, factor_share, labor_share) = data
@@ -388,14 +410,18 @@ function problem_fixed(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # notebooks (headline assertions verify E = w*L - T > 0 at equilibrium).
     E = household_expenditure(fin, model, total_income, p, L_sum)
     agg = sum(consumption_share .* ds_eff .* p .^ (1 - σ))
-    final_demand = (consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg  # gross household demand
-    # v2 open absorption: only the DOMESTIC content circulates; the import content
-    # of household + programme demand leaks to the external account (R2.4 at the
-    # margin AND at baseline). Government demand is exogenous (real, model units).
-    c_dom = (1 .- data.import_margin) .* final_demand
+    # v3 open economy: the household consumes (1-s)E gross (saving s·E leaks);
+    # only the DOMESTIC content circulates -- the import content of household,
+    # government, investment and programme demand is supplied by the external
+    # account. Exports are exogenous domestic sales (no margin). The leakages
+    # s·E + M now balance the injections I + X -- the identity S = I + X - M
+    # holds at every equilibrium (validated in the notebooks).
+    c_dom = (1 .- data.saving_rate) .* (1 .- data.import_margin) .*
+            (consumption_share .* ds_eff) .* E .* p .^ (-σ) ./ agg
     total_final_demand = c_dom .+
                          (1 .- data.import_margin) .* additive_demand(fin, N) .+
-                         data.gov_demand
+                         (1 .- data.import_margin) .* (data.gov_demand .+ data.exo_demand) .+
+                         data.exports_demand
 
     # Intermediary demand
     intermediary_demand = p .^ (-θ) .* (Ω_raw' * (p .^ ϵ .* supply_shock .^ (ϵ - 1) .* intermediate_price .^ (θ - ϵ) .* (1 .- factor_share) .* y))
@@ -405,19 +431,14 @@ function problem_fixed(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # accounting.
     cost = _ces_unit_cost(supply_shock, factor_share, w, intermediate_price, ϵ)
 
-    # 1. Zero-profit (all N sectors)
-    out[1:N] .= p .- cost
+    # 1. Zero-profit (sectors 2..N; sector 1's is the price normalization --
+    #    checked post-solve as a canary)
+    out[1:N-1] .= p[2:N] .- cost[2:N]
 
-    # 2. Market clearing (ALL N sectors). The last sector is NOT dropped: with the
-    # v2 import margin, Walras' law no longer makes the N-th market redundant, so
-    # dropping it would leave a 1-dof manifold (init-dependent employment). Keeping
-    # all N markets fully closes the fixed-wage system and matches leontief_multiplier.
-    out[N+1:2N] .= y .- intermediary_demand .- total_final_demand
-
-    # 3. Price-scale pin (replaces the CPI numeraire): p[1] = 1. Under the v2
-    # calibration the analytic Leontief solution has p ≡ 1, so this is the same
-    # scale choice without leaving the zero-profit homogeneity direction free.
-    out[2N] = p[1] - 1.0
+    # 2. Market clearing (ALL N sectors). With the v3 import margins, Walras'
+    #    law no longer makes the N-th market redundant; the saving leak s·E
+    #    balances the exogenous injections I + X (identity S = I + X - M).
+    out[N:2N-1] .= y .- intermediary_demand .- total_final_demand
 
     nothing
 end
@@ -444,10 +465,10 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
         throw(ArgumentError("fixed-wage η=1 has a homogeneous, scale-indeterminate equilibrium; add an additive public demand anchor (TaxFinanced / ExternalDebt), or use another η"))
 
     if init === nothing
-        init = [ones(N); data.λ]
-    elseif length(init) == 2N + 1
-        # Drop the wage component if a :mobile init was provided
-        init = init[1:2N]
+        init = [ones(N-1); data.λ]              # p2..pN = 1, y = λ
+    elseif length(init) >= 2N
+        # Full (p, y[, w]) init: drop p1 (pinned) and the wage component
+        init = vcat(init[2:N], init[N+1:2N])
     end
 
     # Avoid asking the nonlinear solver to differentiate an already exact
@@ -456,14 +477,26 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
         Float64.(init)
     else
         ProbN = NonlinearSolve.NonlinearProblem(problem_fixed, init, model)
-        res = NonlinearSolve.solve(ProbN, reltol=1e-6, abstol=1e-6, maxiters=5000)
-        string(res.retcode) == "Success" ||
-            error("MobileLaborCES._solve_fixed did not converge: retcode = $(res.retcode)")
-        res.u
+        res = NonlinearSolve.solve(ProbN, reltol=1e-6, abstol=1e-6, maxiters=20000)
+        # Quality gate = the ACTUAL residual, never the retcode. Bounded LM polish.
+        x = res.u
+        rmax = maximum(abs, equilibrium_residuals(model, x))
+        for _ in 1:2
+            rmax <= 1e-6 && break
+            res = NonlinearSolve.solve(
+                NonlinearSolve.NonlinearProblem(problem_fixed, x, model),
+                LevenbergMarquardt(); reltol=1e-8, abstol=1e-8, maxiters=2000)
+            x = res.u
+            rmax = maximum(abs, equilibrium_residuals(model, x))
+        end
+        if rmax > 1e-6
+            error("MobileLaborCES._solve_fixed did not converge: retcode = $(res.retcode), max|resid| = $rmax")
+        end
+        x
     end
 
-    p = x[1:N]
-    q = x[N+1:2N]
+    p = vcat(1.0, x[1:N-1])
+    q = x[N:2N-1]
     w = 1.0  # sticky wage
 
     (; θ, ϵ, σ, η) = options.elasticities
@@ -482,11 +515,12 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
     total_income = w * L_sum
     E = household_expenditure(fin, model, total_income, p, L_sum)
     agg = sum(data.consumption_share .* ds_eff .* p .^ (1 - σ))
-    consumption = (data.consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg  # gross (domestic + import)
+    consumption = (1 .- data.saving_rate) .* (data.consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg  # gross household consumption (saving sE leaks)
 
-    # Real GDP: consumption Tornqvist (B&F metric)
-    base_income = sum(data.labor_share)
-    base_consumption = data.consumption_share .* base_income
+    # Real GDP: consumption Tornqvist (B&F metric). v3 base = the calibrated
+    # baseline household block c0_gross (data.household_baseline) -- the exact
+    # v3 baseline demand, so the index is 1 at the baseline by construction.
+    base_consumption = data.household_baseline
     real_gdp_index = tornqvist_quantity_index(
         p,
         consumption,
@@ -534,11 +568,24 @@ function solve(model::Model{MobileLaborCES};
         Float64.(init)
     else
         ProbN = NonlinearSolve.NonlinearProblem(problem, init, model)
-        res = NonlinearSolve.solve(ProbN, reltol=1e-6, abstol=1e-6, maxiters=5000)
-        # `retcode` may be a symbol or string depending on NonlinearSolve.
-        string(res.retcode) == "Success" ||
-            error("MobileLaborCES.solve did not converge: retcode = $(res.retcode)")
-        res.u
+        res = NonlinearSolve.solve(ProbN, reltol=1e-6, abstol=1e-6, maxiters=20000)
+        # Quality gate = the ACTUAL residual, never the retcode (NonlinearSolve
+        # reports Stalled on slow final convergence). Bounded LM polish (up to
+        # twice) from the last point; verify before accepting.
+        x = res.u
+        rmax = maximum(abs, equilibrium_residuals(model, x))
+        for _ in 1:2
+            rmax <= 1e-6 && break
+            res = NonlinearSolve.solve(
+                NonlinearSolve.NonlinearProblem(problem, x, model),
+                LevenbergMarquardt(); reltol=1e-8, abstol=1e-8, maxiters=2000)
+            x = res.u
+            rmax = maximum(abs, equilibrium_residuals(model, x))
+        end
+        if rmax > 1e-6
+            error("MobileLaborCES.solve did not converge: retcode = $(res.retcode), max|resid| = $rmax")
+        end
+        x
     end
 
     p = x[1:N]
@@ -563,16 +610,16 @@ function solve(model::Model{MobileLaborCES};
     total_income = w * L_sum
     E = household_expenditure(fin, model, total_income, p, L_sum)
     agg = sum(data.consumption_share .* ds_eff .* p .^ (1 - σ))
-    consumption = (data.consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg  # gross (domestic + import)
+    consumption = (1 .- data.saving_rate) .* (data.consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg  # gross household consumption (saving sE leaks)
 
     # Real GDP: Tornqvist (Divisia) quantity index of FINAL CONSUMPTION (value-added)
     # — not gross output. In B&F (2019), real GDP is a Divisia index of real final
     # demand / value added. Using gross output confounds intermediate flows with
     # welfare-relevant final output and dilutes the reallocation bridge. The
     # consumption (final-demand) Tornqvist isolates the welfare-relevant change.
-    # Baseline consumption quantities are cs_i * total_income_base (p=1, numeraire).
-    base_income = sum(data.labor_share)
-    base_consumption = data.consumption_share .* base_income
+    # v3 base = the calibrated baseline household block (data.household_baseline),
+    # so the index is 1 at the v3 baseline by construction.
+    base_consumption = data.household_baseline
     real_gdp_index = tornqvist_quantity_index(
         p,
         consumption,

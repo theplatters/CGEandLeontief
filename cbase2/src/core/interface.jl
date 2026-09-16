@@ -93,9 +93,12 @@ struct Data <: AbstractData
 	import_share::Vector{Float64}
 	domestic_final_demand::Vector{Float64}
 	# ── v2 open-absorption calibration (cbase2, Notebook 03b) ──
-	gov_demand::Vector{Float64}        # exogenous government consumption (real, model units)
+	gov_demand::Vector{Float64}        # exogenous government consumption (gross, margin applies)
 	household_baseline::Vector{Float64} # baseline household block: residual λ − Mλ − gG (exact clearing)
 	import_margin::Vector{Float64}     # sector import share of MARGINAL final demand (0 = v1 closed absorption)
+	exo_demand::Vector{Float64}        # exogenous investment: equipment + construction + inventories (margin applies)
+	exports_demand::Vector{Float64}    # exogenous exports (domestic sales abroad -- NO import margin)
+	saving_rate::Float64               # calibrated non-consumption share of after-tax income (S = I + X - M)
 	gdp_production::Float64
 	gdp_income::Float64
 	gdp_expenditure::Float64
@@ -142,7 +145,8 @@ function Data(io::DataFrame, Ω::AbstractMatrix, consumption_share::AbstractVect
 	va = Float64.(value_added)
 	Data(io, Ωf, Ωf, Float64.(consumption_share), Float64.(factor_share), Float64.(λ),
 		Float64.(labor_share), Float64.(consumption_share_gross_output), gv, va, gv, DataFrame(),
-		zeros(n), zeros(n), zeros(n), zeros(n), zeros(n), zeros(n), sum(va), sum(va), sum(va))
+		zeros(n), zeros(n), zeros(n), zeros(n), zeros(n), zeros(n), zeros(n), zeros(n), 0.0,
+		sum(va), sum(va), sum(va))
 end
 
 """
@@ -391,5 +395,5 @@ function read_data(filename::String)::Data
 			d.labor_share, d.consumption_share_gross_output, d.grossy, d.value_added,
 			d.gross_output_basic, d.value_added_components, d.imports_intermediate,
 			d.import_share, d.domestic_final_demand, zeros(71), zeros(71), zeros(71),
-			d.gdp_production, d.gdp_income, d.gdp_expenditure)
+			zeros(71), zeros(71), 0.0, d.gdp_production, d.gdp_income, d.gdp_expenditure)
 end

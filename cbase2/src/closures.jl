@@ -99,27 +99,32 @@ function leontief_multiplier(data::Data, g::Vector{Float64}; mode::Symbol = :F3)
 	length(g) == n || throw(DimensionMismatch("g must have length $n"))
 	mode in (:F2, :F3) || throw(ArgumentError("mode must be :F2 or :F3"))
 
-	# Uniform-margin structure (matches the model): household demand is the CES
-	# block `consumption_share` (Σ = 1, CPI-normalised) scaled by income E, with
-	# only the domestic content (1 - m_i) circulating; the import content leaks.
-	#   E = (1 - τ0) · L            under F3 (programme untaxed; τ0 = ΣgG)
-	#   E = L - ΣgG - Σg            under F2 (balanced-budget rule)
+	# Uniform-margin structure (matches the model): the household consumes
+	# (1-s)E gross (saving sE leaks) with CPI-normalised weights omega
+	# (consumption_share); only the domestic content (1 - m_i) circulates.
+	# Exogenous injections: government gG (margin), investment I (margin),
+	# exports X (NO margin). Income:
+	#   E = (1 - tau0) * L            under F3 (programme untaxed; tau0 = sum gG)
+	#   E = L - sum gG - sum g        under F2 (balanced-budget rule)
 	M = Ω_raw' * Diagonal(1.0 .- factor_share)
 	τ0 = sum(gov_demand)
-	s = mode === :F3 ? (1.0 - τ0) : 1.0
-	gain = M + Diagonal(1.0 .- import_margin) * consumption_share * factor_share' * s
+	exo = (1.0 .- import_margin) .* (gov_demand + data.exo_demand) .+ data.exports_demand
+	s̃ = mode === :F3 ? (1.0 - τ0) : 1.0     # marginal after-tax share of employment income
+	gain = M + Diagonal(1.0 .- import_margin) * consumption_share * factor_share' * (1.0 - data.saving_rate) * s̃
 	colsums = vec(sum(gain; dims=1))
 	all(<(1), colsums) || error("finiteness gate failed: gain column sums must be < 1 (max = $(maximum(colsums)))")
 
-	const_term = gov_demand .+ (1.0 .- import_margin) .* g
+	const_term = exo .+ (1.0 .- import_margin) .* g
 	if mode === :F2
-		const_term = const_term .- (1.0 .- import_margin) .* consumption_share .* (sum(gov_demand) + sum(g))
+		const_term = const_term .- (1.0 .- import_margin) .* consumption_share .* (1.0 - data.saving_rate) .* (sum(gov_demand) + sum(g))
 	end
 	y = (I - gain) \ const_term   # equilibrium: y = G y + b  ⟺  (I − G) y = b
 	L = dot(factor_share, y)
 	# domestic household demand (for cross-check only; not used by the model)
-	c_dom = (1.0 .- import_margin) .* consumption_share .* (mode === :F3 ? s * L : (L - sum(gov_demand) - sum(g)))
-	F = sum(import_margin .* g) + (mode === :F3 ? sum(import_margin .* consumption_share) * s * (L - 1.0) : 0.0)
+	E = mode === :F3 ? s̃ * L : (L - sum(gov_demand) - sum(g))
+	c_dom = (1.0 .- import_margin) .* consumption_share .* (1.0 - data.saving_rate) .* E
+	F = sum(import_margin .* g) + sum(import_margin .* (gov_demand + data.exo_demand)) +
+		sum(import_margin .* consumption_share) * (1.0 - data.saving_rate) * E
 	(; y = y, L = L, c_dom = c_dom, F = F)
 end
 

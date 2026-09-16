@@ -164,7 +164,119 @@ silently rewritten -- later entries state what they replace.
   0.820 (F3); Keynesian multipliers ~9 / ~5.5; cond(I-G) ~ 15. The v2
   fixed-wage rows are FINITE and well-conditioned -- the unit root is gone.
 
-- **2026-09-16. `:fixed` solver closure fix.** With the import margin, the
+- **2026-09-16 (cont.). STRUCTURAL FINDING: the v2 import margin without a
+  saving/export block has NO interior equilibrium.** Systematic arbitration
+  (baseline_check / arbitrate / instrument scripts) established:
+  (1) The `p[1]` scale pin OVERWROTE sector N's clearing equation
+  (`out[2N]` collision) -- sector 71's market was silently unenforced and
+  the numeric solver parked the import leakage there as overproduction
+  (y_71 stuck at its init). The numeric "successes" were spurious.
+  (2) With all N markets enforced, the Walras identity
+  sum_i p_i * residual_i = mbar*E + programme import content (mbar =
+  sum m_i cs_i) holds EXACTLY -- the N clearing equations are jointly
+  INCONSISTENT for any E > 0: the import content is demand that VANISHES
+  (no import supply channel, no export injection). The only solution is
+  the corner E = 0, L = sum gG -- exactly what the corrected analytic
+  returns (L_ana = 0.2068 = sum gG at g=0, verified residual 0.0).
+  (3) Root cause: national accounting. Y = C + I + G + X - M with a
+  fully-spending household and balanced government forces p'imp = 0: the
+  import leak (mbar*E) has no offsetting injection, so income collapses
+  until the leak vanishes. The household's saving rate is NOT optional --
+  it is the accounting partner of the export/investment injections:
+  S = I + X - M (with T = G). The 2026-09-15 decision to skip the saving
+  rate was wrong; the data already implies it (private domestic
+  consumption = 1 - gG - X_dom, so s = X_dom/(1 - tau0) ~ 0.55 for
+  Germany's open economy).
+  DESIGN CONSEQUENCE (v3, needs user sign-off): full open-economy
+  Keynesian structure -- exogenous investment + exports (injections,
+  import content included), household saving rate s (leakage), government
+  (balanced), import margins. Multipliers become SMALL (marginal leakage
+  s + mbar + tau ~ 0.75) -- the honest German open-economy answer, and
+  the full answer to R2.4. The (I - G) analytic fix stands; the
+  leontief_multiplier then needs the X/I/S terms.
+
+- **2026-09-16 (cont.). v3 IMPLEMENTED (open-economy Keynesian structure).**
+  User approved: exports exogenous and NO import margin (domestic sales
+  abroad); investment I + government G exogenous with margins; household
+  consumes (1-s)E, saving sE leaks; calibrated s from the data residual.
+  Calibration VERIFIED: s = 0.3979 (in the predicted 0.3-0.45 band),
+  tau0 = 0.2141, export share = 0.4219, investment share = 0.1624 --
+  Germany's open economy, exactly as predicted. Finiteness gate holds.
+  Mobile rows: F1 (composition-only) resid 9e-10, budget identity
+  sum p*c - (1-s)E = 0.0 EXACTLY, L = 1.0; F2 (balanced-budget) resid
+  5.6e-7, budget exact. Solver hardening: quality gate = ACTUAL residual
+  (never the retcode), bounded Levenberg-Marquardt polish (2 attempts,
+  maxiters 2000) after a stalled Newton; maxiters 20000 on the main solve.
+
+- **2026-09-16 (cont.). v3 OPEN ITEMS (next session, in this order).**
+  (1) Tornqvist real-GDP base is still the v2 form: under v3 the baseline
+  household consumption is (1-s)E_h0 * omega = 0.473 * omega, but the
+  metric's base vector is the raw omega -- so real_gdp reports 0.199 at
+  the v3 baseline. FIX: the Tornqvist base must be
+  data.household_baseline (c0_gross) in both _solve_mobile and
+  _solve_fixed. Every v3 headline number is contaminated until this is
+  done (F2's "-24.6%" is an artifact of the broken base).
+  (2) F3 mobile solve stalls at max|resid| = 2e-4 (LM polish insufficient);
+  F2 needed no polish (5.6e-7). Investigate: possibly the demand-side
+  E(w) coupling stiffened by the (1-s) factor; consider a wage-anchored
+  homotopy or a damped Newton.
+  (3) The S = I + X - M canary printed diff = -0.16 at the ref: the
+  canary code passes w = 1.0 to sectoral_labor_demand (the equilibrium
+  wage is sol.wages_raw[1], not 1) and E_ref inherits the error -- the
+  canary needs the equilibrium wage; recheck whether the residual identity
+  then closes. Also re-derive whether the identity needs p = 1 (it is a
+  NOMINAL identity: p-weighted residuals + zero-profit; valid at any p,
+  but re-verify with the actual p from the solve).
+  (4) The v3 equilibrium real wage: F2 mobile implies w* ~ 0.48 under
+  CPI = 1 -- a ~50% real-wage drop at full employment. Either the solve
+  found a spurious second equilibrium, or the numeraire/CPI interaction
+  with the new demand block needs re-examination. Do NOT trust any v3
+  aggregate until (1)-(4) are resolved; the F1/F2 budget identities and
+  the calibration are the only fully-trusted v3 numbers so far.
+- **2026-09-16 (cont.). Continuation diagnostic: the price explosion is a
+  CONTINUOUS model pathology, not a solver artifact.** Injection
+  continuation (exo_scale 0.47 -> 1, s recalibrated endogenously per step,
+  warm-starting each solve; start scale found by bisection on s = 0 since
+  s < 0 makes the round-gain matrix non-contractive) tracked the good root
+  smoothly -- every step solved to resid <= 5e-7, no stalls. The
+  trajectory: max|p-1| grows EXPONENTIALLY (0.97 -> 2.1 -> 5.6 -> 16.6 ->
+  52 -> 187 -> 991) while real_gdp (fixed c0_gross base) declines smoothly
+  0.976 -> 0.421 and w* falls 0.98 -> 0.55 at constant full employment
+  L = 1. So the direct solve's wild prices are the endpoint of a continuous
+  branch: as the exogenous injections (I + X = 0.58 of GDP) crowd the
+  household's marginal demand share down to (1-s) = 0.60, a price cluster
+  in the CES production side (eps = theta = 0.5, complements) explodes and
+  the whole economy reprices around it. NEXT SESSION (top priority):
+  identify the exploding sector cluster (top-10 prices + their c0_gross /
+  exogenous demands / Omega column sums) and choose the structural fix.
+  Candidates: (a) isolated/clamped sectors whose price is economically
+  irrelevant -- pin p_i = 1 and drop their equations; (b) unit-elastic
+  bound on theta (gross-substitute production network, as in BF 2019's
+  calibration); (c) re-examine the v3 numeraire interaction. ALSO OPEN as
+  before: Tornqvist base fixed this session (base = c0_gross; verify
+  real_gdp = 1 at step k=0 of the continuation -- it printed 0.976, close
+  but not exactly 1: the clamped-sector baseline is not exactly the
+  c0_gross vector at exo_scale > 0 -- recheck); F3 mobile stall at 2e-4;
+  canary diff -0.094 with the equilibrium wage (still open -- the
+  identity may genuinely fail at the found solution because the dropped
+  N-th market absorbs the import content in the MOBILE path too: the
+  mobile `problem` still drops the N-th clearing equation, which under v3
+  is NOT Walras-redundant -- the reduced all-N formulation exists only in
+  problem_fixed).
+
+- **2026-09-16 (cont.). Solver-formulation fix for `:fixed` (done for the
+  fixed path; the MOBILE path still drops the N-th market -- apply the same
+  reduced formulation there next session).**
+  The reduced formulation (p1 = 1 removed from the unknowns; 2N-1
+  unknowns; zero-profit 2..N + clearing 1..N) is the correct square system
+  once the v3 accounting is in place; sector 1's zero-profit becomes a
+  post-solve check. NOT yet applied -- the v2 demand system must be fixed
+  first, since the overdetermination it exposes is real, not a solver
+  artifact. CD-guard NaN (0/0 for factor_share ~ 1) still open.
+
+
+- **2026-09-16. `:fixed` solver closure fix (superseded by the structural
+  finding below).** With the import margin, the
   N-th market is no longer Walras-redundant, so `problem_fixed` now retains
   ALL N clearing equations and pins the price scale with p[1] = 1 (the CPI
   numeraire is dropped as an equation; checked post-solve). Employment along

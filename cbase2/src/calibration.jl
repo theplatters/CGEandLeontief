@@ -24,7 +24,45 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 
 """
-	recalibrate_open(data, cbroot) -> Data
+	drop_sectors(data, drops) -> Data
+
+Sector-exclusion step of the v3 calibration (Notebook 03b, documented
+decision): removes the listed sectors from the equilibrium system BEFORE
+the open-economy recalibration. Rationale: sector 71 ("Other personal
+service activities") is a residual catch-all (lambda = 1.8 percent of
+gross output) with a 37.5 percent self-loop in Omega_raw whose price is
+self-referencing under theta < 1 complementarity and spirals along the
+solver path (the p = 381 explosion). Its demand is unanchored (no
+government, investment or export demand) and its output negligible; the
+sector is dropped rather than stabilised. Consequences, all documented:
+(i) the model is a 70-sector system; (ii) sector 71's value added and
+final demand are excluded from the accounting (GDP rescaled to the kept
+sectors); (iii) any sector-specific shock vectors must be subset and
+renormalised accordingly (impulses.csv: the sector-71 share is removed
+and the remaining shares renormalised).
+"""
+function drop_sectors(data::Data, drops::Vector{Int})
+	n = length(data.factor_share)
+	keep = setdiff(1:n, drops)
+	m = length(keep)
+	keep == 1:n && return data
+	io = data.io[keep, :]
+	va = data.value_added[keep]
+	vac = data.value_added_components
+	vac70 = vac isa AbstractDataFrame ? vac[keep, :] : vac[keep]
+	return Data(io,
+		data.Ω[keep, keep], data.Ω_raw[keep, keep],
+		data.consumption_share[keep], data.factor_share[keep], data.λ[keep],
+		data.labor_share[keep], data.consumption_share_gross_output[keep],
+		data.grossy[keep], va, data.gross_output_basic[keep], vac70,
+		data.imports_intermediate[keep], data.import_share[keep],
+		data.domestic_final_demand[keep],
+		zeros(m), zeros(m), zeros(m), zeros(m), zeros(m), 0.0,
+		sum(va), sum(va), sum(va))
+end
+
+"""
+	recalibrate_open(data, cbroot; exo_scale = 1.0) -> Data
 
 v3 open-economy recalibration of a v1 `Data` object. Consumes the §4.1
 artifacts (AC_domestic_final_demand.csv) plus the raw io table for the
@@ -38,7 +76,8 @@ gross category columns. Returns a new Data with:
   saving_rate         s = 1 - sum(c0_gross)/(1 - sum(gG))
 Asserts the finiteness gate: round-gain column sums strictly below 1.
 """
-function recalibrate_open(data::Data, cbroot::String; exo_scale::Real = 1.0)
+function recalibrate_open(data::Data, cbroot::String; exo_scale::Real = 1.0,
+		drops::Vector{Int} = Int[])
 	(; Ω_raw, factor_share, λ, gross_output_basic) = data
 	n = length(factor_share)
 	fs = factor_share
@@ -46,6 +85,7 @@ function recalibrate_open(data::Data, cbroot::String; exo_scale::Real = 1.0)
 
 	# ── §4.1 artifact: domestic final demand by sector and category ──
 	fd = CSV.read(joinpath(cbroot, "data_processed", "AC_domestic_final_demand.csv"), DataFrame)
+	fd = drops == Int[] ? fd : fd[setdiff(1:size(fd, 1), drops), :]
 	@assert size(fd, 1) == n "AC_domestic_final_demand rows must match sectors"
 	scale = 1.0 / data.gdp_production          # EUR m -> model units (GDP_P = 1)
 

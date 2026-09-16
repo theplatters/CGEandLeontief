@@ -108,17 +108,16 @@ preference_weights(f::PreferenceReallocation, demand_shock::Vector{Float64}) =
 """
 	tau_rate(fin, model, p, w, L_sum)
 
-Proportional income-tax rate (v3 open-economy calibration). F1/F3 pay a
-FIXED NOMINAL tax T = sum_i gG_i (the baseline government budget): the
-programme is externally financed and the baseline tax does not move -- the
-marginal tax rate is zero, the saving and import leaks close the system.
-F2 additionally finances the programme bundle at a genuinely balanced
-proportional rate tau = (sum p_i gG_i + sum p_i g_i)/(wsum L).
+Proportional income-tax rate (v3 open-economy calibration, homogeneous
+budget): the government's real purchases gG are financed at CURRENT prices,
+T = sum p_i gG_i, so the real tax burden is price-level-invariant and the
+CPI numeraire selects the scale. F2 adds the programme bundle at the same
+balanced rule: T = sum p_i (gG_i + g_i).
 """
 tau_rate(::AbstractFinancing, model::Model{MobileLaborCES}, p, w::Real, L_sum::Real) =
-	sum(model.data.gov_demand) / (w * L_sum)
+	dot(p, model.data.gov_demand) / (w * L_sum)
 tau_rate(::TaxFinanced, model::Model{MobileLaborCES}, p, w::Real, L_sum::Real) =
-	(sum(model.data.gov_demand) + dot(p, model.financing.g)) / (w * L_sum)
+	dot(p, model.data.gov_demand .+ model.financing.g) / (w * L_sum)
 
 """
 	household_expenditure(fin, model, wage_income, p, L_sum)

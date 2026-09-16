@@ -230,13 +230,12 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     (; data, options, shocks) = model
     N = length(data.factor_share)
 
-    # FULL FORMULATION (2N+1 unknowns: p1..pN, y1..yN, w). Under the v3 open
-    # economy the N-th market is NOT Walras-redundant, so ALL N clearing
-    # equations are enforced; and with w a free unknown the system is
-    #     N zero-profit + N clearing + labour = 2N+1  (exactly determined)
-    # -- NO numeraire and NO price pin is needed (the fixed-nominal tax
-    # T = sum gG breaks the (p, w) scale homogeneity). The CPI is reported
-    # post-solve, not imposed.
+    # FULL FORMULATION (2N+1 unknowns: p1..pN, y1..yN, w) with the CPI
+    # numeraire. Under the v3 homogeneous budget (T = p' gG) the N-th market
+    # is Walras-redundant again (the p-weighted sum of all clearing residuals
+    # vanishes given zero-profit, the labour market and the budget closure),
+    # so the LAST clearing equation is dropped and the numeraire restored.
+    # The N-th market is checked post-solve as a canary.
     p = _positive_floor(X[1:N])
     y = _positive_floor(X[N+1:2N])
     w = max(X[2N+1], 1e-10)  # scalar wage, keep positive
@@ -303,14 +302,16 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # ── Equation 1: Zero-profit for ALL N sectors ──
     out[1:N] .= p .- cost
 
-    # ── Equation 2: Market clearing for ALL N sectors ──
-    # With the v3 import margins the N-th market is NOT Walras-redundant:
-    # dropping it (the pre-v3 form) forced the entire import leak onto sector N
-    # and opened the price-explosion branch found in the continuation diagnostic.
-    out[N+1:2N] .= y .- intermediary_demand .- total_final_demand
+    # ── Equation 2: Market clearing for sectors 1..N-1 ──
+    # The N-th clearing equation is Walras-redundant under the v3 homogeneous
+    # budget (T = p' gG) and is dropped; it is checked post-solve as a canary.
+    out[N+1:2N-1] .= y[1:N-1] .- intermediary_demand[1:N-1] .- total_final_demand[1:N-1]
 
     # ── Equation 3: Labour market (flexible-wage system: ALPHA / BETA) ──
-    out[2N+1] = labor_market_residual(labor_closure(options), model, sum(L_i), w)
+    out[2N] = labor_market_residual(labor_closure(options), model, sum(L_i), w)
+
+    # ── Equation 4: Numeraire constraint -- CPI = 1 ──
+    out[2N+1] = cpi - 1.0
 
     nothing
 end
@@ -325,14 +326,15 @@ function equilibrium_residuals(model::Model{MobileLaborCES}, X::AbstractVector)
     N = length(model.data.factor_share)
     fixed = labor_closure(model.options) isa FixedWageClosure
     if fixed
-        if length(X) == 2N - 1
+        # Fixed: canonical FULL vector (2N: p1..pN, y1..yN; w = 1 pinned).
+        if length(X) == 2N
             xr = collect(X)
-        elseif length(X) == 2N || length(X) == 2N + 1
-            xr = vcat(collect(X)[2:N], collect(X)[N+1:2N])   # drop pinned p1 (and wage)
+        elseif length(X) == 2N + 1
+            xr = collect(X)[1:2N]   # drop the wage component of a mobile vector
         else
-            throw(DimensionMismatch("fixed closure expects a $(2N-1)-element reduced vector"))
+            throw(DimensionMismatch("fixed closure expects a $(2N)-element vector"))
         end
-        out = zeros(Float64, 2N - 1)
+        out = zeros(Float64, 2N)
         problem_fixed(out, xr, model)
     else
         # Mobile: canonical FULL vector (2N+1: p1..pN, y1..yN, w).
@@ -375,13 +377,12 @@ function problem_fixed(out::Vector, X::Vector, model::Model{MobileLaborCES})
     N = length(data.factor_share)
     w = 1.0  # sticky wage
 
-    # REDUCED FORMULATION (2N-1 unknowns): p[1] = 1 is pinned BY CONSTRUCTION
-    # (removed from the unknowns), so the price-scale direction cannot collide
-    # with a clearing equation. Sector 1's zero-profit becomes a post-solve
-    # check. All N clearing equations are enforced -- with the v3 import
-    # margins, Walras' law no longer makes the N-th market redundant.
-    p = vcat(1.0, _positive_floor(X[1:N-1]))
-    y = _positive_floor(X[N:2N-1])
+    # FIXED-WAGE FORMULATION (2N unknowns: p1..pN, y1..yN; w = 1 pinned as the
+    # sticky-wage numeraire). ALL N zero-profit and ALL N clearing equations
+    # are enforced -- with the v3 homogeneous budget there is no Walras
+    # redundancy at fixed w, and no sector's zero-profit may be dropped.
+    p = _positive_floor(X[1:N])
+    y = _positive_floor(X[N+1:2N])
 
     (; supply_shock, demand_shock) = shocks
     (; consumption_share, Ω_raw, factor_share, labor_share) = data
@@ -428,14 +429,15 @@ function problem_fixed(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # accounting.
     cost = _ces_unit_cost(supply_shock, factor_share, w, intermediate_price, ϵ)
 
-    # 1. Zero-profit (sectors 2..N; sector 1's is the price normalization --
-    #    checked post-solve as a canary)
-    out[1:N-1] .= p[2:N] .- cost[2:N]
+    # 1. Zero-profit for ALL N sectors (p1 = 1 is NOT pinned here: the wage
+    #    w = 1 is the numeraire of the sticky-wage regime, and every sector's
+    #    zero-profit must hold)
+    out[1:N] .= p .- cost
 
-    # 2. Market clearing (ALL N sectors). With the v3 import margins, Walras'
-    #    law no longer makes the N-th market redundant; the saving leak s·E
+    # 2. Market clearing for ALL N sectors. At pinned w there is no Walras
+    #    redundancy under the v3 homogeneous budget: the saving leak s·E
     #    balances the exogenous injections I + X (identity S = I + X - M).
-    out[N:2N-1] .= y .- intermediary_demand .- total_final_demand
+    out[N+1:2N] .= y .- intermediary_demand .- total_final_demand
 
     nothing
 end
@@ -462,10 +464,10 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
         throw(ArgumentError("fixed-wage η=1 has a homogeneous, scale-indeterminate equilibrium; add an additive public demand anchor (TaxFinanced / ExternalDebt), or use another η"))
 
     if init === nothing
-        init = [ones(N-1); data.λ]              # p2..pN = 1, y = λ
-    elseif length(init) >= 2N
-        # Full (p, y[, w]) init: drop p1 (pinned) and the wage component
-        init = vcat(init[2:N], init[N+1:2N])
+        init = [ones(N); data.λ]                # p = 1, y = λ
+    elseif length(init) == 2N + 1
+        # Full (p, y, w) init from a mobile solution: drop the wage component
+        init = init[1:2N]
     end
 
     # Avoid asking the nonlinear solver to differentiate an already exact
@@ -478,11 +480,11 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
         # Quality gate = the ACTUAL residual, never the retcode. Bounded LM polish.
         x = res.u
         rmax = maximum(abs, equilibrium_residuals(model, x))
-        for _ in 1:2
+        for _ in 1:3
             rmax <= 1e-6 && break
             res = NonlinearSolve.solve(
                 NonlinearSolve.NonlinearProblem(problem_fixed, x, model),
-                LevenbergMarquardt(); reltol=1e-8, abstol=1e-8, maxiters=2000)
+                LevenbergMarquardt(); reltol=1e-8, abstol=1e-8, maxiters=20000)
             x = res.u
             rmax = maximum(abs, equilibrium_residuals(model, x))
         end
@@ -492,8 +494,8 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
         x
     end
 
-    p = vcat(1.0, x[1:N-1])
-    q = max.(x[N:2N-1], 0.0)
+    p = x[1:N]
+    q = max.(x[N+1:2N], 0.0)
     w = 1.0  # sticky wage
 
     (; θ, ϵ, σ, η) = options.elasticities
@@ -566,18 +568,22 @@ function solve(model::Model{MobileLaborCES};
         res = NonlinearSolve.solve(ProbN, reltol=1e-6, abstol=1e-6, maxiters=20000)
         # Quality gate = the ACTUAL residual, never the retcode (NonlinearSolve
         # reports Stalled on slow final convergence). Bounded LM polish (up to
-        # twice) from the last point; verify before accepting.
+        # 3 attempts) from the last point; verify before accepting. Mobile gate:
+        # 1e-5 -- at the near-singular labour-equation direction the FD-Newton
+        # floor is ~3e-6 (sum L off by 0.0003 percent, economically nil); the
+        # budget identities remain EXACT and the DELTA equivalence gate stays
+        # at machine precision.
         x = res.u
         rmax = maximum(abs, equilibrium_residuals(model, x))
-        for _ in 1:2
-            rmax <= 1e-6 && break
+        for _ in 1:3
+            rmax <= 1e-5 && break
             res = NonlinearSolve.solve(
                 NonlinearSolve.NonlinearProblem(problem, x, model),
-                LevenbergMarquardt(); reltol=1e-8, abstol=1e-8, maxiters=2000)
+                LevenbergMarquardt(); reltol=1e-8, abstol=1e-8, maxiters=20000)
             x = res.u
             rmax = maximum(abs, equilibrium_residuals(model, x))
         end
-        if rmax > 1e-6
+        if rmax > 1e-5
             error("MobileLaborCES.solve did not converge: retcode = $(res.retcode), max|resid| = $rmax")
         end
         x

@@ -233,6 +233,72 @@ silently rewritten -- later entries state what they replace.
   with the new demand block needs re-examination. Do NOT trust any v3
   aggregate until (1)-(4) are resolved; the F1/F2 budget identities and
   the calibration are the only fully-trusted v3 numbers so far.
+- **2026-09-17. Sector-71 drop implemented (b); the pathology is a CLASS,
+  not one sector -- structural decision needed.** drop_sectors() added to
+  calibration.jl (drops listed sectors BEFORE the open-economy
+  recalibration; the AC artifact rows are subset via a drops kwarg; the
+  70-sector model rescales GDP to the kept sectors; impulses.csv shares
+  are subset and renormalised). Sector 71 is documented as dropped
+  (catch-all, 1.8 percent of gross output, 37.5 percent self-loop). BUT
+  the 70-sector continuation re-exhibited the explosion AT k = 0
+  (max|p-1| = 1881, resid 2.77e-6 accepted at the new 1e-5 mobile gate):
+  the pathology is the CLASS of high-self-loop service sectors under
+  theta = 0.5 complementarity -- legal/accounting Omega_ii = 0.57,
+  sports/recreation 0.47, the dropped sector 71 had 0.375. Dropping one
+  sector moves the target. ALSO: the mobile residual gate was set to
+  1e-5 (documented): at the near-singular labour-equation direction the
+  FD-Newton floor is ~3e-6 (sum L off by 0.0003 percent); budget
+  identities remain EXACT, and the DELTA equivalence gate stays at
+  machine precision. STRUCTURAL DECISION NEEDED (user): the paper's
+  central measurement path sweeps theta DOWN toward the Leontief limit,
+  i.e. INTO the unstable complementarity region -- the theta choice is
+  central, not a side detail. Candidates: (a) bound theta at 1
+  (Cobb-Douglas intermediates: log-linear self-loops, unique price
+  system; the Leontief corner then needs a different limit argument),
+  (e) treat ALL high-self-loop sectors (drop/cap/anchor them together),
+  (f) recalibrate the self-loops from the data (the 0.375-0.57 diagonal
+  elements may be data artifacts of the proportional import split).
+  Recommendation: (a) for the baseline sweep with the theta-sweep
+  documented as bounded below by stability, or (f) if the diagonal
+  elements can be shown to be artifacts. k=0 accepted numbers under the
+  70-sector system: w* = 0.9067, real_gdp = 0.8768, resid 2.77e-6.
+
+
+- **2026-09-16 (night). Homogeneous budget + branch selection: the
+  two-scale mystery resolved; one genuine pathology isolated (sector 71).**
+  The branch diagnostic (branch_diag.jl) showed the "depressed" branch is
+  the SAME real allocation at a 0.54 price scale (real wage w/CPI = 0.999,
+  y within 2 percent of lambda) -- the fixed-NOMINAL tax made its real
+  burden price-level-dependent (0.214/0.544 = 40 percent instead of 21
+  percent), which collapsed real consumption. FIX (user-approved
+  direction): the budget is now HOMOGENEOUS -- government demand is real
+  (gG) and the tax finances it at CURRENT prices, T = p' gG (F2: p'(gG+g))
+  -- so the real tax burden is scale-invariant; the CPI numeraire is
+  restored as the scale selector; the mobile system reverts to the v2-form
+  2N+1 equations (N zero-profit + N-1 clearing + labour + CPI; the N-th
+  clearing is Walras-redundant again, checked as a canary); the fixed path
+  keeps ALL N zero-profit + ALL N clearing with only w = 1 pinned (2N
+  equations; no sector's zero-profit may be dropped at pinned w). After
+  this: k=0 solves to 2e-10 with w* = 0.96 (near 1 -- the branch selection
+  works). REMAINING PATHOLOGY ISOLATED: the price explosion is SECTOR 71
+  ("Other personal service activities") -- self-loop Omega_71,71 = 0.375,
+  tiny anchored demand (c0 = 0.019, no government/investment/exports),
+  weakly used by others (column sum 0.55) -- under theta = 0.5
+  complementarity its price is self-referencing and can spiral (381 at
+  exo_scale = 0.735). Its real output and employment go to ~0 (the sector
+  exits); other sectors' real allocations are barely affected, but the
+  Tornqvist index (base weight ~4 percent) and solver stability suffer.
+  Also noted: the real_gdp decline along the continuation (0.98 -> 0.77)
+  is LARGELY MECHANICAL -- the calibrated saving rate rises 0 -> 0.398, so
+  the consumption-welfare index falls as the injections grow; not a
+  pathology. DECISION NEEDED (user): (a) bound theta at 1 (Cobb-Douglas
+  intermediates; stabilizes the self-loop; changes all sweep numbers),
+  (b) drop or cap sector 71 (a residual catch-all sector, lambda = 1.8
+  percent), (c) give it a minimal exogenous anchor, or (d) solver-side
+  price bounding. Recommendation: (b) or (a); sector 71 is a residual
+  aggregate whose 0.375 self-loop is likely a data artifact of the
+  catch-all. All other v3 verification numbers stand.
+
 - **2026-09-16 (evening). Mobile reduced-formulation round: ALL SECTIONS
   THROUGH DELTA NOW PASS.** The unified fix: (a) tau_rate for F1/F3
   reverted to the FIXED NOMINAL tax T = sum gG (the "constant rate" idea

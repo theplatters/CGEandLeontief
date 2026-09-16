@@ -43,8 +43,9 @@ cbase2/
 |-- process_comments.md         dated observations by notebook chapter
 |-- 01..08*.ipynb               the pipeline (see map above)
 |-- src/
-|   |-- core/                   trimmed kernel, byte-identical copies of ../src files
-|   |-- financing.jl            Stage 1.1: F1/F2/F3 closures (cbase2-only)
+|   |-- core/                   trimmed kernel (two recorded surgical edits, see
+|   |                           process_comments.md); byte-identical otherwise
+|   |-- financing.jl            Stage 1.1: F1/F2/F3 financing closures (cbase2-only)
 |   |-- closures.jl             Stage 1.2--3: BETA + DELTA corner (cbase2-only)
 |   `-- validation.jl           Stage 1.6: residual gates (cbase2-only)
 |-- scripts/
@@ -53,6 +54,8 @@ cbase2/
 |   |-- run_matrix.jl           Stage 2 full 5 x 3 batch (headless)
 |   `-- run_sobol.jl            sectoral Sobol batch (headless)
 |-- data_raw/                   read-only inputs (never written by any stage)
+|-- data -> data_raw            symlink so read_data()'s pwd()/data/ convention
+|                               resolves inside cbase2
 |-- data_processed/             calibration artifacts (written by 01--03 only)
 |-- results_intermediate/       tests, preregistration record, validation report
 |-- results_final/              5 x 3 headline tables, appendix tables
@@ -134,10 +137,10 @@ run.
 | Stage | State |
 |---|---|
 | Notebooks 01--02 (data wrangling, accounting consistency) | complete; validated end-to-end; `AC_*` artifacts reproduce the parent pipeline's outputs exactly |
-| Notebooks 03--08 | pending |
-| `src/financing.jl`, `src/closures.jl`, `src/validation.jl` | pending (Stage 1) |
+| Notebook 03 + `src/financing.jl` (financing core) | complete; smoke-tested at $m = 1$ for F1/F2/F3 (mobile) and F2 (fixed); budget identities hold to machine precision; kernel DIFFs recorded |
+| Notebooks 04--08, `src/closures.jl`, `src/validation.jl` | pending |
 | `scripts/run_{reference,matrix,sobol}.jl` | pending (Stage 2) |
-| Next | financing core (`03` + `src/financing.jl`), workplan Stage 1 item 1 |
+| Next | BETA + DELTA corner (`04` + `src/closures.jl`), workplan Stage 1 items 2--3 |
 
 # Raw-input provenance (SHA-256)
 

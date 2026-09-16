@@ -1,8 +1,20 @@
 abstract type AbstractElasticities end
 abstract type AbstractData end
 
-"""Abstract supertype for labor-closure descriptions."""
+"""AbstractLaborClosure supertype for labor-closure descriptions."""
 abstract type AbstractLaborClosure end
+
+"""
+	AbstractFinancing
+
+Supertype of the cbase2 financing closures (Foundation II, Stage 1.1):
+`NoFinancing` (baseline reference only), `PreferenceReallocation` (F1),
+`TaxFinanced` (F2), `ExternalDebt` (F3). Concrete specs and the demand-side
+hooks live in `cbase2/src/financing.jl`; every experiment in the cbase2
+pipeline carries one of these so that no unfinanced (manna) demand shock
+exists.
+"""
+abstract type AbstractFinancing end
 """Legacy CES closure, retaining its exogenous labor callback or symbol."""
 struct ExogenousLaborClosure <: AbstractLaborClosure
 	callback::Union{Function, Symbol}
@@ -342,6 +354,15 @@ mutable struct Model{T <: ModelType}
 	data::Data
 	shocks::Shocks
 	options::T
+	# Financing closure (Foundation II). Default: NoFinancing (baseline
+	# reference). Requires cbase2/src/financing.jl to be included.
+	financing::AbstractFinancing
+end
+
+# 3-arg convenience constructor: defaults to the unfinanced baseline
+# reference. Financing experiments construct the 4-arg form (notebook 03).
+function Model(data::Data, shocks::Shocks, options)
+	Model(data, shocks, options, NoFinancing())
 end
 
 labor_closure(model::Model) = labor_closure(model.options)

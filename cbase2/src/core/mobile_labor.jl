@@ -32,7 +32,13 @@ struct MobileLaborCESElasticities <: AbstractElasticities
     ϵ::Float64
     σ::Float64
     η::Float64
+    # BETA closure (Stage 1.2): elasticity of TOTAL labour supply along the
+    # real wage; 0.0 = vertical supply (ALPHA). Used only by the :beta closure.
+    eta_s::Float64
 end
+# Parent-compatible 4-arg constructor (no elastic labour supply).
+MobileLaborCESElasticities(θ::Real, ϵ::Real, σ::Real, η::Real) =
+    MobileLaborCESElasticities(Float64(θ), Float64(ϵ), Float64(σ), Float64(η), 0.0)
 
 """
     MobileLaborCES
@@ -45,9 +51,10 @@ Model type for CES with geometric intersectoral labor reallocation and an explic
 struct MobileLaborCES <: ModelType
     elasticities::MobileLaborCESElasticities
     labor_bar::Float64
-    closure::Symbol   # :mobile = flexible wage; :fixed = sticky wage
+    closure::Symbol   # :mobile = flexible wage (ALPHA); :fixed = sticky wage (GAMMA);
+                      # :beta = flexible wage with elastic total labour supply (BETA)
     function MobileLaborCES(elasticities::MobileLaborCESElasticities, labor_bar::Float64, closure::Symbol)
-        closure in (:mobile, :fixed) || throw(ArgumentError("unsupported MobileLaborCES closure $closure; use :mobile or :fixed"))
+        closure in (:mobile, :fixed, :beta) || throw(ArgumentError("unsupported MobileLaborCES closure $closure; use :mobile, :fixed, or :beta"))
         new(elasticities, labor_bar, closure)
     end
 end
@@ -69,7 +76,33 @@ function MobileLaborCES(elasticities::MobileLaborCESElasticities, data::Data)
     MobileLaborCES(elasticities, labor_bar, :mobile)
 end
 
-labor_closure(options::MobileLaborCES) = options.closure == :mobile ? FlexibleWageClosure() : FixedWageClosure()
+labor_closure(options::MobileLaborCES) =
+    options.closure == :mobile ? FlexibleWageClosure() :
+    options.closure == :beta   ? ElasticLaborClosure(options.elasticities.eta_s) :
+                                 FixedWageClosure()
+
+# ── Labor-market equation hook ──
+# The total-labor-market residual of the flexible-wage systems (problem(), 2N+1).
+# ALPHA (FlexibleWageClosure): vertical supply at the bar L̄.
+# BETA  (ElasticLaborClosure, defined in cbase2/src/closures.jl): elastic supply
+#       L^s = L̄ · (w / w0)^{η_s} along the real wage (CPI = 1 ⇒ w is the real wage).
+labor_market_residual(::FlexibleWageClosure, model::Model{MobileLaborCES}, L_sum::Real, w::Real) =
+    L_sum - model.options.labor_bar
+
+# ── Unit cost with the Cobb-Douglas limit guard (Stage 1.5, Milestone C) ──
+# CES unit cost:  (A^(ϵ-1) · (fs·w^(1-ϵ) + (1-fs)·ip^(1-ϵ)))^(1/(1-ϵ)).
+# At ϵ = 1 exactly the formula degenerates (x^Inf with x = 1 ± float error);
+# the analytic Cobb-Douglas limit is  w^fs · ip^(1-fs) / A  and is used whenever
+# |1 - ϵ| is below machine-relevant tolerance, keeping the CD special case
+# sign-safe and continuous.
+const _CD_LIMIT_TOL = 1e-9
+
+function _ces_unit_cost(A_eff, fs, w, ip, ϵ)
+    if abs(1 - ϵ) < _CD_LIMIT_TOL
+        return (w .^ fs) .* (ip .^ (1 .- fs)) ./ A_eff
+    end
+    ((A_eff .^ (ϵ - 1)) .* (fs .* w .^ (1 - ϵ) .+ (1 .- fs) .* ip .^ (1 - ϵ))) .^ (1 / (1 - ϵ))
+end
 
 # ─────────────────────────────────────────────────────────────────────────────────
 # Sectoral labor demand from the wage (marginal product condition)
@@ -216,28 +249,25 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     L_i = sectoral_labor_demand(p, y, w, model)
 
     # ── Final demand ──
-    # Budget-consistent CES demand: consumption weights are β̃_i = cs_i·ds_i,
-    # normalized through the aggregator `agg = Σ cs_j·ds_j·p_j^(1-σ)` so that
-    # Σ p_i·c_i = total_income exactly (Walras closes; no spurious overspend).
-    # Previously `demand_shock` was applied unnormalized, inflating household
-    # expenditure above income and breaking the budget identity.
+    # Budget-consistent CES demand over the household's (possibly financed)
+    # expenditure. `fin = model.financing` (Foundation II):
+    #   F1  composes E within its budget via preference weights (no additive
+    #       demand; the normalizer keeps Σ p_i c_i = E exactly);
+    #   F2  E = w·ΣL − T(p) with T = Σ p_i g_i the lump-sum tax;
+    #   F3  E = w·ΣL, externally financed.
+    # The unfinanced autonomous/investment manna of the legacy pipeline is
+    # retired; additive demand enters only through `additive_demand(fin, N)`.
+    fin = model.financing
+    ds_eff = preference_weights(fin, demand_shock)
     total_income = w * sum(L_i)
-    agg = sum(consumption_share .* demand_shock .* p .^ (1 - σ))
-    final_demand = (consumption_share .* demand_shock .* total_income .* p .^ (-σ)) ./ agg
-
-    # ── Autonomous & investment (extra-household) final demand (Milestone E) ──
-    # Expansive: they raise total final demand above wage income, so the economy
-    # must scale employment to meet them. With mobile labor (eta>0) this expands
-    # at ~constant wage (large real response); with eta=0 the wage must rise,
-    # muting the response -- the mobile-labor bridge. The gap to wage income is
-    # the financing record (debt / external deficit), not a constraining equation.
-    # Base the autonomous / investment demand on baseline household consumption
-    # (same units as `final_demand`), so the shock is a moderate, well-scaled
-    # additive boost rather than a gross-output multiple.
-    cons_base = sum(data.labor_share)
-    A = shocks.autonomous_demand .* data.consumption_share .* cons_base
-    G = shocks.investment_shock .* data.consumption_share .* cons_base
-    total_final_demand = final_demand .+ A .+ G
+    # NOTE: no positivity guard here — the residual function must tolerate the
+    # solver's exploration of negative-income trial points (the legacy code
+    # did). The E > 0 check belongs to the post-solve validation in the
+    # notebooks (headline assertions verify E = w*L - T > 0 at equilibrium).
+    E = household_expenditure(fin, total_income, p)
+    agg = sum(consumption_share .* ds_eff .* p .^ (1 - σ))
+    final_demand = (consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg
+    total_final_demand = final_demand .+ additive_demand(fin, N)
 
     # ── Intermediary demand ──
     intermediary_demand = p .^ (-θ) .* (Ω_raw' * (p .^ ϵ .* supply_shock .^ (ϵ - 1) .* intermediate_price .^ (θ - ϵ) .* (1 .- factor_share) .* y))
@@ -251,7 +281,7 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     alloc_wedge = _allocation_efficiency_wedge(p, y, w, L_i, model)
 
     # ── Cost function (effective TFP includes the reallocation wedge) ──
-    cost = ((supply_shock .* alloc_wedge) .^ (ϵ - 1) .* (factor_share .* w .^ (1 - ϵ) .+ (1 .- factor_share) .* intermediate_price .^ (1 - ϵ))) .^ (1 / (1 - ϵ))
+    cost = _ces_unit_cost(supply_shock .* alloc_wedge, factor_share, w, intermediate_price, ϵ)
 
     # ── Equation 1: Zero-profit for ALL N sectors (including sector 1) ──
     # Under CRTS the price level is pinned by the numeraire (Eq. 4), so all N
@@ -268,9 +298,9 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # to sector 1 (construction) remains enforced.
     out[N+1:2N-1] .= y[1:N-1] .- intermediary_demand[1:N-1] .- total_final_demand[1:N-1]
 
-    # This is exclusively the flexible-wage system; fixed wages are routed to
-    # `problem_fixed` by `solve`.
-    out[2N] = sum(L_i) - options.labor_bar
+    # This is exclusively the flexible-wage system (ALPHA / BETA); fixed wages
+    # are routed to `problem_fixed` by `solve`.
+    out[2N] = labor_market_residual(labor_closure(options), model, sum(L_i), w)
 
     # ── Equation 4: Numeraire constraint — CPI = 1 ──
     out[2N+1] = cpi - 1.0
@@ -340,23 +370,26 @@ function problem_fixed(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # Sectoral labor demand at w=1.0
     L_i = sectoral_labor_demand(p, y, w, model)
 
-    # Final demand (budget-consistent)
+    # Final demand (budget-consistent, financed — same hook as `problem`).
+    fin = model.financing
+    ds_eff = preference_weights(fin, demand_shock)
     total_income = w * sum(L_i)
-    agg = sum(consumption_share .* demand_shock .* p .^ (1 - σ))
-    final_demand = (consumption_share .* demand_shock .* total_income .* p .^ (-σ)) ./ agg
-
-    # Autonomous & investment final demand
-    cons_base = sum(labor_share)
-    A = shocks.autonomous_demand .* consumption_share .* cons_base
-    G = shocks.investment_shock .* consumption_share .* cons_base
-    total_final_demand = final_demand .+ A .+ G
+    # NOTE: no positivity guard here — the residual function must tolerate the
+    # solver's exploration of negative-income trial points (the legacy code
+    # did). The E > 0 check belongs to the post-solve validation in the
+    # notebooks (headline assertions verify E = w*L - T > 0 at equilibrium).
+    E = household_expenditure(fin, total_income, p)
+    agg = sum(consumption_share .* ds_eff .* p .^ (1 - σ))
+    final_demand = (consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg
+    total_final_demand = final_demand .+ additive_demand(fin, N)
 
     # Intermediary demand
     intermediary_demand = p .^ (-θ) .* (Ω_raw' * (p .^ ϵ .* supply_shock .^ (ϵ - 1) .* intermediate_price .^ (θ - ϵ) .* (1 .- factor_share) .* y))
 
-    # Direct CES cost at the sticky wage; the reallocation correction is
-    # supported only by the mobile closure's labor-market accounting.
-    cost = (supply_shock .^ (ϵ - 1) .* (factor_share .* w .^ (1 - ϵ) .+ (1 .- factor_share) .* intermediate_price .^ (1 - ϵ))) .^ (1 / (1 - ϵ))
+    # Direct CES cost at the sticky wage (CD-limit-safe); the reallocation
+    # correction is supported only by the mobile closure's labor-market
+    # accounting.
+    cost = _ces_unit_cost(supply_shock, factor_share, w, intermediate_price, ϵ)
 
     # 1. Zero-profit (all N sectors)
     out[1:N] .= p .- cost
@@ -383,9 +416,13 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
     N = length(data.factor_share)
 
     η = options.elasticities.η
+    # The fixed-wage η ≈ 1 system is homogeneous and scale-indeterminate
+    # UNLESS an additive demand anchor breaks homogeneity. Only F2/F3
+    # (additive public bundles) anchor scale; F1 is purely compositional
+    # and does not.
     isapprox(η, 1.0; rtol=0, atol=_ETA_SCALE_INDETERMINACY_TOL) &&
-        all(iszero, shocks.autonomous_demand) && all(iszero, shocks.investment_shock) &&
-        throw(ArgumentError("fixed-wage η=1 has a homogeneous, scale-indeterminate equilibrium; add autonomous or investment demand as an additive-demand anchor, or use another η"))
+        !has_additive_anchor(model.financing) &&
+        throw(ArgumentError("fixed-wage η=1 has a homogeneous, scale-indeterminate equilibrium; add an additive public demand anchor (TaxFinanced / ExternalDebt), or use another η"))
 
     if init === nothing
         init = [ones(N); data.λ]
@@ -400,7 +437,7 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
         Float64.(init)
     else
         ProbN = NonlinearSolve.NonlinearProblem(problem_fixed, init, model)
-        res = NonlinearSolve.solve(ProbN, reltol=1e-6, abstol=1e-6, maxiters=1000)
+        res = NonlinearSolve.solve(ProbN, reltol=1e-6, abstol=1e-6, maxiters=5000)
         string(res.retcode) == "Success" ||
             error("MobileLaborCES._solve_fixed did not converge: retcode = $(res.retcode)")
         res.u
@@ -418,11 +455,14 @@ function _solve_fixed(model::Model{MobileLaborCES}; init=nothing)
     # Wages vector (all 1.0 — sticky)
     wages = fill(w, N)
 
-    # Consumption (budget-consistent)
+    # Consumption (budget-consistent, financed — must match `problem_fixed`)
     numeraire = (data.consumption_share' * p .^ (1 - σ))^(1 / (1 - σ))
+    fin = model.financing
+    ds_eff = preference_weights(fin, shocks.demand_shock)
     total_income = w * sum(L_i)
-    agg = sum(data.consumption_share .* shocks.demand_shock .* p .^ (1 - σ))
-    consumption = (data.consumption_share .* shocks.demand_shock .* total_income .* p .^ (-σ)) ./ agg
+    E = household_expenditure(fin, total_income, p)
+    agg = sum(data.consumption_share .* ds_eff .* p .^ (1 - σ))
+    consumption = (data.consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg
 
     # Real GDP: consumption Tornqvist (B&F metric)
     base_income = sum(data.labor_share)
@@ -474,7 +514,7 @@ function solve(model::Model{MobileLaborCES};
         Float64.(init)
     else
         ProbN = NonlinearSolve.NonlinearProblem(problem, init, model)
-        res = NonlinearSolve.solve(ProbN, reltol=1e-6, abstol=1e-6, maxiters=1000)
+        res = NonlinearSolve.solve(ProbN, reltol=1e-6, abstol=1e-6, maxiters=5000)
         # `retcode` may be a symbol or string depending on NonlinearSolve.
         string(res.retcode) == "Success" ||
             error("MobileLaborCES.solve did not converge: retcode = $(res.retcode)")
@@ -493,12 +533,16 @@ function solve(model::Model{MobileLaborCES};
     # Wages vector (all equal to w — mobile labor)
     wages = fill(w, N)
 
-    # Consumption — must match the budget-consistent demand used inside `problem`
-    # so the reported allocation is the actual equilibrium allocation.
+    # Consumption — must match the budget-consistent, financed demand used
+    # inside `problem` so the reported allocation is the actual equilibrium
+    # allocation.
     numeraire = (data.consumption_share' * p .^ (1 - σ))^(1 / (1 - σ))
+    fin = model.financing
+    ds_eff = preference_weights(fin, shocks.demand_shock)
     total_income = w * sum(L_i)
-    agg = sum(data.consumption_share .* shocks.demand_shock .* p .^ (1 - σ))
-    consumption = (data.consumption_share .* shocks.demand_shock .* total_income .* p .^ (-σ)) ./ agg
+    E = household_expenditure(fin, total_income, p)
+    agg = sum(data.consumption_share .* ds_eff .* p .^ (1 - σ))
+    consumption = (data.consumption_share .* ds_eff .* E .* p .^ (-σ)) ./ agg
 
     # Real GDP: Tornqvist (Divisia) quantity index of FINAL CONSUMPTION (value-added)
     # — not gross output. In B&F (2019), real GDP is a Divisia index of real final
@@ -530,17 +574,27 @@ Convenience constructor for a MobileLaborCES model.
 `closure=:mobile` uses a flexible, market-clearing wage; `closure=:fixed` uses a
 sticky wage of one and unconstrained employment demand.
 """
-function mobile_labor_model(data::Data, shocks::Shocks, θ::Float64, ϵ::Float64, σ::Float64, η::Float64; labor_bar::Union{Real, Nothing}=nothing, closure=:mobile)
-    el = MobileLaborCESElasticities(θ, ϵ, σ, η)
+function mobile_labor_model(data::Data, shocks::Shocks, θ::Float64, ϵ::Float64, σ::Float64, η::Float64; labor_bar::Union{Real, Nothing}=nothing, closure=:mobile, financing::Union{AbstractFinancing, Nothing}=nothing, eta_s::Union{Real, Nothing}=nothing)
+    # BETA: an explicit supply elasticity forces the :beta closure.
+    if eta_s !== nothing
+        closure in (:mobile, :beta) || throw(ArgumentError(
+            "eta_s applies to the :beta closure (got closure = $closure)"))
+        closure = :beta
+    end
+    el = eta_s === nothing ? MobileLaborCESElasticities(θ, ϵ, σ, η) :
+                             MobileLaborCESElasticities(θ, ϵ, σ, η, Float64(eta_s))
     closure_symbol = _closure_symbol(closure)
     labor_bar !== nothing && closure_symbol == :fixed && throw(ArgumentError(
         "fixed closure treats employment as an outcome; labor_bar is not used and must not be supplied"))
     lb = labor_bar === nothing ? sum(data.labor_share) : Float64(labor_bar)
-    model = Model(data, shocks, MobileLaborCES(el, lb, closure_symbol))
+    fin = financing === nothing ? NoFinancing() : financing
+    model = Model(data, shocks, MobileLaborCES(el, lb, closure_symbol), fin)
     return model
 end
 
 mobile_labor_model(data::Data, shocks::Shocks, θ::Real, ϵ::Real, σ::Real, η::Real;
-    labor_bar=nothing, closure=:mobile) = mobile_labor_model(data, shocks, Float64(θ), Float64(ϵ), Float64(σ), Float64(η);
+    labor_bar=nothing, closure=:mobile, financing=nothing, eta_s=nothing) = mobile_labor_model(data, shocks, Float64(θ), Float64(ϵ), Float64(σ), Float64(η);
     labor_bar=labor_bar === nothing ? nothing : Float64(labor_bar),
-    closure=_closure_symbol(closure))
+    closure=_closure_symbol(closure),
+    financing=financing,
+    eta_s=eta_s)

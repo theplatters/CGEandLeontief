@@ -1,0 +1,6 @@
+data_processed/*
+!data_processed/.gitkeep
+plots/*
+!plots/.gitkeep
+results_intermediate/*
+!results_intermediate/.gitkeep

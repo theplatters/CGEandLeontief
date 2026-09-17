@@ -53,6 +53,6 @@ Every quantitative claim is traceable: claim → `run_id` → manifest → commi
 
 - Environment: `julia --project=.` from the repo root. Package load check: `julia --project=. -e 'using BeyondHulten'`.
 - Headless runs must not load GLMakie. Plotting is isolated in the lazy extension `ext/BeyondHultenGLMakieExt.jl` and loads only when both `GLMakie` and `BeyondHulten` are loaded, so `julia --project=. -e 'using BeyondHulten'` is headless-safe; if a script needs only the kernel, direct includes work too, as `rerun_results.jl` does:
-  `include("src/interface.jl"); include("src/solution.jl"); include("src/ces.jl"); include("src/mobile_labor.jl"); include("src/util.jl"); include("src/variance_decomposition.jl")`.
+  `include("src/core/accounting.jl"); include("src/core/technology.jl"); include("src/closures/labor/types.jl"); include("src/core/equilibrium.jl"); include("src/closures/labor/labor.jl"); include("src/closures/financing/financing.jl"); include("src/closures/registry.jl"); include("src/core/diagnostics.jl")`.
 - Run `julia --project=. -e 'using Pkg; Pkg.test()'` before quoting any result.
 - Paper tables and figures cite `run_id`s from `registry/scenarios.csv`, not numbers restated in documents (ADR-0003/ADR-0004).

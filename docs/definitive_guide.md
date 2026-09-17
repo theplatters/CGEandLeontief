@@ -120,7 +120,7 @@ material but far smaller than the wage-regime effect.
 
 ### Status after §4.1 data integration — RE-RUN COMPLETE (2026-09-03)
 
-The §4.1 transformation was wired into `src/interface.jl` (domestic `Ω_dom` retained for
+The §4.1 transformation was wired into `src/core/accounting.jl` (domestic `Ω_dom` retained for
 audit, equilibrium technology and `consumption_share` calibration on `Ω_raw`, basic-price
 gross output, standard Domar `λ`, decomposed value added) and the Part I results were
 re-run under the new data (`rerun_results.jl`). Two blocking bugs surfaced during the
@@ -167,8 +167,8 @@ the additional 2026-09-03 guards (log-space mobile allocation with finite `|η| 
 corrected allocative-wedge sign and numerical guards, calibration/equilibrium `Ω_raw`
 alignment including Cobb–Douglas, Sobol grid/output validation, `:fixed` scale-indeterminacy
 guard) are all required. `Data` transformation sound (GDP P=I exact; E residual 5.387%
-documented). Re-run: `julia --project=. rerun_results.jl`. Code fixes: `src/mobile_labor.jl`
-& `src/ces.jl` (`Ω` → `Ω_raw` in the equilibrium technology); the `consumption_share`
+documented). Re-run: `julia --project=. rerun_results.jl`. Code fixes: `src/core/equilibrium.jl`
+& `src/core/technology.jl` (`Ω` → `Ω_raw` in the equilibrium technology); the `consumption_share`
 calibration (and Cobb–Douglas) also migrated to `Ω_raw`; `rerun_results.jl` (`log` → `logmsg`).
 (The 2026-09-02 recorded numbers in the prior version of this document are historical and
 superseded by the 2026-09-03 re-run.)
@@ -343,7 +343,7 @@ Mapping from ROADMAP §7, updated for the new findings:
    - **Done 2026-09-02** — deliverables: `Notebooks/AccountingConsistency.ipynb`, `docs/accounting_consistency_plan.md`, and locally generated `output/AC_*.csv` (regenerate with the notebook; not committed).
    - Separates domestic vs imported intermediate/final uses; decomposes value-added into wages / other-prod-tax / depreciation / net-op-surplus
    - Reconciles the three GDP sides (GDP(P)=GDP(I) exact; |GDP(P)−GDP(E)|=5.387%, a documented raw-table valuation discrepancy)
-   - `src/interface.jl` integration done — `generate_data` performs the §4.1 transformation inline (`Ω_raw` for technology + `consumption_share` calibration, `Ω_dom` retained for domestic audit; decomposed VA; standard Domar λ; separated imports); `Data` extended with audit fields.
+   - `src/core/accounting.jl` integration done — `generate_data` performs the §4.1 transformation inline (`Ω_raw` for technology + `consumption_share` calibration, `Ω_dom` retained for domestic audit; decomposed VA; standard Domar λ; separated imports); `Data` extended with audit fields.
 5. **Phase 2 — Policy experiment** (ROADMAP §6, Phase 2)
    - Fix the sectoral investment vector
    - Choose and implement the principal financing closure

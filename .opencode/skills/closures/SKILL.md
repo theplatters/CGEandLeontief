@@ -25,7 +25,7 @@ Symbol discipline: `η` is always the BF reallocation parameter, `η_s` is alway
 
 ## One kernel rule (ADR-0001)
 
-- Implement in the root `src/` only. Current homes: `src/mobile_labor.jl` (BF, ALPHA, GAMMA) and `src/interface.jl` (closure types). `docs/log/2026-09.md` names `src/closures/` as the Phase 2 promotion target — planned, not created yet.
+- Implement in the root `src/` only. Current homes: `src/core/equilibrium.jl` (BF, ALPHA, GAMMA mechanics), `src/closures/labor/types.jl` (closure descriptions), `src/closures/labor/labor.jl` (BETA, DELTA), `src/closures/financing/financing.jl` (F1–F3), `src/closures/registry.jl` (id → constructor). `docs/log/2026-09.md` named `src/closures/` as the Phase 2 promotion target — done in ADR-0005.
 - `cbase2/` is a frozen snapshot: read `cbase2/src/closures.jl` and `cbase2/src/financing.jl` freely and copy the economics from them, but never edit `cbase2/` and never build a parallel kernel.
 - Closures are plug-in options registered centrally; do not duplicate the CES core.
 
@@ -59,7 +59,7 @@ Evidence per status (ADR-0003, `registry/README.md`): code in a listed file that
 
 ## Promotion from frozen cbase2 (Phase 2, planned)
 
-- Sources: `cbase2/src/closures.jl` (BETA, DELTA) and `cbase2/src/financing.jl` (F1–F3). The `open_gates` for each entry list what blocks promotion.
+- Sources: `cbase2/src/closures.jl` (BETA, DELTA) and `cbase2/src/financing.jl` (F1–F3). The `open_gates` for each entry list what blocks promotion. Promotion landed in Phase 2 (ADR-0005): economics in `src/closures/labor/labor.jl` and `src/closures/financing/financing.jl`, types in `src/closures/labor/types.jl`, mapping in `src/closures/registry.jl`.
 - Port the economics into the root kernel, add contract tests, then record the promotion by updating the closure entry (`files`, `tests`, `status`, `open_gates`, `notes`) and the lab log.
 - Never edit `cbase2/`; its freeze commit, tree hash, kernel diffs, and open items are in `registry/freeze.toml` (`[frozen.cbase2]`).
 - Do not claim `tested`/`validated` for promoted code until the root tests actually cover it and pass.

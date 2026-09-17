@@ -41,3 +41,4 @@ settled question.
 | ADR-0002 | Closure taxonomy and stable IDs | accepted |
 | ADR-0003 | `registry/` is the single source of truth | accepted |
 | ADR-0004 | Runs are immutable, manifest-backed records | accepted |
+| ADR-0005 | Phase 2 layout and cbase2 backport | accepted |

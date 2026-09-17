@@ -20,19 +20,19 @@ formulation = "L_i = L_fixed_i^(1-eta) * L_costmin_i^eta, with sum_i L_i = Lbar;
 interpretation = "Static intersectoral reallocation friction; eta is NOT a labour-supply elasticity, and eta = 0 is not Baqaee-Farhi 2019's immobile benchmark (one common wage is kept)."
 status = "implemented"
 symbols = ["MobileLaborCES"]
-files = ["src/mobile_labor.jl"]
+files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
 references = ["docs/labor_closures.md", "docs/DOCS_ASSESSMENT.md", "roadmaps/vertdict.md", "ROADMAP.md"]
 tests = ["tests/test_mobile_labor.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = ["DE-0001", "DE-0002", "DE-0004"]
-adrs = ["ADR-0002"]
+adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
     "zero-profit/budget consistency for eta < 1 (cbase2/review.md §2.4): the wedge is distributed to no one and p·y does not equal wL + p·int",
     "the ad-hoc efficiency wedge is not derived (cbase2/review.md §1; docs/labor_closures.md:64-79)",
     "Phase-4 residual gates (ROADMAP.md): omitted-equation invariance, household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency",
     "a recorded run manifest",
 ]
-notes = "The geometric interpolation between the fixed and cost-minimizing endpoints is project-specific, not a BF mechanism (cbase2/review.md §1: partially supported, over-claimed). The implemented middle carries an ad hoc efficiency wedge (src/mobile_labor.jl:172-188) that docs/labor_closures.md admits is not established as the exact CES allocative-loss coefficient. tests/test_mobile_labor.jl covers the mobile closure contract by inspection (closure taxonomy, solve, residuals, allocation wedge); status stays implemented because the Phase-4 gates and a run manifest are missing."
+notes = "The geometric interpolation between the fixed and cost-minimizing endpoints is project-specific, not a BF mechanism (cbase2/review.md §1: partially supported, over-claimed). The implemented middle carries an ad hoc efficiency wedge (src/core/equilibrium.jl) that docs/labor_closures.md admits is not established as the exact CES allocative-loss coefficient. tests/test_mobile_labor.jl covers the mobile closure contract by inspection (closure taxonomy, solve, residuals, allocation wedge); status stays implemented because the Phase-4 gates and a run manifest are missing."
 
 [labor.ALPHA]
 id = "ALPHA"
@@ -41,18 +41,18 @@ formulation = "sum_i L_i = Lbar; one economy-wide flexible wage; full cost-minim
 interpretation = "Standard full-employment CGE endpoint."
 status = "implemented"
 symbols = ["MobileLaborCES", "FlexibleWageClosure"]
-files = ["src/mobile_labor.jl"]
+files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
 references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_mobile_labor.jl"]
 evidence = []
 dead_ends = ["DE-0002"]
-adrs = ["ADR-0002"]
+adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
     "Phase-4 residual gates (ROADMAP.md)",
     "a recorded run manifest",
     "matrix cell not yet run",
 ]
-notes = "Nested in BF at eta = 1 by construction; the coincidence is definitional in the code, not a result (cbase2/review.md §1). FlexibleWageClosure is defined in src/interface.jl and referenced by src/mobile_labor.jl. tests/test_mobile_labor.jl covers the mobile closure contract."
+notes = "Nested in BF at eta = 1 by construction; the coincidence is definitional in the code, not a result (cbase2/review.md §1). FlexibleWageClosure is defined in src/closures/labor/types.jl and referenced by src/core/equilibrium.jl. tests/test_mobile_labor.jl covers the mobile closure contract."
 
 [labor.BETA]
 id = "BETA"
@@ -61,20 +61,19 @@ formulation = "sum_i L_i = Lbar * ((w/P)/(w0/P0))^eta_s"
 interpretation = "Intended as a labour-leisure / voluntary supply response; the income effect is not implemented."
 status = "implemented"
 symbols = ["ElasticLaborClosure"]
-files = ["cbase2/src/closures.jl"]
-references = ["docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md", "ROADMAP.md"]
+files = ["src/closures/labor/types.jl", "src/closures/labor/labor.jl", "src/core/equilibrium.jl"]
+references = ["docs/closures/beta.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md", "ROADMAP.md"]
 tests = []
 evidence = ["cbase2/process_comments.md"]
 dead_ends = ["DE-0004"]
-adrs = ["ADR-0002"]
+adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
-    "promotion from cbase2 to src/",
     "contract tests",
     "labour-leisure income effect not implemented (cbase2/review.md §1)",
     "w0 anchor vs baseline wage (cbase2/review.md §3.4)",
     "v3 continuation times out (cbase2/process_comments.md, 2026-09-16)",
 ]
-notes = "cbase2/review.md §1 verdict: partially supported. The power-function supply curve is a defensible reduced form directly answering R2, but the labour-leisure interpretation is not earned by the implementation (no income effect). The v3 verification (solve_beta eta_s-continuation) ran over 25 minutes without completing (cbase2/process_comments.md, 2026-09-16); the v2-stage elasticity identification recovers eta_s by construction and is circular (cbase2/review.md §3.4)."
+notes = "Promoted to src/closures/labor/ in Phase 2 (ADR-0005). cbase2/review.md §1 verdict: partially supported. The power-function supply curve is a defensible reduced form directly answering R2, but the labour-leisure interpretation is not earned by the implementation (no income effect). The v3 verification (solve_beta eta_s-continuation) ran over 25 minutes without completing (cbase2/process_comments.md, 2026-09-16); the v2-stage elasticity identification recovers eta_s by construction and is circular (cbase2/review.md §3.4)."
 
 [labor.GAMMA]
 id = "GAMMA"
@@ -83,17 +82,17 @@ formulation = "w/P = wbar (= 1); employment endogenous and uncapped"
 interpretation = "Perfectly elastic labour supply at a fixed real wage; the fixed-wage endpoint of the sweep."
 status = "implemented"
 symbols = ["FixedWageClosure"]
-files = ["src/mobile_labor.jl"]
+files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
 references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_fixed_closure.jl"]
 evidence = []
 dead_ends = ["DE-0003"]
-adrs = ["ADR-0002"]
+adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
     "the canonical one-sided wage floor with rationed employment is not implemented (that is ZETA; cbase2/review.md §1)",
     "matrix cell not yet run",
 ]
-notes = "The two-sided uncapped peg is not the canonical Keynesian closure; the doc itself identifies it as BETA's eta_s to infinity limit, so it cannot be an independent paradigm (cbase2/review.md §1). The historical +19.3 pp headline came from a retired unfinanced shock; the financed F2 run is roughly employment-neutral (cbase2/review.md §1; cbase2/process_comments.md, 2026-09-15). tests/test_fixed_closure.jl covers the fixed-closure contract by inspection (uncapped employment, scale guards)."
+notes = "The two-sided uncapped peg is not the canonical Keynesian closure; the doc itself identifies it as BETA's eta_s to infinity limit, so it cannot be an independent paradigm (cbase2/review.md §1). Phase 2 adopts the cbase2 fixed formulation (all N clearings, w = 1 numeraire; ADR-0005), resolving the omitted-N open item. The historical +19.3 pp headline came from a retired unfinanced shock; the financed F2 run is roughly employment-neutral (cbase2/review.md §1; cbase2/process_comments.md, 2026-09-15). tests/test_fixed_closure.jl covers the fixed-closure contract by inspection (uncapped employment, scale guards)."
 
 [labor.DELTA]
 id = "DELTA"
@@ -102,18 +101,18 @@ formulation = "GAMMA (w/P = 1) + Leontief limit of the CES core (theta, epsilon,
 interpretation = "Robinson-2006-style fixed-price multiplier corner."
 status = "implemented"
 symbols = ["delta_elasticities", "delta_model", "leontief_multiplier"]
-files = ["cbase2/src/closures.jl"]
-references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
+files = ["src/closures/labor/labor.jl", "src/core/equilibrium.jl"]
+references = ["docs/closures/delta.md", "ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = []
 evidence = ["cbase2/scripts/verify_v3.jl"]
 dead_ends = []
-adrs = ["ADR-0002"]
+adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
-    "promotion from cbase2 to src/",
+    "contract tests",
     "Type I vs Type II multiplier identification unresolved (cbase2/review.md §1)",
     "exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5)",
 ]
-notes = "DELTA is a corner reached as GAMMA plus Leontief technology (docs/DOCS_ASSESSMENT.md; cbase2/documentation.md); it is the endpoint row of the 5x3 matrix but not an independent mechanism (see ADR-0002 amendment 2026-09-17). The analytic counterpart leontief_multiplier includes endogenous consumption, saving and import leaks, i.e. a Type II/SAM-style multiplier rather than the (I-A)^-1 Type I inverse (cbase2/review.md §1). verify_v3.jl asserts relative agreement below 5e-3, not machine zero (cbase2/review.md §2.9)."
+notes = "Promoted to src/closures/labor/labor.jl in Phase 2 (ADR-0005). DELTA is a corner reached as GAMMA plus Leontief technology (docs/DOCS_ASSESSMENT.md; cbase2/documentation.md); it is the endpoint row of the 5x3 matrix but not an independent mechanism (see ADR-0002 amendment 2026-09-17). The analytic counterpart leontief_multiplier includes endogenous consumption, saving and import leaks, i.e. a Type II/SAM-style multiplier rather than the (I-A)^-1 Type I inverse (cbase2/review.md §1). verify_v3.jl asserts relative agreement below 5e-3, not machine zero (cbase2/review.md §2.9)."
 
 [labor.ZETA]
 id = "ZETA"
@@ -148,14 +147,14 @@ formulation = "beta_tilde_i = beta_i d_i / sum_j beta_j d_j; sum_i p_i c_i^h = E
 interpretation = "Compositional household demand shift; the budget closes by construction within fixed household expenditure; government spending untouched."
 status = "implemented"
 symbols = ["PreferenceReallocation"]
-files = ["cbase2/src/financing.jl"]
-references = ["docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
+files = ["src/closures/financing/financing.jl"]
+references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
 tests = []
 evidence = ["cbase2/process_comments.md"]
 dead_ends = ["DE-0001"]
-adrs = ["ADR-0002"]
+adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
-    "promotion to src/",
+    "contract tests",
     "matrix cell not yet run",
 ]
 notes = "A demand-composition shifter, not a financing closure in the CGE taxonomy (cbase2/review.md §1). Must never be described as an autonomous investment multiplier (ROADMAP.md section 4.3; docs/DOCS_ASSESSMENT.md, verdict warning)."
@@ -167,14 +166,14 @@ formulation = "sum_i p_i g_i = T(p); lump-sum / balanced-budget tax"
 interpretation = "Autonomous public investment financed by an explicit tax counterparty (balanced government budget)."
 status = "implemented"
 symbols = ["TaxFinanced"]
-files = ["cbase2/src/financing.jl"]
-references = ["docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
+files = ["src/closures/financing/financing.jl"]
+references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
 tests = []
 evidence = ["cbase2/process_comments.md"]
 dead_ends = []
-adrs = ["ADR-0002"]
+adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
-    "promotion to src/",
+    "contract tests",
     "matrix cell not yet run",
     "budget helper pricing inconsistency noted in review §2.7",
 ]
@@ -187,14 +186,14 @@ formulation = "sum_i p_i g_i = F; external balance F"
 interpretation = "Net new expenditure with an external counterpart; resources arrive via the external balance (imports serve the investment). It is an accounting open-economy closure, not a monetary mechanism."
 status = "implemented"
 symbols = ["ExternalDebt"]
-files = ["cbase2/src/financing.jl"]
-references = ["docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
+files = ["src/closures/financing/financing.jl"]
+references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
 tests = []
 evidence = ["cbase2/process_comments.md"]
 dead_ends = []
-adrs = ["ADR-0002"]
+adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
-    "promotion to src/",
+    "contract tests",
     "matrix cell not yet run",
     "external_balance returns only the programme's import content (review §2.8)",
 ]

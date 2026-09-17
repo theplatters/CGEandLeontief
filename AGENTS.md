@@ -12,7 +12,7 @@ catalogue in `docs/DOCS_ASSESSMENT.md`.
 
 | Path | What it is |
 | --- | --- |
-| `src/` | Canonical Julia package — model, closures, diagnostics. One kernel only. |
+| `src/` | Canonical Julia package — model, closures, diagnostics. One kernel only: `src/core/{accounting,technology,equilibrium,diagnostics}.jl`, closure plugins in `src/closures/{labor,financing}/` plus `src/closures/registry.jl` (ADR-0005). |
 | `ext/` | Phase 1: package extensions for heavy optional features (GLMakie plotting); they load only when the optional package is loaded. Wired via `[weakdeps]` / `[extensions]` in `Project.toml`. |
 | `tests/` | Test suite (entry `tests/runtests.jl`, shimmed by `test/runtests.jl`). |
 | `scripts/` | Repository tooling — `scripts/status.jl` generates the status board. |

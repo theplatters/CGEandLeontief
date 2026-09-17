@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `e8202f3` (clean)
+Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `440efec` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -11,8 +11,8 @@ Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `e8202f3` 
 
 | Axis | idea | spec | implemented | tested | validated | total |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Labour closures | 1 | 0 | 5 | 0 | 0 | 6 |
-| Financing closures | 0 | 0 | 3 | 0 | 0 | 3 |
+| Labour closures | 1 | 0 | 3 | 2 | 0 | 6 |
+| Financing closures | 0 | 0 | 0 | 3 | 0 | 3 |
 
 Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cbase2-v3`, `matrix_5x3`.
 
@@ -21,9 +21,9 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
 | ID | Status | Formulation | Implementation | Tests | Dead ends | Open gates |
 | --- | --- | --- | --- | --- | --- | --- |
 | ALPHA | implemented | sum_i L_i = Lbar; one economy-wide flexible wage; full cost-minimizing allocation (BF eta = 1) | src/core/equilibrium.jl, src/closures/labor/types.jl | tests/test_mobile_labor.jl | DE-0002 | Phase-4 residual gates (ROADMAP.md); a recorded run manifest; matrix cell not yet run |
-| BETA | implemented | sum_i L_i = Lbar * ((w/P)/(w0/P0))^eta_s | src/closures/labor/types.jl, src/closures/labor/labor.jl, src/core/equilibrium.jl |  | DE-0004 | contract tests; labour-leisure income effect not implemented (cbase2/review.md §1); w0 anchor vs baseline wage (cbase2/review.md §3.4); v3 continuation times out (cbase2/process_comments.md, 2026-09-16) |
+| BETA | tested | sum_i L_i = Lbar * ((w/P)/(w0/P0))^eta_s | src/closures/labor/types.jl, src/closures/labor/labor.jl, src/core/equilibrium.jl | tests/test_promoted_closures.jl | DE-0004 | labour-leisure income effect not implemented (cbase2/review.md §1); w0 anchor vs baseline wage (cbase2/review.md §3.4); 70-sector BETA continuation margin unverified after promotion (cbase2 timeout, cbase2/process_comments.md 2026-09-16; 3-sector contract tests converge) |
 | BF | implemented | L_i = L_fixed_i^(1-eta) * L_costmin_i^eta, with sum_i L_i = Lbar; eta in [0,1] (extrapolation outside) | src/core/equilibrium.jl, src/closures/labor/types.jl | tests/test_mobile_labor.jl | DE-0001, DE-0002, DE-0004 | zero-profit/budget consistency for eta < 1 (cbase2/review.md §2.4): the wedge is distributed to no one and p·y does not equal wL + p·int; the ad-hoc efficiency wedge is not derived (cbase2/review.md §1; docs/labor_closures.md:64-79); Phase-4 residual gates (ROADMAP.md): omitted-equation invariance, household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency; a recorded run manifest |
-| DELTA | implemented | GAMMA (w/P = 1) + Leontief limit of the CES core (theta, epsilon, sigma -> 0+) with full cost-minimizing allocation (eta = 1) | src/closures/labor/labor.jl, src/core/equilibrium.jl |  |  | contract tests; Type I vs Type II multiplier identification unresolved (cbase2/review.md §1); exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5) |
+| DELTA | tested | GAMMA (w/P = 1) + Leontief limit of the CES core (theta, epsilon, sigma -> 0+) with full cost-minimizing allocation (eta = 1) | src/closures/labor/labor.jl, src/core/equilibrium.jl | tests/test_promoted_closures.jl |  | Type I vs Type II multiplier identification unresolved (cbase2/review.md §1); exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5) |
 | GAMMA | implemented | w/P = wbar (= 1); employment endogenous and uncapped | src/core/equilibrium.jl, src/closures/labor/types.jl | tests/test_fixed_closure.jl | DE-0003 | the canonical one-sided wage floor with rationed employment is not implemented (that is ZETA; cbase2/review.md §1); matrix cell not yet run |
 | ZETA | idea | 0 <= Lbar - L _\|_ w/P - omega_bar >= 0 (complementarity / one-sided real-wage floor) |  |  | DE-0007 | equations; calibration; implementation; tests; MPEC/smoothing formulation required because plain square solvers cannot express it (cbase2/review.md §4) |
 
@@ -31,9 +31,9 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
 
 | ID | Status | Formulation | Implementation | Tests | Dead ends | Open gates |
 | --- | --- | --- | --- | --- | --- | --- |
-| F1 | implemented | beta_tilde_i = beta_i d_i / sum_j beta_j d_j; sum_i p_i c_i^h = E_h; budget-neutral composition shift | src/closures/financing/financing.jl |  | DE-0001 | contract tests; matrix cell not yet run |
-| F2 | implemented | sum_i p_i g_i = T(p); lump-sum / balanced-budget tax | src/closures/financing/financing.jl |  |  | contract tests; matrix cell not yet run; budget helper pricing inconsistency noted in review §2.7 |
-| F3 | implemented | sum_i p_i g_i = F; external balance F | src/closures/financing/financing.jl |  |  | contract tests; matrix cell not yet run; external_balance returns only the programme's import content (review §2.8) |
+| F1 | tested | beta_tilde_i = beta_i d_i / sum_j beta_j d_j; sum_i p_i c_i^h = E_h; budget-neutral composition shift | src/closures/financing/financing.jl | tests/test_promoted_closures.jl | DE-0001 | matrix cell not yet run; v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md) |
+| F2 | tested | sum_i p_i g_i = T(p); lump-sum / balanced-budget tax | src/closures/financing/financing.jl | tests/test_promoted_closures.jl |  | matrix cell not yet run; budget helper pricing inconsistency noted in review §2.7; v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md) |
+| F3 | tested | sum_i p_i g_i = F; external balance F | src/closures/financing/financing.jl | tests/test_promoted_closures.jl |  | matrix cell not yet run; external_balance returns only the programme's import content (review §2.8); v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md) |
 
 ## Scenario matrix
 

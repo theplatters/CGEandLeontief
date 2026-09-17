@@ -82,3 +82,15 @@ So `GAMMA-F1` and `DELTA-F1` were executable; the guard's premise did not hold.
   wage sits at its anchor. `η_s` bites only with a supply-side scenario
   (+20 % sector-1 shock: L = 1.00245 at `η_s = 0.5` vs 1.00983 at `η_s = 2.0`).
   Recorded in `registry/closures.toml` (BETA open gates).
+
+- **The criterion exposed a latent bug in the retired heuristic.** On the closed
+  `tiny_fixture` the old guard admitted the fixed η = 1 system whenever manna
+  was present (`shocks.autonomous_demand ≠ 0`) — even though manna is a
+  *constant*: it leaves `G` untouched, so the unit root survives
+  (`max(colsums)` = 1.0 exactly, hence `1'(I − G) = 0`) and the solution set
+  stays a line. The kernel's LM then returned a least-squares point with
+  residual < 1e-6 whose location is set by the solver path, not by the model,
+  and `tests/test_fixed_closure.jl` had been asserting that as a pass. The test
+  now (i) asserts rejection for the manna case and (ii) runs the shocked η = 1
+  solve on a fixture with `s = 0.1` (max colsum = 0.95), where the system is
+  determinate.

@@ -7,7 +7,7 @@ restate status. See `docs/decisions/ADR-0003-registry-single-source-of-truth.md`
 | File | Contents | Maintained by |
 | --- | --- | --- |
 | `closures.toml` | Labour and financing closures: formulation, status, code symbols, references, tests, evidence, open gates | Humans/agents by hand; changes require an ADR or a linked run |
-| `scenarios.csv` | Experiment runs: the planned 5×3 matrix plus executed cbase2 verification runs | Humans/agents; from Phase 3, `experiments/run.jl` appends rows |
+| `scenarios.csv` | Experiment runs: the planned 5×3 matrix plus the recorded cbase2-v3 verification runs (provisional/failed) | Humans/agents; from Phase 3, `experiments/run.jl` appends rows |
 | `freeze.toml` | Frozen snapshots and read-only zones with recorded commits and git tree hashes | Only via ADR (Phase 0: ADR-0001) |
 
 ## Status vocabulary — closures (`closures.toml`)

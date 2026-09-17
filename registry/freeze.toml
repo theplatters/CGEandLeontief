@@ -129,3 +129,14 @@ tree_hash = "f37a6a507de9306aa6a9d0656583cceba5a57555"
 tracked_files = 1
 reason = "Root-level legacy notebook predating the current package API, committed with outputs."
 notes = "Read-only; kept for reference only."
+
+[read_only.archive]
+path = "archive"
+kind = "source-archive"
+status = "read-only"
+recorded_commit = "2b124039b0f912044a163cffeefef384bb382800"
+recorded_commit_short = "2b12403"
+tree_hash = "80b32322b72001f5be7b57853856de7c6fdc4c7c"
+tracked_files = 7
+reason = "Closed archive created in Phase 1; holds archive/src-orphans/ with the six sources that were never included by src/BeyondHulten.jl (DE-0009), moved out of src/ so the root package is the single kernel."
+notes = "Read-only per ADR-0001. The freeze baseline is the Phase 1 archive commit 2b12403, not the Phase 0 freeze commit dfd60a2, because the zone did not exist at dfd60a2. Do not add code here."

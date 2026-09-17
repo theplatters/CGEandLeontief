@@ -259,7 +259,7 @@ end
 # ── Reference continuation (ports cbase2/scripts/verify_v3.jl 18–77) ───
 
 """
-Reference continuation for a design: `read_data` → `drop_sectors` →
+Reference continuation for a design: `read_data` → `retained_dataset` →
 bisect `exo_scale` for the smallest scale with `saving_rate ≥ 0` → loop
 `exo_scale` steps × the θ ladder with
 `mobile_labor_model(data, shocks, θ, ϵ, σ, η)` (NoFinancing), warm-starting
@@ -293,16 +293,15 @@ function build_reference(design_d::Dict{String,Any}; root::AbstractString = defa
 
     dat = design_d["data"]
     drops = Int.(dat["drops"])
-    cbroot = joinpath(root, dat["calibration_root"])
     K = Int(ref["exo_scale_steps"])
 
     data_full = read_data(RUN_IO_TABLE; datadir = root)
-    data_v1 = drop_sectors(data_full, drops)
+    data_v1 = retained_dataset(data_full, drops)
     N = length(data_v1.factor_share)
     shocks = Shocks(ones(N), ones(N), zeros(N))
 
     # Bisection: smallest exo_scale with saving_rate ≥ 0 (s is monotone).
-    s_of(esc) = recalibrate_open(data_v1, cbroot; exo_scale = esc, drops = drops).saving_rate
+    s_of(esc) = recalibrate_open(data_v1; exo_scale = esc).saving_rate
     s_of(1.0) > 0 || throw(ErrorException("reference continuation: saving rate at exo_scale = 1 is not positive"))
     lo, hi = 0.0, 1.0
     for _ in 1:40
@@ -317,7 +316,7 @@ function build_reference(design_d::Dict{String,Any}; root::AbstractString = defa
     t0 = time()
     for k in 0:K
         exo_scale = esc0 + (1.0 - esc0) * k / K
-        data_cal = recalibrate_open(data_v1, cbroot; exo_scale = exo_scale, drops = drops)
+        data_cal = recalibrate_open(data_v1; exo_scale = exo_scale)
         init_warm, ref_sol = _theta_ladder(data_cal, shocks, thetas, epsilon, sigma, eta, init_warm)
     end
     @info "reference continuation done" seconds = round(time() - t0; digits = 1)
@@ -605,7 +604,7 @@ function update_scenario_row(run_id::AbstractString, design::AbstractString,
     # infers narrow InlineString widths (e.g. String7) from the current cell
     # values and the longer status/evidence/commit assignments below throw
     # `ArgumentError: string too large`. (Found by the smoke-manifest tests.)
-    raw = DataFrame(CSV.File(scenpath; stringtype = String, silencewarnings = true))
+    raw = DataFrame(CSV.File(scenpath; stringtype = String))
     df = DataFrame([c => string.(coalesce.(raw[!, c], "")) for c in names(raw)])
     r = findfirst(==(run_id), string.(coalesce.(df.run_id, "")))
     r === nothing && throw(ArgumentError("no scenarios.csv row for run_id \"$run_id\""))

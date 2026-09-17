@@ -210,7 +210,7 @@ function build_board(root::String)::Tuple{String,Int}
         check_closure(r, root, warns)
     end
 
-    df = DataFrame(CSV.File(scenpath; stringtype=String, silencewarnings=true))
+    df = DataFrame(CSV.File(scenpath; stringtype=String))
     for c in ("run_id", "design", "status", "labor", "financing", "evidence", "notes")
         hasproperty(df, Symbol(c)) || (df[!, Symbol(c)] = fill("", nrow(df)))
     end
@@ -388,7 +388,7 @@ function main()::Nothing
     clos = TOML.parsefile(joinpath(root, "registry", "closures.toml"))
     nlab = length(load_axis(clos, "labor"))
     nfin = length(load_axis(clos, "financing"))
-    nscen = nrow(DataFrame(CSV.File(joinpath(root, "registry", "scenarios.csv"); stringtype=String, silencewarnings=true)))
+    nscen = nrow(DataFrame(CSV.File(joinpath(root, "registry", "scenarios.csv"); stringtype=String)))
     println("docs/status.md written ($nlab labour, $nfin financing, $nscen scenarios, $nwarn warnings)")
     return nothing
 end

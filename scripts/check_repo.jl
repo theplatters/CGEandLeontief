@@ -264,7 +264,7 @@ end
 function scenario_rows(root::AbstractString)::Dict{String,Dict{String,String}}
     scenpath = joinpath(root, "registry", "scenarios.csv")
     isfile(scenpath) || return Dict{String,Dict{String,String}}()
-    raw = DataFrame(CSV.File(scenpath; silencewarnings = true))
+    raw = DataFrame(CSV.File(scenpath))
     out = Dict{String,Dict{String,String}}()
     for r in eachrow(raw)
         d = Dict{String,String}(string(c) => string(coalesce(r[c], "")) for c in names(raw))
@@ -324,7 +324,7 @@ function check_runs(root::AbstractString)::Vector{RepoViolation}
         idx_ids = Set{String}()
         if filesize(idxpath) > 0
             try
-                df = DataFrame(CSV.File(idxpath; stringtype = String, silencewarnings = true))
+                df = DataFrame(CSV.File(idxpath; stringtype = String))
                 hasproperty(df, :run_id) || push!(out, RepoViolation("runs", "runs/index.csv has no run_id column"))
                 for r in eachrow(df)
                     push!(idx_ids, string(coalesce(r.run_id, "")))

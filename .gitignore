@@ -19,3 +19,10 @@ __pycache__/
 IDEA.md
 docs/reviews/
 Manifest.toml
+
+# Run artifacts: only the index and manifests are committed (ADR-0004)
+/runs/*
+!/runs/index.csv
+!/runs/*/
+/runs/*/*
+!/runs/*/manifest.toml

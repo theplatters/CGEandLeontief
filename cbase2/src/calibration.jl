@@ -155,7 +155,10 @@ full-table baseline is not rebuilt).
 """
 function retained_dataset(data_full::Data, drops::Vector{Int})
 	n_full = length(data_full.factor_share)
+	all(d -> 1 <= d <= n_full, drops) || throw(ArgumentError(
+		"drop indices must lie in 1:n_full (data_full has $n_full sectors); got $drops"))
 	keep = setdiff(1:n_full, drops)
+	isempty(keep) && throw(ArgumentError("cannot drop all sectors"))
 	length(keep) == n_full && return data_full
 	io = retained_io_table(data_full.io, drops; number_sectors = n_full)
 	n = length(keep)

@@ -45,7 +45,7 @@ function main()
 
 		# (3) price index at p = 1, and (4) zero-profit at p = w = A = 1
 		ip_dev = maximum(maximum(abs.(_intermediate_price(d.Ω_raw, ones(n), th) .- 1)) for th in THETAS)
-		zp = Dict{eltype(THETAS),Float64}()
+		zp = Dict{Float64,Float64}()
 		for th in THETAS
 			ip = _intermediate_price(d.Ω_raw, ones(n), th)
 			cost = _ces_unit_cost(ones(n), min.(d.factor_share, 1 - 1e-12), ones(n), ip, 0.5)

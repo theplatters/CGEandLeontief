@@ -333,13 +333,19 @@ function _theta_ladder(data::Data, shocks::Shocks, thetas::Vector{Float64},
     for θ in thetas
         ref = mobile_labor_model(data, shocks, θ, epsilon, sigma, eta)
         if init_warm === nothing
+            # Very first solve: warm start from the linear fixed point (exact
+            # on real calibrations; singular toy fixtures fall back to λ).
             (; Ω_raw, factor_share, consumption_share, import_margin,
                 gov_demand, exo_demand, exports_demand) = data
-            M0 = Ω_raw' * Diagonal(1.0 .- factor_share)
-            Gk = M0 + Diagonal(1.0 .- import_margin) * consumption_share *
-                factor_share' * (1 - data.saving_rate) * (1 - sum(gov_demand))
-            y0 = (I - Gk) \ ((1.0 .- import_margin) .* (gov_demand .+ exo_demand) .+ exports_demand)
-            init_warm = [ones(N); y0; 1.0]
+            init_warm = try
+                M0 = Ω_raw' * Diagonal(1.0 .- factor_share)
+                Gk = M0 + Diagonal(1.0 .- import_margin) * consumption_share *
+                    factor_share' * (1 - data.saving_rate) * (1 - sum(gov_demand))
+                y0 = (I - Gk) \ ((1.0 .- import_margin) .* (gov_demand .+ exo_demand) .+ exports_demand)
+                [ones(N); y0; 1.0]
+            catch
+                [ones(N); data.λ; 1.0]
+            end
         end
         ref_sol = solve(ref; init = init_warm)
         mxp = maximum(abs.(ref_sol.prices_raw .- 1))
@@ -457,8 +463,10 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
     budget_pass = budget < budget_tol
 
     third_name, third_value, third_tol, third_pass =
-        fixed ? ("wage", maximum(abs.(sol.wages .- 1)), wage_tol,
-                 maximum(abs.(sol.wages .- 1)) < wage_tol) :
+        # Fixed closures hard-pin w = 1 (wages_raw); the normalized sol.wages
+        # folds in the CPI numeraire and must not enter the gate.
+        fixed ? ("wage", maximum(abs.(sol.wages_raw .- 1)), wage_tol,
+                 maximum(abs.(sol.wages_raw .- 1)) < wage_tol) :
                 ("labour", abs(labor_market_residual(labor_closure(model.options), model, L_sum, w)),
                  labour_tol, abs(labor_market_residual(labor_closure(model.options), model, L_sum, w)) < labour_tol)
 
@@ -502,12 +510,14 @@ function batch_provenance(design::AbstractString, design_d::Dict{String,Any};
     dat = design_d["data"]
     prog = design_d["programme"]
     HEAD = git_commit(root)
-    paths = [
+    # Smoke designs pin an explicit programme vector instead of a source
+    # file; absent keys simply contribute no hashes.
+    paths = String[
         "experiments/designs/" * design * ".toml",
         "data/" * RUN_IO_TABLE,
-        dat["calibration_artifacts"]...,
-        prog["source"],
+        String.(dat["calibration_artifacts"])...,
     ]
+    haskey(prog, "source") && push!(paths, prog["source"])
     data_sha = Dict{String,Any}(p => sha256_or_absent(joinpath(root, p)) for p in paths)
     return Dict{String,Any}(
         "git_commit" => HEAD,
@@ -591,7 +601,11 @@ function update_scenario_row(run_id::AbstractString, design::AbstractString,
         cell::Dict{String,Any}, status::AbstractString, commit::AbstractString;
         root::AbstractString = default_root(), note_suffix::AbstractString = "")::Nothing
     scenpath = joinpath(root, "registry", "scenarios.csv")
-    df = DataFrame(CSV.File(scenpath; stringtype = String, silencewarnings = true))
+    # Normalize every column to String: CSV type inference would otherwise
+    # flip an all-numeric column (e.g. eta after pinning) to Float64 and
+    # reject the String assignments below.
+    raw = DataFrame(CSV.File(scenpath; silencewarnings = true))
+    df = DataFrame([c => string.(coalesce.(raw[!, c], "")) for c in names(raw)])
     r = findfirst(==(run_id), string.(coalesce.(df.run_id, "")))
     r === nothing && throw(ArgumentError("no scenarios.csv row for run_id \"$run_id\""))
     df[r, :design] = design
@@ -617,9 +631,10 @@ end
 
 """
 Execute one cell: refuse when the run dir exists (operator must register a
-`-v2` variant), else write `manifest.toml` (`running`), solve (per-cell
-exceptions become `failed` manifests with an `[error]` table), and update
-the manifest, `solution.csv`, `runs/index.csv`, and `scenarios.csv`.
+`-v2` variant), else write `manifest.toml` (`running`), solve, evaluate,
+and update the manifest, `solution.csv`, `runs/index.csv`, and
+`scenarios.csv`. Any per-cell failure becomes a `failed` manifest with an
+`[error]` table; the batch continues.
 Returns the final status (`"executed"`, `"failed"`, or `"refused"`).
 """
 function execute_cell(run_id::AbstractString, design::AbstractString,
@@ -658,18 +673,43 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
         TOML.print(io, man)
     end
     run_log(rundir, "start $run_id design=$design actor=$actor commit=$(prov["git_commit"])")
-    run_log(rundir, "reference: resid=$(ref_sol === nothing ? "none" : "ok") " *
-        "real_gdp_ref=$(real_gdp(ref_sol))")
+    run_log(rundir, "reference real_gdp_ref=$(real_gdp(ref_sol))")
     update_scenario_row(run_id, design, cell, "running", prov["git_commit"]; root = root)
-    local sol
     try
         sol = solve_cell(cell, design_d, data, ψ, g, init_warm)
+        ev = evaluate_gates(cell, design_d, sol.model, sol, ref_sol)
+        for (k, v) in ev.metrics
+            isfinite(v) || throw(ErrorException("non-finite metric $k in $run_id"))
+        end
+        status = ev.gates["overall"] == "pass" ? "executed" : "failed"
+        man["status"] = status
+        man["gates"] = ev.gates
+        man["metrics"] = ev.metrics
+        man["diagnostics"] = ev.diagnostics
+        if status == "executed"
+            write_solution(rundir, data, sol)
+            man["artifacts"]["solution"] = "solution.csv"
+        end
+        open(joinpath(rundir, "manifest.toml"), "w") do io
+            TOML.print(io, man)
+        end
+        run_log(rundir, "$(status): $(ev.gate_summary)")
+        rewrite_index(; runs_dir = runs_dir)
+        update_scenario_row(run_id, design, cell, status, prov["git_commit"]; root = root,
+            note_suffix = " | $(status) $(iso_date()) (see runs/$run_id/manifest.toml)")
+        return status
     catch e
+        # Any per-cell failure — solve, gates, metrics, or writes — becomes
+        # a `failed` manifest; the batch continues.
         man["status"] = "failed"
         man["gates"] = Dict{String,Any}("overall" => "fail")
         man["error"] = Dict{String,Any}("type" => string(typeof(e)), "message" => sprint(showerror, e))
-        open(joinpath(rundir, "manifest.toml"), "w") do io
-            TOML.print(io, man)
+        try
+            open(joinpath(rundir, "manifest.toml"), "w") do io
+                TOML.print(io, man)
+            end
+        catch io_e
+            println("could not write failed manifest for $run_id: $(sprint(showerror, io_e))")
         end
         run_log(rundir, "failed: $(typeof(e)): $(sprint(showerror, e))")
         rewrite_index(; runs_dir = runs_dir)
@@ -677,27 +717,6 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
             note_suffix = " | failed $(iso_date()) (see runs/$run_id/manifest.toml)")
         return "failed"
     end
-    ev = evaluate_gates(cell, design_d, sol.model, sol, ref_sol)
-    for (k, v) in ev.metrics
-        isfinite(v) || throw(ErrorException("non-finite metric $k in $run_id"))
-    end
-    status = ev.gates["overall"] == "pass" ? "executed" : "failed"
-    man["status"] = status
-    man["gates"] = ev.gates
-    man["metrics"] = ev.metrics
-    man["diagnostics"] = ev.diagnostics
-    if status == "executed"
-        write_solution(rundir, data, sol)
-        man["artifacts"]["solution"] = "solution.csv"
-    end
-    open(joinpath(rundir, "manifest.toml"), "w") do io
-        TOML.print(io, man)
-    end
-    run_log(rundir, "$(status): $(ev.gate_summary)")
-    rewrite_index(; runs_dir = runs_dir)
-    update_scenario_row(run_id, design, cell, status, prov["git_commit"]; root = root,
-        note_suffix = " | $(status) $(iso_date()) (see runs/$run_id/manifest.toml)")
-    return status
 end
 
 # ── Batch driver ───────────────────────────────────────────────────────
@@ -756,8 +775,15 @@ function run_design(design::AbstractString; root::AbstractString = default_root(
                 "stopping cleanly before $id")
             break
         end
-        results[id] = execute_cell(id, design, design_d, ref.data, ψ, g,
-            ref.sol, ref.init_warm, prov; root = root, runs_dir = runs_dir, actor = actor)
+        results[id] = try
+            execute_cell(id, design, design_d, ref.data, ψ, g,
+                ref.sol, ref.init_warm, prov; root = root, runs_dir = runs_dir, actor = actor)
+        catch e
+            # Infrastructure failures outside the cell itself (already
+            # manifest-backed inside execute_cell) must not abort the batch.
+            println("cell $id errored outside its manifest: $(sprint(showerror, e))")
+            "error"
+        end
     end
     return results
 end

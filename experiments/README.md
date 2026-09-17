@@ -33,7 +33,9 @@ final solution as the warm start for all mobile cells and as the
 warm-starting each solve (first init from the linear fixed point
 `y0 = (I − Gk) \\ b`), stopping a ladder early when `max|p−1| > 10`.
 `[reference] theta` must equal the final ladder value. Cells then
-warm-start from `[p; q; w]`.
+warm-start from `[p; q; w]`. (On singular toy fixtures, where `(I − Gk)`
+is not invertible, the first init falls back to `[ones(N); λ; 1.0]`; real
+calibrations always take the linear-fixed-point branch.)
 
 ## Cell construction
 
@@ -80,9 +82,11 @@ ladder runs on that data: no read/drop/bisect/`exo_scale` loop).
 
 Written `running` at cell start, `executed` (all gates pass) or `failed`
 otherwise at the end. An existing run dir is never overwritten (register a
-`-v2` variant). Per-cell exceptions are caught: the manifest keeps
-`[error]` (`type`, `message`) with `[gates] overall = "fail"` and no
-per-gate values. `TOML.print` may render some tables non-inline; the
+`-v2` variant). Any per-cell failure — solve, gates, metrics, or writes —
+is caught and recorded (`[error]` with type/message; `[gates] overall =
+"fail"` without per-gate values); the batch continues (an infrastructure
+failure outside the cell's own manifest is reported as `error` for that
+cell). `TOML.print` may render some tables non-inline; the
 parsed structure is the contract.
 
 - Top level: `schema_version`, `run_id`, `design`, `cell`, `status`,
@@ -104,7 +108,8 @@ parsed structure is the contract.
   `X = [p; q]` (fixed) or `[p; q; w]` (mobile); `budget` = `|Σ p·c −
   (1−s)E| < budget_tol` with `E = household_expenditure(fin, model, w*L,
   p, L)`; `labour` = the kernel `labor_market_residual` at `(L_sum, w)`
-  below `labour_tol`; `wage` = `max|w−1| < wage_tol`.
+  below `labour_tol`; `wage` = `max|w_raw−1| < wage_tol` on the raw pinned
+  wage (the CPI-normalized wage must not enter the gate).
 - `[metrics]`: `real_gdp`, `real_gdp_ref`, `real_gdp_rel`, `employment`,
   `wage`, `nominal_gdp`, `max_abs_price_dev`.
 - `[diagnostics]` (never gates): `canary_s`, `canary_ixm`, `canary_diff`

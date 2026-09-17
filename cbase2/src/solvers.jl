@@ -189,11 +189,13 @@ function attempt_newton(model, x0; tol = 1e-10, maxiters = 20_000)
 end
 
 function attempt_lm(model, x0; tol = 1e-10, maxiters = 20_000, ad = :default)
-	alg = try
-		ad === :fd ? LevenbergMarquardt(; ad = AutoFiniteDiff()) : LevenbergMarquardt()
-	catch
-		LevenbergMarquardt()
-	end
+	# 2026-09-17 (review §4 / LaForge): `ad` was an INVALID keyword for
+	# NonlinearSolve v4 — the correct kwarg is `autodiff`. The old try/catch
+	# silently swallowed the MethodError, so the :fd arm ran ForwardDiff all
+	# along and every past FD-vs-AD comparison was fake. No try/catch: a bad
+	# algorithm construction must fail loudly.
+	alg = ad === :fd ? LevenbergMarquardt(; autodiff = AutoFiniteDiff()) :
+					  LevenbergMarquardt()
 	x, ret, rmax = _nsolve(model, x0, alg; tol, maxiters)
 	return x, ret, rmax
 end

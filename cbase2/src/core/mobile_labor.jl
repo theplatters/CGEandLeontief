@@ -233,22 +233,22 @@ The equilibrium system for the mobile-labor CES model.
 Unknowns: X = [p(1:N); y(1:N); w]  — 2N+1 elements
 Equations (2N+1):
   1. Zero-profit equations  (N):     p_i = cost_i(p, w)   for all i=1..N
-  2. Market clearing        (N):     y_i = intermediary_demand_i + final_demand_i
-                                      for ALL i=1..N
+  2. Market clearing        (N-1):   y_i = intermediary_demand_i + final_demand_i
+                                      for i=1..N-1
   3. Labor market clearing  (1):     Σ L_i(p,y,w) = L̄
+  4. Numeraire              (1):     CPI = 1  (Σ β_i · p_i^(1-σ))^(1/(1-σ)) = 1)
 
-Note: ALL N market-clearing equations are enforced. Under the v3 open economy
-with import margins the N-th market is NOT Walras-redundant: the p-weighted
-sum of the clearing residuals equals s·E − p′(I+X) + M(x), which vanishes only
-where the external account closes. Dropping the N-th market (the post-v4
-form) over-determined the economy by the saving identity and left every
-solver stalling at the inconsistency floor (measured 3.6e-4; see
-cbase2/process_comments.md, chapter "The saving-identity inconsistency").
-The external balance is the residual adjuster: income and the import content
-move until s·E + M = p′(I+X) at the all-market equilibrium. There is no
-numeraire equation — the fixed real injections (gG, I, X) pin the price
-level, and the CPI is reported post-solve. This mirrors the fixed-wage
-system (`problem_fixed`), where w = 1 pins the scale instead.
+Note (2026-09-17, user decision: back to the sanctioned form). With the v3
+homogeneous budget the system is scale-homogeneous in (p, w): enforcing ALL N
+clearing equations leaves solutions on RAYS (measured: r_zp(μp, y, μw) =
+μ·r_zp, r_rest invariant, to 9.3e-15), so the all-N/no-numeraire variant is
+ray-degenerate with a singular Jacobian (deflated σ_min analysis,
+process_comments.md). The numeraire CPI = 1 is the GAUGE FIX that selects the
+ray member; the enforced system is square with a generically nonsingular
+Jacobian. The N-th market is not independent: the ray member with CPI = 1
+clears all N markets, which is asserted post-solve as the canary
+(verify_v3.jl). The price level is pinned by the numeraire, not by the real
+injections (which are scale-invariant).
 
 Economic note: η changes the geometric allocation between baseline and
 cost-minimizing sectoral labor demand. It is not a labor-supply elasticity.
@@ -257,12 +257,11 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     (; data, options, shocks) = model
     N = length(data.factor_share)
 
-    # FULL FORMULATION (2N+1 unknowns: p1..pN, y1..yN, w): ALL N zero-profit
-    # and ALL N clearing equations, plus the labour market. No numeraire
-    # equation: with the v3 homogeneous budget (T = p' gG) the price level is
-    # pinned by the fixed real injections, and the N-th market is NOT
-    # Walras-redundant (see the docstring above and process_comments.md). The
-    # CPI is computed below for post-solve reporting only.
+    # FORMULATION (2026-09-17, user decision: back to the sanctioned
+    # N−1+CPI form). 2N+1 unknowns: p1..pN, y1..yN, w. The numeraire CPI = 1
+    # is the gauge fix of the scale-homogeneous system (rays in (p, w); see
+    # the docstring above); the N-th clearing equation is implied at the
+    # selected ray member and asserted post-solve as the canary.
     p = _positive_floor(X[1:N])
     y = _positive_floor(X[N+1:2N])
     w = max(X[2N+1], 1e-10)  # scalar wage, keep positive
@@ -323,22 +322,34 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # for eta=1 (mobile) and at baseline (L_opt == L_base).
     alloc_wedge = _allocation_efficiency_wedge(p, y, w, L_i, model)
 
-    # ── Cost function (effective TFP includes the reallocation wedge) ──
-    cost = _ces_unit_cost(supply_shock .* alloc_wedge, factor_share, w, intermediate_price, ϵ)
+    # ── Cost function ──
+    # 2026-09-17 (user decision): the allocative-efficiency wedge is BYPASSED.
+    # The storyline only needs the extreme closures η ∈ {0, 1}; the wedge's
+    # second-order penalty and its accounting rent in the middle ground were
+    # speculative complications. The geometric interpolation of labour demand
+    # (η in the labour block) is unaffected; _allocation_efficiency_wedge is
+    # retained as dormant code. Consequence: at η < 1 the zero-profit block
+    # prices at cost-minimizing cost while actual employment is the
+    # interpolated L_i — a documented one-wage-device artifact, NOT enforced
+    # by any accounting identity (the wedge rent no longer exists as a
+    # separate leak; it is simply not modelled).
+    cost = _ces_unit_cost(supply_shock, factor_share, w, intermediate_price, ϵ)
 
     # ── Equation 1: Zero-profit for ALL N sectors ──
     out[1:N] .= p .- cost
 
-    # ── Equation 2: Market clearing for ALL N sectors ──
-    # The N-th market is NOT Walras-redundant once imports leak: dropping it
-    # (the post-v4 form) made the saving identity the over-determining
-    # residual and stalled every solver at the inconsistency floor. The
-    # external balance adjusts residually (S = I + X − M holds at the
-    # all-market equilibrium; asserted by the acceptance gate).
-    out[N+1:2N] .= y .- intermediary_demand .- total_final_demand
+    # ── Equation 2: Market clearing for sectors 1..N-1 ──
+    # The numeraire CPI = 1 fixes the gauge of the scale-homogeneous system;
+    # the ray member it selects clears ALL N markets (verified post-solve as
+    # the canary in verify_v3.jl). Dropping the N-th equation here keeps the
+    # enforced system square with a generically nonsingular Jacobian.
+    out[N+1:2N-1] .= y[1:N-1] .- intermediary_demand[1:N-1] .- total_final_demand[1:N-1]
 
     # ── Equation 3: Labour market (flexible-wage system: ALPHA / BETA) ──
-    out[2N+1] = labor_market_residual(labor_closure(options), model, sum(L_i), w)
+    out[2N] = labor_market_residual(labor_closure(options), model, sum(L_i), w)
+
+    # ── Equation 4: Numeraire constraint -- CPI = 1 (gauge fix) ──
+    out[2N+1] = cpi - 1.0
 
     nothing
 end

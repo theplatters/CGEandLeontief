@@ -50,6 +50,11 @@ println("continuation start: exo_scale* = ", round(esc0; digits=4),
         " (s there = ", round(s_of(esc0); digits=4), ")")
 
 K = 6
+# 2026-09-17 (user decision): the pipeline runs at η = 1 — the BF-mobile
+# endpoint identical to ALPHA — because only the extreme closures η ∈ {0, 1}
+# carry the storyline; the middle-ground wedge issues are retired (the wedge
+# is bypassed in problem()). η = 0 (the immobile benchmark) is reported
+# alongside in the matrix rows; the pre-registered η* = 0.5 is superseded.
 THETAS = [2.0, 1.5, 1.2, 1.0, 0.8, 0.65, 0.5]   # gross substitutes -> the target 0.5
 t_cont = time()
 init_warm = nothing
@@ -62,7 +67,7 @@ for k in 0:K
     data = recalibrate_open(data_v1; exo_scale=exo_scale)
     for θ in THETAS
         global ref, ref_sol, init_warm
-        ref = mobile_labor_model(data, shocks, θ, 0.5, 0.9, 0.5)
+        ref = mobile_labor_model(data, shocks, θ, 0.5, 0.9, 1.0)
         if init_warm === nothing
             # Very first solve: warm start from the linear fixed point
             (; Ω_raw, factor_share, consumption_share, import_margin,
@@ -113,6 +118,23 @@ println("ref diagnostics: w* = ", round(w_ref; digits=4), ", L = ", round(L_ref;
         ", nominal GDP wL = ", round(w_ref * L_ref; digits=6),
         ", max|p-1| = ", round(maximum(abs.(p_ref .- 1)); digits=6))
 
+# ── 1c. θ-consistent reference (verify defect 9, review §3 / LaForge) ──
+# The financing headline rows are specified at θ = 1.0; comparing them against
+# the θ = 0.5 continuation endpoint mixed a technology change into the
+# financing effect. The headline denominator is a θ = 1.0 economy on the SAME
+# data; the continuation endpoint is kept as ref_cont for the record.
+ref_cont, ref_cont_sol = ref, ref_sol
+ref1 = mobile_labor_model(data, shocks, 1.0, 0.5, 0.9, 1.0)
+ref1_sol = solve(ref1; init=init_warm)
+rmax1 = maximum(abs, equilibrium_residuals(ref1, [ref1_sol.prices_raw;
+        ref1_sol.quantities; ref1_sol.wages_raw[1]]))
+println("θ=1.0 reference: resid = ", round(rmax1; digits=10),
+        ", real_gdp = ", round(real_gdp(ref1_sol); digits=6),
+        "  (headline denominator; continuation endpoint kept as ref_cont)")
+@assert rmax1 < 1e-6 "θ=1.0 reference solve"
+ref, ref_sol = ref1, ref1_sol
+init_warm = [ref1_sol.prices_raw; ref1_sol.quantities; ref1_sol.wages_raw[1]]
+
 # ── Programme calibration (as notebook 03) ──
 imp = CSV.read(joinpath(CB, "data_raw", "impulses.csv"), DataFrame)
 r24 = imp[imp.year .== 2024, :]
@@ -121,7 +143,21 @@ imp24 = imp24_full[1:N]   # sector 71 dropped with the sector; shares renormaliz
 G0_MODEL = 40_300.0 / data.gdp_production
 ψ = imp24 ./ sum(imp24)
 g = G0_MODEL .* ψ
-fin1 = PreferenceReallocation(fill(1.0, N))          # composition-neutral stand-in (m=1 test)
+# F1 with the ACTUAL preference tilt (verify defect 9: the all-ones vector was
+# the composition-neutral stand-in kept from the Notebook-03 smoke test, which
+# is an F1 no-op). Design (Notebook 03): redirect m·G0·ψ_i toward programme
+# sectors within the fixed household budget:
+#     d_i = 1 + G0·ψ_i / c0_i      (c0_i = cs_i·E0 at baseline prices).
+# ψ is restricted to sectors with positive baseline consumption (a zero
+# category cannot be tilted) and renormalised; the budget stays closed by the
+# CES normalizer (Σ p_i c_i = (1-s)E exactly).
+pos = data.household_baseline .> 0
+ψ1 = ψ .* pos
+ψ1 = ψ1 ./ sum(ψ1)
+d1 = 1.0 .+ G0_MODEL .* ψ1 ./ max.(data.household_baseline, 1e-12)
+fin1 = PreferenceReallocation(d1)
+println("F1 tilt: ", count(>(1), d1), " sectors tilted; ψ mass = ",
+        round(sum(ψ1); digits = 4), "; max d_i = ", round(maximum(d1); digits = 3))
 fin2 = TaxFinanced(g)
 fin3 = ExternalDebt(g)
 
@@ -149,7 +185,7 @@ end
 
 res = DataFrame()
 for (tag, fin) in [("F1_preference_reallocation", fin1), ("F2_tax_financed", fin2), ("F3_external_debt", fin3)]
-    mdl = mobile_labor_model(data, shocks, 1.0, 0.5, 0.9, 0.5; financing=fin)
+    mdl = mobile_labor_model(data, shocks, 1.0, 0.5, 0.9, 1.0; financing=fin)
     push!(res, headline(tag * " mobile", mdl, solve(mdl; init=init_warm)))
 end
 
@@ -178,8 +214,8 @@ end
 
 # ── 4. BETA elasticity (single-point identification) ──
 for η_s in (0.5, 1.0)
-    mdl = mobile_labor_model(data, shocks, 1.0, 0.5, 0.9, 0.5; financing=fin3, eta_s=η_s)
-    sol = solve_beta(data, shocks, 1.0, 0.5, 0.9, 0.5; financing=fin3, eta_s=η_s, init=init_warm)
+    mdl = mobile_labor_model(data, shocks, 1.0, 0.5, 0.9, 1.0; financing=fin3, eta_s=η_s)
+    sol = solve_beta(data, shocks, 1.0, 0.5, 0.9, 1.0; financing=fin3, eta_s=η_s, init=init_warm)
     w = sol.wages_raw[1]
     L = sum(sectoral_labor_demand(sol.prices_raw, sol.quantities, w, mdl))
     est = log(L / 1.0) / log(w / 1.0)
@@ -188,9 +224,9 @@ for η_s in (0.5, 1.0)
 end
 
 # ── 5. Cobb-Douglas guard: ϵ = 1 exact, continuous ──
-cd = mobile_labor_model(data, shocks, 1.0, 1.0, 0.9, 0.5; financing=fin3)
+cd = mobile_labor_model(data, shocks, 1.0, 1.0, 0.9, 1.0; financing=fin3)
 sol_cd = solve(cd; init=init_warm)
-cd_near = mobile_labor_model(data, shocks, 1.0, 1 - 1e-7, 0.9, 0.5; financing=fin3)
+cd_near = mobile_labor_model(data, shocks, 1.0, 1 - 1e-7, 0.9, 1.0; financing=fin3)
 sol_near = solve(cd_near; init=init_warm)
 println("CD guard: real_gdp(ϵ=1) = ", round(real_gdp(sol_cd); digits=8),
         " vs ϵ=1-1e-7: ", round(real_gdp(sol_near); digits=8))

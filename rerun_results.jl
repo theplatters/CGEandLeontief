@@ -31,8 +31,8 @@
 #  ProgressMeter/ThreadsX — NOT IJulia/Plots/GR, so notebook-plotting precompile
 #  errors in the full project are irrelevant here.)
 using CSV, DataFrames, LinearAlgebra, Statistics, NonlinearSolve, ProgressMeter, ThreadsX
-include("src/interface.jl"); include("src/solution.jl"); include("src/ces.jl")
-include("src/mobile_labor.jl"); include("src/util.jl"); include("src/variance_decomposition.jl")
+include("src/core/accounting.jl"); include("src/core/technology.jl"); include("src/closures/labor/types.jl")
+include("src/core/equilibrium.jl"); include("src/closures/labor/labor.jl"); include("src/closures/financing/financing.jl"); include("src/closures/registry.jl"); include("src/core/diagnostics.jl")
 
 cd(@__DIR__)
 data = Data("I-O_DE2019_formatiert.csv"); N = 71; SEC = 35

@@ -8,6 +8,8 @@ open questions/
 RepAEA2022/
 # Generated diagnostic output (written by tests/minimal_test scripts)
 output/
+# Generated figures (regenerate; do not commit)
+/plots/*.png
 # Editor/tool leftovers and transient artifacts
 *.bak
 *.log

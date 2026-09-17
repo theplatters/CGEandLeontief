@@ -1,0 +1,146 @@
+# Status Board
+
+<!-- volatile:start -->
+Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `ca40ac7` (dirty)
+<!-- volatile:end -->
+
+> Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
+> Generated file — do not edit by hand (ADR-0003). See `registry/README.md`.
+
+## Summary
+
+| Axis | idea | spec | implemented | tested | validated | total |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Labour closures | 1 | 0 | 5 | 0 | 0 | 6 |
+| Financing closures | 0 | 0 | 3 | 0 | 0 | 3 |
+
+Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cbase2-v3`, `matrix_5x3`.
+
+## Labour closures
+
+| ID | Status | Formulation | Implementation | Tests | Dead ends | Open gates |
+| --- | --- | --- | --- | --- | --- | --- |
+| ALPHA | implemented | sum_i L_i = Lbar; one economy-wide flexible wage; full cost-minimizing allocation (BF eta = 1) | src/mobile_labor.jl | tests/test_mobile_labor.jl | DE-0002 | Phase-4 residual gates (ROADMAP.md); a recorded run manifest; matrix cell not yet run |
+| BETA | implemented | sum_i L_i = Lbar * ((w/P)/(w0/P0))^eta_s | cbase2/src/closures.jl |  | DE-0004 | promotion from cbase2 to src/; contract tests; labour-leisure income effect not implemented (cbase2/review.md §1); w0 anchor vs baseline wage (cbase2/review.md §3.4); v3 continuation times out (cbase2/process_comments.md, 2026-09-16) |
+| BF | implemented | L_i = L_fixed_i^(1-eta) * L_costmin_i^eta, with sum_i L_i = Lbar; eta in [0,1] (extrapolation outside) | src/mobile_labor.jl | tests/test_mobile_labor.jl | DE-0001, DE-0002, DE-0004 | zero-profit/budget consistency for eta < 1 (cbase2/review.md §2.4): the wedge is distributed to no one and p·y does not equal wL + p·int; the ad-hoc efficiency wedge is not derived (cbase2/review.md §1; docs/labor_closures.md:64-79); Phase-4 residual gates (ROADMAP.md): omitted-equation invariance, household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency; a recorded run manifest |
+| DELTA | implemented | GAMMA (w/P = 1) + Leontief limit of the CES core (theta, epsilon, sigma -> 0+) with full cost-minimizing allocation (eta = 1) | cbase2/src/closures.jl |  |  | promotion from cbase2 to src/; Type I vs Type II multiplier identification unresolved (cbase2/review.md §1); exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5) |
+| GAMMA | implemented | w/P = wbar (= 1); employment endogenous and uncapped | src/mobile_labor.jl | tests/test_fixed_closure.jl | DE-0003 | the canonical one-sided wage floor with rationed employment is not implemented (that is ZETA; cbase2/review.md §1); matrix cell not yet run |
+| ZETA | idea | 0 <= Lbar - L _\|_ w/P - omega_bar >= 0 (complementarity / one-sided real-wage floor) |  |  | DE-0007 | equations; calibration; implementation; tests; MPEC/smoothing formulation required because plain square solvers cannot express it (cbase2/review.md §4) |
+
+## Financing closures
+
+| ID | Status | Formulation | Implementation | Tests | Dead ends | Open gates |
+| --- | --- | --- | --- | --- | --- | --- |
+| F1 | implemented | beta_tilde_i = beta_i d_i / sum_j beta_j d_j; sum_i p_i c_i^h = E_h; budget-neutral composition shift | cbase2/src/financing.jl |  | DE-0001 | promotion to src/; matrix cell not yet run |
+| F2 | implemented | sum_i p_i g_i = T(p); lump-sum / balanced-budget tax | cbase2/src/financing.jl |  |  | promotion to src/; matrix cell not yet run; budget helper pricing inconsistency noted in review §2.7 |
+| F3 | implemented | sum_i p_i g_i = F; external balance F | cbase2/src/financing.jl |  |  | promotion to src/; matrix cell not yet run; external_balance returns only the programme's import content (review §2.8) |
+
+## Scenario matrix
+
+| Labour \ Financing | F1 | F2 | F3 |
+| --- | --- | --- | --- |
+| ALPHA | failed, planned | provisional, planned | failed, planned |
+| BETA | planned | planned | failed, planned |
+| BF | planned | planned | planned |
+| DELTA | planned | provisional, planned | provisional, planned |
+| GAMMA | planned | planned | planned |
+| ZETA | — | — | — |
+
+### Runs by design
+
+#### `cbase2-v3`
+
+| run_id | labour | financing | status | parameters | evidence | notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| cbase2-v3-ALPHA-F1-mobile | ALPHA | F1 | failed | eta=0.5, eta_s=0, theta=1.0, epsilon=0.5, sigma=0.9 | cbase2/scripts/verify_v3.jl; cbase2/process_comments.md; cbase2/review.md | F1 test used an all-ones no-op preference vector, so it is not a valid F1 test [review 2.9]; budget identity sum p*c - (1-s)E = 0.0 exact, resid 9e-10 and L = 1.0 at v3 implementation [process_comments 2026-09-16]; later reduced-formulation round reports mobile rows resid <= 3.7e-7 [process_comments 2026-09-16 evening] |
+| cbase2-v3-ALPHA-F2-mobile | ALPHA | F2 | provisional | eta=0.5, eta_s=0, theta=1.0, epsilon=0.5, sigma=0.9 | cbase2/scripts/verify_v3.jl; cbase2/process_comments.md; cbase2/review.md | resid 5.6e-7 and budget identity sum p*c - (1-s)E = 0.0 exact at v3 implementation [process_comments 2026-09-16]; aggregate headlines contaminated until the Tornqvist base is fixed (base still in v2 form, real_gdp reads 0.199 at the v3 baseline, F2 -24.6% is an artifact) and by technology-change mixing (headline rows use theta=1.0 while the reference is the final continuation point theta=0.5) [process_comments 2026-09-16; review 2.9]; equilibrium real wage w* ~ 0.48 flagged for re-examination [process_comments 2026-09-16] |
+| cbase2-v3-ALPHA-F3-mobile | ALPHA | F3 | failed | eta=0.5, eta_s=0, theta=1.0, epsilon=0.5, sigma=0.9 | cbase2/scripts/verify_v3.jl; cbase2/process_comments.md; cbase2/review.md | mobile solve stalls at max\|resid\| ~2e-4 (LM polish insufficient; F2 needed no polish) [process_comments 2026-09-16]; later reduced-formulation round reports F3 mobile resid <= 3.7e-7 and records external deficit F = 0.001472, but external_balance returns only the programme's import content and the figure is ambiguous (~half of dot(p, m.*g) at baseline) [process_comments 2026-09-16; review 2.8] |
+| cbase2-v3-BETA-mobile | BETA | F3 | failed | eta=0.5 | cbase2/scripts/verify_v3.jl; cbase2/process_comments.md; cbase2/review.md | eta_s-continuation (solve_beta) ran >25 min without completing; each rung can trigger the 2000-iter LM polish on the 142-dim FD system [process_comments 2026-09-16]; theta/epsilon/sigma TBD because the timed-out run predates the theta=1 bound and its configuration is not documented [process_comments 2026-09-17]; verify_v3.jl targets eta_s in {0.5, 1.0} under F3 and its identification test recovers eta_s by construction (circular, w0=1 hardcoded) [review 3.4] |
+| cbase2-v3-DELTA-analytic-F2 | DELTA | F2 | provisional | eta=1.0, eta_s=0, theta=1e-4, epsilon=1e-4, sigma=1e-4 | cbase2/scripts/verify_v3.jl; cbase2/process_comments.md; cbase2/review.md | analytic Leontief equivalence F2: L num/ana = 1.165584/1.165584 with rel y error 0.0 [process_comments 2026-09-16]; values are pre-drop 71-sector (70-sector ~1.1365); exactness rests on p=1 being an exact equilibrium under demand-only shocks rather than the epsilon->0 limit and the near-unit round-gain column sums (~0.976) make it fragile; the in-script assertion is rel < 5e-3 while the doc quotes 0.0 [review 3.5, 2.9] |
+| cbase2-v3-DELTA-analytic-F3 | DELTA | F3 | provisional | eta=1.0, eta_s=0, theta=1e-4, epsilon=1e-4, sigma=1e-4 | cbase2/scripts/verify_v3.jl; cbase2/process_comments.md; cbase2/review.md | analytic Leontief equivalence F3: L num/ana = 1.176709/1.176709 with rel y error 0.0 [process_comments 2026-09-16]; values are pre-drop 71-sector (70-sector ~1.1469); exactness rests on p=1 being an exact equilibrium under demand-only shocks rather than the epsilon->0 limit and the near-unit round-gain column sums (~0.976) make it fragile; the in-script assertion is rel < 5e-3 while the doc quotes 0.0 [review 3.5, 2.9] |
+
+#### `matrix_5x3`
+
+| run_id | labour | financing | status | parameters | evidence | notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| matrix_5x3-ALPHA-F1 | ALPHA | F1 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-ALPHA-F2 | ALPHA | F2 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-ALPHA-F3 | ALPHA | F3 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-BETA-F1 | BETA | F1 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-BETA-F2 | BETA | F2 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-BETA-F3 | BETA | F3 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-BF-F1 | BF | F1 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3); matrix not yet implemented; cbase2 pipeline map lists notebooks 04-08 that do not exist [cbase2/documentation.md] |
+| matrix_5x3-BF-F2 | BF | F2 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-BF-F3 | BF | F3 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-DELTA-F1 | DELTA | F1 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-DELTA-F2 | DELTA | F2 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-DELTA-F3 | DELTA | F3 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-GAMMA-F1 | GAMMA | F1 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-GAMMA-F2 | GAMMA | F2 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-GAMMA-F3 | GAMMA | F3 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+
+## Freeze board
+
+| Zone | Kind | Status | Frozen at | Files | Tree hash | Reason |
+| --- | --- | --- | --- | --- | --- | --- |
+| CobbDouglas.ipynb | legacy-notebooks | read-only | — | 1 | f37a6a5 | Root-level legacy notebook predating the current package API, committed with outputs. |
+  - notes: Read-only; kept for reference only.
+| CompareModels.ipynb | legacy-notebooks | read-only | — | 1 | 556d7f4 | Root-level legacy notebook predating the current package API, committed with outputs. |
+  - notes: Read-only; kept for reference only.
+| DemandShocks.ipynb | legacy-notebooks | read-only | — | 1 | 2fcc29c | Root-level legacy notebook predating the current package API, committed with outputs (single tracked blob of ~19 MB). |
+  - notes: Read-only; kept for reference only.
+| Dokumente | source-archive | read-only | — | 6 | 2df41b0 | PDF sources and archive material: the Baqaee-Farhi 2019 Econometrica paper, the Baqaee-Farhi 2022 AER paper, B&F Tabula rasa, Bryant (2009), ces.pdf, and mcfadden1963.pdf. |
+  - notes: Collected reference PDFs, not generated by the repository; kept for reference only.
+| Notebooks | legacy-notebooks | read-only | — | 6 | 3932266 | Legacy notebooks predating the current package API: AccountingConsistency, Analysis, Covid_Code, Summary, Translation, Translation_Python. |
+  - notes: Kept for reference only; no further edits are expected in this zone.
+| Replication Files | source-archive | read-only | — | 106 | d4b7ed1 | MATLAB replication code and paper source material for the Baqaee-Farhi (2019) replication: GDP Simulatin -- 88 Sector/, Growth Accounting_Klems/, Stuck Intermediates and Adjustment Costs/, plus Results.txt and figure exports. |
+  - notes: Referenced by bf_replication/REPLICATION_WORKPLAN.md as the location of the original MATLAB code; the Baqaee-Farhi (2020) replication source (RepAEA2022/Replication code_ver2/ per bf_replication2/README.md) is not present in this repository.
+| bf_replication | replication-snapshot | frozen | dfd60a2 | 41 | 7814c90 | From-scratch Julia replication of the computational model in Baqaee-Farhi (2019), Econometrica 87(4) (REPLICATION_REPORT.md). Per the sources all MATLAB files are ported (R1-R6 plus Oil_Shock.m); the fixed-labor CES Monte Carlo is validated near-perfect against MATLAB (mean -0.351% vs -0.335%), while the reallocation MC shows a 14% relative gap in the mean (-0.972% vs -1.134%). |
+  - open: Reallocation MC 14% relative gap vs MATLAB (mean -0.972% vs -1.134%); cause not determined
+  - open: Full 50,000-draw MC and the full 76-sector R6 Hessian/MC runs still to be executed on the Mac
+  - open: Systematic comparison over the 144 data points in the paper's Results.txt not yet done
+  - open: bf_jacobian! analytical Jacobian has a sign/transposition bug (~300x entry differences) and is reference-only; numerical + LM solver is the production path
+  - open: Direct cross-check against pre-computed MATLAB .mat results (e.g. GDP_simulation_50K_CD.mat) outstanding
+  - successor: None recorded; bf_replication2/README.md states that bf_replication2 reuses the verification methodology established for the 2019-paper replication in bf_replication/.
+  - notes: Sources conflict on the oil-shock headline: REPLICATION_ASSESSMENT.md reports amplification 1.28x (delta-log GDP -3.55%), while REPLICATION_REPORT.md states 1.92x is the correct MC/nominal-GDP measure and that 1.28x comes from the consumption-welfare index. REPLICATION_REPORT.md's completion table lists Oil_Shock.m and R5/R6 as ported, but its Next Steps still ask to port them (stale section).
+| bf_replication2 | replication-snapshot | frozen | dfd60a2 | 25 | 1eb9b65 | Clean-room Julia port of the Baqaee-Farhi (2020) AER COVID application: 66 BEA sectors, standard-form network dimension D = 5N + 4 = 334 (README.md). Per the sources the loop-1 calibration grid (2 elasticities x 5 shock types) is complete and matches the paper within 0.04 percentage points, while the HtM sweep has two reconstructed (not converged) cells. |
+  - open: HtM sweep: 2 of 6 cells not converged at t = 1.0 and reconstructed from the last convergent t (phi=0.2 CD at t=0.70, an underestimate; phi=0.8 benchmark at t=0.99)
+  - open: Route B (JuMP + PATHSolver) not implemented; Route A (NLsolve + Fischer-Burmeister) used because of container memory limits
+  - open: Route B memory feasibility on the host unresolved (the 668-variable FD Jacobian needs >15 GB; README cites 32+ GB for the full grid)
+  - open: Whether the CD phi=0.2 failure is a genuine singularity or a solver artifact is undiagnosed
+  - open: Fully automated make-all pipeline still unchecked in the VALIDATION.md verification list
+  - open: Documentation conflict: README.md says all six HtM cells converge successfully, while VALIDATION.md and archive/STATUS.md mark two as reconstructed
+  - successor: None recorded (retained as the Baqaee-Farhi (2020) replication record).
+  - notes: archive/STATUS.md lists README.md as missing (Phase 8 partial) although README.md is present and described there as verified, and it mentions unpushed commits on a revise branch; STATUS.md and WORKPLAN.md were moved to archive/ on 2026-08-15. VALIDATION.md records the MATLAB-to-Julia corrections applied (shock sign, lambda initialisation, B renormalisation, chi = 0.0, Trunc_A dimensions), and README.md states 0.06 pp agreement for the three reported benchmark values while its own summary and VALIDATION.md state 0.04 pp.
+| cbase2 | submission-snapshot | frozen | dfd60a2 | 45 | a8241e9 | Self-contained cbase2 pipeline for the Metroeconomica revision (5 x 3 evaluation matrix; cbase2/documentation.md). At freeze: notebooks 01-02 complete and validated end-to-end; notebook 03 plus src/financing.jl complete and smoke-tested at m = 1 with two recorded kernel DIFFs; notebooks 04-08 and src/validation.jl listed as pending. |
+  - open: Tornqvist real-GDP base is still the v2 form; every v3 aggregate is contaminated until the base is household_baseline (c0_gross) -- F2's -24.6% is an artifact of the broken base
+  - open: F3 mobile solve stalls at max residual ~2e-4; the BETA eta-continuation ran >25 min without completing
+  - open: S = I + X - M canary mismatch (diff -0.16 at the ref, -0.094 with the equilibrium wage); review.md's critical finding is that the mobile system drops the N-th clearing equation and it is not Walras-redundant, while process_comments.md contains conflicting statements about the mobile formulation
+  - open: theta bounded at 1 (Cobb-Douglas intermediates) after theta < 1 instability; the theta = 1, k = 0 continuation stalls at 3.1e-4
+  - open: Sector-71 / high-self-loop class instability under theta < 1; drop_sectors breaks CES share normalization (0.971 for the 70s variant, 0.549 for reduced)
+  - open: External review: baseline clamp mass ~8.7% of GDP (0.0873 GDP units); stale 71-sector headline numbers (s = 0.398, tau0 = 0.214, X = 0.422, I = 0.162); GAMMA labelling issue
+  - successor: root src/, the reproducible baseline per ROADMAP.md section 3; Phase 2 promotes BETA/DELTA/F1-F3 from cbase2.
+  - notes: Notebooks 04-08 are listed as pending and do not exist; only 01-03 exist. documentation.md's layout also names src/validation.jl and scripts/run_{reference,matrix,sobol}.jl (not on disk), and its pending row names src/closures.jl, which does exist. review.md is pinned to commits 17c5730..3dd0d60 (pre-freeze) and reports a conditioning/fold solver problem rather than an init-setup issue; backport of the kernel DIFFs to parent src/ is pending.
+
+## Dead ends
+
+- [DE-0001 — Unnormalized household demand shifter](dead-ends/DE-0001-unnormalized-demand-shifter.md)
+- [DE-0002 — Dropping a zero-profit equation to close the system](dead-ends/DE-0002-dropped-zero-profit-equation.md)
+- [DE-0003 — `η = 10⁶` as a fixed-real-wage approximation](dead-ends/DE-0003-eta-1e6-as-fixed-wage.md)
+- [DE-0004 — Nominal wage in the labour-supply function](dead-ends/DE-0004-nominal-wage-labour-supply.md)
+- [DE-0005 — Fixed-base quantity sum called real GDP](dead-ends/DE-0005-fixed-base-gdp-sum.md)
+- [DE-0006 — Variance shares renormalized over main effects / silent incomplete designs](dead-ends/DE-0006-renormalized-variance-shares.md)
+- [DE-0007 — Adopting Baqaee–Farhi (2022) wholesale as the base model](dead-ends/DE-0007-bf2022-wholesale-base.md)
+- [DE-0008 — Open-economy calibration without a saving rate (cbase2 v2)](dead-ends/DE-0008-open-economy-without-saving-rate.md)
+
+## Decisions
+
+- [ADR-0001 — One kernel, no living copies](decisions/ADR-0001-one-kernel-no-living-copies.md)
+- [ADR-0002 — Closure taxonomy and stable IDs](decisions/ADR-0002-closure-taxonomy.md)
+- [ADR-0003 — `registry/` is the single source of truth](decisions/ADR-0003-registry-single-source-of-truth.md)
+- [ADR-0004 — Runs are immutable, manifest-backed records](decisions/ADR-0004-runs-are-immutable-manifests.md)
+
+## Warnings
+
+None.
+

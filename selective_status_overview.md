@@ -1,3 +1,11 @@
+> **SUPERSEDED (2026-09-17).** The status claims below are historical and are
+> no longer authoritative. Current status lives in the generated
+> `docs/status.md` (from `registry/`), per
+> `docs/decisions/ADR-0003-registry-single-source-of-truth.md`. In
+> particular, the mobile-labour "GO" and the "88.4%" variance share are
+> rejected pending regeneration: see `docs/dead-ends/DE-0001`,
+> `DE-0002`, `DE-0003`, and `DE-0006`, and `ROADMAP.md` §3.
+
 ## `WORKPLAN2.md` (Manuscript-Level, Three Streams)
 
 ### Stream A --- Manuscript Revision

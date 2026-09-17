@@ -514,13 +514,14 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
     resid_pass = resid < residual_tol
     budget_pass = budget < budget_tol
 
+    cpi_val = sum(data.consumption_share .* p .^ (1 - model.options.elasticities.σ))^(1 / (1 - model.options.elasticities.σ))
     third_name, third_value, third_tol, third_pass =
         # Fixed closures hard-pin w = 1 (wages_raw); the normalized sol.wages
         # folds in the CPI numeraire and must not enter the gate.
         fixed ? ("wage", maximum(abs.(sol.wages_raw .- 1)), wage_tol,
                  maximum(abs.(sol.wages_raw .- 1)) < wage_tol) :
-                ("labour", abs(labor_market_residual(labor_closure(model.options), model, L_sum, w)),
-                 labour_tol, abs(labor_market_residual(labor_closure(model.options), model, L_sum, w)) < labour_tol)
+                ("labour", abs(labor_market_residual(labor_closure(model.options), model, L_sum, w, cpi_val)),
+                 labour_tol, abs(labor_market_residual(labor_closure(model.options), model, L_sum, w, cpi_val)) < labour_tol)
 
     rgdp = real_gdp(sol)
     rgdp_ref = real_gdp(ref_sol)

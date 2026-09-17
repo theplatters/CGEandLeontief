@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `629a2e9` (dirty)
+Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `34199ae` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -14,7 +14,7 @@ Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `629a2e9` 
 | Labour closures | 1 | 0 | 3 | 2 | 0 | 6 |
 | Financing closures | 0 | 0 | 0 | 3 | 0 | 3 |
 
-Scenarios: **21** rows — executed: 13, provisional: 3, failed: 5. Designs: `cbase2-v3`, `matrix_5x3`.
+Scenarios: **36** rows — planned: 15, executed: 13, provisional: 3, failed: 5. Designs: `cbase2-v3`, `matrix_5x3`, `matrix_5x3_v2`.
 
 ## Labour closures
 
@@ -39,11 +39,11 @@ Scenarios: **21** rows — executed: 13, provisional: 3, failed: 5. Designs: `cb
 
 | Labour \ Financing | F1 | F2 | F3 |
 | --- | --- | --- | --- |
-| ALPHA | failed, executed | provisional, executed | failed, executed |
-| BETA | executed | executed | failed, executed |
-| BF | executed | executed | executed |
-| DELTA | failed | provisional, executed | provisional, executed |
-| GAMMA | failed | executed | executed |
+| ALPHA | failed, executed, planned | provisional, executed, planned | failed, executed, planned |
+| BETA | executed, planned | executed, planned | failed, executed, planned |
+| BF | executed, planned | executed, planned | executed, planned |
+| DELTA | failed, planned | provisional, executed, planned | provisional, executed, planned |
+| GAMMA | failed, planned | executed, planned | executed, planned |
 | ZETA | — | — | — |
 
 ### Runs by design
@@ -78,6 +78,26 @@ Scenarios: **21** rows — executed: 13, provisional: 3, failed: 5. Designs: `cb
 | matrix_5x3-GAMMA-F1 | GAMMA | F1 | failed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-GAMMA-F1/manifest.toml; runs/matrix_5x3-GAMMA-F1/log.txt | parameters pinned in experiments/designs/matrix_5x3.toml (full-71 A-bill, ADR-0012); planned \| failed 2026-09-17 (see runs/matrix_5x3-GAMMA-F1/manifest.toml) |
 | matrix_5x3-GAMMA-F2 | GAMMA | F2 | executed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-GAMMA-F2/manifest.toml; runs/matrix_5x3-GAMMA-F2/log.txt | parameters pinned in experiments/designs/matrix_5x3.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-GAMMA-F2/manifest.toml) |
 | matrix_5x3-GAMMA-F3 | GAMMA | F3 | executed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-GAMMA-F3/manifest.toml; runs/matrix_5x3-GAMMA-F3/log.txt | parameters pinned in experiments/designs/matrix_5x3.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-GAMMA-F3/manifest.toml) |
+
+#### `matrix_5x3_v2`
+
+| run_id | labour | financing | status | parameters | evidence | notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| matrix_5x3-v2-ALPHA-F1 | ALPHA | F1 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-ALPHA-F1/manifest.toml) |
+| matrix_5x3-v2-ALPHA-F2 | ALPHA | F2 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-ALPHA-F2/manifest.toml) |
+| matrix_5x3-v2-ALPHA-F3 | ALPHA | F3 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-ALPHA-F3/manifest.toml) |
+| matrix_5x3-v2-BETA-F1 | BETA | F1 | planned | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-BETA-F1/manifest.toml) |
+| matrix_5x3-v2-BETA-F2 | BETA | F2 | planned | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-BETA-F2/manifest.toml) |
+| matrix_5x3-v2-BETA-F3 | BETA | F3 | planned | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-BETA-F3/manifest.toml) |
+| matrix_5x3-v2-BF-F1 | BF | F1 | planned | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-BF-F1/manifest.toml) |
+| matrix_5x3-v2-BF-F2 | BF | F2 | planned | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-BF-F2/manifest.toml) |
+| matrix_5x3-v2-BF-F3 | BF | F3 | planned | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-BF-F3/manifest.toml) |
+| matrix_5x3-v2-DELTA-F1 | DELTA | F1 | planned | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| theta/epsilon/sigma = delta_epsilon = 1e-4 (the solved Leontief-limit values; ADR-0006) \| failed 2026-09-17 (see runs/matrix_5x3-DELTA-F1/manifest.toml) |
+| matrix_5x3-v2-DELTA-F2 | DELTA | F2 | planned | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| theta/epsilon/sigma = delta_epsilon = 1e-4 (the solved Leontief-limit values; ADR-0006) \| executed 2026-09-17 (see runs/matrix_5x3-DELTA-F2/manifest.toml) |
+| matrix_5x3-v2-DELTA-F3 | DELTA | F3 | planned | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| theta/epsilon/sigma = delta_epsilon = 1e-4 (the solved Leontief-limit values; ADR-0006) \| executed 2026-09-17 (see runs/matrix_5x3-DELTA-F3/manifest.toml) |
+| matrix_5x3-v2-GAMMA-F1 | GAMMA | F1 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| failed 2026-09-17 (see runs/matrix_5x3-GAMMA-F1/manifest.toml) |
+| matrix_5x3-v2-GAMMA-F2 | GAMMA | F2 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-GAMMA-F2/manifest.toml) |
+| matrix_5x3-v2-GAMMA-F3 | GAMMA | F3 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v2.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-GAMMA-F3/manifest.toml) |
 
 ## Freeze board
 
@@ -156,6 +176,7 @@ Scenarios: **21** rows — executed: 13, provisional: 3, failed: 5. Designs: `cb
 - [ADR-0011 — Conform the frozen cbase2 notebook 01 to the canonical kernel](decisions/ADR-0011-conform-cbase2-notebook-01.md)
 - [ADR-0012 — A-bill calibration: the domestic intermediate bill replaces the purchaser-price bill](decisions/ADR-0012-abill-calibration.md)
 - [ADR-0013 — the intermediate-bill tax term: row 75 booked as an external leak](decisions/ADR-0013-intermediate-bill-tax-term.md)
+- [ADR-0014 — real-wage elastic supply and a verified scale-determinacy guard](decisions/ADR-0014-real-wage-supply-and-scale-guard.md)
 
 ## Warnings
 

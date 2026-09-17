@@ -226,49 +226,82 @@ function _fd_jacobian!(J::Matrix{Float64}, r!::Function, x::Vector{Float64},
 end
 
 """
-	ipopt_residual_solve(model, x0; tol, max_iter, verbose, pbnd) -> (x, info::String, rmax)
+	ipopt_residual_solve(model, x0; tol, max_iter, verbose, pbnd, ubnd,
+	                     formulation) -> (x, info::String, rmax)
 
-IPOPT formulation (rung D): the square equilibrium system as a constrained
-NLP — minimize 0.5‖r(x)‖² subject to r(x) = 0 and x ≥ pbnd — with dense
-central-difference derivatives (one FD Jacobian cached per trial point, shared
-by the objective gradient and all N constraint rows) and the limited-memory
-Hessian approximation (the KNITRO/fmincon analogue; free, mature, standard in
-the CGE world). Implemented through JuMP nonlinear operators with
-user-supplied gradients (IPOPT.jl v1.x removed the raw CreateProblem API).
+IPOPT formulation (rung D): the equilibrium system as a bound-constrained
+NLP with dense central-difference derivatives (one FD Jacobian cached per
+trial point, shared by the objective gradient and the constraint rows) and
+the limited-memory Hessian approximation (the KNITRO/fmincon analogue; free,
+mature, standard in the CGE world). Implemented through JuMP nonlinear
+operators with user-supplied gradients (IPOPT.jl v1.x removed the raw
+CreateProblem API).
 
-Returns the raw iterate with the best residual among {IPOPT's final iterate,
-the warm start} plus a status string. Requires JuMP + Ipopt in the project.
+Two formulations:
+  :square  minimize 0.5‖r(x)‖²  subject to  r(x) = 0,  pbnd ≤ x ≤ ubnd
+           (classic square-system NLP; IPOPT reports the constraint
+           violation directly).
+  :ls      minimize 0.5‖r(x)‖²  subject to  pbnd ≤ x ≤ ubnd
+           (bound-constrained nonlinear least squares; the line search
+           cannot accept an objective increase, so the price-explosion
+           branch is rejected outright rather than explored).
+
+Bounds are load-bearing here: from the default init IPOPT's first full step
+lands ON the documented price-explosion branch (objective 3.4e+20 — measured),
+and plain filter logic then drifts near-feasible with a growing objective.
+The upper bound ubnd (default 100, equilibrium prices/output live near 1)
+makes that branch infeasible; `bound_push`/`bound_frac` are set to 1e-9 so
+the start point is not shifted away from x0 (IPOPT's default 0.01 push
+distorts small lambda components massively).
+
+Returns the best-residual iterate among {IPOPT's final iterate, the warm
+start} plus a status string. Requires JuMP + Ipopt in the project.
 """
 function ipopt_residual_solve(model::Model{MobileLaborCES}, x0::Vector{Float64};
 		tol::Float64 = 1e-8, max_iter::Int = 3000, verbose::Bool = false,
-		pbnd::Float64 = 1e-8)
+		pbnd::Float64 = 1e-8, ubnd::Float64 = 100.0,
+		formulation::Symbol = :square)
 	@assert _IPOPT_AVAILABLE[] "ipopt_residual_solve requires JuMP and Ipopt"
+	formulation in (:square, :ls) ||
+		throw(ArgumentError("formulation must be :square or :ls, got $formulation"))
 	nv = length(x0)                    # 2N+1
 	N = length(model.data.factor_share)
+	# ── Scaling (percent-deviation variables for quantities) ──
+	# The system mixes quantity scales of O(1) and ~5e-4 (small sectors); a
+	# perturbation that drives a tiny y_i across zero hits the eps floor, log y
+	# jumps by ~-28 and the wedge penalty (proportional to ratio²) explodes the
+	# residual by 10 orders of magnitude (measured: r = 7.8e11 at a 0.01
+	# absolute y shift). Scaling y by λ (the baseline gross output) puts every
+	# decision variable at O(1) — the standard CGE practice (MPSGE solves in
+	# relative deviations). p and w are already O(1) and stay in levels.
+	scale = vcat(ones(N), max.(model.data.λ, 1e-6), [1.0])
 	buf = Vector{Float64}(undef, nv)
 	buf2 = Vector{Float64}(undef, nv)
 	# per-point cache: r(x) and the FD Jacobian, computed once and shared by
-	# the objective gradient and every constraint-row operator
-	key_x = fill(NaN, nv)
+	# the objective gradient and every constraint row. Evaluation happens in
+	# SCALED coordinates v (x = scale .* v): MOI works in v, the residual in x.
+	key_v = fill(NaN, nv)
 	r_cache = fill(NaN, nv)
-	J_cache = fill(NaN, nv, nv)
+	J_cache = fill(NaN, nv, nv)     # ∂r/∂v (v-space Jacobian)
 	lock_r = ReentrantLock()
 
-	r! = (out, x) -> (problem(out, x, model); out)
-	function _ensure(x::Vector{Float64})
+	rv! = (out, v) -> (problem(out, scale .* v, model); out)
+	function _ensure(v::Vector{Float64})
 		lock(lock_r) do
-			if key_x != x
-				r!(r_cache, x)
-				_fd_jacobian!(J_cache, r!, x, buf, buf2)
-				key_x[:] = x
+			if key_v != v
+				rv!(r_cache, v)
+				_fd_jacobian!(J_cache, rv!, v, buf, buf2)
+				key_v[:] = v
 			end
 		end
 	end
-	f_impl(x...) = (y = collect(Float64, x); _ensure(y); 0.5 * dot(r_cache, r_cache))
+	f_impl(x...) = (v = collect(Float64, x); _ensure(v); 0.5 * dot(r_cache, r_cache))
 	# NOTE: MOI hands the gradient out as an `_UnsafeVectorView`, which BLAS
 	# `mul!` cannot point into — so assign via broadcast (tiny per-call alloc,
 	# negligible against the ~2n residual evaluations of the FD Jacobian).
-	f_grad(gout, x...) = (y = collect(Float64, x); _ensure(y); gout .= J_cache' * r_cache; nothing)
+	f_grad(gout, x...) = (v = collect(Float64, x); _ensure(v); gout .= J_cache' * r_cache; nothing)
+
+	v0 = x0 ./ scale                  # warm start in scaled coordinates
 
 	m = JuMP.Model(Ipopt.Optimizer)
 	JuMP.set_silent(m)
@@ -280,26 +313,37 @@ function ipopt_residual_solve(model::Model{MobileLaborCES}, x0::Vector{Float64};
 	JuMP.set_attribute(m, "acceptable_constr_viol_tol", max(1e-5, 100 * tol))
 	JuMP.set_attribute(m, "max_iter", max_iter)
 	JuMP.set_attribute(m, "bound_relax_factor", 0.0)
+	JuMP.set_attribute(m, "bound_push", 1e-9)
+	JuMP.set_attribute(m, "bound_frac", 1e-9)
 	JuMP.set_attribute(m, "sb", "yes")
 	if verbose
 		JuMP.unset_silent(m)
 		JuMP.set_attribute(m, "print_level", 5)
 	end
 
-	JuMP.@variable(m, xv[i = 1:nv], start = x0[i])
-	JuMP.set_lower_bound.(xv, pbnd)
-	JuMP.set_upper_bound.(xv, 1.0e20)
+	JuMP.@variable(m, vv[i = 1:nv], start = v0[i])
+	JuMP.set_lower_bound.(vv, pbnd ./ scale)   # bounds in x-units → v-units
+	JuMP.set_upper_bound.(vv, ubnd ./ scale)   # excludes the explosion branch
 	op_f = JuMP.add_nonlinear_operator(m, nv, f_impl, f_grad)
-	JuMP.@objective(m, Min, op_f(xv...))
-	for i in 1:nv
-		ri(x...) = (y = collect(Float64, x); _ensure(y); r_cache[i])
-		rgi(gout, x...) = (y = collect(Float64, x); _ensure(y); gout .= J_cache[i, :]; nothing)
-		op = JuMP.add_nonlinear_operator(m, nv, ri, rgi)
-		JuMP.@constraint(m, op(xv...) == 0)
+	JuMP.@objective(m, Min, op_f(vv...))
+	if formulation === :square
+		for i in 1:nv
+			ri(x...) = (v = collect(Float64, x); _ensure(v); r_cache[i])
+			rgi(gout, x...) = (v = collect(Float64, x); _ensure(v); gout .= J_cache[i, :]; nothing)
+			# UNIQUE name is load-bearing: closures from the same source line
+			# share one mangled name, and Symbol(f) collisions make the MOI
+			# registry overwrite earlier registrations — all 141 constraints
+			# would silently evaluate as the LAST row (the numeraire residual
+			# ~1e-15), so IPOPT sees a feasible system and never solves it.
+			op = JuMP.add_nonlinear_operator(m, nv, ri, rgi;
+				name = Symbol("res_", i))
+			JuMP.@constraint(m, op(vv...) == 0)
+		end
 	end
 	JuMP.optimize!(m)
 	st = JuMP.termination_status(m)
-	x = try Float64.(JuMP.value.(xv)) catch; Float64.(x0) end
+	v_final = try Float64.(JuMP.value.(vv)) catch; copy(v0) end
+	x = scale .* v_final                  # back to x-space
 	info = "ipopt($st)"
 	# best-of-iterate: IPOPT's final iterate can drift off the best residual
 	# seen along the path; compare it against the warm start.
@@ -388,20 +432,25 @@ function solve_robust(model::Model{MobileLaborCES};
 		end
 	end
 
-	# Rung D: IPOPT from the best-so-far point
+	# Rung D: IPOPT from the best-so-far point. :ls first (the line search
+	# rejects the price-explosion branch outright), :square as the alternative.
 	if :ipopt in ladder
 		start = isempty(best_x) ? inits[1][2] : best_x
 		if isempty(start) || any(!isfinite, start)
 			start = inits[1][2]
 		end
-		x, info, r = ipopt_residual_solve(model, start; tol, max_iter = ipopt_max_iter, verbose = false)
-		(; nth) = residual_canary(model, x)
-		push!(attempts, (method = "ipopt", init = "best-so-far", retcode = info,
-			resid = r, canary = nth, secs = round(time() - t0; digits = 2), msg = ""))
-		verbose && println("  [", rpad("ipopt", 16), "init=best-sof ] ret=", rpad(info, 10),
-			" resid=", Printf.@sprintf("%.3e", r), " canary=", Printf.@sprintf("%.3e", nth))
-		if r < best_r || (r ≈ best_r && canary_ok(nth))
-			best_x = x; best_r = r; best_m = "ipopt"
+		for f in (:ls, :square)
+			x, info, r = ipopt_residual_solve(model, start; tol,
+				max_iter = ipopt_max_iter, verbose = false, formulation = f)
+			(; nth) = residual_canary(model, x)
+			push!(attempts, (method = "ipopt/$f", init = "best-so-far", retcode = info,
+				resid = r, canary = nth, secs = round(time() - t0; digits = 2), msg = ""))
+			verbose && println("  [", rpad("ipopt/$f", 16), "init=best-sof ] ret=", rpad(info, 10),
+				" resid=", Printf.@sprintf("%.3e", r), " canary=", Printf.@sprintf("%.3e", nth))
+			if r < best_r || (r ≈ best_r && canary_ok(nth))
+				best_x = x; best_r = r; best_m = "ipopt/$f"
+			end
+			best_r <= tol && break
 		end
 		# final polish: one AD-Newton/LM pass from the IPOPT point (smooth
 		# region, so AD is safe here and drives to machine precision)

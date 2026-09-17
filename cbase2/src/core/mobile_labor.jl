@@ -130,6 +130,21 @@ end
 _positive_floor(x) = max.(x, eps(Float64))
 _positive_floor(x::Real) = max(x, eps(Float64))
 
+"""
+	_intermediate_price(Ω_raw, p, θ)
+
+Intermediate-goods price index. CES for θ ≠ 1; the exact Cobb-Douglas
+limit ip_u = prod_j p_j^{Ω[u,j]} at θ = 1 (the bounded production-core
+choice of Notebook 03b: with genuine sector self-loops -- up to Omega_ii
+= 0.57 in the data -- the CES index at theta < 1 is self-referencing and
+the zero-profit price system has exploding spiral branches; the
+Cobb-Douglas index is log-linear with a unique positive root).
+"""
+function _intermediate_price(Ω_raw::AbstractMatrix, p::AbstractVector, θ::Real)
+	isapprox(θ, 1.0; rtol = 0, atol = 1e-6) && return exp.(Ω_raw * log.(p))
+	return (Ω_raw * p .^ (1 - θ)) .^ (1 / (1 - θ))
+end
+
 """Cost-minimizing labor demand, evaluated in log space for stable η extrapolation."""
 function _cost_minimizing_labor(p, y, w, model::Model{MobileLaborCES})
     (; data, options, shocks) = model
@@ -245,7 +260,7 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     (; θ, ϵ, σ, η) = options.elasticities
 
     # ── Intermediate goods price index ──
-    intermediate_price = (Ω_raw * p .^ (1 - θ)) .^ (1 / (1 - θ))
+    intermediate_price = _intermediate_price(Ω_raw, p, θ)
 
     # ── CPI (consumption price index) ──
     cpi = sum(consumption_share .* p .^ (1 - σ))^(1 / (1 - σ))
@@ -325,23 +340,24 @@ reduced internally (p1 is pinned by construction).
 function equilibrium_residuals(model::Model{MobileLaborCES}, X::AbstractVector)
     N = length(model.data.factor_share)
     fixed = labor_closure(model.options) isa FixedWageClosure
+    Xv = collect(X)
     if fixed
         # Fixed: canonical FULL vector (2N: p1..pN, y1..yN; w = 1 pinned).
-        if length(X) == 2N
-            xr = collect(X)
-        elseif length(X) == 2N + 1
-            xr = collect(X)[1:2N]   # drop the wage component of a mobile vector
+        if length(Xv) == 2N
+            xr = Xv
+        elseif length(Xv) == 2N + 1
+            xr = Xv[1:2N]   # drop the wage component of a mobile vector
         else
             throw(DimensionMismatch("fixed closure expects a $(2N)-element vector"))
         end
-        out = zeros(Float64, 2N)
+        out = similar(xr)
         problem_fixed(out, xr, model)
     else
         # Mobile: canonical FULL vector (2N+1: p1..pN, y1..yN, w).
-        length(X) == 2N + 1 || throw(DimensionMismatch(
+        length(Xv) == 2N + 1 || throw(DimensionMismatch(
             "mobile closure expects a $(2N+1)-element vector"))
-        out = zeros(Float64, 2N + 1)
-        problem(out, collect(X), model)
+        out = similar(Xv)
+        problem(out, Xv, model)
     end
     out
 end
@@ -389,7 +405,7 @@ function problem_fixed(out::Vector, X::Vector, model::Model{MobileLaborCES})
     (; θ, ϵ, σ, η) = options.elasticities
 
     # Intermediate goods price index
-    intermediate_price = (Ω_raw * p .^ (1 - θ)) .^ (1 / (1 - θ))
+    intermediate_price = _intermediate_price(Ω_raw, p, θ)
 
     # CPI
     cpi = sum(consumption_share .* p .^ (1 - σ))^(1 / (1 - σ))

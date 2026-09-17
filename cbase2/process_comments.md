@@ -233,6 +233,101 @@ silently rewritten -- later entries state what they replace.
   with the new demand block needs re-examination. Do NOT trust any v3
   aggregate until (1)-(4) are resolved; the F1/F2 budget identities and
   the calibration are the only fully-trusted v3 numbers so far.
+- **2026-09-17 (evening). Dataset variants + solver sweep infrastructure
+  (user-directed).** Three standard datasets defined in
+  calibration.jl (DATASET_VARIANTS): "full" (71 sectors, 100% gross),
+  "70s" (drop 71, 99.15% gross / 98.78% VA), "reduced" (additionally
+  drop the self-share > 0.45 class 13, 18, 19, 48, 53, 58, 68 -- 87.35%
+  gross / 88.32% VA / 92.32% FD kept). dataset_coverage() reports the
+  trade-off per variant. NOTE: the reduced variant is a MODELLING CHOICE,
+  not a data correction -- the (f) diagnostic proved the self-loops
+  genuine. The acceptance test is now permanent at
+  cbase2/scripts/verify_v3.jl; cbase2/scripts/solver_sweep.jl added
+  (init x theta x algorithm sweep: default/linear/perturbed inits x
+  theta in {2.0, 1.0, 0.5}, Newton with LM-polish fallback). This is the
+  first Mac-test candidate: cheap, decisive, and usable in either venue.
+
+- **2026-09-17 (cont.). theta-homotopy result: the difficulty is NOT
+  theta-specific.** The two-dimensional continuation (exo x theta-ladder
+  from 2.0 -- gross substitutes -- down to 0.5) failed at the VERY FIRST
+  solve: theta = 2.0 stalls at 3.6e-4, the same order as theta = 1 and
+  0.5. Gross substitutes rule out the self-referencing spiral, so the
+  remaining explanation is the SOLVER SETUP: the FD-Jacobian Newton on
+  the kinked 140-dim residual (positive floors, wedge clamps, CD/CES
+  branch) is at its reliability limit. Evidence across the session: the
+  SAME structure converged to 2e-10 in one run (default init) and
+  stalled at 3.6e-4 in another (warm init) -- init/path-sensitive
+  convergence, not a structural boundary. NEXT OPTIONS, in order:
+  (1) Mac runtime with a fresh session and a simple robustness sweep
+      over inits (default vs warm vs perturbed) -- cheap, the 2e-10 run
+      proves solvable points exist;
+  (2) solver setup: NonlinearFunction with autodiff = AutoFiniteDiff()
+      (ForwardDiff through the kinks is the prime suspect), or
+      LevenbergMarquardt as the PRIMARY algorithm with Newton only as
+      polish;
+  (3) the multi-sector cut (major todo above) if (1)-(2) fail.
+  The v3 accounting/financing/branch-selection results all STAND (they
+  were verified at machine precision when the solver cooperated).
+
+- **2026-09-17 (cont.). MAJOR TODO (route b extended, user-directed): cut
+  more sectors to remove the instability.** The sector-71 drop moved the
+  explosion to the next high-self-loop sector; if the theta-homotopy
+  fails or the stability boundary turns out to be too restrictive, the
+  fallback is to drop/cap ALL high-self-loop service sectors together
+  (candidates by Omega_ii: 53 legal/accounting 0.57, 68 sports/recreation
+  0.47, plus any sector crossing the stability boundary) and re-run the
+  pipeline as a smaller-sector model. Trade-off to document if used:
+  smaller coverage, but a stable production network. Also to check then:
+  whether the high diagonals are genuine intra-sector service flows or
+  a supply-use-table aggregation artifact (the (f) diagnostic found them
+  GENUINE in the 71-sector data -- self_raw = self_dom exactly -- so a
+  drop is a modelling choice, not a data correction, and must be
+  documented as such).
+
+- **2026-09-17 (cont.). Alternating block-solver proof: fails too; the
+  strategic picture is now clear.** An alternating scheme (1-d wage root at
+  fixed (p, y); then the (p, y) block at fixed w; 8 rounds) converges to a
+  fixed point of the ALTERNATION at max|resid| = 0.06, not a root -- the
+  (p, y) block stalls the same way at theta = 1. CONCLUSION: the theta = 1
+  point is numerically hard for the current solver setup, AND bounding
+  theta at 1 would flatten the production network to Cobb-Douglas --
+  dissolving the CGE-IO network structure the paper is about. The
+  self-loops are genuine data (proven above), so the instability is
+  INTRINSIC to the complementarity region theta < 1 where the paper's
+  measurement lives. NEXT SESSION (recommended): theta-HOMOTOPY for the
+  production core, mirroring the proven solve_beta / exo_scale patterns:
+  start at a solvable theta (e.g. 1.0 or wherever a root is found), step
+  down to the target 0.5 with warm starts and residual-gated rungs; the
+  machinery (continuation, quality gates, LM polish) is already in place
+  and tested. If the homotopy stalls at a specific theta, that theta is
+  the stability boundary of the calibration -- itself a reportable
+  finding for the paper (the complementarity region where BF-style
+  aggregation is interesting is where sectoral self-reference
+  stabilises prices). The Mac is available for the runtime.
+
+- **2026-09-17 (cont.). Decision (a) implemented: theta bounded at 1
+  (Cobb-Douglas intermediate aggregation).** _intermediate_price() added
+  (CD limit ip = prod p^Omega at theta = 1, generic CES otherwise;
+  ForwardDiff-compatible signature). The verification sweep moved to
+  (theta, eps, sigma) = (1.0, 0.5, 0.9). STATUS: the theta = 1 k = 0
+  continuation step stalls at 3.1e-4 (Newton + LM polish x3 at 20000) --
+  the CD curvature changes the numerical landscape; the same diagnostic
+  treatment as before is needed (decompose the plateau: which equation
+  holds it, and whether the linear warm start needs the CD-consistent
+  gain). The (f) provenance finding STANDS as the justification: the
+  self-loops are genuine data (self_raw = self_dom exactly; import
+  content in the self-cells only 1-8 percent of the column; 23 sectors
+  above a 0.3 self-share; legal/accounting 0.569 with EUR 42.7 bn
+  intra-sector flows), so the production core must handle them, and the
+  CD index is the standard stabilizing choice. The DELTA corner is
+  unaffected as an analytic limit ((theta, eps, sigma) -> 0, exact
+  equivalence verified earlier); the paper's sweep now lives in
+  (eps, sigma) plus the analytic corner. NEXT SESSION: (i) decompose the
+  theta = 1 k = 0 plateau, (ii) BETA verification under theta = 1,
+  (iii) ALPHA/GAMMA/F1 rows, (iv) notebook 04. The Mac is available for
+  runtime-heavy runs if the continuation needs many steps.
+
+
 - **2026-09-17. Sector-71 drop implemented (b); the pathology is a CLASS,
   not one sector -- structural decision needed.** drop_sectors() added to
   calibration.jl (drops listed sectors BEFORE the open-economy

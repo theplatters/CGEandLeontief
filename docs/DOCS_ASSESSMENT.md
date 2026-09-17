@@ -514,6 +514,34 @@ and the interpretive pass on the v3 baseline units (the wage reads 0.54 in
 the new no-numeraire units while prices stay near 1 -- normalization or
 inconsistency, to be settled in notebook 04).}
 
+\textcolor{revisionV3}{Post-v4 findings (folded into this version, no
+version change). Three further results qualify the intermediate state.
+(i) The branch mystery was resolved: the "depressed" equilibrium found by
+the solver is the same real allocation at a lower price scale; the fixed
+nominal tax made its real burden price-level-dependent, so the government
+budget was made homogeneous (real purchases $gG$ financed at current
+prices, $T = p'gG$) and the CPI numeraire restored as the scale selector.
+(ii) Sector 71 was dropped on documented grounds (residual catch-all,
+1.8\% of gross output, 37.5\% self-loop), but the instability then moved
+to other high-self-loop service sectors -- the (f) provenance diagnostic
+showed the diagonals are genuine data (self-shares identical before and
+after the import split; 23 sectors above a 0.3 self-share), so no data
+correction is available and the trade-off is structural. Three dataset
+variants are now defined in \texttt{cbase2/src/calibration.jl}
+(\texttt{full} = 71 sectors, \texttt{70s} = drop 71, \texttt{reduced} =
+additionally drop the self-share $> 0.45$ class 13, 18, 19, 48, 53, 58,
+68; coverage: 100\%/99.2\%/87.4\% of gross output).
+(iii) The solver question is reframed: the theta-homotopy showed that
+even at $\theta = 2$ (gross substitutes, no self-referencing spiral
+possible) the FD-Newton stalls at the same $3.6\times10^{-4}$ floor --
+the difficulty is solver-setup reliability (kinked residuals under
+ForwardDiff), not model structure; the identical system converged to
+$2\times10^{-10}$ under a different init. This matches the Baqaee--Farhi
+practice of solving equilibria as general NLPs (KNITRO/fmincon in
+MATLAB): the recommended cbase2 route is a constrained-NLP formulation
+(IPOPT via JuMP, the free KNITRO analogue) if the quick
+finite-difference/least-squares experiments do not suffice.}
+
 # Workplan \textcolor{revisionV3}{\normalsize [section 5 since v4; reworked v3]}
 
 ## Stage 1: Model completion \textcolor{revisionV2}{\normalsize [reworked v3]}
@@ -668,6 +696,44 @@ corner are done; the remaining Stage 1 items are the BETA verification
 run, the ALPHA/GAMMA v3 re-runs ($\eta = 1$, CES elasticities), the
 explicit F1 tilt experiment, and the interpretive pass on the v3 baseline
 units in notebook 04 -- then pre-register $\eta^{*}$ and open Stage 2.}
+
+## Running the pipeline (container and Mac) \textcolor{revisionV3}{\normalsize [added v4, folded]}
+
+\textcolor{revisionV3}{Execution venue. Notebooks 01 (data wrangling) and
+02 (accounting consistency) are validated end-to-end and reproduce the
+parent \texttt{AC\_*} artifacts exactly; notebook 03 (financing closures)
+needs a v3 re-run once the solver route is settled. Notebooks are
+executed in the container (Julia 1.12.7, depot
+\texttt{/opt/julia-depot}, kernel \texttt{julia-1.12}); the Mac is a
+second venue for the same code, useful for solver experiments, not for
+speed.}
+
+\textcolor{revisionV3}{Can runtime be ruled out? Yes, in the narrow
+sense: a single 140-dimensional solve takes seconds and the failures are
+convergence stalls at floors that are identical across algorithms and
+run-times -- more CPU time does not fix them. A Mac run is nevertheless
+NOT superfluous, but its purpose is solver robustness in a clean
+environment: the session evidence is init/path-sensitive (the identical
+system converged to $2\times10^{-10}$ under one init and stalled at
+$3.6\times10^{-4}$ under another), so a controlled init sweep is the
+cheapest decisive experiment.}
+
+\textcolor{revisionV3}{Commands. Container (repo root
+\texttt{BFRep/(3)BeyondHulten}): \texttt{julia -{}-project=. -e 'using
+Pkg; Pkg.instantiate()'} once; acceptance test
+\texttt{julia -{}-threads=4 cbase2/scripts/verify\_v3.jl} (the standing
+gate: baseline continuation, F1/F2/F3 rows, budget identities, DELTA
+equivalence). Mac (same repo checked out, \texttt{juliaup} 1.12.x):
+first \texttt{julia -{}-project=. -e 'using Pkg; Pkg.instantiate(); using
+BeyondHulten'}; then (1) the acceptance test as above, (2) an init sweep
+on one calibrated economy -- default \texttt{[ones(N); lambda; 1.0]},
+warm linear fixed point, and small random perturbations of each -- over
+$\theta \in \{2.0, 1.0, 0.5\}$ with \texttt{drops=[71]}, recording
+retcode and residual per run (a short script to be added as
+\texttt{cbase2/scripts/solver\_sweep.jl}); (3) the same with
+\texttt{AutoFiniteDiff()} and with Levenberg--Marquardt as primary. If
+any route reaches machine-tolerance residuals, the pipeline proceeds
+unchanged; if all stall, implement the IPOPT/JuMP formulation.}
 
 \textcolor{revisionV2}{The chronological document map, the
 per-document evaluation of documents 1--10, and the synthesis have been

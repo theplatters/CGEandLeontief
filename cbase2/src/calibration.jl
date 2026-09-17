@@ -23,6 +23,22 @@
 # natural refinement: s_h on wage income, s_c on profits, two households).
 # ═══════════════════════════════════════════════════════════════════════════════
 
+# ------------------------------------------------------------------
+# Dataset variants (user-directed design, Notebook 03b).
+#   "full"    all 71 sectors (reference; carries the self-loop instability)
+#   "70s"     sector 71 dropped (the documented decision; current working set)
+#   "reduced" additionally drops every sector with self-share > 0.45
+#             (48, 18, 19, 53, 58, 13, 68) -- the genuine-data class proven
+#             by the (f) diagnostic; a modelling choice, NOT a data
+#             correction. The instability-vs-coverage trade-off is measured
+#             by comparing results across variants (notebook 03b).
+# ------------------------------------------------------------------
+const DATASET_VARIANTS = Dict{String,Vector{Int}}(
+	"full"    => Int[],
+	"70s"     => [71],
+	"reduced" => [71, 48, 18, 19, 53, 58, 13, 68],
+)
+
 """
 	drop_sectors(data, drops) -> Data
 
@@ -59,6 +75,27 @@ function drop_sectors(data::Data, drops::Vector{Int})
 		data.domestic_final_demand[keep],
 		zeros(m), zeros(m), zeros(m), zeros(m), zeros(m), 0.0,
 		sum(va), sum(va), sum(va))
+end
+
+"""
+	dataset_coverage(data_v1, drops) -> NamedTuple
+
+Coverage report for a sector-drop configuration: shares of gross output,
+value added and household final demand kept, plus the dropped sector
+indices. Used by notebook 03b to document the "reduced" variant's cost.
+"""
+function dataset_coverage(data_v1::Data, drops::Vector{Int})
+	dropped = sort(unique(drops))
+	g = sum(data_v1.gross_output_basic)
+	v = sum(data_v1.value_added)
+	f = sum(data_v1.domestic_final_demand)
+	gk = g - sum(data_v1.gross_output_basic[dropped])
+	vk = v - sum(data_v1.value_added[dropped])
+	fk = sum(data_v1.domestic_final_demand) - sum(data_v1.domestic_final_demand[dropped])
+	(; dropped_sectors = dropped,
+	   gross_share_kept = round(100 * gk / g; digits=2),
+	   va_share_kept = round(100 * vk / v; digits=2),
+	   fd_share_kept = round(100 * fk / sum(data_v1.domestic_final_demand); digits=2))
 end
 
 """

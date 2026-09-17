@@ -359,6 +359,30 @@ silently rewritten -- later entries state what they replace.
   70-sector system: w* = 0.9067, real_gdp = 0.8768, resid 2.77e-6.
 
 
+- **2026-09-17 (cont.). Sector pipeline REPLACED: `drop_sectors` ->
+  `retained_dataset` (review findings 2 + 3).** The old slicer left Ω_raw
+  rows at 0.9713 (70s) / 0.5488 (reduced) and labor_share at 0.9878 /
+  0.8832, so p = w = 1 was not a zero-profit equilibrium off the CD window
+  (ip(θ→1⁻) -> 0, ip(1) = 1, ip(θ→1⁺) -> ∞) and E_h0 = 1 - ΣgG used the
+  wrong income unit. `calibration.jl` now rebuilds the retained IO table FROM
+  THE RAW TABLE (`retained_io_table`): dropped sector rows/columns are
+  removed, the FD import/product-tax rows are scaled by the retained share of
+  each category (the §4.1 split reports these by category, not by product),
+  and `generate_data` is re-run on the slice (`number_sectors` parameter; FD
+  columns now located by name). `recalibrate_open(data; exo_scale)` no longer
+  takes `cbroot`/`drops` and derives all open-economy blocks from `data.io`
+  directly (the AC artifact is reproduced exactly by `final_demand_split`).
+  `retained_dataset` asserts Σ_j Ω_raw[u,j] = 1 and Σ labor_share = 1.
+  Verified (`scripts/verify_retained_pipeline.jl`): all variants have exact
+  row sums and Σ labor_share = 1, max|ip - 1| < 3e-12 across
+  θ ∈ [0.5, 2.0], max|p - cost| < 2.2e-15 at p = w = 1. 70s calibration:
+  s = 0.410965 (was 0.4259; the predicted "both fixes" value), E_h0 =
+  0.783259, clamp mass = 0.086197; full is unchanged (s = 0.397878). The
+  clamp mass (finding 2.5) is NOT addressed -- it stays 0.086-0.091 in all
+  variants. Scripts updated to the new API; hardcoded /workspace paths in
+  verify_v3.jl / reduced_variant_sweep.jl replaced by @__DIR__.
+
+
 - **2026-09-16 (night). Homogeneous budget + branch selection: the
   two-scale mystery resolved; one genuine pathology isolated (sector 71).**
   The branch diagnostic (branch_diag.jl) showed the "depressed" branch is

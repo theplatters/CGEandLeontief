@@ -139,6 +139,12 @@ choice of Notebook 03b: with genuine sector self-loops -- up to Omega_ii
 = 0.57 in the data -- the CES index at theta < 1 is self-referencing and
 the zero-profit price system has exploding spiral branches; the
 Cobb-Douglas index is log-linear with a unique positive root).
+
+Both branches are valid unit-expenditure functions only when every row of
+Ω_raw is a probability vector (Σ_j Ω_raw[u,j] = 1). `conditional_input_shares`
+enforces this for the source table and `retained_dataset` re-asserts it after
+any sector rebuild; without the renormalization the CES branch silently
+rescales with a deficit-dependent factor (the 2026-09-17 θ-discontinuity).
 """
 function _intermediate_price(Ω_raw::AbstractMatrix, p::AbstractVector, θ::Real)
 	isapprox(θ, 1.0; rtol = 0, atol = 1e-6) && return exp.(Ω_raw * log.(p))

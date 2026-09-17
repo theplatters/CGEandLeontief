@@ -1,8 +1,8 @@
-# v2_verify.jl — acceptance test for the open-absorption recalibration.
-# Run from the PARENT repo root:  julia /workspace/agents/v2_verify.jl
+# verify_v3.jl — acceptance test for the open-absorption recalibration.
+# Run from the repo root:  julia --project=. cbase2/scripts/verify_v3.jl
 using CSV, DataFrames, LinearAlgebra, Statistics, NonlinearSolve
 
-CB = "/workspace/git/BFRep/(3)BeyondHulten/cbase2"
+const CB = normpath(joinpath(@__DIR__, ".."))
 
 for f in ["interface.jl", "solution.jl", "ces.jl", "mobile_labor.jl", "leontief.jl", "util.jl"]
     include(joinpath(CB, "src", "core", f))
@@ -19,10 +19,16 @@ include(joinpath(CB, "src", "calibration.jl"))
 # as robustness axes in cbase2/src/calibration.jl.
 # DROPS = [71]   # <- the former documented decision, kept as robustness axis
 DROPS = Int[]
-data_full = read_data("I-O_DE2019_formatiert.csv")
-data_v1 = drop_sectors(data_full, DROPS)
+data_full = read_data(joinpath(CB, "data_raw", "I-O_DE2019_formatiert.csv"))
+data_v1 = retained_dataset(data_full, DROPS)
 N = length(data_v1.factor_share)
 shocks = Shocks(ones(N), ones(N), zeros(N))
+
+# Sector-pipeline contract (review findings 2/3, fixed 2026-09-17): the
+# retained dataset must have probability rows in Ω_raw (CES/CD price-index
+# contract) and unit baseline factor income (E_h0 = 1 - ΣgG uses income = 1).
+@assert all(x -> isapprox(x, 1.0; atol = 1e-10), vec(sum(data_v1.Ω_raw; dims = 2))) "Ω_raw rows must sum to 1"
+@assert isapprox(sum(data_v1.labor_share), 1.0; atol = 1e-10) "Σ labor_share must be 1"
 
 # ── 1. Injection continuation: exo_scale from s~0 to 1, warm-starting each step ──
 # Each intermediate economy is internally exact (c0 and s recalibrated); the
@@ -31,7 +37,7 @@ shocks = Shocks(ones(N), ones(N), zeros(N))
 # The start scale is where the data-implied saving rate crosses zero
 # (bisection: s(exo_scale) is monotone increasing); below it s < 0 and the
 # round-gain matrix is non-contractive.
-s_of(esc) = (d = recalibrate_open(data_v1, CB; exo_scale=esc, drops=DROPS); d.saving_rate)
+s_of(esc) = (d = recalibrate_open(data_v1; exo_scale=esc); d.saving_rate)
 lo, hi = 0.0, 1.0
 @assert s_of(hi) > 0
 for _ in 1:40
@@ -53,7 +59,7 @@ ref_sol = nothing
 for k in 0:K
     global data, ref, ref_sol, init_warm
     exo_scale = esc0 + (1.0 - esc0) * k / K
-    data = recalibrate_open(data_v1, CB; exo_scale=exo_scale, drops=DROPS)
+    data = recalibrate_open(data_v1; exo_scale=exo_scale)
     for θ in THETAS
         global ref, ref_sol, init_warm
         ref = mobile_labor_model(data, shocks, θ, 0.5, 0.9, 0.5)

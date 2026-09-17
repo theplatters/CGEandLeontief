@@ -15,10 +15,10 @@ include(joinpath(CB, "src", "calibration.jl"))
 
 function main()
     drops = DATASET_VARIANTS["70s"]
-    data_v1 = drop_sectors(read_data(joinpath(CB, "data_raw", "I-O_DE2019_formatiert.csv")), drops)
+    data_v1 = retained_dataset(read_data(joinpath(CB, "data_raw", "I-O_DE2019_formatiert.csv")), drops)
     N = length(data_v1.factor_share)
     shocks = Shocks(ones(N), ones(N), zeros(N))
-    es = recalibrate_open(data_v1, CB; exo_scale=1.0, drops=drops)
+    es = recalibrate_open(data_v1; exo_scale=1.0)
     (; Ω_raw, factor_share, consumption_share, import_margin, gov_demand,
      exo_demand, exports_demand, saving_rate) = es
     M0 = Ω_raw' * Diagonal(1.0 .- factor_share)

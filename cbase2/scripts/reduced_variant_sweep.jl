@@ -18,8 +18,7 @@
 
 using DataFrames, CSV
 using LinearAlgebra, NonlinearSolve
-const ROOT = "/workspace/git/BFRep/(3)BeyondHulten"
-const CB = joinpath(ROOT, "cbase2")
+const CB = normpath(joinpath(@__DIR__, ".."))
 for f in ["interface.jl", "solution.jl", "ces.jl", "mobile_labor.jl", "leontief.jl", "util.jl"]
 	include(joinpath(CB, "src", "core", f))
 end
@@ -54,16 +53,15 @@ raw = read_data(joinpath(CB, "data_raw", "I-O_DE2019_formatiert.csv"))
 for (vname, drops) in [("full", DATASET_VARIANTS["full"]),
 					   ("70s", DATASET_VARIANTS["70s"]),
 					   ("reduced", DATASET_VARIANTS["reduced"])]
-	data_v1 = drop_sectors(raw, drops)
+	data_v1 = retained_dataset(raw, drops)
 	N = length(data_v1.factor_share)
 	shocks = Shocks(ones(N), ones(N), zeros(N))
-	cover = dataset_coverage(data_v1, drops)
+	cover = dataset_coverage(raw, drops)
 	println("══ variant ", vname, ": N=", N, "  coverage GO=", cover.gross_share_kept,
 		"% VA=", cover.va_share_kept, "% ══")
 
 	# continuation start: smallest exo_scale with s >= 0 (bisection, as the gate)
-	s_of(esc) = (d = recalibrate_open(data_v1, CB; exo_scale = esc, drops = drops);
-				 d.saving_rate)
+	s_of(esc) = (d = recalibrate_open(data_v1; exo_scale = esc); d.saving_rate)
 	lo, hi = 0.0, 1.0
 	@assert s_of(hi) > 0
 	for _ in 1:40
@@ -77,7 +75,7 @@ for (vname, drops) in [("full", DATASET_VARIANTS["full"]),
 	init_warm = nothing
 	for k in 0:K
 		esc = esc0 + (1.0 - esc0) * k / K
-		es = recalibrate_open(data_v1, CB; exo_scale = esc, drops = drops)
+		es = recalibrate_open(data_v1; exo_scale = esc)
 		for th in THETAS
 			mdl = mobile_labor_model(es, shocks, th, 0.5, 0.9, 0.5)
 			t0 = time()
@@ -105,7 +103,7 @@ for (vname, drops) in [("full", DATASET_VARIANTS["full"]),
 	end
 
 	# cold-solve contrast: the configuration that stalls (θ ladder, direct init)
-	es = recalibrate_open(data_v1, CB; exo_scale = 1.0, drops = drops)
+	es = recalibrate_open(data_v1; exo_scale = 1.0)
 	for th in THETAS
 		mdl = mobile_labor_model(es, shocks, th, 0.5, 0.9, 0.5)
 		t0 = time()

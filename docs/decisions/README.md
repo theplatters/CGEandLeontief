@@ -48,3 +48,4 @@ settled question.
 | ADR-0009 | Archive the legacy root notebooks | accepted |
 | ADR-0010 | Port the `cbase2/review.md` pipeline fixes | accepted |
 | ADR-0011 | Conform the frozen cbase2 notebook 01 to the canonical kernel | accepted |
+| ADR-0012 | A-bill calibration: domestic intermediate bill, clamp eliminated, s re-anchored | accepted |

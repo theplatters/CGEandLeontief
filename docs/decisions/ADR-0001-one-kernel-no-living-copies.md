@@ -59,3 +59,14 @@ currently means touching at least two kernels plus notebooks.
   tree differs from its freeze record.
 - `AGENTS.md` states the rule for agents: never edit a frozen zone, never
   copy the kernel.
+
+## Amendment 2026-09-17 — The root notebooks leave their path (ADR-0009)
+
+The Decision line that legacy source material "stays at its path" no longer
+applies to the three root notebooks (`DemandShocks.ipynb`,
+`CompareModels.ipynb`, `CobbDouglas.ipynb`): ADR-0009 moved them to
+`docs/archive/notebooks/`, where they stay read-only. Everything else in
+this ADR — in particular the one-kernel rule and the freeze of `cbase2`,
+`bf_replication`, `bf_replication2` and the remaining legacy zones — is
+unchanged. The original wording is kept per the append-only rule; this
+amendment is authoritative where the two disagree.

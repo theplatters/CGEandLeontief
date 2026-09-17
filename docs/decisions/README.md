@@ -45,3 +45,4 @@ settled question.
 | ADR-0006 | Experiment entry point and preregistration | accepted |
 | ADR-0007 | Repository gate and WIP limits | accepted |
 | ADR-0008 | Archive superseded root documents as read-only | accepted |
+| ADR-0009 | Archive the legacy root notebooks | accepted |

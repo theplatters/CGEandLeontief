@@ -80,7 +80,9 @@ history).
 ## Legacy material
 
 The root notebooks (`DemandShocks.ipynb`, `CompareModels.ipynb`,
-`CobbDouglas.ipynb`) and the `Notebooks/` directory (`Analysis.ipynb`,
-`Translation.ipynb`, …) are the pre-package history: they predate the current
-API, are committed with outputs, and are frozen/read-only for reference only.
-The current model lives in `src/`.
+`CobbDouglas.ipynb`) were moved out of the root into
+`docs/archive/notebooks/` and stay frozen/read-only (ADR-0009). Together
+with the `Notebooks/` directory (`Analysis.ipynb`, `Translation.ipynb`, …)
+they are the pre-package history: they predate the current API, are
+committed with outputs, and are kept for reference only. The current model
+lives in `src/`.

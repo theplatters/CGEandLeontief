@@ -65,7 +65,7 @@ const NON_CLOSURE_SUBTYPES = Set(["ExogenousLaborClosure", "NoFinancing"])
 """SHA-256 hex digest of a file's bytes."""
 file_sha256(path::AbstractString) = bytes2hex(SHA.sha256(read(path)))
 
-"""Read-only/frozen zone paths from registry/freeze.toml plus the legacy root notebooks."""
+"""Read-only/frozen zone paths from registry/freeze.toml."""
 function frozen_paths(root::AbstractString)::Set{String}
     out = Set{String}()
     fp = joinpath(root, "registry", "freeze.toml")
@@ -79,9 +79,6 @@ function frozen_paths(root::AbstractString)::Set{String}
                 push!(out, strip(string(v["path"])))
             end
         end
-    end
-    for nb in ("DemandShocks.ipynb", "CompareModels.ipynb", "CobbDouglas.ipynb")
-        push!(out, nb)
     end
     return out
 end

@@ -75,7 +75,7 @@ Warnings mean a dangling reference: missing `files`/`tests`/`evidence` path, unk
 ## Freeze rules
 
 - ADR-0001 and `registry/freeze.toml` are authoritative: frozen snapshots and read-only zones are never edited.
-- Frozen/read-only zones: `cbase2/`, `bf_replication/`, `bf_replication2/`, `Replication Files/`, `Dokumente/`, `Notebooks/`, the legacy root notebooks (`CobbDouglas.ipynb`, `CompareModels.ipynb`, `DemandShocks.ipynb`), and `archive/` (including the orphan-source archive `archive/src-orphans/`).
+- Frozen/read-only zones: `cbase2/`, `bf_replication/`, `bf_replication2/`, `Replication Files/`, `Dokumente/`, `Notebooks/`, the archived legacy notebooks (`docs/archive/notebooks/`, ADR-0009), and `archive/` (including the orphan-source archive `archive/src-orphans/`).
 - Read frozen sources if needed, but write all changes in the root kernel. Never copy the kernel (ADR-0001).
 - Unfreezing or moving a zone requires a superseding ADR and a new freeze record; `scripts/status.jl` warns when a zone differs from its recorded commit/tree hash.
 

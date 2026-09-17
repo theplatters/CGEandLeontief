@@ -18,4 +18,6 @@ Contents include: `WORKPLAN.md`, `WORKPLAN2.md`, `WORKPLAN3.md`,
 `accounting_consistency_plan.md`, `milestone_D_plan.md` (and PDF mirrors),
 plus the archived root documents `selective_status_overview.md` (a superseded
 status overview) and `varianten.xlsx` (the pre-Phase-0 closure-design
-workbook, renamed from `varianten`; both moved here by ADR-0008).
+workbook, renamed from `varianten`; both moved here by ADR-0008), and the
+root legacy notebooks `DemandShocks.ipynb`, `CompareModels.ipynb` and
+`CobbDouglas.ipynb` in `notebooks/` (moved here by ADR-0009, still frozen).

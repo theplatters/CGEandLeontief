@@ -25,10 +25,10 @@ catalogue in `docs/DOCS_ASSESSMENT.md`.
 | `data/` | Input data; mostly gitignored, a few small reference files are tracked. |
 | `paper/`, `revised_manuscript/` | Manuscript sources. |
 
-Frozen/read-only — never edit (ADR-0001; commits and tree hashes in
+Frozen/read-only — never edit (ADR-0001, ADR-0009; commits and tree hashes in
 `registry/freeze.toml`): `cbase2/`, `bf_replication/`, `bf_replication2/`,
-`Replication Files/`, `Dokumente/`, `Notebooks/`, the legacy root notebooks
-(`DemandShocks.ipynb`, `CompareModels.ipynb`, `CobbDouglas.ipynb`), and `archive/`.
+`Replication Files/`, `Dokumente/`, `Notebooks/`, the archived legacy
+notebooks (`docs/archive/notebooks/`), and `archive/`.
 
 ## Commands
 

@@ -72,3 +72,14 @@ are recorded per entry in `registry/closures.toml`.
   formulation string.
 - `scripts/status.jl` renders the registry; unknown ids in scenarios.csv are
   warnings on `docs/status.md`.
+
+## Amendment 2026-09-17 — DELTA in the matrix
+
+The 5×3 evaluation matrix (`docs/DOCS_ASSESSMENT.md`) legitimately contains
+DELTA as its IO-endpoint row. The statements above that DELTA is "never
+listed as an independent row of the evaluation matrix" (Decision bullet and
+taxonomy table, "not to be confused with …") are to be read as "**not an
+independent mechanism**": DELTA's cells are reached as GAMMA plus Leontief
+technology, and the paper reports the limit relations rather than hiding
+them as redundancy. The original wording is kept per the append-only rule;
+this amendment is authoritative where the two disagree.

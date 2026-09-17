@@ -113,7 +113,7 @@ open_gates = [
     "Type I vs Type II multiplier identification unresolved (cbase2/review.md §1)",
     "exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5)",
 ]
-notes = "DELTA is a corner (GAMMA + Leontief limit), never an independent matrix row (docs/DOCS_ASSESSMENT.md; cbase2/documentation.md). The analytic counterpart leontief_multiplier includes endogenous consumption, saving and import leaks, i.e. a Type II/SAM-style multiplier rather than the (I-A)^-1 Type I inverse (cbase2/review.md §1). verify_v3.jl asserts relative agreement below 5e-3, not machine zero (cbase2/review.md §2.9)."
+notes = "DELTA is a corner reached as GAMMA plus Leontief technology (docs/DOCS_ASSESSMENT.md; cbase2/documentation.md); it is the endpoint row of the 5x3 matrix but not an independent mechanism (see ADR-0002 amendment 2026-09-17). The analytic counterpart leontief_multiplier includes endogenous consumption, saving and import leaks, i.e. a Type II/SAM-style multiplier rather than the (I-A)^-1 Type I inverse (cbase2/review.md §1). verify_v3.jl asserts relative agreement below 5e-3, not machine zero (cbase2/review.md §2.9)."
 
 [labor.ZETA]
 id = "ZETA"

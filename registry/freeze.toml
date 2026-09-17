@@ -1,0 +1,131 @@
+# registry/freeze.toml -- frozen snapshots and read-only zones (Phase 0, ADR-0001)
+schema_version = 1
+generated_at = "2026-09-17"
+generated_by = "phase-0 agent"
+frozen_at_commit = "dfd60a21f3d816ae9a8d3c55eaa8a3c7a8f45fc7"
+frozen_at_commit_short = "dfd60a2"
+frozen_at_date = "2026-09-17"
+branch = "reorg"
+
+[frozen.cbase2]
+path = "cbase2"
+kind = "submission-snapshot"
+status = "frozen"
+recorded_commit = "dfd60a21f3d816ae9a8d3c55eaa8a3c7a8f45fc7"
+recorded_commit_short = "dfd60a2"
+last_touch_commit = "dfd60a21f3d816ae9a8d3c55eaa8a3c7a8f45fc7"
+last_touch_subject = "added review"
+last_touch_date = "2026-09-17"
+tree_hash = "a8241e98ef61e572910c3a43d49de2fecc32b9e2"
+tracked_files = 45
+reason = "Self-contained cbase2 pipeline for the Metroeconomica revision (5 x 3 evaluation matrix; cbase2/documentation.md). At freeze: notebooks 01-02 complete and validated end-to-end; notebook 03 plus src/financing.jl complete and smoke-tested at m = 1 with two recorded kernel DIFFs; notebooks 04-08 and src/validation.jl listed as pending."
+successor = "root src/, the reproducible baseline per ROADMAP.md section 3; Phase 2 promotes BETA/DELTA/F1-F3 from cbase2."
+open_items = [
+    "Tornqvist real-GDP base is still the v2 form; every v3 aggregate is contaminated until the base is household_baseline (c0_gross) -- F2's -24.6% is an artifact of the broken base",
+    "F3 mobile solve stalls at max residual ~2e-4; the BETA eta-continuation ran >25 min without completing",
+    "S = I + X - M canary mismatch (diff -0.16 at the ref, -0.094 with the equilibrium wage); review.md's critical finding is that the mobile system drops the N-th clearing equation and it is not Walras-redundant, while process_comments.md contains conflicting statements about the mobile formulation",
+    "theta bounded at 1 (Cobb-Douglas intermediates) after theta < 1 instability; the theta = 1, k = 0 continuation stalls at 3.1e-4",
+    "Sector-71 / high-self-loop class instability under theta < 1; drop_sectors breaks CES share normalization (0.971 for the 70s variant, 0.549 for reduced)",
+    "External review: baseline clamp mass ~8.7% of GDP (0.0873 GDP units); stale 71-sector headline numbers (s = 0.398, tau0 = 0.214, X = 0.422, I = 0.162); GAMMA labelling issue",
+]
+kernel_diffs = ["src/core/interface.jl", "src/core/mobile_labor.jl"]
+notes = "Notebooks 04-08 are listed as pending and do not exist; only 01-03 exist. documentation.md's layout also names src/validation.jl and scripts/run_{reference,matrix,sobol}.jl (not on disk), and its pending row names src/closures.jl, which does exist. review.md is pinned to commits 17c5730..3dd0d60 (pre-freeze) and reports a conditioning/fold solver problem rather than an init-setup issue; backport of the kernel DIFFs to parent src/ is pending."
+
+[frozen.bf_replication]
+path = "bf_replication"
+kind = "replication-snapshot"
+status = "frozen"
+recorded_commit = "dfd60a21f3d816ae9a8d3c55eaa8a3c7a8f45fc7"
+recorded_commit_short = "dfd60a2"
+last_touch_commit = "a179deee7cb82a6304f9e47e715732b2f2322531"
+last_touch_subject = "cleanup"
+last_touch_date = "2026-09-04"
+tree_hash = "7814c904386c7073e9a40f714f82becae5a86017"
+tracked_files = 41
+reason = "From-scratch Julia replication of the computational model in Baqaee-Farhi (2019), Econometrica 87(4) (REPLICATION_REPORT.md). Per the sources all MATLAB files are ported (R1-R6 plus Oil_Shock.m); the fixed-labor CES Monte Carlo is validated near-perfect against MATLAB (mean -0.351% vs -0.335%), while the reallocation MC shows a 14% relative gap in the mean (-0.972% vs -1.134%)."
+successor = "None recorded; bf_replication2/README.md states that bf_replication2 reuses the verification methodology established for the 2019-paper replication in bf_replication/."
+open_items = [
+    "Reallocation MC 14% relative gap vs MATLAB (mean -0.972% vs -1.134%); cause not determined",
+    "Full 50,000-draw MC and the full 76-sector R6 Hessian/MC runs still to be executed on the Mac",
+    "Systematic comparison over the 144 data points in the paper's Results.txt not yet done",
+    "bf_jacobian! analytical Jacobian has a sign/transposition bug (~300x entry differences) and is reference-only; numerical + LM solver is the production path",
+    "Direct cross-check against pre-computed MATLAB .mat results (e.g. GDP_simulation_50K_CD.mat) outstanding",
+]
+notes = "Sources conflict on the oil-shock headline: REPLICATION_ASSESSMENT.md reports amplification 1.28x (delta-log GDP -3.55%), while REPLICATION_REPORT.md states 1.92x is the correct MC/nominal-GDP measure and that 1.28x comes from the consumption-welfare index. REPLICATION_REPORT.md's completion table lists Oil_Shock.m and R5/R6 as ported, but its Next Steps still ask to port them (stale section)."
+
+[frozen.bf_replication2]
+path = "bf_replication2"
+kind = "replication-snapshot"
+status = "frozen"
+recorded_commit = "dfd60a21f3d816ae9a8d3c55eaa8a3c7a8f45fc7"
+recorded_commit_short = "dfd60a2"
+last_touch_commit = "f6e75028fe6c202dfc7d642d69684ea35cbe3592"
+last_touch_subject = "closing rep AER"
+last_touch_date = "2026-08-15"
+tree_hash = "1eb9b650a7b04b41ab899a3da104ac973a907162"
+tracked_files = 25
+reason = "Clean-room Julia port of the Baqaee-Farhi (2020) AER COVID application: 66 BEA sectors, standard-form network dimension D = 5N + 4 = 334 (README.md). Per the sources the loop-1 calibration grid (2 elasticities x 5 shock types) is complete and matches the paper within 0.04 percentage points, while the HtM sweep has two reconstructed (not converged) cells."
+successor = "None recorded (retained as the Baqaee-Farhi (2020) replication record)."
+open_items = [
+    "HtM sweep: 2 of 6 cells not converged at t = 1.0 and reconstructed from the last convergent t (phi=0.2 CD at t=0.70, an underestimate; phi=0.8 benchmark at t=0.99)",
+    "Route B (JuMP + PATHSolver) not implemented; Route A (NLsolve + Fischer-Burmeister) used because of container memory limits",
+    "Route B memory feasibility on the host unresolved (the 668-variable FD Jacobian needs >15 GB; README cites 32+ GB for the full grid)",
+    "Whether the CD phi=0.2 failure is a genuine singularity or a solver artifact is undiagnosed",
+    "Fully automated make-all pipeline still unchecked in the VALIDATION.md verification list",
+    "Documentation conflict: README.md says all six HtM cells converge successfully, while VALIDATION.md and archive/STATUS.md mark two as reconstructed",
+]
+notes = "archive/STATUS.md lists README.md as missing (Phase 8 partial) although README.md is present and described there as verified, and it mentions unpushed commits on a revise branch; STATUS.md and WORKPLAN.md were moved to archive/ on 2026-08-15. VALIDATION.md records the MATLAB-to-Julia corrections applied (shock sign, lambda initialisation, B renormalisation, chi = 0.0, Trunc_A dimensions), and README.md states 0.06 pp agreement for the three reported benchmark values while its own summary and VALIDATION.md state 0.04 pp."
+
+[read_only."Replication Files"]
+path = "Replication Files"
+kind = "source-archive"
+status = "read-only"
+tree_hash = "d4b7ed14b96e732ab5680c13548839069f8720d8"
+tracked_files = 106
+reason = "MATLAB replication code and paper source material for the Baqaee-Farhi (2019) replication: GDP Simulatin -- 88 Sector/, Growth Accounting_Klems/, Stuck Intermediates and Adjustment Costs/, plus Results.txt and figure exports."
+notes = "Referenced by bf_replication/REPLICATION_WORKPLAN.md as the location of the original MATLAB code; the Baqaee-Farhi (2020) replication source (RepAEA2022/Replication code_ver2/ per bf_replication2/README.md) is not present in this repository."
+
+[read_only.Dokumente]
+path = "Dokumente"
+kind = "source-archive"
+status = "read-only"
+tree_hash = "2df41b0916b6693bbd939e82d4a43e5ac8b54065"
+tracked_files = 6
+reason = "PDF sources and archive material: the Baqaee-Farhi 2019 Econometrica paper, the Baqaee-Farhi 2022 AER paper, B&F Tabula rasa, Bryant (2009), ces.pdf, and mcfadden1963.pdf."
+notes = "Collected reference PDFs, not generated by the repository; kept for reference only."
+
+[read_only.Notebooks]
+path = "Notebooks"
+kind = "legacy-notebooks"
+status = "read-only"
+tree_hash = "393226616e9d260c05f6230a95360cf9cada68df"
+tracked_files = 6
+reason = "Legacy notebooks predating the current package API: AccountingConsistency, Analysis, Covid_Code, Summary, Translation, Translation_Python."
+notes = "Kept for reference only; no further edits are expected in this zone."
+
+[read_only."DemandShocks.ipynb"]
+path = "DemandShocks.ipynb"
+kind = "legacy-notebooks"
+status = "read-only"
+tree_hash = "2fcc29cb3c3643f3b64325a909f80f3912994e3d"
+tracked_files = 1
+reason = "Root-level legacy notebook predating the current package API, committed with outputs (single tracked blob of ~19 MB)."
+notes = "Read-only; kept for reference only."
+
+[read_only."CompareModels.ipynb"]
+path = "CompareModels.ipynb"
+kind = "legacy-notebooks"
+status = "read-only"
+tree_hash = "556d7f4773bcfbe2628aefd2602f1b413f719fb9"
+tracked_files = 1
+reason = "Root-level legacy notebook predating the current package API, committed with outputs."
+notes = "Read-only; kept for reference only."
+
+[read_only."CobbDouglas.ipynb"]
+path = "CobbDouglas.ipynb"
+kind = "legacy-notebooks"
+status = "read-only"
+tree_hash = "f37a6a507de9306aa6a9d0656583cceba5a57555"
+tracked_files = 1
+reason = "Root-level legacy notebook predating the current package API, committed with outputs."
+notes = "Read-only; kept for reference only."

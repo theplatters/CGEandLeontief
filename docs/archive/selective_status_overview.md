@@ -1,6 +1,9 @@
-> **SUPERSEDED (2026-09-17).** The status claims below are historical and are
-> no longer authoritative. Current status lives in the generated
-> `docs/status.md` (from `registry/`), per
+> **ARCHIVED AND SUPERSEDED (2026-09-17).** This document was moved out of
+> the repository root into the closed archive and registered read-only in
+> `registry/freeze.toml` by
+> `docs/decisions/ADR-0008-archive-superseded-root-documents.md`. The status
+> claims below are historical and are no longer authoritative. Current status
+> lives in the generated `docs/status.md` (from `registry/`), per
 > `docs/decisions/ADR-0003-registry-single-source-of-truth.md`. In
 > particular, the mobile-labour "GO" and the "88.4%" variance share are
 > rejected pending regeneration: see `docs/dead-ends/DE-0001`,

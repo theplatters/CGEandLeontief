@@ -44,3 +44,4 @@ settled question.
 | ADR-0005 | Phase 2 layout and cbase2 backport | accepted |
 | ADR-0006 | Experiment entry point and preregistration | accepted |
 | ADR-0007 | Repository gate and WIP limits | accepted |
+| ADR-0008 | Archive superseded root documents as read-only | accepted |

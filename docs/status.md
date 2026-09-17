@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `ca40ac7` (dirty)
+Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `c206280` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -95,6 +95,8 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
   - notes: Kept for reference only; no further edits are expected in this zone.
 | Replication Files | source-archive | read-only | — | 106 | d4b7ed1 | MATLAB replication code and paper source material for the Baqaee-Farhi (2019) replication: GDP Simulatin -- 88 Sector/, Growth Accounting_Klems/, Stuck Intermediates and Adjustment Costs/, plus Results.txt and figure exports. |
   - notes: Referenced by bf_replication/REPLICATION_WORKPLAN.md as the location of the original MATLAB code; the Baqaee-Farhi (2020) replication source (RepAEA2022/Replication code_ver2/ per bf_replication2/README.md) is not present in this repository.
+| archive | source-archive | read-only | 2b12403 | 7 | 80b3232 | Closed archive created in Phase 1; holds archive/src-orphans/ with the six sources that were never included by src/BeyondHulten.jl (DE-0009), moved out of src/ so the root package is the single kernel. |
+  - notes: Read-only per ADR-0001. The freeze baseline is the Phase 1 archive commit 2b12403, not the Phase 0 freeze commit dfd60a2, because the zone did not exist at dfd60a2. Do not add code here.
 | bf_replication | replication-snapshot | frozen | dfd60a2 | 41 | 7814c90 | From-scratch Julia replication of the computational model in Baqaee-Farhi (2019), Econometrica 87(4) (REPLICATION_REPORT.md). Per the sources all MATLAB files are ported (R1-R6 plus Oil_Shock.m); the fixed-labor CES Monte Carlo is validated near-perfect against MATLAB (mean -0.351% vs -0.335%), while the reallocation MC shows a 14% relative gap in the mean (-0.972% vs -1.134%). |
   - open: Reallocation MC 14% relative gap vs MATLAB (mean -0.972% vs -1.134%); cause not determined
   - open: Full 50,000-draw MC and the full 76-sector R6 Hessian/MC runs still to be executed on the Mac
@@ -132,6 +134,7 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
 - [DE-0006 — Variance shares renormalized over main effects / silent incomplete designs](dead-ends/DE-0006-renormalized-variance-shares.md)
 - [DE-0007 — Adopting Baqaee–Farhi (2022) wholesale as the base model](dead-ends/DE-0007-bf2022-wholesale-base.md)
 - [DE-0008 — Open-economy calibration without a saving rate (cbase2 v2)](dead-ends/DE-0008-open-economy-without-saving-rate.md)
+- [DE-0009 — Orphan `src/` files archived, never wired into the package module](dead-ends/DE-0009-orphan-src-files.md)
 
 ## Decisions
 

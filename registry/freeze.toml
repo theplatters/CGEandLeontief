@@ -140,3 +140,25 @@ tree_hash = "80b32322b72001f5be7b57853856de7c6fdc4c7c"
 tracked_files = 7
 reason = "Closed archive created in Phase 1; holds archive/src-orphans/ with the six sources that were never included by src/BeyondHulten.jl (DE-0009), moved out of src/ so the root package is the single kernel."
 notes = "Read-only per ADR-0001. The freeze baseline is the Phase 1 archive commit 2b12403, not the Phase 0 freeze commit dfd60a2, because the zone did not exist at dfd60a2. Do not add code here."
+
+[read_only."docs/archive/selective_status_overview.md"]
+path = "docs/archive/selective_status_overview.md"
+kind = "archived-docs"
+status = "read-only"
+recorded_commit = "7e7e1bb9691ae257238e13814a0e0604b9d3474a"
+recorded_commit_short = "7e7e1bb"
+tree_hash = "5658ada86924341fe6a748729fb1ebb4879d89af"
+tracked_files = 1
+reason = "Superseded status overview: its mobile-labour GO and 88.4% variance share are contradicted by roadmaps/vertdict.md, ROADMAP.md, and DE-0001/DE-0002/DE-0003/DE-0006. Moved out of the repository root into the closed docs archive by ADR-0008."
+notes = "Read-only; kept for reference only. Current status lives in docs/status.md (ADR-0003). The file carries an ARCHIVED AND SUPERSEDED banner."
+
+[read_only."docs/archive/varianten.xlsx"]
+path = "docs/archive/varianten.xlsx"
+kind = "archived-docs"
+status = "read-only"
+recorded_commit = "7e7e1bb9691ae257238e13814a0e0604b9d3474a"
+recorded_commit_short = "7e7e1bb"
+tree_hash = "b292f261525fc723dbf4ae5e397208451794acd6"
+tracked_files = 1
+reason = "Pre-Phase-0 design-options workbook (labour-closure variants against the 2019 and 2022 Baqaee-Farhi models and the Leontief endpoint); unreferenced and superseded by docs/DOCS_ASSESSMENT.md and registry/closures.toml. Moved out of the repository root into the closed docs archive by ADR-0008."
+notes = "Read-only; kept for reference only. Renamed from `varianten` (no extension) when archived; git history preserves the original path."

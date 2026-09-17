@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `bb5b71a` (clean)
+Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `7e7e1bb` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -123,6 +123,10 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
   - open: External review: baseline clamp mass ~8.7% of GDP (0.0873 GDP units); stale 71-sector headline numbers (s = 0.398, tau0 = 0.214, X = 0.422, I = 0.162); GAMMA labelling issue
   - successor: root src/, the reproducible baseline per ROADMAP.md section 3; Phase 2 promotes BETA/DELTA/F1-F3 from cbase2.
   - notes: Notebooks 04-08 are listed as pending and do not exist; only 01-03 exist. documentation.md's layout also names src/validation.jl and scripts/run_{reference,matrix,sobol}.jl (not on disk), and its pending row names src/closures.jl, which does exist. review.md is pinned to commits 17c5730..3dd0d60 (pre-freeze) and reports a conditioning/fold solver problem rather than an init-setup issue. Phase 2 backport (ADR-0005): the recorded DIFFs were backported into the root kernel (src/core/accounting.jl, src/core/equilibrium.jl, src/closures/). Resolved as kernel changes: Tornqvist base (household_baseline, with legacy-default compatibility), residual-gated LM polish (F3 stall), all-N fixed formulation with w=1 numeraire (omitted-N item), and the theta/epsilon CD-limit guards (theta continuation). calibration.jl remains frozen/unported (Phase 3); diff_kernel.jl is retired as a checker (frozen snapshots keep recorded parent commits as history; file stays as history). Hashes/commits above unchanged.
+| docs/archive/selective_status_overview.md | archived-docs | read-only | 7e7e1bb | 1 | 5658ada | Superseded status overview: its mobile-labour GO and 88.4% variance share are contradicted by roadmaps/vertdict.md, ROADMAP.md, and DE-0001/DE-0002/DE-0003/DE-0006. Moved out of the repository root into the closed docs archive by ADR-0008. |
+  - notes: Read-only; kept for reference only. Current status lives in docs/status.md (ADR-0003). The file carries an ARCHIVED AND SUPERSEDED banner.
+| docs/archive/varianten.xlsx | archived-docs | read-only | 7e7e1bb | 1 | b292f26 | Pre-Phase-0 design-options workbook (labour-closure variants against the 2019 and 2022 Baqaee-Farhi models and the Leontief endpoint); unreferenced and superseded by docs/DOCS_ASSESSMENT.md and registry/closures.toml. Moved out of the repository root into the closed docs archive by ADR-0008. |
+  - notes: Read-only; kept for reference only. Renamed from `varianten` (no extension) when archived; git history preserves the original path.
 
 ## Dead ends
 
@@ -145,6 +149,7 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
 - [ADR-0005 — Phase 2 layout and cbase2 backport](decisions/ADR-0005-phase2-layout-and-backport.md)
 - [ADR-0006 — Experiment entry point and preregistration](decisions/ADR-0006-experiment-entry-point-and-preregistration.md)
 - [ADR-0007 — Repository gate and WIP limits](decisions/ADR-0007-repository-gate-and-wip-limits.md)
+- [ADR-0008 — Archive superseded root documents as read-only](decisions/ADR-0008-archive-superseded-root-documents.md)
 
 ## Warnings
 

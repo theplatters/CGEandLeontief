@@ -1,11 +1,11 @@
 schema_version = 1
 
 [designs.calibration_abill]
-git_commit = "fa49d96bb4c4861b629612ad97ae2b25c1414ce5"
+git_commit = "60c2665acafa107912154c39a7dde1e65dbdfbb0"
 note = "A-bill calibration baseline (full-71): domestic intermediate bill, clamp eliminated, intermediate imports explicit in the external account"
-registered_at = "2026-09-17T18:24:37"
-design_sha256 = "ece04c0cd9577dda227ba61a3ab62418c9f2c7f592fc720bf3b563189f2320ad"
-actor = "unknown"
+registered_at = "2026-09-17T21:27:45"
+design_sha256 = "0cf672bbb7f699366ee14db3fb69c05b2e9b622046791cc18a4d3960a9a8b0cd"
+actor = "hermes-agent"
 
     [designs.calibration_abill.pinned]
     sigma = 0.0
@@ -18,11 +18,11 @@ actor = "unknown"
     programme_year = 0
 
 [designs.matrix_5x3]
-git_commit = "b388b90cfdb2e2c4f0e54f916871e6b8d98b788d"
-note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the 70-sector v3 open-economy calibration"
-registered_at = "2026-09-17T14:30:42"
-design_sha256 = "f505cd8ea01141b541720ad1b0f73da099d74e6e50f52ff968bbd44f26b64e49"
-actor = "franzs"
+git_commit = "60c2665acafa107912154c39a7dde1e65dbdfbb0"
+note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration (ADR-0012)"
+registered_at = "2026-09-17T21:27:39"
+design_sha256 = "a83ef2b2e28a33b25fd4e33115e5190b39e7fafb4e09be5c40a9a4861c82337f"
+actor = "hermes-agent"
 
     [designs.matrix_5x3.pinned]
     sigma = 0.9

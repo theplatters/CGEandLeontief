@@ -7,6 +7,14 @@
 # when this file's SHA-256 does not match registry/preregistration.toml.
 # See experiments/README.md and ADR-0006.
 #
+# Calibration: FULL-71 A-bill (ADR-0012; designs/calibration_abill.toml).
+# The 70-sector v3 pin (drops = [71], cbase2 artifacts, old s) is superseded:
+# the intermediate demand is charged with the DOMESTIC bill (raw-table row 73),
+# the clamp is gone, the imported intermediates (row 74) are an explicit
+# external-account leak, and the household block is the table's own domestic
+# household final demand. drops = [] leaves the full table in place
+# (retained_dataset returns the full-table Data unchanged).
+#
 # η ∈ {0, 1} only (ADR-0010): BF is the immobile endpoint (η = 0), ALPHA,
 # BETA, GAMMA, DELTA and the reference continuation use fully mobile
 # allocation (η = 1). The former interpolated η = 0.5 and its allocation wedge
@@ -14,14 +22,29 @@
 
 schema_version = 1
 design = "matrix_5x3"
-description = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the 70-sector v3 open-economy calibration"
+description = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration (ADR-0012)"
 smoke = false
 
 [data]
-vintage = "cbase2-v3"
-drops = [71]
-calibration_root = "cbase2"
-calibration_artifacts = ["cbase2/data_processed/AC_domestic_final_demand.csv"]
+vintage = "full-71-abill"
+drops = []
+calibration_root = "src"
+source_table = "data/I-O_DE2019_formatiert.csv"
+calibration_artifacts = []
+
+[calibration]
+# Informational (ADR-0012 anchors; not read by run.jl). The reference
+# continuation bisects exo_scale for the smallest scale with s >= 0 and ends at
+# exo_scale = 1, where the full-71 A-bill calibration gives s = 0.1199,
+# intermediate imports = 0.2214, household demand c0 = 0.6917 of GDP. The
+# external-identity canary is exact to machine precision once the row-75
+# product taxes on intermediate use are booked as the third leak of the
+# purchaser-price intermediate bill (T_int = 0.0257449 of GDP, ADR-0013);
+# before that term the omitted-market residual was short by exactly it.
+saving_rate = 0.1199
+intermediate_imports = 0.2214
+intermediate_taxes = 0.0257449423974625
+baseline_root_tol = 1e-12
 
 [programme]
 source = "cbase2/data_raw/impulses.csv"

@@ -292,7 +292,12 @@ function build_reference(design_d::Dict{String,Any}; root::AbstractString = defa
     end
 
     dat = design_d["data"]
-    drops = Int.(dat["drops"])
+    # `Vector{Int}(...)`, not `Int.(...)`: inside any process that has loaded
+    # BeyondHulten (the NonlinearSolve/SciML stack), inference returns `Any`
+    # for `Int(::Any)`, so broadcasting over an EMPTY vector degrades to
+    # `Vector{Any}` (`Int.(Any[]) === Any[]`) and `retained_dataset` rejects
+    # it. Typed conversion is inference-independent.
+    drops = Vector{Int}(dat["drops"])
     K = Int(ref["exo_scale_steps"])
 
     data_full = read_data(RUN_IO_TABLE; datadir = root)
@@ -647,7 +652,8 @@ end
 """Update one `registry/scenarios.csv` row from a finished (or started) cell."""
 function update_scenario_row(run_id::AbstractString, design::AbstractString,
         cell::Dict{String,Any}, status::AbstractString, commit::AbstractString;
-        root::AbstractString = default_root(), note_suffix::AbstractString = "")::Nothing
+        root::AbstractString = default_root(), note_suffix::AbstractString = "",
+        vintage::AbstractString = "unknown")::Nothing
     scenpath = joinpath(root, "registry", "scenarios.csv")
     # Normalize every column to String: without `stringtype = String`, CSV
     # infers narrow InlineString widths (e.g. String7) from the current cell
@@ -668,7 +674,7 @@ function update_scenario_row(run_id::AbstractString, design::AbstractString,
     df[r, :sigma] = string(cell["sigma"])
     df[r, :shock] = "impulses.csv"
     df[r, :magnitude] = "1.0"
-    df[r, :data_vintage] = "cbase2-v3"
+    df[r, :data_vintage] = vintage
     df[r, :evidence] = "runs/$run_id/manifest.toml; runs/$run_id/log.txt"
     df[r, :commit] = commit
     isempty(note_suffix) || (df[r, :notes] = string(coalesce(df[r, :notes], ""), note_suffix))
@@ -723,7 +729,9 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
     end
     run_log(rundir, "start $run_id design=$design actor=$actor commit=$(prov["git_commit"])")
     run_log(rundir, "reference real_gdp_ref=$(real_gdp(ref_sol))")
-    update_scenario_row(run_id, design, cell, "running", prov["git_commit"]; root = root)
+    vintage = string(get(get(design_d, "data", Dict{String,Any}()), "vintage", "unknown"))
+    update_scenario_row(run_id, design, cell, "running", prov["git_commit"]; root = root,
+        vintage = vintage)
     try
         sol = solve_cell(cell, design_d, data, ψ, g, init_warm)
         ev = evaluate_gates(cell, design_d, sol.model, sol, ref_sol)
@@ -745,6 +753,7 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
         run_log(rundir, "$(status): $(ev.gate_summary)")
         rewrite_index(; runs_dir = runs_dir)
         update_scenario_row(run_id, design, cell, status, prov["git_commit"]; root = root,
+            vintage = vintage,
             note_suffix = " | $(status) $(iso_date()) (see runs/$run_id/manifest.toml)")
         return status
     catch e
@@ -763,6 +772,7 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
         run_log(rundir, "failed: $(typeof(e)): $(sprint(showerror, e))")
         rewrite_index(; runs_dir = runs_dir)
         update_scenario_row(run_id, design, cell, "failed", prov["git_commit"]; root = root,
+            vintage = vintage,
             note_suffix = " | failed $(iso_date()) (see runs/$run_id/manifest.toml)")
         return "failed"
     end
@@ -805,7 +815,9 @@ function run_design(design::AbstractString; root::AbstractString = default_root(
     end
 
     ref = build_reference(design_d; root = root, data = data)
-    drops = Int.(design_d["data"]["drops"])
+    # Typed conversion (see the note in `build_reference`): broadcasting over
+    # an empty `drops = []` yields `Vector{Any}` once BeyondHulten is loaded.
+    drops = Vector{Int}(design_d["data"]["drops"])
     kept = if data !== nothing
         collect(1:length(ref.data.factor_share))
     else

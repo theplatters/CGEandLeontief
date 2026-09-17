@@ -103,32 +103,38 @@ tracked_files = 6
 reason = "Legacy notebooks predating the current package API: AccountingConsistency, Analysis, Covid_Code, Summary, Translation, Translation_Python."
 notes = "Kept for reference only; no further edits are expected in this zone."
 
-[read_only."DemandShocks.ipynb"]
-path = "DemandShocks.ipynb"
+[read_only."docs/archive/notebooks/DemandShocks.ipynb"]
+path = "docs/archive/notebooks/DemandShocks.ipynb"
 kind = "legacy-notebooks"
 status = "read-only"
+recorded_commit = "31a72140a759a4aff9814ca4b3c0877dfb87fec4"
+recorded_commit_short = "31a7214"
 tree_hash = "2fcc29cb3c3643f3b64325a909f80f3912994e3d"
 tracked_files = 1
-reason = "Root-level legacy notebook predating the current package API, committed with outputs (single tracked blob of ~19 MB)."
-notes = "Read-only; kept for reference only."
+reason = "Legacy root notebook predating the current package API, committed with outputs (single tracked blob of ~19 MB). Moved out of the repository root into the closed docs archive by ADR-0009."
+notes = "Read-only; kept for reference only. Moved from DemandShocks.ipynb (repository root); git history preserves the original path."
 
-[read_only."CompareModels.ipynb"]
-path = "CompareModels.ipynb"
+[read_only."docs/archive/notebooks/CompareModels.ipynb"]
+path = "docs/archive/notebooks/CompareModels.ipynb"
 kind = "legacy-notebooks"
 status = "read-only"
+recorded_commit = "31a72140a759a4aff9814ca4b3c0877dfb87fec4"
+recorded_commit_short = "31a7214"
 tree_hash = "556d7f4773bcfbe2628aefd2602f1b413f719fb9"
 tracked_files = 1
-reason = "Root-level legacy notebook predating the current package API, committed with outputs."
-notes = "Read-only; kept for reference only."
+reason = "Legacy root notebook predating the current package API, committed with outputs. Moved out of the repository root into the closed docs archive by ADR-0009."
+notes = "Read-only; kept for reference only. Moved from CompareModels.ipynb (repository root); git history preserves the original path."
 
-[read_only."CobbDouglas.ipynb"]
-path = "CobbDouglas.ipynb"
+[read_only."docs/archive/notebooks/CobbDouglas.ipynb"]
+path = "docs/archive/notebooks/CobbDouglas.ipynb"
 kind = "legacy-notebooks"
 status = "read-only"
+recorded_commit = "31a72140a759a4aff9814ca4b3c0877dfb87fec4"
+recorded_commit_short = "31a7214"
 tree_hash = "f37a6a507de9306aa6a9d0656583cceba5a57555"
 tracked_files = 1
-reason = "Root-level legacy notebook predating the current package API, committed with outputs."
-notes = "Read-only; kept for reference only."
+reason = "Legacy root notebook predating the current package API, committed with outputs. Moved out of the repository root into the closed docs archive by ADR-0009."
+notes = "Read-only; kept for reference only. Moved from CobbDouglas.ipynb (repository root); git history preserves the original path."
 
 [read_only.archive]
 path = "archive"

@@ -46,3 +46,4 @@ the conditions under which it could be revived.
 | DE-0006 | Variance shares renormalized over main effects / silent incomplete designs |
 | DE-0007 | Adopting Baqaee–Farhi (2022) wholesale as the base model |
 | DE-0008 | Open-economy calibration without a saving rate (cbase2 v2) |
+| DE-0009 | Orphan src files archived |

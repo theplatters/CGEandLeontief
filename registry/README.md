@@ -111,3 +111,16 @@ julia --project=. scripts/status.jl --check  # fails if the board is stale
 `docs/status.md` is generated from this directory and must never be edited by
 hand. Broken references (missing files, unknown ids, stale run directories) are
 reported in the board's warnings section.
+
+## Repository gate and WIP limit (ADR-0007)
+
+```bash
+julia --project=. scripts/check_repo.jl         # ten checks, exit 1 on violations
+julia --project=. scripts/check_repo.jl --quiet # violations only
+```
+
+Run the gate before and after every batch. It covers the board/warnings check,
+closure bidirectionality, unregistered closure subtypes, zombie kernel files,
+manifest/index/scenario consistency, failed/provisional visibility, tracked
+artifacts, living kernel copies, preregistration integrity, and the WIP limit:
+at most one `scenarios.csv` row may be `running` at a time.

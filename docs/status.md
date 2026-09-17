@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `66b0201` (dirty)
+Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `446e521` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -144,6 +144,7 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
 - [ADR-0004 — Runs are immutable, manifest-backed records](decisions/ADR-0004-runs-are-immutable-manifests.md)
 - [ADR-0005 — Phase 2 layout and cbase2 backport](decisions/ADR-0005-phase2-layout-and-backport.md)
 - [ADR-0006 — Experiment entry point and preregistration](decisions/ADR-0006-experiment-entry-point-and-preregistration.md)
+- [ADR-0007 — Repository gate and WIP limits](decisions/ADR-0007-repository-gate-and-wip-limits.md)
 
 ## Warnings
 

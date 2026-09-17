@@ -43,3 +43,4 @@ settled question.
 | ADR-0004 | Runs are immutable, manifest-backed records | accepted |
 | ADR-0005 | Phase 2 layout and cbase2 backport | accepted |
 | ADR-0006 | Experiment entry point and preregistration | accepted |
+| ADR-0007 | Repository gate and WIP limits | accepted |

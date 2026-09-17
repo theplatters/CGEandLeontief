@@ -1,19 +1,23 @@
 # ═══════════════════════════════════════════════════════════════════════════════
-# reduced_variant_sweep.jl — the decisive self-loop experiment + solver ladder
-# (cbase2, 2026-09-17, per docs/DOCS_ASSESSMENT.md "post-v4 findings")
+# reduced_variant_sweep.jl — the decisive self-loop experiment (continuation
+# recipe). (cbase2, 2026-09-17, per docs/DOCS_ASSESSMENT.md "post-v4 findings")
 #
-# Questions:
-#  Q1 (dataset): does the "reduced" variant (71 + self-share>0.45 class
-#     dropped, 87.4% GO coverage) converge where "full" and "70s" stall?
-#     → falsifies / isolates the high-self-loop sectors as the cause.
-#  Q2 (solver): does the new IPOPT rung (src/solvers.jl) crack the stalls
-#     that Newton/LM leave at the 3.6e-4 floor?
+# Q (dataset): does the "reduced" variant (71 + self-share>0.45 class dropped,
+#     87.4% GO coverage) behave differently from "full"/"70s" under the SAME
+#     solver recipe the acceptance gate uses?
+#
+# Recipe (mirrors verify_v3.jl section 1 — the standing gate): bisection for
+# the continuation start exo_scale* (saving rate crosses 0), exo_scale
+# continuation K=6, θ ladder 2.0 → 0.5 within each step, every solve
+# warm-started from the previous solution. A cold solve at each θ is recorded
+# alongside for contrast (that is the configuration that stalls at ~1.7e-3).
 #
 # Run:  julia --threads=4 --project=. cbase2/scripts/reduced_variant_sweep.jl
-# Rows appended to cbase2/results_intermediate/reduced_variant_sweep.csv
+# Rows → cbase2/results_intermediate/reduced_variant_sweep.csv
 # ═══════════════════════════════════════════════════════════════════════════════
 
-using DataFrames, CSV, Dates
+using DataFrames, CSV
+using LinearAlgebra, NonlinearSolve
 const ROOT = "/workspace/git/BFRep/(3)BeyondHulten"
 const CB = joinpath(ROOT, "cbase2")
 for f in ["interface.jl", "solution.jl", "ces.jl", "mobile_labor.jl", "leontief.jl", "util.jl"]
@@ -24,59 +28,89 @@ include(joinpath(CB, "src", "financing.jl"))
 include(joinpath(CB, "src", "calibration.jl"))
 include(joinpath(CB, "src", "solvers.jl"))
 
-rows = DataFrame(variant = String[], theta = Float64[], init = String[],
-	stage = String[], method = String[], retcode = String[],
-	resid = Float64[], canary = Float64[], secs = Float64[])
+rows = DataFrame(variant = String[], exo_scale = Float64[], theta = Float64[],
+	mode = String[], init = String[], retcode = String[],
+	resid = Float64[], canary = Float64[], wage = Float64[],
+	maxp = Float64[], secs = Float64[])
 
-function record!(variant, th, iname, stage, meth, x, ret, t0)
-	r = maximum(abs, equilibrium_residuals(mdl, x))  # mdl from enclosing scope
-	(; nth) = residual_canary(mdl, x)
-	push!(rows, (variant, th, iname, stage, meth, ret, r, nth,
+function record!(variant, esc, th, mode, iname, x, ret, t0, mdl)
+	r = maximum(abs, equilibrium_residuals(mdl, x))
+	(; nth_market = nth, w) = residual_canary(mdl, x)
+	push!(rows, (variant, esc, th, mode, iname, ret, r, nth, w,
+				 maximum(abs, x[1:length(mdl.data.factor_share)] .- 1),
 				 round(time() - t0; digits = 2)))
-	println(rpad(variant, 8), " θ=", rpad(th, 5), " init=", rpad(iname, 8),
-		" ", rpad(stage * "/" * meth, 22), " ret=", rpad(ret, 28),
-		" resid=", Printf.@sprintf("%.3e", r), " canary=", Printf.@sprintf("%.3e", nth),
-		" (", round(time() - t0; digits = 1), "s)")
-	return r, nth
+	println(rpad(variant, 8), " exo=", rpad(round(esc; digits = 4), 6),
+		" θ=", rpad(th, 5), " ", rpad(mode * "/" * iname, 18),
+		" ret=", rpad(ret, 12), " resid=", Printf.@sprintf("%.3e", r),
+		" canary=", Printf.@sprintf("%.3e", nth),
+		" w*=", Printf.@sprintf("%.4f", w))
+	return r
 end
 
+THETAS = [2.0, 1.5, 1.2, 1.0, 0.8, 0.65, 0.5]   # the gate's ladder
+K = 6
 raw = read_data(joinpath(CB, "data_raw", "I-O_DE2019_formatiert.csv"))
+
 for (vname, drops) in [("full", DATASET_VARIANTS["full"]),
 					   ("70s", DATASET_VARIANTS["70s"]),
 					   ("reduced", DATASET_VARIANTS["reduced"])]
 	data_v1 = drop_sectors(raw, drops)
 	N = length(data_v1.factor_share)
-	cover = dataset_coverage(data_v1, drops)
-	println("── variant ", vname, ": N=", N, " coverage GO=", cover.gross_share_kept,
-		"% VA=", cover.va_share_kept, "%")
-	es = recalibrate_open(data_v1, CB; exo_scale = 1.0, drops = drops)
 	shocks = Shocks(ones(N), ones(N), zeros(N))
-	lin = fixed_point_init(es)
-	for th in (2.0, 1.0, 0.5)
-		global mdl = mobile_labor_model(es, shocks, th, 0.5, 0.9, 0.5)
-		for (iname, x0) in [("default", [ones(N); es.λ; 1.0]), ("linear", lin)]
+	cover = dataset_coverage(data_v1, drops)
+	println("══ variant ", vname, ": N=", N, "  coverage GO=", cover.gross_share_kept,
+		"% VA=", cover.va_share_kept, "% ══")
+
+	# continuation start: smallest exo_scale with s >= 0 (bisection, as the gate)
+	s_of(esc) = (d = recalibrate_open(data_v1, CB; exo_scale = esc, drops = drops);
+				 d.saving_rate)
+	lo, hi = 0.0, 1.0
+	@assert s_of(hi) > 0
+	for _ in 1:40
+		mid = (lo + hi) / 2
+		s_of(mid) < 0 ? (lo = mid) : (hi = mid)
+	end
+	esc0 = hi
+	println("continuation start exo_scale* = ", round(esc0; digits = 4),
+		" (s = ", round(s_of(esc0); digits = 4), ")")
+
+	init_warm = nothing
+	for k in 0:K
+		esc = esc0 + (1.0 - esc0) * k / K
+		es = recalibrate_open(data_v1, CB; exo_scale = esc, drops = drops)
+		for th in THETAS
+			mdl = mobile_labor_model(es, shocks, th, 0.5, 0.9, 0.5)
 			t0 = time()
-			# ── current setup: Newton + LM polish (standing `solve()` path) ──
-			x, ret, _ = attempt_newton(mdl, x0; tol = 1e-10, maxiters = 20_000)
-			r, nth = record!(vname, th, iname, "current", "newton", x, ret, t0)
-			if r > 1e-6 || !canary_ok(nth)
-				x2, ret2, _ = attempt_lm(mdl, x; tol = 1e-10, maxiters = 20_000)
-				r2, nth2 = record!(vname, th, iname, "current", "lm-polish", x2, ret2, t0)
-				if r2 > 1e-6 || !canary_ok(nth2)
-					# ── new framework: IPOPT rung from the stalled point ──
-					x3, info, r3 = ipopt_residual_solve(mdl, x2; tol = 1e-8,
-						max_iter = 3000)
-					record!(vname, th, iname, "ladder", info, x3, info, t0)
-					if r3 > 1e-6 || !canary_ok(residual_canary(mdl, x3).nth_market)
-						# ── full ladder (multistart + IPOPT) from scratch ──
-						rr = solve_robust(mdl; init = nothing, tol = 1e-8,
-							verbose = false, ladder = (:multistart, :ipopt))
-						record!(vname, th, iname, "ladder", "solve_robust:" * rr.method,
-							rr.x, "best", t0)
-					end
-				end
+			if init_warm === nothing
+				# first solve ever: linear fixed-point warm start (gate recipe)
+				init_warm = fixed_point_init(es)
 			end
+			prob = NonlinearSolve.NonlinearProblem(problem, Float64.(init_warm), mdl)
+			res = NonlinearSolve.solve(prob; reltol = 1e-6, abstol = 1e-6, maxiters = 20_000)
+			x = Float64.(res.u)
+			r = record!(vname, esc, th, "cont", "warm", x, string(res.retcode), t0, mdl)
+			# bounded LM polish when above the gate (as solve() does)
+			if r > 1e-6
+				xl, retl, _ = attempt_lm(mdl, x; tol = 1e-10, maxiters = 20_000)
+				r = record!(vname, esc, th, "cont", "lm", xl, retl, t0, mdl)
+			end
+			# IPOPT rung from the stalled point (the new framework's finisher)
+			if r > 1e-6
+				xi, infoi, ri = ipopt_residual_solve(mdl, x; tol = 1e-8,
+					max_iter = 2000, formulation = :ls)
+				r = record!(vname, esc, th, "cont", "ipopt", xi, infoi, t0, mdl)
+			end
+			init_warm = [x[1:N]; x[N+1:2N]; x[2N+1]]   # continue from best Newton point
 		end
+	end
+
+	# cold-solve contrast: the configuration that stalls (θ ladder, direct init)
+	es = recalibrate_open(data_v1, CB; exo_scale = 1.0, drops = drops)
+	for th in THETAS
+		mdl = mobile_labor_model(es, shocks, th, 0.5, 0.9, 0.5)
+		t0 = time()
+		x, ret, _ = attempt_newton(mdl, default_init(mdl); tol = 1e-10, maxiters = 20_000)
+		record!(vname, 1.0, th, "cold", "default", x, ret, t0, mdl)
 	end
 end
 
@@ -86,12 +120,14 @@ fname = joinpath(out, "reduced_variant_sweep.csv")
 CSV.write(fname, rows)
 println("\nrows: ", size(rows, 1), " → ", fname)
 
-# summary: converged = resid ≤ 1e-6 AND canary ok
-ok(row) = row.resid <= 1e-6 && abs(row.canary) < 1e-5
-println("\n── convergence summary (resid ≤ 1e-6, canary ok) ──")
+# summary per variant: worst residual along the continuation and cold stalls
+println("\n── summary ──")
 for vname in ("full", "70s", "reduced")
-	sub = filter(r -> r.variant == vname && ok(r), rows)
-	sol = filter(r -> r.variant == vname, rows)
-	println(rpad(vname, 8), ": ", nrow(sub), "/", nrow(sol), " attempts converged; methods: ",
-		join(unique(sub.method), ", "))
+	sub = filter(r -> r.variant == vname && r.mode == "cont", rows)
+	cold = filter(r -> r.variant == vname && r.mode == "cold", rows)
+	ok = filter(r -> r.resid <= 1e-6, sub)
+	println(rpad(vname, 8), ": continuation steps resid≤1e-6: ", nrow(ok), "/", nrow(sub),
+		"  worst cont resid = ", Printf.@sprintf("%.2e", maximum(sub.resid)),
+		"  |  cold θ=0.5 resid = ",
+		Printf.@sprintf("%.2e", only(cold[cold.theta .== 0.5, :resid])))
 end

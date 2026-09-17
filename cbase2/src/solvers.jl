@@ -112,10 +112,14 @@ end
 """
 	residual_canary(model, x) -> (rmax, nth_market, w)
 
-Max residual of the enforced system, the Walras-canary N-th clearing
-residual (not enforced in `problem`; must vanish at a true equilibrium),
-and the implied wage, all at the RAW vector `x` (floors applied as the
-residual itself applies them).
+Max residual of the enforced system plus the ACCOUNTING CANARY: the
+saving-identity residual S − (I + X − M), i.e. s·E − p′(I+X) + M(x) with M
+the import content of gross household, government and investment demand.
+Since the 2026-09-17 formulation repair ALL N markets are enforced and the
+external balance closes residually, this residual vanishes with the system
+residual at any true equilibrium — asserting it in the gate catches exactly
+the formulation regression (dropped-market over-determination) that
+previously certified non-equilibria with machine-zero residuals.
 """
 function residual_canary(model::Model{MobileLaborCES}, x::AbstractVector)
 	N = length(model.data.factor_share)
@@ -123,26 +127,21 @@ function residual_canary(model::Model{MobileLaborCES}, x::AbstractVector)
 	(; data, options, shocks) = model
 	p = _positive_floor(x[1:N]); y = _positive_floor(x[N+1:2N])
 	w = max(x[2N+1], 1e-10)
-	(; θ, ϵ, σ, η) = options.elasticities
-	intermediate_price = _intermediate_price(data.Ω_raw, p, θ)
+	(; σ,) = options.elasticities
 	L_i = sectoral_labor_demand(p, y, w, model)
 	fin = model.financing
 	ds_eff = preference_weights(fin, shocks.demand_shock)
 	L_sum = sum(L_i)
 	E = household_expenditure(fin, model, w * L_sum, p, L_sum)
 	agg = sum(data.consumption_share .* ds_eff .* p .^ (1 - σ))
-	c_dom = (1 .- data.saving_rate) .* (1 .- data.import_margin) .*
-			(data.consumption_share .* ds_eff) .* E .* p .^ (-σ) ./ agg
-	tfd = c_dom .+ (1 .- data.import_margin) .* additive_demand(fin, N) .+
-		  (1 .- data.import_margin) .* (data.gov_demand .+ data.exo_demand) .+
-		  data.exports_demand
-	id = p .^ (-θ) .* (data.Ω_raw' * (p .^ ϵ .* shocks.supply_shock .^ (ϵ - 1) .*
-		 intermediate_price .^ (θ - ϵ) .* (1 .- data.factor_share) .* y))
-	nth = y[N] - id[N] - tfd[N]
-	return (rmax = maximum(abs, r), nth_market = nth, w = w)
+	cg_gross = (1 .- data.saving_rate) .*
+			   (data.consumption_share .* ds_eff) .* E .* p .^ (-σ) ./ agg
+	M = dot(p, data.import_margin .* (cg_gross .+ data.gov_demand .+ data.exo_demand))
+	saving_identity = data.saving_rate * E - dot(p, data.exo_demand .+ data.exports_demand) + M
+	return (rmax = maximum(abs, r), nth_market = saving_identity, w = w)
 end
 
-"Canary gate: N-th clearing residual must be small relative to system scale."
+"Canary gate: the saving identity S = I + X − M must hold at the equilibrium."
 canary_ok(nth) = abs(nth) < 1e-5
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -196,6 +195,134 @@ function attempt_lm(model, x0; tol = 1e-10, maxiters = 20_000, ad = :default)
 		LevenbergMarquardt()
 	end
 	x, ret, rmax = _nsolve(model, x0, alg; tol, maxiters)
+	return x, ret, rmax
+end
+
+"""
+	attempt_projected_newton(model, x0; tol, maxiters, lo, hi) -> (x, ret, rmax)
+
+Damped Newton with box projection and central-difference Jacobians — the
+globalization the plain FD-Newton lacks. Motivation (measured, 2026-09-17):
+the stall attractor is a path excursion into the y→0 cliff — at the gate's
+failing first rung the stalled point has y₅ = 2.1e-6 (240× below λ₅), where
+the residual's log-sensitivity makes the FD Jacobian catastrophically
+ill-conditioned (σmax 2e15, cond 3.5e20) and every Newton/IPOPT step
+diverges. Fencing the iterates into the economically meaningful region
+(relative lower bounds on y, generous bounds on p and w) keeps the Jacobian
+sane; the backtracking line search on ‖r‖₂ does the rest.
+
+Default fence: p ≥ 0.05, y_i ≥ 1e-3·λ_i, w ≥ 0.05, no upper bounds except
+p ≤ 50, y ≤ 200·λ_i (far outside any admissible equilibrium; blocks the
+price-explosion branch).
+"""
+function attempt_projected_newton(model::Model{MobileLaborCES}, x0;
+		tol::Float64 = 1e-10, maxiters::Int = 200,
+		lo::Union{Nothing,Vector{Float64}} = nothing,
+		hi::Union{Nothing,Vector{Float64}} = nothing)
+	nv = length(x0)
+	N = length(model.data.factor_share)
+	lo = lo === nothing ? vcat(fill(0.05, N), 1e-3 .* max.(model.data.λ, 1e-6), [0.05]) : lo
+	hi = hi === nothing ? vcat(fill(50.0, N), 200.0 .* max.(model.data.λ, 1e-6), [50.0]) : hi
+	project!(x) = (x .= clamp.(x, lo, hi); x)
+	r! = (out, xx) -> (problem(out, xx, model); out)
+	nv == length(lo) == length(hi) || throw(DimensionMismatch("fence size mismatch"))
+	r = Vector{Float64}(undef, nv); buf = Vector{Float64}(undef, nv)
+	buf2 = Vector{Float64}(undef, nv); trial = Vector{Float64}(undef, nv)
+	J = Matrix{Float64}(undef, nv, nv)
+	x = project!(Float64.(x0))
+	rmax = maximum(abs, r!(r, x))
+	ret = "MaxIters"
+	for it in 1:maxiters
+		rmax = maximum(abs, r)
+		rmax <= tol && (ret = string("converged(it=", it, ")"); break)
+		_fd_jacobian!(J, r!, x, buf, buf2)
+		# damped Newton direction: least-squares fallback when J is singular
+		dx = try
+			-(J \ r)
+		catch
+			-(J' * ((J * J' + 1e-8 * I) \ r))
+		end
+		all(isfinite, dx) || (dx = -(J' * ((J * J' + 1e-6 * I) \ r)))
+		gn = sqrt(dot(r, r))
+		# backtracking line search on ‖r‖₂ with projection after every trial
+		t = 1.0
+		improved = false
+		for _ in 1:40
+			trial .= x .+ t .* dx
+			project!(trial)
+			r!(r, trial)
+			if sqrt(dot(r, r)) < (1 - 1e-4 * t) * gn
+				improved = true
+				break
+			end
+			t /= 2
+		end
+		improved || (ret = string("stalled(it=", it, ")"); break)
+		x .= trial
+	end
+	rmax = maximum(abs, r!(r, x))    # r may hold a rejected trial's residual
+	return x, ret, rmax
+end
+
+"""
+	attempt_logspace_newton(model, x0; tol, maxiters) -> (x, ret, rmax)
+
+Damped Newton in LOG coordinates: variables z = [log p; log y; log w], so
+positivity holds by construction and the eps-floor cliff (the measured cause
+of every stall: a y-component crossing zero under an O(0.1) step while λ
+itself is 5e-4) is unreachable — in log space the residual is smooth along
+the whole path (the floor at y = eps sits ~33 log-units below the data).
+This is the standard CGE practice of solving in relative changes (MPSGE).
+
+FD Jacobian in z-space; backtracking line search on ‖r‖₂. Returns the
+x-space vector. This is the preferred opener rung; the fence of
+`attempt_projected_newton` turned out to be the wrong cure (a projected
+step at the fence boundary cannot descend, and any fence low enough to
+permit convergence sits inside the cliff).
+"""
+function attempt_logspace_newton(model::Model{MobileLaborCES}, x0;
+		tol::Float64 = 1e-10, maxiters::Int = 500)
+	N = length(model.data.factor_share)
+	nv = 2N + 1
+	floorlog = log(1e-12)
+	z0 = vcat(log.(max.(x0[1:2N], 1e-12)), [log(max(x0[2N+1], 1e-12))])
+	xf(z) = vcat(exp.(z[1:2N]), [exp(z[2N+1])])
+	rlog! = (out, z) -> (problem(out, xf(z), model); out)
+	r = Vector{Float64}(undef, nv); buf = Vector{Float64}(undef, nv)
+	buf2 = Vector{Float64}(undef, nv); trial = Vector{Float64}(undef, nv)
+	J = Matrix{Float64}(undef, nv, nv)
+	z = copy(z0)
+	rmax = maximum(abs, rlog!(r, z))
+	ret = "MaxIters"
+	for it in 1:maxiters
+		rmax = maximum(abs, r)
+		rmax <= tol && (ret = string("converged(it=", it, ")"); break)
+		_fd_jacobian!(J, rlog!, z, buf, buf2)
+		dx = try
+			-(J \ r)
+		catch
+			-(J' * ((J * J' + 1e-8 * I) \ r))
+		end
+		all(isfinite, dx) || (dx = -(J' * ((J * J' + 1e-6 * I) \ r)))
+		gn = sqrt(dot(r, r))
+		t = 1.0
+		improved = false
+		for _ in 1:60
+			trial .= z .+ t .* dx
+			all(isfinite, trial) || (t /= 2; continue)
+			rlog!(r, trial)
+			if sqrt(dot(r, r)) < (1 - 1e-4 * t) * gn
+				improved = true
+				break
+			end
+			t /= 2
+		end
+		improved || (ret = string("stalled(it=", it, ")"); break)
+		z .= trial
+		z[1:2N] = max.(z[1:2N], floorlog)   # keep exp() finite
+	end
+	x = xf(z)
+	rmax = maximum(abs, rlog!(r, z))
 	return x, ret, rmax
 end
 
@@ -370,7 +497,7 @@ caller (sweep scripts, notebooks) can decide.
 """
 function solve_robust(model::Model{MobileLaborCES};
 		init = nothing, tol::Float64 = 1e-8, verbose::Bool = true,
-		ladder::Tuple = (:newton, :lm, :multistart, :ipopt),
+		ladder::Tuple = (:pnewton, :newton, :lm, :multistart, :ipopt),
 		seed::Int = 20260917, maxiters::Int = 20_000, ipopt_max_iter::Int = 3000)
 	attempts = Vector{NamedTuple}()
 	best_x = Float64[]; best_r = Inf; best_m = "none"
@@ -393,7 +520,19 @@ function solve_robust(model::Model{MobileLaborCES};
 		return r, nth
 	end
 
+	verbose && println("solve_robust: tol=", tol, " ladder=", ladder)
+
 	t0 = time()
+	# Rung A2 (first): projected damped Newton — fences the y→0 cliff that
+	# every unprojected method wanders into (measured stall anatomy 2026-09-17).
+	if :pnewton in ladder
+		for (nm, x0) in inits
+			x, ret, _ = attempt_projected_newton(model, x0; tol, maxiters = 500)
+			r, nth = offer!(x, "pnewton", ret, t0, nm)
+			gate(r, nth) && return RobustResult(best_x, best_r, nth, "pnewton($nm)", attempts)
+		end
+	end
+
 	# Rung A/B/C share the init sequence; rung D starts from the best so far.
 	inits = init === nothing ? init_battery(model; seed) :
 			[("given", Float64.(init))]
@@ -515,4 +654,5 @@ function solution_from_x(model::Model{MobileLaborCES}, x::AbstractVector)
 end
 
 export fixed_point_init, default_init, init_battery, residual_canary, canary_ok,
-	   solve_robust, ipopt_residual_solve, solution_from_x, RobustResult
+	   solve_robust, ipopt_residual_solve, solution_from_x, RobustResult,
+	   attempt_newton, attempt_lm, attempt_projected_newton

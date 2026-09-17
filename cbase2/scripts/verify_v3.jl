@@ -3,6 +3,7 @@
 using CSV, DataFrames, LinearAlgebra, Statistics, NonlinearSolve
 
 CB = "/workspace/git/BFRep/(3)BeyondHulten/cbase2"
+
 for f in ["interface.jl", "solution.jl", "ces.jl", "mobile_labor.jl", "leontief.jl", "util.jl"]
     include(joinpath(CB, "src", "core", f))
 end
@@ -10,14 +11,17 @@ include(joinpath(CB, "src", "closures.jl"))
 include(joinpath(CB, "src", "financing.jl"))
 include(joinpath(CB, "src", "calibration.jl"))
 
-# Documented decision (Notebook 03b): drop sector 71 ("Other personal service
-# activities") -- residual catch-all, 1.8 percent of gross output, 37.5 percent
-# self-loop whose price spirals under theta < 1 complementarity. The model is a
-# 70-sector system; sector 71's VA and demand are excluded from the accounting.
-N_FULL = 71
+# 2026-09-17 formulation repair: ALL N markets are enforced in the mobile
+# system again and the external balance closes residually (S = I + X − M).
+# User decision: back to the FULL 71-sector economy — the drop-71 rationale
+# (self-loop spiral, solver floor) collapsed when the real cause turned out
+# to be the saving-identity inconsistency. "70s"/"reduced" remain available
+# as robustness axes in cbase2/src/calibration.jl.
+# DROPS = [71]   # <- the former documented decision, kept as robustness axis
+DROPS = Int[]
 data_full = read_data("I-O_DE2019_formatiert.csv")
-data_v1 = drop_sectors(data_full, [71])
-N = 70
+data_v1 = drop_sectors(data_full, DROPS)
+N = length(data_v1.factor_share)
 shocks = Shocks(ones(N), ones(N), zeros(N))
 
 # ── 1. Injection continuation: exo_scale from s~0 to 1, warm-starting each step ──
@@ -27,7 +31,7 @@ shocks = Shocks(ones(N), ones(N), zeros(N))
 # The start scale is where the data-implied saving rate crosses zero
 # (bisection: s(exo_scale) is monotone increasing); below it s < 0 and the
 # round-gain matrix is non-contractive.
-s_of(esc) = (d = recalibrate_open(data_v1, CB; exo_scale=esc, drops=[71]); d.saving_rate)
+s_of(esc) = (d = recalibrate_open(data_v1, CB; exo_scale=esc, drops=DROPS); d.saving_rate)
 lo, hi = 0.0, 1.0
 @assert s_of(hi) > 0
 for _ in 1:40
@@ -49,7 +53,7 @@ ref_sol = nothing
 for k in 0:K
     global data, ref, ref_sol, init_warm
     exo_scale = esc0 + (1.0 - esc0) * k / K
-    data = recalibrate_open(data_v1, CB; exo_scale=exo_scale, drops=[71])
+    data = recalibrate_open(data_v1, CB; exo_scale=exo_scale, drops=DROPS)
     for θ in THETAS
         global ref, ref_sol, init_warm
         ref = mobile_labor_model(data, shocks, θ, 0.5, 0.9, 0.5)
@@ -89,10 +93,16 @@ E_ref = household_expenditure(NoFinancing(), ref, w_ref * L_ref, ref_sol.prices_
 S_lhs = data.saving_rate * E_ref
 p_ref = ref_sol.prices_raw
 cg_vec = (1 - data.saving_rate) * E_ref .* (data.consumption_share .* p_ref .^ (1-0.9)) ./ sum(data.consumption_share .* p_ref .^ (1-0.9))
-M_rhs = dot(data.import_margin, cg_vec ./ max.(p_ref, 1e-12) .+ data.gov_demand .+ data.exo_demand)
+# 2026-09-17: import content in VALUE terms (the numeraire-pinned units made
+# the quantity form coincidentally correct; injection-pinned units do not).
+M_rhs = dot(data.import_margin, cg_vec .+ data.gov_demand .* p_ref .+ data.exo_demand .* p_ref)
 I_X = dot(data.exo_demand .+ data.exports_demand, p_ref)
 println("S = I + X - M canary: S = ", round(S_lhs; digits=6), " vs I+X-M = ",
         round(I_X - M_rhs; digits=6), " (diff ", round(S_lhs - (I_X - M_rhs); digits=6), ")")
+# 2026-09-17: the canary is now an ASSERT — the post-v4 dropped-market
+# formulation certified non-equilibria (perfect residuals, canary ≈ −0.094)
+# precisely because this check only printed.
+@assert abs(S_lhs - (I_X - M_rhs)) < 1e-6 "S = I + X − M violated: the external balance does not close (formulation regression)"
 println("ref diagnostics: w* = ", round(w_ref; digits=4), ", L = ", round(L_ref; digits=6),
         ", nominal GDP wL = ", round(w_ref * L_ref; digits=6),
         ", max|p-1| = ", round(maximum(abs.(p_ref .- 1)); digits=6))

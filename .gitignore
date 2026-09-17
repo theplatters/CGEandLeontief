@@ -17,3 +17,4 @@ __pycache__/
 IDEA.md
 docs/reviews/
 Manifest.toml
+*_mac.*

@@ -227,16 +227,22 @@ The equilibrium system for the mobile-labor CES model.
 Unknowns: X = [p(1:N); y(1:N); w]  — 2N+1 elements
 Equations (2N+1):
   1. Zero-profit equations  (N):     p_i = cost_i(p, w)   for all i=1..N
-  2. Market clearing        (N-1):   y_i = intermediary_demand_i + final_demand_i
-                                      for i=1..N-1 (the last sector's equation is
-                                      dropped under Walras' law)
+  2. Market clearing        (N):     y_i = intermediary_demand_i + final_demand_i
+                                      for ALL i=1..N
   3. Labor market clearing  (1):     Σ L_i(p,y,w) = L̄
-  4. Numeraire              (1):     CPI = 1  (Σ β_i · p_i^(1-σ))^(1/(1-σ)) = 1)
 
-Note: The numeraire constraint (CPI = 1) pins the price level, breaking the
-price-level indeterminacy inherent in CRTS models. All N zero-profit
-conditions are enforced because the numeraire already replaces the price-level
-degree of freedom.
+Note: ALL N market-clearing equations are enforced. Under the v3 open economy
+with import margins the N-th market is NOT Walras-redundant: the p-weighted
+sum of the clearing residuals equals s·E − p′(I+X) + M(x), which vanishes only
+where the external account closes. Dropping the N-th market (the post-v4
+form) over-determined the economy by the saving identity and left every
+solver stalling at the inconsistency floor (measured 3.6e-4; see
+cbase2/process_comments.md, chapter "The saving-identity inconsistency").
+The external balance is the residual adjuster: income and the import content
+move until s·E + M = p′(I+X) at the all-market equilibrium. There is no
+numeraire equation — the fixed real injections (gG, I, X) pin the price
+level, and the CPI is reported post-solve. This mirrors the fixed-wage
+system (`problem_fixed`), where w = 1 pins the scale instead.
 
 Economic note: η changes the geometric allocation between baseline and
 cost-minimizing sectoral labor demand. It is not a labor-supply elasticity.
@@ -245,12 +251,12 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     (; data, options, shocks) = model
     N = length(data.factor_share)
 
-    # FULL FORMULATION (2N+1 unknowns: p1..pN, y1..yN, w) with the CPI
-    # numeraire. Under the v3 homogeneous budget (T = p' gG) the N-th market
-    # is Walras-redundant again (the p-weighted sum of all clearing residuals
-    # vanishes given zero-profit, the labour market and the budget closure),
-    # so the LAST clearing equation is dropped and the numeraire restored.
-    # The N-th market is checked post-solve as a canary.
+    # FULL FORMULATION (2N+1 unknowns: p1..pN, y1..yN, w): ALL N zero-profit
+    # and ALL N clearing equations, plus the labour market. No numeraire
+    # equation: with the v3 homogeneous budget (T = p' gG) the price level is
+    # pinned by the fixed real injections, and the N-th market is NOT
+    # Walras-redundant (see the docstring above and process_comments.md). The
+    # CPI is computed below for post-solve reporting only.
     p = _positive_floor(X[1:N])
     y = _positive_floor(X[N+1:2N])
     w = max(X[2N+1], 1e-10)  # scalar wage, keep positive
@@ -317,16 +323,16 @@ function problem(out::Vector, X::Vector, model::Model{MobileLaborCES})
     # ── Equation 1: Zero-profit for ALL N sectors ──
     out[1:N] .= p .- cost
 
-    # ── Equation 2: Market clearing for sectors 1..N-1 ──
-    # The N-th clearing equation is Walras-redundant under the v3 homogeneous
-    # budget (T = p' gG) and is dropped; it is checked post-solve as a canary.
-    out[N+1:2N-1] .= y[1:N-1] .- intermediary_demand[1:N-1] .- total_final_demand[1:N-1]
+    # ── Equation 2: Market clearing for ALL N sectors ──
+    # The N-th market is NOT Walras-redundant once imports leak: dropping it
+    # (the post-v4 form) made the saving identity the over-determining
+    # residual and stalled every solver at the inconsistency floor. The
+    # external balance adjusts residually (S = I + X − M holds at the
+    # all-market equilibrium; asserted by the acceptance gate).
+    out[N+1:2N] .= y .- intermediary_demand .- total_final_demand
 
     # ── Equation 3: Labour market (flexible-wage system: ALPHA / BETA) ──
-    out[2N] = labor_market_residual(labor_closure(options), model, sum(L_i), w)
-
-    # ── Equation 4: Numeraire constraint -- CPI = 1 ──
-    out[2N+1] = cpi - 1.0
+    out[2N+1] = labor_market_residual(labor_closure(options), model, sum(L_i), w)
 
     nothing
 end

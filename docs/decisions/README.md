@@ -47,3 +47,4 @@ settled question.
 | ADR-0008 | Archive superseded root documents as read-only | accepted |
 | ADR-0009 | Archive the legacy root notebooks | accepted |
 | ADR-0010 | Port the `cbase2/review.md` pipeline fixes | accepted |
+| ADR-0011 | Conform the frozen cbase2 notebook 01 to the canonical kernel | accepted |

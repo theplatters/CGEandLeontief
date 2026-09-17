@@ -70,3 +70,16 @@ this ADR — in particular the one-kernel rule and the freeze of `cbase2`,
 `bf_replication`, `bf_replication2` and the remaining legacy zones — is
 unchanged. The original wording is kept per the append-only rule; this
 amendment is authoritative where the two disagree.
+
+## Amendment 2026-09-17 — One cbase2 file conformed, the freeze re-pinned (ADR-0011)
+
+The Decision line that frozen zones are read-only holds in full, with exactly
+one authorised exception: `cbase2/01_data_wrangling.ipynb` was conformed in
+place to the canonical kernel under ADR-0011 (label-based schema instead of
+hard-coded table positions, the `Plots.jl` figure replaced by an opt-in GLMakie
+figure, and a non-fatal cross-check against `BeyondHulten.generate_data`). The
+notebook's tracked `data_processed/` artifacts are unchanged and regenerate
+byte-identically, so no living copy of the kernel was created and notebook 02's
+inputs are untouched. The `cbase2` freeze record was re-pinned to the conforming
+commit; the rest of the zone — notebooks 02 and 03, `cbase2/src/`, the raw data
+and the prose records — stays read-only, and any further edit needs a new ADR.

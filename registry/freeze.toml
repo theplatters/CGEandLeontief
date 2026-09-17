@@ -11,13 +11,18 @@ branch = "reorg"
 path = "cbase2"
 kind = "submission-snapshot"
 status = "frozen"
-recorded_commit = "dfd60a21f3d816ae9a8d3c55eaa8a3c7a8f45fc7"
-recorded_commit_short = "dfd60a2"
-last_touch_commit = "dfd60a21f3d816ae9a8d3c55eaa8a3c7a8f45fc7"
-last_touch_subject = "added review"
+# Re-pinned 2026-09-17 by ADR-0011 (notebook 01 conformed in place); the original
+# freeze point is preserved in the two keys below it.
+recorded_commit = "6d66265fc98d9dd660ce201aca52348e6e9ecf17"
+recorded_commit_short = "6d66265"
+last_touch_commit = "6d66265fc98d9dd660ce201aca52348e6e9ecf17"
+last_touch_subject = "conform cbase2 notebook 01 to the canonical kernel (ADR-0011)"
 last_touch_date = "2026-09-17"
-tree_hash = "a8241e98ef61e572910c3a43d49de2fecc32b9e2"
-tracked_files = 45
+tree_hash = "8a28d1e8cb96a3c48c18b3f8654820ca88ba67a9"
+tracked_files = 46
+original_freeze_commit = "dfd60a21f3d816ae9a8d3c55eaa8a3c7a8f45fc7"
+original_freeze_commit_short = "dfd60a2"
+original_freeze_tree_hash = "a8241e98ef61e572910c3a43d49de2fecc32b9e2"
 reason = "Self-contained cbase2 pipeline for the Metroeconomica revision (5 x 3 evaluation matrix; cbase2/documentation.md). At freeze: notebooks 01-02 complete and validated end-to-end; notebook 03 plus src/financing.jl complete and smoke-tested at m = 1 with two recorded kernel DIFFs; notebooks 04-08 and src/validation.jl listed as pending."
 successor = "root src/, the reproducible baseline per ROADMAP.md section 3; Phase 2 promotes BETA/DELTA/F1-F3 from cbase2."
 open_items = [
@@ -29,7 +34,7 @@ open_items = [
     "External review: baseline clamp mass 0.086197 GDP units (70s) stays UNRECONCILED (finding 2.5); the pre-drop 71-sector headline numbers are superseded by the retained pipeline (full s = 0.397878, tau0 = 0.214101; 70s s = 0.410965, tau0 = 0.216741); GAMMA labelling issue recorded in registry/closures.toml",
 ]
 kernel_diffs = ["src/core/interface.jl", "src/core/mobile_labor.jl"]
-notes = "Notebooks 04-08 are listed as pending and do not exist; only 01-03 exist. documentation.md's layout also names src/validation.jl and scripts/run_{reference,matrix,sobol}.jl (not on disk), and its pending row names src/closures.jl, which does exist. review.md is pinned to commits 17c5730..3dd0d60 (pre-freeze) and reports a conditioning/fold solver problem rather than an init-setup issue. Phase 2 backport (ADR-0005): the recorded DIFFs were backported into the root kernel (src/core/accounting.jl, src/core/equilibrium.jl, src/closures/). Resolved as kernel changes: Tornqvist base (household_baseline, with legacy-default compatibility), residual-gated LM polish (F3 stall), all-N fixed formulation with w=1 numeraire (omitted-N item), and the theta/epsilon CD-limit guards (theta continuation). calibration.jl remains frozen/unported (Phase 3); diff_kernel.jl is retired as a checker (frozen snapshots keep recorded parent commits as history; file stays as history). Hashes/commits above unchanged. ADR-0010 (root kernel): retained_dataset/retained_io_table port (review 2.2/2.3); eta in {0,1} with the allocation wedge retired; mobile N-1 clearing + CPI with the asserted residual-external-account canary (review 2.1; revisefinal later reverted to the same N-1+CPI form via 0f33ad6 -- see ADR-0010 amendment 2026-09-17); baseline clamp (2.5) left open. The frozen cbase2 tree is unchanged: it intentionally still contains the pre-fix code (all-N mobile form, dormant allocation wedge, ad keyword bug in cbase2/src/solvers.jl, all-ones F1 stand-in, eta = 0.5) per ADR-0001; the canonical root kernel is unaffected."
+notes = "Notebooks 04-08 are listed as pending and do not exist; only 01-03 exist. documentation.md's layout also names src/validation.jl and scripts/run_{reference,matrix,sobol}.jl (not on disk), and its pending row names src/closures.jl, which does exist. review.md is pinned to commits 17c5730..3dd0d60 (pre-freeze) and reports a conditioning/fold solver problem rather than an init-setup issue. Phase 2 backport (ADR-0005): the recorded DIFFs were backported into the root kernel (src/core/accounting.jl, src/core/equilibrium.jl, src/closures/). Resolved as kernel changes: Tornqvist base (household_baseline, with legacy-default compatibility), residual-gated LM polish (F3 stall), all-N fixed formulation with w=1 numeraire (omitted-N item), and the theta/epsilon CD-limit guards (theta continuation). calibration.jl remains frozen/unported (Phase 3); diff_kernel.jl is retired as a checker (frozen snapshots keep recorded parent commits as history; file stays as history). Hashes/commits above unchanged. ADR-0010 (root kernel): retained_dataset/retained_io_table port (review 2.2/2.3); eta in {0,1} with the allocation wedge retired; mobile N-1 clearing + CPI with the asserted residual-external-account canary (review 2.1; revisefinal later reverted to the same N-1+CPI form via 0f33ad6 -- see ADR-0010 amendment 2026-09-17); baseline clamp (2.5) left open. The frozen cbase2 tree is otherwise unchanged: it intentionally still contains the pre-fix code (all-N mobile form, dormant allocation wedge, ad keyword bug in cbase2/src/solvers.jl, all-ones F1 stand-in, eta = 0.5) per ADR-0001; ADR-0011 (2026-09-17) then conformed `01_data_wrangling.ipynb` in place (label-based schema, opt-in GLMakie figure, non-fatal kernel cross-check) and re-pinned this record to the conforming commit -- original freeze commit/tree hash preserved in `original_freeze_commit` / `original_freeze_tree_hash` above. Notebooks 02/03, `cbase2/src/`, the raw data, the tracked `data_processed/` artifacts and the prose records are untouched by that amendment."
 
 [frozen.bf_replication]
 path = "bf_replication"

@@ -46,3 +46,4 @@ settled question.
 | ADR-0007 | Repository gate and WIP limits | accepted |
 | ADR-0008 | Archive superseded root documents as read-only | accepted |
 | ADR-0009 | Archive the legacy root notebooks | accepted |
+| ADR-0010 | Port the `cbase2/review.md` pipeline fixes | accepted |

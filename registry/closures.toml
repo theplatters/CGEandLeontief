@@ -15,24 +15,23 @@ generated_by = "phase-0 agent"
 
 [labor.BF]
 id = "BF"
-name = "Geometric mobility friction (BF reallocation)"
-formulation = "L_i = L_fixed_i^(1-eta) * L_costmin_i^eta, with sum_i L_i = Lbar; eta in [0,1] (extrapolation outside)"
-interpretation = "Static intersectoral reallocation friction; eta is NOT a labour-supply elasticity, and eta = 0 is not Baqaee-Farhi 2019's immobile benchmark (one common wage is kept)."
+name = "Mobility-endpoint selector (BF reallocation)"
+formulation = "eta selects the kept BF endpoints: eta = 0 keeps the baseline allocation L_fixed_i, eta = 1 uses the cost-minimizing demand L_costmin_i; the flexible wage clears the labour market (ADR-0010)"
+interpretation = "Static intersectoral allocation selector; eta is NOT a labour-supply elasticity, and eta = 0 is not Baqaee-Farhi 2019's immobile benchmark (one common wage is kept)."
 status = "implemented"
 symbols = ["MobileLaborCES"]
 files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
 references = ["docs/labor_closures.md", "docs/DOCS_ASSESSMENT.md", "roadmaps/vertdict.md", "ROADMAP.md"]
-tests = ["tests/test_mobile_labor.jl"]
+tests = ["tests/test_mobile_labor.jl", "tests/test_kernel_regression.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = ["DE-0001", "DE-0002", "DE-0004"]
-adrs = ["ADR-0002", "ADR-0005"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
 open_gates = [
-    "zero-profit/budget consistency for eta < 1 (cbase2/review.md §2.4): the wedge is distributed to no one and p·y does not equal wL + p·int",
-    "the ad-hoc efficiency wedge is not derived (cbase2/review.md §1; docs/labor_closures.md:64-79)",
+    "eta = 0 keeps one common wage with fixed quantities; BF's immobile case has sector-specific wages (cbase2/review.md §1)",
     "Phase-4 residual gates (ROADMAP.md): omitted-equation invariance, household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency",
     "a recorded run manifest",
 ]
-notes = "The geometric interpolation between the fixed and cost-minimizing endpoints is project-specific, not a BF mechanism (cbase2/review.md §1: partially supported, over-claimed). The implemented middle carries an ad hoc efficiency wedge (src/core/equilibrium.jl) that docs/labor_closures.md admits is not established as the exact CES allocative-loss coefficient. tests/test_mobile_labor.jl covers the mobile closure contract by inspection (closure taxonomy, solve, residuals, allocation wedge); status stays implemented because the Phase-4 gates and a run manifest are missing."
+notes = "ADR-0010 retires the interpolated 0 < eta < 1 cases and the ad hoc allocation wedge (never derived as a CES allocative-loss coefficient; cbase2/review.md §1, §2.4). The mobile system keeps N-1 clearing equations plus the CPI = 1 numeraire; the omitted N-th market is the residual external account, exposed by market_clearing_residuals and asserted against S - (I+X-M) by external_balance_canary in tests and experiments. tests/test_mobile_labor.jl covers the endpoint contract (closure taxonomy, solve, residuals, rejected intermediates); tests/test_kernel_regression.jl pins the eta = 0/1 goldens."
 
 [labor.ALPHA]
 id = "ALPHA"
@@ -46,7 +45,7 @@ references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_mobile_labor.jl"]
 evidence = []
 dead_ends = ["DE-0002"]
-adrs = ["ADR-0002", "ADR-0005"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
 open_gates = [
     "Phase-4 residual gates (ROADMAP.md)",
     "a recorded run manifest",
@@ -66,7 +65,7 @@ references = ["docs/closures/beta.md", "docs/DOCS_ASSESSMENT.md", "cbase2/docume
 tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = ["DE-0004"]
-adrs = ["ADR-0002", "ADR-0005"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
 open_gates = [
     "labour-leisure income effect not implemented (cbase2/review.md §1)",
     "w0 anchor vs baseline wage (cbase2/review.md §3.4)",
@@ -86,7 +85,7 @@ references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_fixed_closure.jl"]
 evidence = []
 dead_ends = ["DE-0003"]
-adrs = ["ADR-0002", "ADR-0005"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
 open_gates = [
     "the canonical one-sided wage floor with rationed employment is not implemented (that is ZETA; cbase2/review.md §1)",
     "matrix cell not yet run",
@@ -105,7 +104,7 @@ references = ["docs/closures/delta.md", "ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/scripts/verify_v3.jl"]
 dead_ends = []
-adrs = ["ADR-0002", "ADR-0005"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
 open_gates = [
     "Type I vs Type II multiplier identification unresolved (cbase2/review.md §1)",
     "exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5)",
@@ -150,7 +149,7 @@ references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/d
 tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = ["DE-0001"]
-adrs = ["ADR-0002", "ADR-0005"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
 open_gates = [
     "matrix cell not yet run",
     "v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md)",
@@ -169,7 +168,7 @@ references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/d
 tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = []
-adrs = ["ADR-0002", "ADR-0005"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
 open_gates = [
     "matrix cell not yet run",
     "budget helper pricing inconsistency noted in review §2.7",
@@ -189,10 +188,10 @@ references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/d
 tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = []
-adrs = ["ADR-0002", "ADR-0005"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
 open_gates = [
     "matrix cell not yet run",
     "external_balance returns only the programme's import content (review §2.8)",
     "v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md)",
 ]
-notes = "Not a full current-account closure (cbase2/review.md §1). external_balance returns only the programme's import content (cbase2/review.md §2.8), and the recorded F = 0.00147 figure is ambiguous: about half of dot(p, m .* g) at baseline."
+notes = "Not a full current-account closure (cbase2/review.md §1). external_balance returns only the programme's import content (cbase2/review.md §2.8), and the recorded F = 0.00147 figure is ambiguous: about half of dot(p, m .* g) at baseline. ADR-0010 adds the asserted external-account canary: at mobile eta = 1 solutions the omitted N-th market residual equals S - (I+X-M) via external_balance_canary, asserted by tests and experiments."

@@ -5,8 +5,9 @@ The package exposes three dimensions that should not be conflated:
 * **Legacy `CES` and `CobbDouglas`** store an exogenous `labor_slack` callback
   (or their compatibility `Symbol`). `labor_closure` reports this as an
   `ExogenousLaborClosure`; it is not a wage-regime selector.
-* **Mobile η** controls geometric intersectoral allocation:
-  `L_fixed^(1-η) * L_costmin^η`.
+* **Mobile η** selects between the two kept BF endpoints (ADR-0010):
+  `η = 0` keeps the baseline allocation `L_fixed`, `η = 1` uses the
+  cost-minimizing demand `L_costmin`. Intermediate values are rejected.
 * **The wage regime** is flexible or fixed.  `:mobile` (or
   `FlexibleWageClosure()`) clears the labor market with a common wage; `:fixed`
   (or `FixedWageClosure()`) fixes wages at one.  In the fixed regime the
@@ -19,8 +20,9 @@ canonical taxonomy and
 `equilibrium_residuals(solution)` for closure-appropriate diagnostics.
 
 The legacy callback, η, and the wage regime are independent concepts: η=0 is
-immobility and η=1 is full cost-minimizing allocation. Values outside `[0,1]`
-are extrapolations; η is not a labor-supply elasticity or `L̄*w^η`.
+the baseline (immobile) allocation and η=1 is full cost-minimizing
+allocation. Only these two endpoints are kept (ADR-0010); η is not a
+labor-supply elasticity or `L̄*w^η`.
 
 ## Standard partial-mobility formulation
 
@@ -61,14 +63,13 @@ The standard endpoints are:
 | Partially mobile | Wage-responsive sectoral supply | Sector-specific wages |
 | Fully mobile | `\sum_i L_i = \bar L` | Common wage |
 
-This differs from the current `MobileLaborCES` interpolation. The current model
-uses a common wage while geometrically interpolating between fixed and
-cost-minimizing labor, then applies an exponential-quadratic efficiency factor
-to the flexible-wage cost equation. That factor is a project-specific
-reduced-form assumption, not a labor wedge derived from the CES first-order
-conditions. In particular, its curvature
-`factor_share_i * (1-factor_share_i) * abs(1-ϵ)/ϵ` guarantees a nonnegative
-penalty but is not established as the exact CES allocative-loss coefficient.
+The current `MobileLaborCES` keeps only the two endpoints (ADR-0010) with a
+common wage: η=0 reports the baseline allocation, η=1 the cost-minimizing
+demand. The former geometric interpolation and its exponential-quadratic
+efficiency factor are retired; that factor was a project-specific reduced-form
+assumption, not a labor wedge derived from the CES first-order conditions
+(its curvature `factor_share_i * (1-factor_share_i) * abs(1-ϵ)/ϵ` was never
+established as the exact CES allocative-loss coefficient).
 
 For a structural partial-mobility interpretation, prefer sectoral wages and the
 labor-supply system above; the output loss then follows from constrained

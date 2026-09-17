@@ -1,11 +1,11 @@
 schema_version = 1
 
 [designs.matrix_5x3]
-git_commit = "66b02016735926ce14a86051cb5d10a93179e9c0"
+git_commit = "65bf7651ddb45b15a04291e9a75ce5f00d38daaf"
 note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the 70-sector v3 open-economy calibration"
-registered_at = "2026-09-17T11:53:12"
-design_sha256 = "7fb9dad00975b83c4a534bf1d331f26ccf03ae94d95fcc8ea8b153ea783c28c1"
-actor = "phase3-agent"
+registered_at = "2026-09-17T14:05:52"
+design_sha256 = "303ad3ea829b295fc144a8cd3e15f5750fcfcad8486a470c67bf62b62c5f72e3"
+actor = "franzs"
 
     [designs.matrix_5x3.pinned]
     sigma = 0.9
@@ -14,5 +14,5 @@ actor = "phase3-agent"
     epsilon = 0.5
     total_eur_m = 40300.0
     exo_scale_steps = 6
-    eta = 0.5
+    eta = 1.0
     programme_year = 2024

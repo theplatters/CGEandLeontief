@@ -27,15 +27,18 @@ Each batch computes the design's reference continuation once and reuses its
 final solution as the warm start for all mobile cells and as the
 `real_gdp` reference. The continuation ports
 `cbase2/scripts/verify_v3.jl` (lines 18–77): `read_data` →
-`drop_sectors` → bisect `exo_scale` for the smallest scale with
+`retained_dataset` → bisect `exo_scale` for the smallest scale with
 `saving_rate ≥ 0` → `exo_scale` steps × the θ ladder with
-`mobile_labor_model(data, shocks, θ, 0.5, 0.9, 0.5)` (`NoFinancing`),
-warm-starting each solve (first init from the linear fixed point
-`y0 = (I − Gk) \\ b`), stopping a ladder early when `max|p−1| > 10`.
-`[reference] theta` must equal the final ladder value. Cells then
-warm-start from `[p; q; w]`. (On singular toy fixtures, where `(I − Gk)`
-is not invertible, the first init falls back to `[ones(N); λ; 1.0]`; real
-calibrations always take the linear-fixed-point branch.)
+`mobile_labor_model(data, shocks, θ, 0.5, 0.9, η)` (`NoFinancing`; the
+design's reference η ∈ {0,1}), warm-starting each solve (first init from
+the linear fixed point `y0 = (I − Gk) \\ b`), stopping a ladder early when
+`max|p−1| > 10`. `[reference] theta` must equal the final ladder value.
+Cells then warm-start from `[p; q; w]`. At mobile η = 1 solutions the
+reference asserts the external-account canary (the omitted N-th market
+residual equals `S − (I+X−M)`; review finding 2.1, ADR-0010). (On singular
+toy fixtures, where `(I − Gk)` is not invertible, the first init falls
+back to `[ones(N); λ; 1.0]`; real calibrations always take the
+linear-fixed-point branch.)
 
 ## Cell construction
 
@@ -45,7 +48,7 @@ renormalized 2024 impulse share over kept sectors
 
 | Labour | Constructor |
 | --- | --- |
-| BF / ALPHA | `mobile_labor_model(data, shocks, θ, ϵ, σ, η)` (ALPHA pins η = 1) |
+| BF / ALPHA | `mobile_labor_model(data, shocks, θ, ϵ, σ, η)` (BF η = 0; ALPHA η = 1; intermediates rejected, ADR-0010) |
 | BETA | `solve_beta(data, shocks, θ, ϵ, σ, η; eta_s, financing, init)` |
 | GAMMA | `mobile_labor_model(...; closure = :fixed, financing)` |
 | DELTA | `delta_model(data, shocks; ε = delta_epsilon, financing)` |
@@ -64,12 +67,13 @@ scale-indeterminacy guard: F1 has no additive anchor and the fixed-wage
 Smoke designs (`smoke = true`) pin `[programme] explicit = [...]` instead
 of the impulses file and are used only by tests, which pass the `Data`
 object directly to `build_reference(...; data = ...)` (then a single θ
-ladder runs on that data: no read/drop/bisect/`exo_scale` loop).
+ladder runs on that data: no read/retain/bisect/`exo_scale` loop).
 
 ## Design file schema (`experiments/designs/<design>.toml`)
 
 `schema_version = 1`, `design`, `description`, `smoke`,
-`[data]` (`vintage`, `drops`, `calibration_root`, `calibration_artifacts`),
+`[data]` (`vintage`, `drops`; `calibration_root`/`calibration_artifacts`
+are provenance-only since ADR-0010 — `recalibrate_open` reads `data.io`),
 `[programme]` (`source`, `year`, `column_slice` 1-based inclusive,
 `total_eur_m`, `f1_shift`; or `explicit` for smoke designs),
 `[reference]` (`labor`, `eta`, `theta`, `epsilon`, `sigma`,

@@ -356,21 +356,40 @@ function _theta_ladder(data::Data, shocks::Shocks, thetas::Vector{Float64},
     return init_warm, ref_sol
 end
 
-"""Final reference solution plus the `S = I + X − M` canary (diagnostic)."""
+"""
+    assert_external_canary(model, sol)
+
+Assert the review-2.1 canary identity at a mobile η = 1 solution: the omitted
+N-th market residual (`market_clearing_residuals`) must equal the
+external-account imbalance `S − (I+X−M)` (`external_balance_canary`). Fixed
+closures enforce all N clearings and η = 0 additionally carries the
+fixed-allocation gap, so both are exempt.
+"""
+function assert_external_canary(model::Model, sol::Solution)
+    labor_closure(model.options) isa FixedWageClosure && return nothing
+    model.options.elasticities.η == 1.0 || return nothing
+    X = [sol.prices_raw; sol.quantities; sol.wages_raw[1]]
+    market = dot(sol.prices_raw, market_clearing_residuals(model, X))
+    canary = external_balance_canary(model, X)
+    isapprox(market, canary.diff; atol = 1e-6) || error(
+        "external-account canary mismatch: omitted market residual = $market, " *
+        "S − (I+X−M) = $(canary.diff) (review finding 2.1, ADR-0010)")
+    return nothing
+end
+
+"""Final reference solution plus the asserted `S = I + X − M` canary."""
 function _reference_result(data::Data, ref_sol::Solution, init_warm::Vector{Float64})::NamedTuple
     p = ref_sol.prices_raw
     w = ref_sol.wages_raw[1]
     L = sum(sectoral_labor_demand(p, ref_sol.quantities, w, ref_sol.model))
-    E = household_expenditure(NoFinancing(), ref_sol.model, w * L, p, L)
-    canary_s = data.saving_rate * E
-    cg_q = ref_sol.consumption ./ max.(p, 1e-12)
-    canary_m = dot(data.import_margin, cg_q .+ data.gov_demand .+ data.exo_demand)
-    canary_ix = dot(data.exo_demand .+ data.exports_demand, p)
+    X = [p; ref_sol.quantities; w]
+    canary = external_balance_canary(ref_sol.model, X)
+    assert_external_canary(ref_sol.model, ref_sol)
     return (data = data, sol = ref_sol, init_warm = init_warm,
-        resid = maximum(abs, equilibrium_residuals(ref_sol.model, init_warm)),
+        resid = maximum(abs, equilibrium_residuals(ref_sol.model, X)),
         w_star = w, employment = L, max_p_dev = maximum(abs.(p .- 1)),
-        canary_s = canary_s, canary_ixm = canary_ix - canary_m,
-        canary_diff = canary_s - (canary_ix - canary_m))
+        canary_s = canary.S, canary_ixm = canary.IX - canary.M,
+        canary_diff = canary.diff)
 end
 
 # ── Cell construction ──────────────────────────────────────────────────
@@ -476,10 +495,11 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
         gate_frag("budget", budget, budget_tol, budget_pass) * "; " *
         gate_frag(third_name, third_value, third_tol, third_pass)
 
-    canary_s = data.saving_rate * E
-    cg_q = sol.consumption ./ max.(p, 1e-12)
-    canary_ixm = dot(data.exo_demand .+ data.exports_demand, p) -
-        dot(data.import_margin, cg_q .+ data.gov_demand .+ data.exo_demand)
+    # Value-consistent external-account canary (review finding 2.1, ADR-0010):
+    # recorded for every cell and asserted for mobile η = 1 cells, where the
+    # omitted N-th market residual must equal S − (I+X−M).
+    assert_external_canary(model, sol)
+    canary = external_balance_canary(model, [p; q; fixed ? 1.0 : w])
     return (
         gates = Dict{String,Any}(
             "residual" => Dict{String,Any}("value" => resid, "tolerance" => residual_tol, "pass" => resid_pass),
@@ -494,8 +514,8 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
             "nominal_gdp" => nominal_gdp(sol),
             "max_abs_price_dev" => maximum(abs.(p .- 1))),
         diagnostics = Dict{String,Any}(
-            "canary_s" => canary_s, "canary_ixm" => canary_ixm,
-            "canary_diff" => canary_s - canary_ixm,
+            "canary_s" => canary.S, "canary_ixm" => canary.IX - canary.M,
+            "canary_diff" => canary.diff,
             "external_balance" => external_balance(fin, model, p),
             "public_budget" => public_budget(fin, model, p)),
     )

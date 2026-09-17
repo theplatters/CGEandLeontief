@@ -379,9 +379,9 @@ matrix of 15 model variants to evaluate. This is not overblown: each cell
 is one solve of a 71-sector static system, computationally trivial; the
 interpretive burden is managed by reporting one headline set per cell
 (Tornqvist real GDP response, employment, external balance) with
-sectoral detail in an appendix. Two design amendments: BF's row needs a
-pre-registered $\eta^{*}$ (proposal: 0.5, fixed before Stage 2 results
-are inspected), and DELTA is a corner of the matrix rather than an
+sectoral detail in an appendix. Two design amendments: BF's row uses the
+pre-registered endpoints $\eta \in \{0,1\}$ (the interpolated $\eta^{*}$
+is retired, ADR-0010), and DELTA is a corner of the matrix rather than an
 independent equilibrium row -- its cells are reached as
 GAMMA plus Leontief technology. The matrix serves the paradigmatic
 main point directly: it turns the search for commensurability into a
@@ -483,11 +483,13 @@ household's non-consumption share is the accounting partner of the
 exogenous investment and export injections, so the v3 calibration derives
 it from the data (s = 0.398; government share tau0 = 0.214, export share
 0.422, investment share 0.162) instead of assuming it. Third, the
-equilibrium formulation was corrected throughout: ALL N clearing equations
-are enforced (the N-th market is not Walras-redundant once imports leak),
-the F1/F3 tax is the fixed nominal baseline budget T = sum gG (F3 reads
-exactly as "baseline tax unchanged, programme externally financed"), and
-F2 keeps the genuinely balanced-budget rule.}
+equilibrium formulation was corrected throughout: the mobile system keeps
+N-1 clearing equations plus the CPI = 1 numeraire, and the omitted N-th
+market is the residual external account (it is NOT Walras-redundant once
+imports leak, so it is exposed and asserted rather than silently dropped;
+ADR-0010); the F1/F3 tax is the price-indexed baseline budget T = p'gG
+(F3 reads exactly as "baseline tax unchanged, programme externally
+financed"), and F2 keeps the genuinely balanced-budget rule.}
 
 \textcolor{revisionV3}{Verified results (acceptance test
 \texttt{v2\_verify.jl}): the injection continuation runs in 5.4 s with no
@@ -501,7 +503,7 @@ same layout as above:}
 
 | Labour closure | F1: preference reallocation | F2: tax-financed | F3: external debt |
 |---|---|---|---|
-| BF (friction, $\eta^{*}=0.5$) | ![](pictures/emoji/1f7e0.png){width=9pt} machinery verified with the composition-only stand-in; the explicit $\tilde\beta$ tilt experiment pending | ![](pictures/emoji/2705.png){width=9pt} implemented and verified (balanced-budget rule; resid 1.1e-7) | ![](pictures/emoji/2705.png){width=9pt} implemented and verified (external balance recorded) |
+| BF (endpoint selector, $\eta \in \{0,1\}$) | ![](pictures/emoji/1f7e0.png){width=9pt} machinery verified with the composition-only stand-in; the explicit $\tilde\beta$ tilt experiment pending | ![](pictures/emoji/2705.png){width=9pt} implemented and verified (balanced-budget rule; resid 1.1e-7) | ![](pictures/emoji/2705.png){width=9pt} implemented and verified (external balance recorded) |
 | ALPHA (full employment) | ![](pictures/emoji/1f7e0.png){width=9pt} v3 re-run pending ($\eta = 1$) | ![](pictures/emoji/1f7e0.png){width=9pt} v3 re-run pending ($\eta = 1$) | ![](pictures/emoji/1f7e0.png){width=9pt} v3 re-run pending ($\eta = 1$) |
 | BETA (elastic supply) | ![](pictures/emoji/1f7e0.png){width=9pt} implemented ($\eta_s$, continuation solver; elasticity identification verified at the v2 stage); v3 verification pending | ![](pictures/emoji/1f534.png){width=9pt} verification pending | ![](pictures/emoji/1f534.png){width=9pt} verification pending |
 | GAMMA (sticky real wage) | ![](pictures/emoji/1f534.png){width=9pt} v3 run pending | ![](pictures/emoji/1f7e0.png){width=9pt} the DELTA corner (its Leontief limit) verified exact; the CES-elasticity GAMMA run pending | ![](pictures/emoji/1f534.png){width=9pt} v3 run pending |
@@ -510,9 +512,11 @@ same layout as above:}
 \textcolor{revisionV3}{Open items carried into Stage 1: the BETA
 verification (the eta-continuation runtime under v3), the ALPHA and GAMMA
 v3 re-runs at $\eta = 1$ and the CES elasticities, the explicit F1 tilt,
-and the interpretive pass on the v3 baseline units (the wage reads 0.54 in
-the new no-numeraire units while prices stay near 1 -- normalization or
-inconsistency, to be settled in notebook 04).}
+and the interpretive pass on the v3 baseline units (the no-numeraire
+units experiment is retired with ADR-0010: the CPI = 1 numeraire is
+restored, so the CPI-normalized wage is the real wage; the 0.54 reading
+belonged to the retired no-numeraire units and must be re-checked in
+notebook 04).}
 
 \textcolor{revisionV3}{Post-v4 findings (folded into this version, no
 version change). Three further results qualify the intermediate state.
@@ -577,7 +581,8 @@ labour closures, then the guards:}
    \textcolor{revisionV3}{-- DONE: implemented as :fixed + Leontief
    limit; the analytic equivalence is EXACT for F2 and F3 (rel y error
    0.0).}
-4. **Pre-register $\eta^{*}$** (proposal: 0.5) before any Stage 2 run.
+4. **Pre-register the BF endpoints** before any Stage 2 run: only
+   $\eta \in \{0,1\}$ are kept (ADR-0010); no interpolated $\eta^{*}$.
 5. **Cobb-Douglas limit guard** (Milestone C): sign-safe real powers at
    $\varepsilon \to 1$.
    \textcolor{revisionV3}{-- Implemented (analytic branch at
@@ -589,9 +594,10 @@ labour closures, then the guards:}
    convergence, Tornqvist consistency. Machine-precision residuals are
    the gate.
    \textcolor{revisionV3}{-- Partially done: budget identities exact at
-   every solved equilibrium; ALL N clearing equations enforced in both
-   wage regimes; the omitted-equation rotation and multi-start battery
-   are pending.}
+   every solved equilibrium; the fixed-wage regime enforces all N
+   clearings, the mobile regime enforces N-1 plus the CPI numeraire and
+   asserts the omitted N-th market against S - (I+X-M) (ADR-0010); the
+   omitted-equation rotation and multi-start battery are pending.}
 
 ## Stage 2: Simulation and sensitivity \textcolor{revisionV2}{\normalsize [reworked v3]}
 
@@ -820,8 +826,9 @@ evaluation matrix, and the workplan only.}
   corner; the national-accounts identity S = I + X - M forcing the
   saving rate s = 0.398, calibrated from the data together with tau0 =
   0.214, export share 0.422, investment share 0.162; the corrected
-  equilibrium formulation with ALL N clearing equations, the fixed
-  nominal F1/F3 tax and the balanced-budget F2 rule) and the verified
+  equilibrium formulation with N-1 mobile clearings plus the CPI
+  numeraire and the asserted residual external account, the price-indexed
+  F1/F3 tax and the balanced-budget F2 rule) and the verified
   results (injection continuation 5.4 s without stalls, price-explosion
   branch eliminated, F1/F2/F3 mobile rows at resid <= 3.7e-7 with exact
   budget identities, F3 external balance recorded, DELTA analytic

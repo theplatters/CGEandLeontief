@@ -6,6 +6,11 @@
 # before executing; experiments/run.jl --design matrix_5x3 refuses to start
 # when this file's SHA-256 does not match registry/preregistration.toml.
 # See experiments/README.md and ADR-0006.
+#
+# η ∈ {0, 1} only (ADR-0010): BF is the immobile endpoint (η = 0), ALPHA,
+# BETA, GAMMA, DELTA and the reference continuation use fully mobile
+# allocation (η = 1). The former interpolated η = 0.5 and its allocation wedge
+# are retired.
 
 schema_version = 1
 design = "matrix_5x3"
@@ -26,8 +31,8 @@ total_eur_m = 40300.0
 f1_shift = "one_plus_psi"
 
 [reference]
-labor = "BF"
-eta = 0.5
+labor = "ALPHA"
+eta = 1.0
 theta = 0.5
 epsilon = 0.5
 sigma = 0.9
@@ -43,32 +48,32 @@ wage_tol = 1e-8
 [cells.matrix_5x3-BF-F1]
 labor = "BF"
 financing = "F1"
-eta = 0.5
+eta = 0.0
 eta_s = 0.0
 theta = 0.5
 epsilon = 0.5
 sigma = 0.9
-note = "BF reallocation friction (eta=0.5) with compositional F1 shift"
+note = "BF immobile baseline allocation (eta=0) with compositional F1 shift"
 
 [cells.matrix_5x3-BF-F2]
 labor = "BF"
 financing = "F2"
-eta = 0.5
+eta = 0.0
 eta_s = 0.0
 theta = 0.5
 epsilon = 0.5
 sigma = 0.9
-note = "BF reallocation friction (eta=0.5), tax-financed programme"
+note = "BF immobile baseline allocation (eta=0), tax-financed programme"
 
 [cells.matrix_5x3-BF-F3]
 labor = "BF"
 financing = "F3"
-eta = 0.5
+eta = 0.0
 eta_s = 0.0
 theta = 0.5
 epsilon = 0.5
 sigma = 0.9
-note = "BF reallocation friction (eta=0.5), externally financed programme"
+note = "BF immobile baseline allocation (eta=0), externally financed programme"
 
 [cells.matrix_5x3-ALPHA-F1]
 labor = "ALPHA"
@@ -103,62 +108,62 @@ note = "Full-employment mobile labour (eta=1), externally financed programme"
 [cells.matrix_5x3-BETA-F1]
 labor = "BETA"
 financing = "F1"
-eta = 0.5
+eta = 1.0
 eta_s = 0.5
 theta = 0.5
 epsilon = 0.5
 sigma = 0.9
-note = "Elastic labour supply (eta_s=0.5) with compositional F1 shift"
+note = "Elastic labour supply (eta_s=0.5), fully mobile allocation, compositional F1 shift"
 
 [cells.matrix_5x3-BETA-F2]
 labor = "BETA"
 financing = "F2"
-eta = 0.5
+eta = 1.0
 eta_s = 0.5
 theta = 0.5
 epsilon = 0.5
 sigma = 0.9
-note = "Elastic labour supply (eta_s=0.5), tax-financed programme"
+note = "Elastic labour supply (eta_s=0.5), fully mobile allocation, tax-financed programme"
 
 [cells.matrix_5x3-BETA-F3]
 labor = "BETA"
 financing = "F3"
-eta = 0.5
+eta = 1.0
 eta_s = 0.5
 theta = 0.5
 epsilon = 0.5
 sigma = 0.9
-note = "Elastic labour supply (eta_s=0.5), externally financed programme"
+note = "Elastic labour supply (eta_s=0.5), fully mobile allocation, externally financed programme"
 
 [cells.matrix_5x3-GAMMA-F1]
 labor = "GAMMA"
 financing = "F1"
-eta = 0.5
+eta = 1.0
 eta_s = 0.0
 theta = 0.5
 epsilon = 0.5
 sigma = 0.9
-note = "Fixed real wage (eta=0.5) with compositional F1 shift"
+note = "Fixed real wage with fully mobile allocation (eta=1), compositional F1 shift"
 
 [cells.matrix_5x3-GAMMA-F2]
 labor = "GAMMA"
 financing = "F2"
-eta = 0.5
+eta = 1.0
 eta_s = 0.0
 theta = 0.5
 epsilon = 0.5
 sigma = 0.9
-note = "Fixed real wage (eta=0.5), tax-financed programme"
+note = "Fixed real wage with fully mobile allocation (eta=1), tax-financed programme"
 
 [cells.matrix_5x3-GAMMA-F3]
 labor = "GAMMA"
 financing = "F3"
-eta = 0.5
+eta = 1.0
 eta_s = 0.0
 theta = 0.5
 epsilon = 0.5
 sigma = 0.9
-note = "Fixed real wage (eta=0.5), externally financed programme"
+note = "Fixed real wage with fully mobile allocation (eta=1), externally financed programme"
 
 [cells.matrix_5x3-DELTA-F1]
 labor = "DELTA"

@@ -601,10 +601,11 @@ function update_scenario_row(run_id::AbstractString, design::AbstractString,
         cell::Dict{String,Any}, status::AbstractString, commit::AbstractString;
         root::AbstractString = default_root(), note_suffix::AbstractString = "")::Nothing
     scenpath = joinpath(root, "registry", "scenarios.csv")
-    # Normalize every column to String: CSV type inference would otherwise
-    # flip an all-numeric column (e.g. eta after pinning) to Float64 and
-    # reject the String assignments below.
-    raw = DataFrame(CSV.File(scenpath; silencewarnings = true))
+    # Normalize every column to String: without `stringtype = String`, CSV
+    # infers narrow InlineString widths (e.g. String7) from the current cell
+    # values and the longer status/evidence/commit assignments below throw
+    # `ArgumentError: string too large`. (Found by the smoke-manifest tests.)
+    raw = DataFrame(CSV.File(scenpath; stringtype = String, silencewarnings = true))
     df = DataFrame([c => string.(coalesce.(raw[!, c], "")) for c in names(raw)])
     r = findfirst(==(run_id), string.(coalesce.(df.run_id, "")))
     r === nothing && throw(ArgumentError("no scenarios.csv row for run_id \"$run_id\""))

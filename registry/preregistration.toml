@@ -1,5 +1,23 @@
 schema_version = 1
 
+# 2026-09-17 (A-bill calibration, LaForge exact domestic-bill fix): the
+# data-implied saving rate is RE-ANCHORED. The old s = 0.398-0.411 charged the
+# imported+taxed intermediate content to the household; under the exact
+# domestic bill (row 73) the identity-implied rate is s = 0.1199 (full-71,
+# measured; probe_abill.jl). Intermediate imports (row 74) enter the external
+# account explicitly: M_int = 0.2214 (full) / 0.2237 (70s) of GDP. The 70s
+# variant carries one microscopic negative (−2.4e-6, clamped, documented); the
+# "reduced" variant FAILS its identity gap (7.7e-3) and is deferred.
+[designs.calibration_abill]
+git_commit = "0f33ad6"
+note = "A-bill calibration baseline (full-71, N-1+CPI sanctioned form, wedge bypassed, eta=1): s = 0.1199, intermediate imports M_int = 0.2214, baseline root max|resid| = 3.5e-18; external-identity diff -2.6e-2 (residual table reconciliation, flagged, NOT threshold-fit)"
+registered_at = "2026-09-17T18:40:00"
+actor = "hermes"
+pinned_s_full = 0.1199
+pinned_s_70s = 0.1285
+pinned_M_int_full = 0.2214
+pinned_M_int_70s = 0.2237
+
 [designs.matrix_5x3]
 git_commit = "b388b90cfdb2e2c4f0e54f916871e6b8d98b788d"
 note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the 70-sector v3 open-economy calibration"
@@ -16,3 +34,4 @@ actor = "franzs"
     exo_scale_steps = 6
     eta = 1.0
     programme_year = 2024
+

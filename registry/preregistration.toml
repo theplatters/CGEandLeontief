@@ -1,16 +1,16 @@
 schema_version = 1
 
 [designs.matrix_5x3]
-git_commit = "65bf7651ddb45b15a04291e9a75ce5f00d38daaf"
+git_commit = "b388b90cfdb2e2c4f0e54f916871e6b8d98b788d"
 note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the 70-sector v3 open-economy calibration"
-registered_at = "2026-09-17T14:05:52"
-design_sha256 = "303ad3ea829b295fc144a8cd3e15f5750fcfcad8486a470c67bf62b62c5f72e3"
+registered_at = "2026-09-17T14:30:42"
+design_sha256 = "f505cd8ea01141b541720ad1b0f73da099d74e6e50f52ff968bbd44f26b64e49"
 actor = "franzs"
 
     [designs.matrix_5x3.pinned]
     sigma = 0.9
     theta = 0.5
-    f1_shift = "one_plus_psi"
+    f1_shift = "tilt_g0_over_c0"
     epsilon = 0.5
     total_eur_m = 40300.0
     exo_scale_steps = 6

@@ -503,7 +503,7 @@ same layout as above:}
 
 | Labour closure | F1: preference reallocation | F2: tax-financed | F3: external debt |
 |---|---|---|---|
-| BF (endpoint selector, $\eta \in \{0,1\}$) | ![](pictures/emoji/1f7e0.png){width=9pt} machinery verified with the composition-only stand-in; the explicit $\tilde\beta$ tilt experiment pending | ![](pictures/emoji/2705.png){width=9pt} implemented and verified (balanced-budget rule; resid 1.1e-7) | ![](pictures/emoji/2705.png){width=9pt} implemented and verified (external balance recorded) |
+| BF (endpoint selector, $\eta \in \{0,1\}$) | ![](pictures/emoji/1f7e0.png){width=9pt} machinery verified; the explicit $\tilde\beta$ tilt ported to the canonical pipeline ($d = 1 + G0\cdot\psi/c0$, \texttt{f1\_shift = tilt\_g0\_over\_c0}); matrix-cell runs pending | ![](pictures/emoji/2705.png){width=9pt} implemented and verified (balanced-budget rule; resid 1.1e-7) | ![](pictures/emoji/2705.png){width=9pt} implemented and verified (external balance recorded) |
 | ALPHA (full employment) | ![](pictures/emoji/1f7e0.png){width=9pt} v3 re-run pending ($\eta = 1$) | ![](pictures/emoji/1f7e0.png){width=9pt} v3 re-run pending ($\eta = 1$) | ![](pictures/emoji/1f7e0.png){width=9pt} v3 re-run pending ($\eta = 1$) |
 | BETA (elastic supply) | ![](pictures/emoji/1f7e0.png){width=9pt} implemented ($\eta_s$, continuation solver; elasticity identification verified at the v2 stage); v3 verification pending | ![](pictures/emoji/1f534.png){width=9pt} verification pending | ![](pictures/emoji/1f534.png){width=9pt} verification pending |
 | GAMMA (sticky real wage) | ![](pictures/emoji/1f534.png){width=9pt} v3 run pending | ![](pictures/emoji/1f7e0.png){width=9pt} the DELTA corner (its Leontief limit) verified exact; the CES-elasticity GAMMA run pending | ![](pictures/emoji/1f534.png){width=9pt} v3 run pending |
@@ -511,7 +511,9 @@ same layout as above:}
 
 \textcolor{revisionV3}{Open items carried into Stage 1: the BETA
 verification (the eta-continuation runtime under v3), the ALPHA and GAMMA
-v3 re-runs at $\eta = 1$ and the CES elasticities, the explicit F1 tilt,
+v3 re-runs at $\eta = 1$ and the CES elasticities, the F1 tilted-cell runs
+(the explicit tilt is ported to the canonical pipeline as
+\texttt{f1\_shift = tilt\_g0\_over\_c0}; the matrix cells are pending),
 and the interpretive pass on the v3 baseline units (the no-numeraire
 units experiment is retired with ADR-0010: the CPI = 1 numeraire is
 restored, so the CPI-normalized wage is the real wage; the 0.54 reading
@@ -564,9 +566,10 @@ labour closures, then the guards:}
    \textcolor{revisionV3}{-- DONE in v3, superseded in scope: the v3
    open-economy calibration implements the government block, investment,
    exports, import margins, the saving rate and all three financings
-   (see section 4, intermediate results). The F1 experiment currently
-   runs with a composition-only stand-in; the explicit $\tilde\beta$
-   tilt is pending.}
+   (see section 4, intermediate results). The explicit $\tilde\beta$
+   tilt is ported to the canonical pipeline (\texttt{experiments/run.jl},
+   \texttt{f1\_shift = tilt\_g0\_over\_c0}); the tilted matrix cells are
+   pending.}
 2. **BETA**: elastic total labour supply on the real wage,
    $L^s = \bar L\,[(w/P)/(w_0/P_0)]^{\eta_s}$, with the labour--leisure
    interpretation and the numerical elasticity test
@@ -695,13 +698,16 @@ submission commit.}
 \textcolor{revisionV2}{Stage 0 is resolved except the disclosure decision
 and the scope locks. Begin Stage 1 with the financing core ($g_i$, the
 $T$ rule, the external account, the explicit F1 experiment), then BETA,
-then the DELTA corner; pre-register $\eta^{*}$ before any Stage 2 run.}
+then the DELTA corner; pre-register the BF endpoints
+($\eta \in \{0,1\}$, ADR-0010) before any Stage 2 run.}
 
 \textcolor{revisionV3}{Update (v4): the financing core and the DELTA
 corner are done; the remaining Stage 1 items are the BETA verification
-run, the ALPHA/GAMMA v3 re-runs ($\eta = 1$, CES elasticities), the
-explicit F1 tilt experiment, and the interpretive pass on the v3 baseline
-units in notebook 04 -- then pre-register $\eta^{*}$ and open Stage 2.}
+run, the ALPHA/GAMMA v3 re-runs ($\eta = 1$, CES elasticities), the F1
+tilted-cell runs (tilt ported to the canonical pipeline; cells pending),
+and the interpretive pass on the v3 baseline
+units in notebook 04 -- then re-preregister the design
+($\eta \in \{0,1\}$, ADR-0010) and open Stage 2.}
 
 ## Running the pipeline (container and Mac) \textcolor{revisionV3}{\normalsize [added v4, folded]}
 
@@ -836,5 +842,5 @@ evaluation matrix, and the workplan only.}
   state (financing core and DELTA corner done; BETA implemented with the
   verification run pending; CD guard implemented; residual validation
   partially done); immediate next step updated (BETA verification,
-  ALPHA/GAMMA v3 re-runs, explicit F1 tilt, notebook 04 interpretive
+  ALPHA/GAMMA v3 re-runs, F1 tilted-cell runs, notebook 04 interpretive
   pass, then pre-registration).

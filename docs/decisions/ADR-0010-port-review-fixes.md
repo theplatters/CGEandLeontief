@@ -91,3 +91,20 @@ Two things surfaced during the port that changed the plan:
   asserts the canary for mobile η = 1 cells and the reference.
 - `scripts/check_repo.jl` enforces preregistration integrity for the re-pinned
   design.
+
+## Amendment 2026-09-17 — `revisefinal` `0f33ad6` converges on the N-1+CPI form
+
+`revisefinal` commit `0f33ad6` restored the same N-1+CPI mobile form and
+bypassed the allocation wedge, so both branches have converged on the
+formulation this ADR records. The reorg root kernel stays stricter: the wedge
+is deleted (not bypassed), η ∈ {0,1} is validated by `_checked_eta`, and the
+omitted market is exposed as `market_clearing_residuals` /
+`external_balance_canary` with test and experiment assertions. The `0f33ad6`
+F1 preference tilt is ported into the experiment pipeline under the new
+`f1_shift = "tilt_g0_over_c0"` value. The `0f33ad6` `autodiff` keyword fix
+applies only to the frozen `cbase2/src/solvers.jl` and is intentionally not
+ported (ADR-0001/ADR-0005). The `0f33ad6` θ-consistent reference fix is not
+needed by the current `matrix_5x3` design because cells and reference share
+θ = 0.5; if the intended headline spec is θ = 1.0, that remains a design
+question. The original wording above is kept per the append-only rule; this
+amendment is authoritative where the two disagree.

@@ -24,7 +24,11 @@ model units (1 model income unit = GDP at basic prices).
 
 - F1 `PreferenceReallocation(d)`: preference weights become
   `demand_shock .* d`; the household CES normalizer keeps `Σ p_i c_i = E`
-  exactly. NO additive demand.
+  exactly. NO additive demand. Design tilt (ports
+  `cbase2/scripts/verify_v3.jl`): `d_i = 1 + G0·ψ_i/c0_i` with `c0` the
+  household baseline and `ψ` restricted to positive-baseline sectors and
+  renormalised; the retired `1 .+ ψ` stand-in was a non-reference tilt
+  (ψ added directly instead of `G0 .* ψ1 ./ c0`).
 - F2 `TaxFinanced(g)`: additive real demand with endogenous lump-sum tax
   `T(p) = Σ p_i g_i`; household expenditure `E = w·ΣL − T`.
 - F3 `ExternalDebt(g)`: identical additive demand, household untaxed; the

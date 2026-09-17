@@ -146,15 +146,15 @@ status = "tested"
 symbols = ["PreferenceReallocation"]
 files = ["src/closures/financing/financing.jl"]
 references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
-tests = ["tests/test_promoted_closures.jl"]
-evidence = ["cbase2/process_comments.md"]
+tests = ["tests/test_promoted_closures.jl", "tests/test_f1_tilt.jl"]
+evidence = ["cbase2/process_comments.md", "cbase2/scripts/verify_v3.jl"]
 dead_ends = ["DE-0001"]
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
 open_gates = [
     "matrix cell not yet run",
     "v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md)",
 ]
-notes = "A demand-composition shifter, not a financing closure in the CGE taxonomy (cbase2/review.md §1). Must never be described as an autonomous investment multiplier (ROADMAP.md section 4.3; docs/DOCS_ASSESSMENT.md, verdict warning)."
+notes = "A demand-composition shifter, not a financing closure in the CGE taxonomy (cbase2/review.md §1). Must never be described as an autonomous investment multiplier (ROADMAP.md section 4.3; docs/DOCS_ASSESSMENT.md, verdict warning). The explicit tilt is implemented in the canonical pipeline: experiments/run.jl f1_tilt_weights computes d = 1 .+ G0 .* ψ1 ./ c0 (ψ restricted to positive-baseline sectors and renormalised, G0 = sum(g), c0 = data.household_baseline), replacing the retired non-reference 1 .+ ψ tilt (ψ added directly instead of G0 .* ψ1 ./ c0) (f1_shift tilt_g0_over_c0)."
 
 [financing.F2]
 id = "F2"

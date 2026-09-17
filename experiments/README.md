@@ -55,7 +55,7 @@ renormalized 2024 impulse share over kept sectors
 
 | Financing | Constructor |
 | --- | --- |
-| F1 | `PreferenceReallocation(1 .+ ψ)` (`f1_shift = "one_plus_psi"`) |
+| F1 | `PreferenceReallocation(d)` with `d = 1 .+ G0 .* ψ1 ./ c0` (`f1_shift = "tilt_g0_over_c0"`; `ψ1` = `ψ` restricted to sectors with positive baseline household demand `c0 = data.household_baseline` and renormalised to sum 1, `G0 = sum(g)`) |
 | F2 | `TaxFinanced(g)` |
 | F3 | `ExternalDebt(g)` |
 

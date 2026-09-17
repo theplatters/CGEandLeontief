@@ -394,13 +394,42 @@ end
 
 # ── Cell construction ──────────────────────────────────────────────────
 
-"""Financing closure for a cell from `(ψ, g)` (`f1_shift = "one_plus_psi"`)."""
+"""F1 preference-tilt weights from verify_v3.jl (defect 9 fix, commit `0f33ad6`).
+
+Restrict programme shares `ψ` to sectors with positive baseline household
+demand `c0` (a zero category cannot be tilted), renormalise to sum 1, then
+`d = 1 .+ G0 .* ψ1 ./ max.(c0, 1e-12)` with `G0 = sum(g)`. Throws an
+`ArgumentError` when no baseline entry is positive.
+"""
+function f1_tilt_weights(baseline::AbstractVector, ψ::AbstractVector, g::AbstractVector)::Vector{Float64}
+    n = length(baseline)
+    length(ψ) == n && length(g) == n || throw(ArgumentError(
+        "f1_tilt_weights: length mismatch (baseline=$n, ψ=$(length(ψ)), g=$(length(g)))"))
+    all(isfinite, baseline) || throw(ArgumentError("f1_tilt_weights: baseline must be finite"))
+    all(isfinite, ψ) || throw(ArgumentError("f1_tilt_weights: ψ must be finite"))
+    all(isfinite, g) || throw(ArgumentError("f1_tilt_weights: g must be finite"))
+    all(>=(0), ψ) || throw(ArgumentError("f1_tilt_weights: ψ entries must be nonnegative"))
+    all(>=(0), g) || throw(ArgumentError("f1_tilt_weights: g entries must be nonnegative"))
+    pos = baseline .> 0
+    any(pos) || throw(ArgumentError("f1_tilt_weights: no baseline entry is positive"))
+    ψ1 = ψ .* pos
+    s = sum(ψ1)
+    s > 0 || throw(ArgumentError("f1_tilt_weights: programme has zero mass over positive-baseline sectors"))
+    ψ1 = ψ1 ./ s
+    G0 = sum(g)
+    return 1.0 .+ G0 .* ψ1 ./ max.(baseline, 1e-12)
+end
+
+"""Financing closure for a cell from `(ψ, g)` (`f1_shift = "tilt_g0_over_c0"`)."""
 function cell_financing(fin::AbstractString, ψ::Vector{Float64}, g::Vector{Float64},
-        f1_shift::AbstractString)::AbstractFinancing
+        f1_shift::AbstractString, data::Data)::AbstractFinancing
     fin == "F1" || return fin == "F2" ? TaxFinanced(g) : fin == "F3" ? ExternalDebt(g) :
         throw(ArgumentError("unknown financing id $fin"))
-    f1_shift == "one_plus_psi" || throw(ArgumentError("unknown f1_shift \"$f1_shift\""))
-    return PreferenceReallocation(1.0 .+ ψ)
+    if f1_shift == "one_plus_psi"
+        throw(ArgumentError("retired f1_shift \"one_plus_psi\": the non-reference 1 .+ ψ tilt adds ψ directly instead of G0 .* ψ1 ./ c0; use \"tilt_g0_over_c0\""))
+    end
+    f1_shift == "tilt_g0_over_c0" || throw(ArgumentError("unknown f1_shift \"$f1_shift\""))
+    return PreferenceReallocation(f1_tilt_weights(data.household_baseline, ψ, g))
 end
 
 """
@@ -414,7 +443,7 @@ function build_cell_model(cell::Dict{String,Any}, design_d::Dict{String,Any},
     N = length(data.factor_share)
     shocks = Shocks(ones(N), ones(N), zeros(N))
     labor, fin_id = cell["labor"], cell["financing"]
-    fin = cell_financing(fin_id, ψ, g, design_d["programme"]["f1_shift"])
+    fin = cell_financing(fin_id, ψ, g, design_d["programme"]["f1_shift"], data)
     if labor == "BF" || labor == "ALPHA"
         return mobile_labor_model(data, shocks, Float64(cell["theta"]),
             Float64(cell["epsilon"]), Float64(cell["sigma"]), Float64(cell["eta"]);
@@ -442,7 +471,7 @@ function solve_cell(cell::Dict{String,Any}, design_d::Dict{String,Any}, data::Da
         shocks = Shocks(ones(N), ones(N), zeros(N))
         return solve_beta(data, shocks, Float64(cell["theta"]), Float64(cell["epsilon"]),
             Float64(cell["sigma"]), Float64(cell["eta"]); eta_s = Float64(cell["eta_s"]),
-            financing = cell_financing(cell["financing"], ψ, g, design_d["programme"]["f1_shift"]),
+            financing = cell_financing(cell["financing"], ψ, g, design_d["programme"]["f1_shift"], data),
             init = init_warm)
     end
     return solve(model; init = init_warm)

@@ -28,7 +28,7 @@ source = "cbase2/data_raw/impulses.csv"
 year = 2024
 column_slice = [3, 73]   # 1-based inclusive (sectors 1..71)
 total_eur_m = 40300.0
-f1_shift = "one_plus_psi"
+f1_shift = "tilt_g0_over_c0"
 
 [reference]
 labor = "ALPHA"

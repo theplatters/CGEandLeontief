@@ -1,6 +1,6 @@
 ---
 name: experiments
-description: Use when defining, running, or recording an experiment or scenario in the BeyondHulten repo — run ids, registry/scenarios.csv rows and evidence paths, failed and provisional run retention, the ADR-0004 run-manifest contract, the planned experiments/run.jl entry point and runs/index.csv, headless Julia runs that avoid GLMakie, and citing run ids in the paper.
+description: Use when defining, running, or recording an experiment or scenario in the BeyondHulten repo — run ids, registry/scenarios.csv rows and evidence paths, failed and provisional run retention, the ADR-0004/ADR-0006 run-manifest contract, the experiments/run.jl entry point and runs/index.csv, headless Julia runs that avoid GLMakie, and citing run ids in the paper.
 ---
 
 # Experiments: scenarios and runs
@@ -40,13 +40,18 @@ Rules:
 - `failed` — ran and did not pass; evidence is kept.
 - `superseded` — replaced by a later `run_id`.
 
-## Run manifests (ADR-0004)
+## Run manifests (ADR-0004, ADR-0006)
 
 Every quantitative claim is traceable: claim → `run_id` → manifest → commit → closure/design → data vintage.
 
-- **From Phase 3 (planned; does not exist yet):** the single entry point `experiments/run.jl` writes `runs/<run_id>/manifest.toml` and appends to `runs/index.csv`. `runs/` holds raw results, logs, and figures and is not committed, except the index and manifests. Design files will live in `experiments/designs/<design>.toml` (planned).
-- Manifest contents: git commit and dirty flag, scenario/design hash, data-vintage SHA-256 values, Julia and package versions (Manifest hash), solver settings and seed, per-gate residual results, actor (human/agent), and artifact pointers. `runs/index.csv` rows: `run_id`, date, design, closures, status, gate summary, headline metrics, commit.
-- **Until then:** register runs manually in `registry/scenarios.csv` with existing evidence artifacts (the `cbase2-v3` rows cite `cbase2/scripts/verify_v3.jl`, `cbase2/process_comments.md`, `cbase2/review.md`), set `commit` to the recorded commit, and state the exact data vintage and configuration in `notes`.
+- **Entry point `experiments/run.jl`** (register before running):
+  `julia --project=. experiments/run.jl --list <design>` prints cells with pinned parameters;
+  `julia --project=. experiments/run.jl --preregister <design> [--actor NAME]` writes `registry/preregistration.toml` (the only writer);
+  `julia --project=. experiments/run.jl --design <design> [--cell <run_id>] [--cells a,b,c] [--runs-dir DIR] [--budget-seconds N] [--actor NAME]` executes cells in file order.
+  `--design` refuses to start unless the design file's SHA-256 matches the preregistration record. Design files: `experiments/designs/<design>.toml` (schemas: `experiments/README.md`).
+- Each run writes `runs/<run_id>/manifest.toml` (`running` → `executed`/`failed`; per-cell exceptions become `failed` with an `[error]` table), `log.txt`, and `solution.csv` (`sector,price,quantity`) on success. Existing run dirs are never overwritten — reruns register a `-v2` variant `run_id`. `runs/index.csv` rows: `run_id`, date, design, closures, status, gate summary, headline metrics, commit; one row per run, sorted by `run_id`, rewritten on status transitions. Only the index and manifests are tracked (`.gitignore`; verify with `git check-ignore`).
+- Manifest contents: git commit and dirty flag, design hash, data-vintage SHA-256 values, Julia version and Manifest hash, solver settings and seed (`1234`), per-gate residual results (`residual`/`budget`/`labour`-or-`wage`, `overall`), actor, and artifact pointers. The `S = I + X − M` canary and `external_balance` are diagnostics, never gates.
+- `--design` also updates the cell's `registry/scenarios.csv` row (status, pinned params, `evidence = "runs/<id>/manifest.toml; runs/<id>/log.txt"`, recorded HEAD).
 - Historical runs predating manifests are registered with their caveats and are **not** retrofitted with invented manifests.
 
 ## Practicalities for this repo

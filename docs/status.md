@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `440efec` (dirty)
+Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `66b0201` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -63,21 +63,21 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
 
 | run_id | labour | financing | status | parameters | evidence | notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| matrix_5x3-ALPHA-F1 | ALPHA | F1 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-ALPHA-F2 | ALPHA | F2 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-ALPHA-F3 | ALPHA | F3 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-BETA-F1 | BETA | F1 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-BETA-F2 | BETA | F2 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-BETA-F3 | BETA | F3 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-BF-F1 | BF | F1 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3); matrix not yet implemented; cbase2 pipeline map lists notebooks 04-08 that do not exist [cbase2/documentation.md] |
-| matrix_5x3-BF-F2 | BF | F2 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-BF-F3 | BF | F3 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-DELTA-F1 | DELTA | F1 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-DELTA-F2 | DELTA | F2 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-DELTA-F3 | DELTA | F3 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-GAMMA-F1 | GAMMA | F1 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-GAMMA-F2 | GAMMA | F2 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
-| matrix_5x3-GAMMA-F3 | GAMMA | F3 | planned | TBD |  | planned; parameters to be pinned in experiments/designs/matrix_5x3.toml (Phase 3) |
+| matrix_5x3-ALPHA-F1 | ALPHA | F1 | planned | eta=1.0, eta_s=0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned |
+| matrix_5x3-ALPHA-F2 | ALPHA | F2 | planned | eta=1.0, eta_s=0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned |
+| matrix_5x3-ALPHA-F3 | ALPHA | F3 | planned | eta=1.0, eta_s=0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned |
+| matrix_5x3-BETA-F1 | BETA | F1 | planned | eta=0.5, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned |
+| matrix_5x3-BETA-F2 | BETA | F2 | planned | eta=0.5, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned |
+| matrix_5x3-BETA-F3 | BETA | F3 | planned | eta=0.5, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned |
+| matrix_5x3-BF-F1 | BF | F1 | planned | eta=0.5, eta_s=0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned; matrix not yet implemented; cbase2 pipeline map lists notebooks 04-08 that do not exist [cbase2/documentation.md] |
+| matrix_5x3-BF-F2 | BF | F2 | planned | eta=0.5, eta_s=0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned |
+| matrix_5x3-BF-F3 | BF | F3 | planned | eta=0.5, eta_s=0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned |
+| matrix_5x3-DELTA-F1 | DELTA | F1 | planned | eta=1.0, eta_s=0, theta=1e-4, epsilon=1e-4, sigma=1e-4 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned \| theta/epsilon/sigma = delta_epsilon = 1e-4 (the solved Leontief-limit values; ADR-0006) |
+| matrix_5x3-DELTA-F2 | DELTA | F2 | planned | eta=1.0, eta_s=0, theta=1e-4, epsilon=1e-4, sigma=1e-4 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned \| theta/epsilon/sigma = delta_epsilon = 1e-4 (the solved Leontief-limit values; ADR-0006) |
+| matrix_5x3-DELTA-F3 | DELTA | F3 | planned | eta=1.0, eta_s=0, theta=1e-4, epsilon=1e-4, sigma=1e-4 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned \| theta/epsilon/sigma = delta_epsilon = 1e-4 (the solved Leontief-limit values; ADR-0006) |
+| matrix_5x3-GAMMA-F1 | GAMMA | F1 | planned | eta=0.5, eta_s=0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned |
+| matrix_5x3-GAMMA-F2 | GAMMA | F2 | planned | eta=0.5, eta_s=0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned |
+| matrix_5x3-GAMMA-F3 | GAMMA | F3 | planned | eta=0.5, eta_s=0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3.toml (preregistered 2026-09-17); planned |
 
 ## Freeze board
 
@@ -143,6 +143,7 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
 - [ADR-0003 — `registry/` is the single source of truth](decisions/ADR-0003-registry-single-source-of-truth.md)
 - [ADR-0004 — Runs are immutable, manifest-backed records](decisions/ADR-0004-runs-are-immutable-manifests.md)
 - [ADR-0005 — Phase 2 layout and cbase2 backport](decisions/ADR-0005-phase2-layout-and-backport.md)
+- [ADR-0006 — Experiment entry point and preregistration](decisions/ADR-0006-experiment-entry-point-and-preregistration.md)
 
 ## Warnings
 

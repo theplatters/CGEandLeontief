@@ -59,19 +59,18 @@ id = "BETA"
 name = "Elastic total labour supply"
 formulation = "sum_i L_i = Lbar * ((w/P)/(w0/P0))^eta_s"
 interpretation = "Intended as a labour-leisure / voluntary supply response; the income effect is not implemented."
-status = "implemented"
+status = "tested"
 symbols = ["ElasticLaborClosure"]
 files = ["src/closures/labor/types.jl", "src/closures/labor/labor.jl", "src/core/equilibrium.jl"]
 references = ["docs/closures/beta.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md", "ROADMAP.md"]
-tests = []
+tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = ["DE-0004"]
 adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
-    "contract tests",
     "labour-leisure income effect not implemented (cbase2/review.md §1)",
     "w0 anchor vs baseline wage (cbase2/review.md §3.4)",
-    "v3 continuation times out (cbase2/process_comments.md, 2026-09-16)",
+    "70-sector BETA continuation margin unverified after promotion (cbase2 timeout, cbase2/process_comments.md 2026-09-16; 3-sector contract tests converge)",
 ]
 notes = "Promoted to src/closures/labor/ in Phase 2 (ADR-0005). cbase2/review.md §1 verdict: partially supported. The power-function supply curve is a defensible reduced form directly answering R2, but the labour-leisure interpretation is not earned by the implementation (no income effect). The v3 verification (solve_beta eta_s-continuation) ran over 25 minutes without completing (cbase2/process_comments.md, 2026-09-16); the v2-stage elasticity identification recovers eta_s by construction and is circular (cbase2/review.md §3.4)."
 
@@ -99,16 +98,15 @@ id = "DELTA"
 name = "IO-type endpoint (Leontief limit)"
 formulation = "GAMMA (w/P = 1) + Leontief limit of the CES core (theta, epsilon, sigma -> 0+) with full cost-minimizing allocation (eta = 1)"
 interpretation = "Robinson-2006-style fixed-price multiplier corner."
-status = "implemented"
+status = "tested"
 symbols = ["delta_elasticities", "delta_model", "leontief_multiplier"]
 files = ["src/closures/labor/labor.jl", "src/core/equilibrium.jl"]
 references = ["docs/closures/delta.md", "ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
-tests = []
+tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/scripts/verify_v3.jl"]
 dead_ends = []
 adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
-    "contract tests",
     "Type I vs Type II multiplier identification unresolved (cbase2/review.md §1)",
     "exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5)",
 ]
@@ -145,17 +143,17 @@ id = "F1"
 name = "Preference reallocation"
 formulation = "beta_tilde_i = beta_i d_i / sum_j beta_j d_j; sum_i p_i c_i^h = E_h; budget-neutral composition shift"
 interpretation = "Compositional household demand shift; the budget closes by construction within fixed household expenditure; government spending untouched."
-status = "implemented"
+status = "tested"
 symbols = ["PreferenceReallocation"]
 files = ["src/closures/financing/financing.jl"]
 references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
-tests = []
+tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = ["DE-0001"]
 adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
-    "contract tests",
     "matrix cell not yet run",
+    "v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md)",
 ]
 notes = "A demand-composition shifter, not a financing closure in the CGE taxonomy (cbase2/review.md §1). Must never be described as an autonomous investment multiplier (ROADMAP.md section 4.3; docs/DOCS_ASSESSMENT.md, verdict warning)."
 
@@ -164,18 +162,18 @@ id = "F2"
 name = "Tax-financed public investment"
 formulation = "sum_i p_i g_i = T(p); lump-sum / balanced-budget tax"
 interpretation = "Autonomous public investment financed by an explicit tax counterparty (balanced government budget)."
-status = "implemented"
+status = "tested"
 symbols = ["TaxFinanced"]
 files = ["src/closures/financing/financing.jl"]
 references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
-tests = []
+tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = []
 adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
-    "contract tests",
     "matrix cell not yet run",
     "budget helper pricing inconsistency noted in review §2.7",
+    "v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md)",
 ]
 notes = "public_budget prices at sum(gov_demand) while taxes are dot(p, gov_demand) (cbase2/review.md §2.7), so government budget reports fail as soon as p != 1. The tax is implemented as an endogenous rate tau = dot(p, gG + g) / (w * sum L) on wage income; with one representative household the burden T(p) is effectively lump-sum."
 
@@ -184,17 +182,17 @@ id = "F3"
 name = "External / debt-financed programme"
 formulation = "sum_i p_i g_i = F; external balance F"
 interpretation = "Net new expenditure with an external counterpart; resources arrive via the external balance (imports serve the investment). It is an accounting open-economy closure, not a monetary mechanism."
-status = "implemented"
+status = "tested"
 symbols = ["ExternalDebt"]
 files = ["src/closures/financing/financing.jl"]
 references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
-tests = []
+tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = []
 adrs = ["ADR-0002", "ADR-0005"]
 open_gates = [
-    "contract tests",
     "matrix cell not yet run",
     "external_balance returns only the programme's import content (review §2.8)",
+    "v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md)",
 ]
 notes = "Not a full current-account closure (cbase2/review.md §1). external_balance returns only the programme's import content (cbase2/review.md §2.8), and the recorded F = 0.00147 figure is ambiguous: about half of dot(p, m .* g) at baseline."

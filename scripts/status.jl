@@ -393,4 +393,6 @@ function main()::Nothing
     return nothing
 end
 
-main()
+if abspath(PROGRAM_FILE) == abspath(@__FILE__)
+    main()
+end

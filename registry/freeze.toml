@@ -12,13 +12,14 @@ path = "cbase2"
 kind = "submission-snapshot"
 status = "frozen"
 # Re-pinned 2026-09-17 by ADR-0011 (notebook 01 conformed in place); the original
-# freeze point is preserved in the two keys below it.
-recorded_commit = "6d66265fc98d9dd660ce201aca52348e6e9ecf17"
-recorded_commit_short = "6d66265"
-last_touch_commit = "6d66265fc98d9dd660ce201aca52348e6e9ecf17"
-last_touch_subject = "conform cbase2 notebook 01 to the canonical kernel (ADR-0011)"
+# freeze point is preserved in the two keys below it. Re-pinned again 2026-09-17
+# (ADR-0012 session): the executed notebook state was committed (ad7e689).
+recorded_commit = "ad7e689"
+recorded_commit_short = "ad7e689"
+last_touch_commit = "ad7e689"
+last_touch_subject = "cbase2: commit the conformed notebook 01 execution state (ADR-0011 in-flight follow-up)"
 last_touch_date = "2026-09-17"
-tree_hash = "8a28d1e8cb96a3c48c18b3f8654820ca88ba67a9"
+tree_hash = "61044321b62f2d83f2f2dd7972a003f8ea23e439"
 tracked_files = 46
 original_freeze_commit = "dfd60a21f3d816ae9a8d3c55eaa8a3c7a8f45fc7"
 original_freeze_commit_short = "dfd60a2"
@@ -27,11 +28,11 @@ reason = "Self-contained cbase2 pipeline for the Metroeconomica revision (5 x 3 
 successor = "root src/, the reproducible baseline per ROADMAP.md section 3; Phase 2 promotes BETA/DELTA/F1-F3 from cbase2."
 open_items = [
     "Tornqvist real-GDP base is still the v2 form; every v3 aggregate is contaminated until the base is household_baseline (c0_gross) -- F2's -24.6% is an artifact of the broken base",
-    "F3 mobile solve stalls at max residual ~2e-4; the BETA eta-continuation ran >25 min without completing. Root-kernel status (ADR-0010): the stall is the review section 4 conditioning/fold problem, not the equation count; measured 4.3e-4 on the real 70-sector calibration at the reference rung (both N-1+CPI and all-N formulations)",
+    "F3 mobile solve stalls at max residual ~2e-4; the BETA eta-continuation ran >25 min without completing. RESOLVED (ADR-0012, 2026-09-17): the stall was the clamp hole spread over the markets (clamp mass / N = 4.3e-4 measured); under the A-bill calibration the standing solve() reaches machine tolerance (exo=1: 3.5e-18, exo=0.8: 4.4e-16, F2 programme: 2.2e-15)",
     "S = I + X - M canary: RESOLVED IN THE ROOT KERNEL (ADR-0010) as a residual external account -- the mobile system keeps N-1 clearings plus the CPI numeraire, the omitted N-th market is exposed by market_clearing_residuals and asserted against S-(I+X-M) by external_balance_canary. The pre-0f33ad6 all-N revisefinal form over-determined open economies and had no exact root (v3 fixture F3 floor 9.0e-3 with a stationary least-squares gradient); revisefinal later reverted to the same N-1+CPI form via 0f33ad6 (ADR-0010 amendment 2026-09-17)",
     "theta bounded at 1 (Cobb-Douglas intermediates) after theta < 1 instability; the theta = 1, k = 0 continuation stalls at 3.1e-4",
     "Sector-71 / high-self-loop class instability under theta < 1: RESOLVED IN THE ROOT KERNEL (ADR-0010) -- retained_dataset rebuilds the raw IO table and asserts Omega rows sum to 1 and Sum labor_share = 1 (70s: s = 0.410965, E_h0 = 0.783259; reduced: s = 0.386970, clamp 0.091363)",
-    "External review: baseline clamp mass 0.086197 GDP units (70s) stays UNRECONCILED (finding 2.5); the pre-drop 71-sector headline numbers are superseded by the retained pipeline (full s = 0.397878, tau0 = 0.214101; 70s s = 0.410965, tau0 = 0.216741); GAMMA labelling issue recorded in registry/closures.toml",
+    "External review: baseline clamp mass 0.086197 GDP units (70s) — RESOLVED (ADR-0012, 2026-09-17): the A-bill calibration eliminates the clamp entirely (c0 = the table's own household final demand; 0 negatives by identity); headline numbers re-anchored to s = 0.1199 (full) / 0.1285 (70s), intermediate imports 0.2214/0.2237 explicit in the external account; the external-identity canary shows -2.6e-2 (the raw table's reconciliation gap, flagged, pending the discrepancy-item decision); GAMMA labelling issue recorded in registry/closures.toml",
 ]
 kernel_diffs = ["src/core/interface.jl", "src/core/mobile_labor.jl"]
 notes = "Notebooks 04-08 are listed as pending and do not exist; only 01-03 exist. documentation.md's layout also names src/validation.jl and scripts/run_{reference,matrix,sobol}.jl (not on disk), and its pending row names src/closures.jl, which does exist. review.md is pinned to commits 17c5730..3dd0d60 (pre-freeze) and reports a conditioning/fold solver problem rather than an init-setup issue. Phase 2 backport (ADR-0005): the recorded DIFFs were backported into the root kernel (src/core/accounting.jl, src/core/equilibrium.jl, src/closures/). Resolved as kernel changes: Tornqvist base (household_baseline, with legacy-default compatibility), residual-gated LM polish (F3 stall), all-N fixed formulation with w=1 numeraire (omitted-N item), and the theta/epsilon CD-limit guards (theta continuation). calibration.jl remains frozen/unported (Phase 3); diff_kernel.jl is retired as a checker (frozen snapshots keep recorded parent commits as history; file stays as history). Hashes/commits above unchanged. ADR-0010 (root kernel): retained_dataset/retained_io_table port (review 2.2/2.3); eta in {0,1} with the allocation wedge retired; mobile N-1 clearing + CPI with the asserted residual-external-account canary (review 2.1; revisefinal later reverted to the same N-1+CPI form via 0f33ad6 -- see ADR-0010 amendment 2026-09-17); baseline clamp (2.5) left open. The frozen cbase2 tree is otherwise unchanged: it intentionally still contains the pre-fix code (all-N mobile form, dormant allocation wedge, ad keyword bug in cbase2/src/solvers.jl, all-ones F1 stand-in, eta = 0.5) per ADR-0001; ADR-0011 (2026-09-17) then conformed `01_data_wrangling.ipynb` in place (label-based schema, opt-in GLMakie figure, non-fatal kernel cross-check) and re-pinned this record to the conforming commit -- original freeze commit/tree hash preserved in `original_freeze_commit` / `original_freeze_tree_hash` above. Notebooks 02/03, `cbase2/src/`, the raw data, the tracked `data_processed/` artifacts and the prose records are untouched by that amendment."

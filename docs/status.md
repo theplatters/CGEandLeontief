@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `c206280` (dirty)
+Generated 2026-09-17 by `scripts/status.jl` · branch `reorg` · HEAD `e8202f3` (clean)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -20,20 +20,20 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
 
 | ID | Status | Formulation | Implementation | Tests | Dead ends | Open gates |
 | --- | --- | --- | --- | --- | --- | --- |
-| ALPHA | implemented | sum_i L_i = Lbar; one economy-wide flexible wage; full cost-minimizing allocation (BF eta = 1) | src/mobile_labor.jl | tests/test_mobile_labor.jl | DE-0002 | Phase-4 residual gates (ROADMAP.md); a recorded run manifest; matrix cell not yet run |
-| BETA | implemented | sum_i L_i = Lbar * ((w/P)/(w0/P0))^eta_s | cbase2/src/closures.jl |  | DE-0004 | promotion from cbase2 to src/; contract tests; labour-leisure income effect not implemented (cbase2/review.md §1); w0 anchor vs baseline wage (cbase2/review.md §3.4); v3 continuation times out (cbase2/process_comments.md, 2026-09-16) |
-| BF | implemented | L_i = L_fixed_i^(1-eta) * L_costmin_i^eta, with sum_i L_i = Lbar; eta in [0,1] (extrapolation outside) | src/mobile_labor.jl | tests/test_mobile_labor.jl | DE-0001, DE-0002, DE-0004 | zero-profit/budget consistency for eta < 1 (cbase2/review.md §2.4): the wedge is distributed to no one and p·y does not equal wL + p·int; the ad-hoc efficiency wedge is not derived (cbase2/review.md §1; docs/labor_closures.md:64-79); Phase-4 residual gates (ROADMAP.md): omitted-equation invariance, household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency; a recorded run manifest |
-| DELTA | implemented | GAMMA (w/P = 1) + Leontief limit of the CES core (theta, epsilon, sigma -> 0+) with full cost-minimizing allocation (eta = 1) | cbase2/src/closures.jl |  |  | promotion from cbase2 to src/; Type I vs Type II multiplier identification unresolved (cbase2/review.md §1); exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5) |
-| GAMMA | implemented | w/P = wbar (= 1); employment endogenous and uncapped | src/mobile_labor.jl | tests/test_fixed_closure.jl | DE-0003 | the canonical one-sided wage floor with rationed employment is not implemented (that is ZETA; cbase2/review.md §1); matrix cell not yet run |
+| ALPHA | implemented | sum_i L_i = Lbar; one economy-wide flexible wage; full cost-minimizing allocation (BF eta = 1) | src/core/equilibrium.jl, src/closures/labor/types.jl | tests/test_mobile_labor.jl | DE-0002 | Phase-4 residual gates (ROADMAP.md); a recorded run manifest; matrix cell not yet run |
+| BETA | implemented | sum_i L_i = Lbar * ((w/P)/(w0/P0))^eta_s | src/closures/labor/types.jl, src/closures/labor/labor.jl, src/core/equilibrium.jl |  | DE-0004 | contract tests; labour-leisure income effect not implemented (cbase2/review.md §1); w0 anchor vs baseline wage (cbase2/review.md §3.4); v3 continuation times out (cbase2/process_comments.md, 2026-09-16) |
+| BF | implemented | L_i = L_fixed_i^(1-eta) * L_costmin_i^eta, with sum_i L_i = Lbar; eta in [0,1] (extrapolation outside) | src/core/equilibrium.jl, src/closures/labor/types.jl | tests/test_mobile_labor.jl | DE-0001, DE-0002, DE-0004 | zero-profit/budget consistency for eta < 1 (cbase2/review.md §2.4): the wedge is distributed to no one and p·y does not equal wL + p·int; the ad-hoc efficiency wedge is not derived (cbase2/review.md §1; docs/labor_closures.md:64-79); Phase-4 residual gates (ROADMAP.md): omitted-equation invariance, household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency; a recorded run manifest |
+| DELTA | implemented | GAMMA (w/P = 1) + Leontief limit of the CES core (theta, epsilon, sigma -> 0+) with full cost-minimizing allocation (eta = 1) | src/closures/labor/labor.jl, src/core/equilibrium.jl |  |  | contract tests; Type I vs Type II multiplier identification unresolved (cbase2/review.md §1); exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5) |
+| GAMMA | implemented | w/P = wbar (= 1); employment endogenous and uncapped | src/core/equilibrium.jl, src/closures/labor/types.jl | tests/test_fixed_closure.jl | DE-0003 | the canonical one-sided wage floor with rationed employment is not implemented (that is ZETA; cbase2/review.md §1); matrix cell not yet run |
 | ZETA | idea | 0 <= Lbar - L _\|_ w/P - omega_bar >= 0 (complementarity / one-sided real-wage floor) |  |  | DE-0007 | equations; calibration; implementation; tests; MPEC/smoothing formulation required because plain square solvers cannot express it (cbase2/review.md §4) |
 
 ## Financing closures
 
 | ID | Status | Formulation | Implementation | Tests | Dead ends | Open gates |
 | --- | --- | --- | --- | --- | --- | --- |
-| F1 | implemented | beta_tilde_i = beta_i d_i / sum_j beta_j d_j; sum_i p_i c_i^h = E_h; budget-neutral composition shift | cbase2/src/financing.jl |  | DE-0001 | promotion to src/; matrix cell not yet run |
-| F2 | implemented | sum_i p_i g_i = T(p); lump-sum / balanced-budget tax | cbase2/src/financing.jl |  |  | promotion to src/; matrix cell not yet run; budget helper pricing inconsistency noted in review §2.7 |
-| F3 | implemented | sum_i p_i g_i = F; external balance F | cbase2/src/financing.jl |  |  | promotion to src/; matrix cell not yet run; external_balance returns only the programme's import content (review §2.8) |
+| F1 | implemented | beta_tilde_i = beta_i d_i / sum_j beta_j d_j; sum_i p_i c_i^h = E_h; budget-neutral composition shift | src/closures/financing/financing.jl |  | DE-0001 | contract tests; matrix cell not yet run |
+| F2 | implemented | sum_i p_i g_i = T(p); lump-sum / balanced-budget tax | src/closures/financing/financing.jl |  |  | contract tests; matrix cell not yet run; budget helper pricing inconsistency noted in review §2.7 |
+| F3 | implemented | sum_i p_i g_i = F; external balance F | src/closures/financing/financing.jl |  |  | contract tests; matrix cell not yet run; external_balance returns only the programme's import content (review §2.8) |
 
 ## Scenario matrix
 
@@ -122,7 +122,7 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
   - open: Sector-71 / high-self-loop class instability under theta < 1; drop_sectors breaks CES share normalization (0.971 for the 70s variant, 0.549 for reduced)
   - open: External review: baseline clamp mass ~8.7% of GDP (0.0873 GDP units); stale 71-sector headline numbers (s = 0.398, tau0 = 0.214, X = 0.422, I = 0.162); GAMMA labelling issue
   - successor: root src/, the reproducible baseline per ROADMAP.md section 3; Phase 2 promotes BETA/DELTA/F1-F3 from cbase2.
-  - notes: Notebooks 04-08 are listed as pending and do not exist; only 01-03 exist. documentation.md's layout also names src/validation.jl and scripts/run_{reference,matrix,sobol}.jl (not on disk), and its pending row names src/closures.jl, which does exist. review.md is pinned to commits 17c5730..3dd0d60 (pre-freeze) and reports a conditioning/fold solver problem rather than an init-setup issue; backport of the kernel DIFFs to parent src/ is pending.
+  - notes: Notebooks 04-08 are listed as pending and do not exist; only 01-03 exist. documentation.md's layout also names src/validation.jl and scripts/run_{reference,matrix,sobol}.jl (not on disk), and its pending row names src/closures.jl, which does exist. review.md is pinned to commits 17c5730..3dd0d60 (pre-freeze) and reports a conditioning/fold solver problem rather than an init-setup issue. Phase 2 backport (ADR-0005): the recorded DIFFs were backported into the root kernel (src/core/accounting.jl, src/core/equilibrium.jl, src/closures/). Resolved as kernel changes: Tornqvist base (household_baseline, with legacy-default compatibility), residual-gated LM polish (F3 stall), all-N fixed formulation with w=1 numeraire (omitted-N item), and the theta/epsilon CD-limit guards (theta continuation). calibration.jl remains frozen/unported (Phase 3); diff_kernel.jl is retired as a checker (frozen snapshots keep recorded parent commits as history; file stays as history). Hashes/commits above unchanged.
 
 ## Dead ends
 
@@ -142,6 +142,7 @@ Scenarios: **21** rows — planned: 15, provisional: 3, failed: 3. Designs: `cba
 - [ADR-0002 — Closure taxonomy and stable IDs](decisions/ADR-0002-closure-taxonomy.md)
 - [ADR-0003 — `registry/` is the single source of truth](decisions/ADR-0003-registry-single-source-of-truth.md)
 - [ADR-0004 — Runs are immutable, manifest-backed records](decisions/ADR-0004-runs-are-immutable-manifests.md)
+- [ADR-0005 — Phase 2 layout and cbase2 backport](decisions/ADR-0005-phase2-layout-and-backport.md)
 
 ## Warnings
 

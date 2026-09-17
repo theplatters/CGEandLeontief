@@ -1,0 +1,18 @@
+schema_version = 1
+
+[designs.matrix_5x3]
+git_commit = "66b02016735926ce14a86051cb5d10a93179e9c0"
+note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the 70-sector v3 open-economy calibration"
+registered_at = "2026-09-17T11:53:12"
+design_sha256 = "7fb9dad00975b83c4a534bf1d331f26ccf03ae94d95fcc8ea8b153ea783c28c1"
+actor = "phase3-agent"
+
+    [designs.matrix_5x3.pinned]
+    sigma = 0.9
+    theta = 0.5
+    f1_shift = "one_plus_psi"
+    epsilon = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    eta = 0.5
+    programme_year = 2024

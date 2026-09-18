@@ -402,7 +402,7 @@ Stage 2 run (headline quantities per cell; sectoral detail deferred):}
 | GAMMA (sticky real wage) | Composition shift; small positive employment response | The extensive-margin result: employment absorbs the shock (current: +19.3 pp at mult 10) | Employment absorbs the domestically-produced share; imports take the rest |
 | DELTA (IO endpoint, corner) | IO multiplier on the compositional shift (value-added effects) | IO multiplier net of the tax withdrawal | Full IO multiplier with import-adjusted inverse; external deficit = $F$ |
 
-\textcolor{revisionV4}{Measured values for every cell are in section 4.2. Three readings of the table above need correction: the BF row's label carries the retired interpolated eta-star (the endpoints eta in {0,1} are what runs); the parenthetical \"current: +19.3 pp at mult 10\" is a retired UNFINANCED result; and \"external deficit = F\" describes the gross external inflow, not the net position the model reports (section 4.2; the decomposition is in \texttt{paper/tables/matrix\_5x3\_v2\_flows.md}).}
+\textcolor{revisionV4}{Measured values for every cell are in section 4.2. Three readings of the table above need correction: the BF row's label carries the retired interpolated eta-star (the endpoints eta in {0,1} are what runs); the parenthetical \"current: +19.3 pp at mult 10\" is a retired UNFINANCED result; and \"external deficit = F\" describes the gross external inflow, not the net position the model reports (section 4.2; the decomposition is in \texttt{paper/tables/matrix\_5x3\_v3\_flows.md}).}
 
 \textcolor{revisionV1}{Limit relations across the matrix (reported as
 results, not hidden as redundancy): BF at $\eta = 1$ coincides with
@@ -558,7 +558,7 @@ finite-difference/least-squares experiments do not suffice.}
 
 ## Matrix results: the 5 x 3 evaluation on the A-bill calibration \textcolor{revisionV4}{\normalsize [added v5]}
 
-\textcolor{revisionV4}{Design \texttt{matrix\_5x3\_v3} (the ADR-0014/ADR-0015 generation): 15 of 15 cells executed, no locked and no dropped scenarios. Below is the pre-registered headline set -- Tornqvist real GDP against the baseline, employment, and the model's own identity-consistent external position (the omitted-market canary, S - (I+X-M) + T). The per-cell accounting decomposition (saving, tax, investment plus exports, and the three import components) is in \texttt{paper/tables/matrix\_5x3\_v2\_flows.md}; the paper cites the \texttt{matrix\_5x3-v3-*} run ids.}
+\textcolor{revisionV4}{Design \texttt{matrix\_5x3\_v3} (the ADR-0014/ADR-0015 generation): 15 of 15 cells executed, no locked and no dropped scenarios. Below is the pre-registered headline set -- Tornqvist real GDP against the baseline, employment, and the model's own identity-consistent external position (the omitted-market canary, S - (I+X-M) + T). The per-cell accounting decomposition (saving, tax, investment plus exports, and the three import components) is in \texttt{paper/tables/matrix\_5x3\_v3\_flows.md}; the paper cites the \texttt{matrix\_5x3-v3-*} run ids.}
 
 | Cell | Real GDP rel. | Employment | Net external position |
 | --- | ---: | ---: | ---: |

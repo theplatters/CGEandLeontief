@@ -84,3 +84,20 @@ actor = "hermes-agent"
     exo_scale_steps = 6
     eta = 1.0
     programme_year = 2024
+
+[designs.matrix_5x3_v5]
+git_commit = "0f37d9f5deeb000c8c3081234020502a8b5eda6a"
+note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration under ADR-0014/ADR-0015/ADR-0018/ADR-0019 (real-wage elastic supply; verified scale-determinacy guard; monotone polish to 1e-10; income-side real GDP vs welfare measurement; all-N clearing with the explicit external account F and F3 programme financing B_gov). Supersedes the v4 generation for citation, whose runs stay as history."
+registered_at = "2026-09-18T12:07:21"
+design_sha256 = "9997dea0f4e6c9743f9ef2d4e24805ca86ee52602f129ce7b60e0924c07b444c"
+actor = "hermes-agent"
+
+    [designs.matrix_5x3_v5.pinned]
+    sigma = 0.9
+    theta = 0.5
+    f1_shift = "tilt_g0_over_c0"
+    epsilon = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    eta = 1.0
+    programme_year = 2024

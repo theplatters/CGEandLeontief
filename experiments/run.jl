@@ -15,7 +15,8 @@
 #   any run dir) when the design file is not preregistered with a matching
 #   SHA-256. The design's reference continuation is computed once per batch
 #   and its final solution warm-starts all mobile cells and anchors `consumption`
-#   (the GDP reference is 1 by construction).
+#   (the GDP reference is 1 by construction). The canonical mobile unknown
+#   vector is 2N+2 `[p; y; w; F]` (ADR-0019); fixed cells use `[p; y]`.
 #
 # Run layout: `runs/<run_id>/manifest.toml` (written `running` at cell start,
 # `executed`/`failed` at the end), `log.txt` (appended progress lines),
@@ -268,8 +269,11 @@ each solve (first init from the linear fixed point
 `y0 = (I − Gk) \\ b`), stopping a ladder early when `max|p−1| > 10`.
 
 `design.theta` must equal the final ladder value. Returns a NamedTuple
-with `data` (final, `exo_scale = 1`), `sol`, `init_warm = [p; q; w]`,
-`resid`, `w_star`, `max_p_dev`, and the `S = I + X − M` canary.
+with `data` (final, `exo_scale = 1`), `sol`, `init_warm = [p; q; w; F]`
+(canonical 2N+2 mobile vector, ADR-0019), `resid`, `w_star`, `max_p_dev`,
+the external-account identity gap
+(`canary_diff = S + T + M − (I+X) − (F + B_gov)`) and the booked
+`external_position = F + B_gov`.
 
 Smoke path: with `data` given, the calibration (read/drop/bisect/loop) is
 skipped and a single θ ladder runs on the passed `Data` (tests use this
@@ -340,6 +344,7 @@ function _theta_ladder(data::Data, shocks::Shocks, thetas::Vector{Float64},
         if init_warm === nothing
             # Very first solve: warm start from the linear fixed point (exact
             # on real calibrations; singular toy fixtures fall back to λ).
+            # Canonical 2N+2 mobile vector (ADR-0019): F = 0 first.
             (; Ω_raw, factor_share, consumption_share, import_margin,
                 gov_demand, exo_demand, exports_demand) = data
             init_warm = try
@@ -347,14 +352,14 @@ function _theta_ladder(data::Data, shocks::Shocks, thetas::Vector{Float64},
                 Gk = M0 + Diagonal(1.0 .- import_margin) * consumption_share *
                     factor_share' * (1 - data.saving_rate) * (1 - sum(gov_demand))
                 y0 = (I - Gk) \ ((1.0 .- import_margin) .* (gov_demand .+ exo_demand) .+ exports_demand)
-                [ones(N); y0; 1.0]
+                [ones(N); y0; 1.0; 0.0]
             catch
-                [ones(N); data.λ; 1.0]
+                [ones(N); data.λ; 1.0; 0.0]
             end
         end
         ref_sol = solve(ref; init = init_warm)
         mxp = maximum(abs.(ref_sol.prices_raw .- 1))
-        init_warm = [ref_sol.prices_raw; ref_sol.quantities; ref_sol.wages_raw[1]]
+        init_warm = [ref_sol.prices_raw; ref_sol.quantities; ref_sol.wages_raw[1]; ref_sol.external_transfer]
         @info "reference rung" theta = θ resid =
             maximum(abs, equilibrium_residuals(ref, init_warm)) w_star = ref_sol.wages_raw[1] max_p_dev = mxp
         mxp > 10 && (@warn "exploded branch; stopping the θ ladder"; break)
@@ -363,39 +368,60 @@ function _theta_ladder(data::Data, shocks::Shocks, thetas::Vector{Float64},
 end
 
 """
-    assert_external_canary(model, sol)
+    assert_external_account(model, sol; clearing_tol = 1e-6, gap_tol = 1e-9)
 
-Assert the review-2.1 canary identity at a mobile η = 1 solution: the omitted
-N-th market residual (`market_clearing_residuals`) must equal the
-external-account imbalance `S − (I+X−M)` (`external_balance_canary`). Fixed
-closures enforce all N clearings and η = 0 additionally carries the
-fixed-allocation gap, so both are exempt.
+ADR-0019 external-account acceptance gate. Every regime enforces all N
+goods-market clearings with the explicit external account: build the
+canonical vector `X = [p; q]` (fixed) or `[p; q; w; F]` (mobile, with
+`F = sol.external_transfer`) and assert
+`maximum(abs, market_clearing_residuals(model, X)) < clearing_tol` for
+every closure. At η = 1 (non-fixed mobile and fixed-wage) additionally
+assert the external-account identity gap
+`abs(external_balance_canary(model, X).diff) < gap_tol`, where
+`diff = S + T + M − (I+X) − (F + B_gov)`. At the η = 0 (BF) endpoint the
+all-N clearings hold but the canary carries the documented
+fixed-allocation/factor-market gap (zero-profit prices the
+cost-minimizing labour demand, not the frozen baseline allocation;
+measured order 4e-4..8e-3 on full-71), so it is only checked for
+finiteness there, never gated.
 """
-function assert_external_canary(model::Model, sol::Solution)
-    labor_closure(model.options) isa FixedWageClosure && return nothing
-    model.options.elasticities.η == 1.0 || return nothing
-    X = [sol.prices_raw; sol.quantities; sol.wages_raw[1]]
-    market = dot(sol.prices_raw, market_clearing_residuals(model, X))
-    canary = external_balance_canary(model, X)
-    isapprox(market, canary.diff; atol = 1e-6) || error(
-        "external-account canary mismatch: omitted market residual = $market, " *
-        "S − (I+X−M) = $(canary.diff) (review finding 2.1, ADR-0010)")
+function assert_external_account(model::Model, sol::Solution;
+        clearing_tol::Real = 1e-6, gap_tol::Real = 1e-9)
+    fixed = labor_closure(model.options) isa FixedWageClosure
+    p, q = sol.prices_raw, sol.quantities
+    w = sol.wages_raw[1]
+    X = fixed ? [p; q] : [p; q; w; sol.external_transfer]
+    clearing = maximum(abs, market_clearing_residuals(model, X))
+    clearing < clearing_tol || error(
+        "external-account clearing failure: max|market_clearing_residuals| = $clearing " *
+        ">= $clearing_tol (ADR-0019: all N markets must clear)")
+    model.options.elasticities.η == 1.0 || begin
+        # η = 0 (BF) endpoint: the identity gap is the fixed-allocation /
+        # factor-market gap, reported but not gated.
+        gap = external_balance_canary(model, X).diff
+        isfinite(gap) || error("external-account identity gap is non-finite at η = 0: $gap")
+        return nothing
+    end
+    gap = abs(external_balance_canary(model, X).diff)
+    gap < gap_tol || error(
+        "external-account identity gap failure: |diff| = $gap >= $gap_tol " *
+        "(ADR-0019: S + T + M − (I+X) = F + B_gov at η = 1)")
     return nothing
 end
 
-"""Final reference solution plus the asserted `S = I + X − M` canary."""
+"""Final reference solution plus the asserted ADR-0019 external account."""
 function _reference_result(data::Data, ref_sol::Solution, init_warm::Vector{Float64})::NamedTuple
     p = ref_sol.prices_raw
     w = ref_sol.wages_raw[1]
     L = sum(sectoral_labor_demand(p, ref_sol.quantities, w, ref_sol.model))
-    X = [p; ref_sol.quantities; w]
+    X = [p; ref_sol.quantities; w; ref_sol.external_transfer]
     canary = external_balance_canary(ref_sol.model, X)
-    assert_external_canary(ref_sol.model, ref_sol)
+    assert_external_account(ref_sol.model, ref_sol)
     return (data = data, sol = ref_sol, init_warm = init_warm,
         resid = maximum(abs, equilibrium_residuals(ref_sol.model, X)),
         w_star = w, employment = L, max_p_dev = maximum(abs.(p .- 1)),
         canary_s = canary.S, canary_ixm = canary.IX - canary.M,
-        canary_diff = canary.diff)
+        canary_diff = canary.diff, external_position = canary.financing)
 end
 
 # ── Cell construction ──────────────────────────────────────────────────
@@ -491,8 +517,9 @@ gate_frag(name::AbstractString, value::Real, tol::Real, pass::Bool) =
 
 """
 Evaluate a solved cell: residual / budget / labour-or-wage gates, headline
-metrics (against the reference solution), and the `S = I + X − M` canary
-plus `external_balance` / `public_budget` diagnostics (never gates).
+metrics (against the reference solution), and the ADR-0019 external-account
+identity gap (`S + T + M − (I+X) − (F + B_gov)`) plus `external_balance` /
+`public_budget` diagnostics (never gates).
 """
 function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
         model::Model, sol::Solution, ref_sol::Solution)::NamedTuple
@@ -507,10 +534,11 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
 
     p, q = sol.prices_raw, sol.quantities
     w = sol.wages_raw[1]
-    X = fixed ? [p; q] : [p; q; w]
+    X = fixed ? [p; q] : [p; q; w; sol.external_transfer]
     resid = maximum(abs, equilibrium_residuals(model, X))
     L_sum = sum(sectoral_labor_demand(p, q, w, model))
-    E = household_expenditure(fin, model, w * L_sum, p, L_sum)
+    E = household_expenditure(fin, model, w * L_sum, p, L_sum;
+        external_transfer = sol.external_transfer)
     budget = abs(dot(p, sol.consumption) - (1 - data.saving_rate) * E)
     resid_pass = resid < residual_tol
     budget_pass = budget < budget_tol
@@ -534,11 +562,12 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
         gate_frag("budget", budget, budget_tol, budget_pass) * "; " *
         gate_frag(third_name, third_value, third_tol, third_pass)
 
-    # Value-consistent external-account canary (review finding 2.1, ADR-0010):
-    # recorded for every cell and asserted for mobile η = 1 cells, where the
-    # omitted N-th market residual must equal S − (I+X−M).
-    assert_external_canary(model, sol)
-    canary = external_balance_canary(model, [p; q; fixed ? 1.0 : w])
+    # ADR-0019 external account: every cell asserts all-N clearing; η = 1
+    # cells additionally assert the identity gap
+    # S + T + M − (I+X) − (F + B_gov) ≈ 0 (at η = 0 the gap is the
+    # fixed-allocation factor-market gap, reported but not gated).
+    assert_external_account(model, sol)
+    canary = external_balance_canary(model, X)
     comp = gdp_components(model, sol)
     return (
         gates = Dict{String,Any}(
@@ -554,7 +583,10 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
             "consumption" => cons, "consumption_rel" => cons - 1,
             "employment" => L_sum, "wage" => w,
             "nominal_gdp" => nominal_gdp(sol),
-            "max_abs_price_dev" => maximum(abs.(p .- 1))),
+            "max_abs_price_dev" => maximum(abs.(p .- 1)),
+            "external_transfer" => sol.external_transfer,
+            "programme_financing" => canary.programme_financing,
+            "external_position" => canary.financing),
         diagnostics = Dict{String,Any}(
             "canary_s" => canary.S, "canary_ixm" => canary.IX - canary.M,
             "canary_diff" => canary.diff,

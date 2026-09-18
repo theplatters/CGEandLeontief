@@ -31,13 +31,14 @@ final solution as the warm start for all mobile cells and as the
 `saving_rate ≥ 0` → `exo_scale` steps × the θ ladder with
 `mobile_labor_model(data, shocks, θ, 0.5, 0.9, η)` (`NoFinancing`; the
 design's reference η ∈ {0,1}), warm-starting each solve (first init from
-the linear fixed point `y0 = (I − Gk) \\ b`), stopping a ladder early when
+the linear fixed point `y0 = (I − Gk) \\ b`, with `F = 0` appended for the
+canonical 2N+2 mobile vector `[p; y; w; F]`, ADR-0019), stopping a ladder early when
 `max|p−1| > 10`. `[reference] theta` must equal the final ladder value.
-Cells then warm-start from `[p; q; w]`. At mobile η = 1 solutions the
-reference asserts the external-account canary (the omitted N-th market
-residual equals `S − (I+X−M)`; review finding 2.1, ADR-0010). (On singular
+Cells then warm-start from `[p; y; w; F]`. At mobile η = 1 solutions the
+reference asserts the ADR-0019 external account: all N goods markets clear
+and the identity gap `S + T + M − (I+X) − (F + B_gov)` is ≈ 0. (On singular
 toy fixtures, where `(I − Gk)` is not invertible, the first init falls
-back to `[ones(N); λ; 1.0]`; real calibrations always take the
+back to `[ones(N); λ; 1.0; 0.0]`; real calibrations always take the
 linear-fixed-point branch.)
 
 ## Cell construction
@@ -91,7 +92,9 @@ is caught and recorded (`[error]` with type/message; `[gates] overall =
 "fail"` without per-gate values); the batch continues (an infrastructure
 failure outside the cell's own manifest is reported as `error` for that
 cell). `TOML.print` may render some tables non-inline; the
-parsed structure is the contract.
+parsed structure is the contract. The ADR-0019 external-account generation
+is `matrix_5x3_v5` with run ids `matrix_5x3-v5-*`; it supersedes v4 for
+citation while v4 stays as history (ADR-0004).
 
 - Top level: `schema_version` (= 2), `run_id`, `design`, `cell`, `status`,
   `date` (ISO), `actor`.
@@ -109,19 +112,28 @@ parsed structure is the contract.
   `wage` for fixed+DELTA) a table with `value`, `tolerance`, `pass`;
   `overall = "pass" | "fail"`. Gate definitions: `residual` =
   `maximum(abs, equilibrium_residuals(model, X)) < residual_tol` with
-  `X = [p; q]` (fixed) or `[p; q; w]` (mobile); `budget` = `|Σ p·c −
+  `X = [p; q]` (fixed) or `[p; q; w; F]` (mobile, `F =
+  sol.external_transfer`, ADR-0019); `budget` = `|Σ p·c −
   (1−s)E| < budget_tol` with `E = household_expenditure(fin, model, w*L,
-  p, L)`; `labour` = the kernel `labor_market_residual` at `(L_sum, w)`
+  p, L; external_transfer = sol.external_transfer)`; `labour` = the kernel `labor_market_residual` at `(L_sum, w)`
   below `labour_tol`; `wage` = `max|w_raw−1| < wage_tol` on the raw pinned
-  wage (the CPI-normalized wage must not enter the gate).
+  wage (the CPI-normalized wage must not enter the gate). The acceptance
+  gate is all-N clearing plus the external-account identity gap at η = 1
+  (`assert_external_account` in `run.jl`: `maximum(abs,
+  market_clearing_residuals(model, X)) < 1e-6` for every closure, and
+  `abs(external_balance_canary(model, X).diff) < 1e-9` at η = 1; at the
+  η = 0 endpoint the gap is the reported factor-market gap, not gated).
 - `[metrics]`: `gdp`, `gdp_rel`, `gdp_expenditure`, `gdp_expenditure_rel`,
   `gdp_deflator`, `gdp_wedge`, `consumption`, `consumption_rel`, `employment`,
-  `wage`, `nominal_gdp`, `max_abs_price_dev`. `gdp` is the ADR-0018
+  `wage`, `nominal_gdp`, `max_abs_price_dev`, `external_transfer`,
+  `programme_financing`, `external_position` (`= F + B_gov`, the booked net
+  external position; schema v2). `gdp` is the ADR-0018
   income-side real GDP index against the batch reference, `consumption` the
   household-consumption (welfare) index; old v1 manifests (with `real_gdp*`)
   stay as immutable history.
 - `[diagnostics]` (never gates): `canary_s`, `canary_ixm`, `canary_diff`
-  (`S = I + X − M`), `gdp_c`, `gdp_g`, `gdp_i`, `gdp_x`, `gdp_m_final`,
+  (the ADR-0019 external-account identity gap `S + T + M − (I+X) − (F +
+  B_gov)`), `gdp_c`, `gdp_g`, `gdp_i`, `gdp_x`, `gdp_m_final`,
   `gdp_m_int`, `gdp_t_int`, `external_balance`, `public_budget`.
 - `[artifacts]`: `log = "log.txt"`, `solution = "solution.csv" | ""`.
 

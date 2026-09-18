@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-18 by `scripts/status.jl` · branch `reorg` · HEAD `f360d0c` (dirty)
+Generated 2026-09-18 by `scripts/status.jl` · branch `reorg` · HEAD `24f6880` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -221,52 +221,9 @@ Scenarios: **66** rows — executed: 58, provisional: 3, failed: 5. Designs: `cb
 - [ADR-0016 — CES-consistent valuation of the intermediate-bill leaks](decisions/ADR-0016-ces-consistent-leak-valuation.md)
 - [ADR-0017 — actual-matrix scale determinacy for the fixed-wage η = 1 system](decisions/ADR-0017-actual-matrix-scale-determinacy.md)
 - [ADR-0018 — Real GDP measurement in the open economy](decisions/ADR-0018-real-gdp-measurement.md)
+- [ADR-0019 — All-N goods-market clearing with an explicit external account](decisions/ADR-0019-external-account-closure.md)
 
 ## Warnings
 
-- scenario matrix_5x3-ALPHA-F1: evidence not found: runs/matrix_5x3-ALPHA-F1/log.txt
-- scenario matrix_5x3-ALPHA-F2: evidence not found: runs/matrix_5x3-ALPHA-F2/log.txt
-- scenario matrix_5x3-ALPHA-F3: evidence not found: runs/matrix_5x3-ALPHA-F3/log.txt
-- scenario matrix_5x3-BETA-F1: evidence not found: runs/matrix_5x3-BETA-F1/log.txt
-- scenario matrix_5x3-BETA-F2: evidence not found: runs/matrix_5x3-BETA-F2/log.txt
-- scenario matrix_5x3-BETA-F3: evidence not found: runs/matrix_5x3-BETA-F3/log.txt
-- scenario matrix_5x3-BF-F1: evidence not found: runs/matrix_5x3-BF-F1/log.txt
-- scenario matrix_5x3-BF-F2: evidence not found: runs/matrix_5x3-BF-F2/log.txt
-- scenario matrix_5x3-BF-F3: evidence not found: runs/matrix_5x3-BF-F3/log.txt
-- scenario matrix_5x3-DELTA-F1: evidence not found: runs/matrix_5x3-DELTA-F1/log.txt
-- scenario matrix_5x3-DELTA-F2: evidence not found: runs/matrix_5x3-DELTA-F2/log.txt
-- scenario matrix_5x3-DELTA-F3: evidence not found: runs/matrix_5x3-DELTA-F3/log.txt
-- scenario matrix_5x3-GAMMA-F1: evidence not found: runs/matrix_5x3-GAMMA-F1/log.txt
-- scenario matrix_5x3-GAMMA-F2: evidence not found: runs/matrix_5x3-GAMMA-F2/log.txt
-- scenario matrix_5x3-GAMMA-F3: evidence not found: runs/matrix_5x3-GAMMA-F3/log.txt
-- scenario matrix_5x3-v2-ALPHA-F1: evidence not found: runs/matrix_5x3-v2-ALPHA-F1/log.txt
-- scenario matrix_5x3-v2-ALPHA-F2: evidence not found: runs/matrix_5x3-v2-ALPHA-F2/log.txt
-- scenario matrix_5x3-v2-ALPHA-F3: evidence not found: runs/matrix_5x3-v2-ALPHA-F3/log.txt
-- scenario matrix_5x3-v2-BETA-F1: evidence not found: runs/matrix_5x3-v2-BETA-F1/log.txt
-- scenario matrix_5x3-v2-BETA-F2: evidence not found: runs/matrix_5x3-v2-BETA-F2/log.txt
-- scenario matrix_5x3-v2-BETA-F3: evidence not found: runs/matrix_5x3-v2-BETA-F3/log.txt
-- scenario matrix_5x3-v2-BF-F1: evidence not found: runs/matrix_5x3-v2-BF-F1/log.txt
-- scenario matrix_5x3-v2-BF-F2: evidence not found: runs/matrix_5x3-v2-BF-F2/log.txt
-- scenario matrix_5x3-v2-BF-F3: evidence not found: runs/matrix_5x3-v2-BF-F3/log.txt
-- scenario matrix_5x3-v2-DELTA-F1: evidence not found: runs/matrix_5x3-v2-DELTA-F1/log.txt
-- scenario matrix_5x3-v2-DELTA-F2: evidence not found: runs/matrix_5x3-v2-DELTA-F2/log.txt
-- scenario matrix_5x3-v2-DELTA-F3: evidence not found: runs/matrix_5x3-v2-DELTA-F3/log.txt
-- scenario matrix_5x3-v2-GAMMA-F1: evidence not found: runs/matrix_5x3-v2-GAMMA-F1/log.txt
-- scenario matrix_5x3-v2-GAMMA-F2: evidence not found: runs/matrix_5x3-v2-GAMMA-F2/log.txt
-- scenario matrix_5x3-v2-GAMMA-F3: evidence not found: runs/matrix_5x3-v2-GAMMA-F3/log.txt
-- scenario matrix_5x3-v3-ALPHA-F1: evidence not found: runs/matrix_5x3-v3-ALPHA-F1/log.txt
-- scenario matrix_5x3-v3-ALPHA-F2: evidence not found: runs/matrix_5x3-v3-ALPHA-F2/log.txt
-- scenario matrix_5x3-v3-ALPHA-F3: evidence not found: runs/matrix_5x3-v3-ALPHA-F3/log.txt
-- scenario matrix_5x3-v3-BETA-F1: evidence not found: runs/matrix_5x3-v3-BETA-F1/log.txt
-- scenario matrix_5x3-v3-BETA-F2: evidence not found: runs/matrix_5x3-v3-BETA-F2/log.txt
-- scenario matrix_5x3-v3-BETA-F3: evidence not found: runs/matrix_5x3-v3-BETA-F3/log.txt
-- scenario matrix_5x3-v3-BF-F1: evidence not found: runs/matrix_5x3-v3-BF-F1/log.txt
-- scenario matrix_5x3-v3-BF-F2: evidence not found: runs/matrix_5x3-v3-BF-F2/log.txt
-- scenario matrix_5x3-v3-BF-F3: evidence not found: runs/matrix_5x3-v3-BF-F3/log.txt
-- scenario matrix_5x3-v3-DELTA-F1: evidence not found: runs/matrix_5x3-v3-DELTA-F1/log.txt
-- scenario matrix_5x3-v3-DELTA-F2: evidence not found: runs/matrix_5x3-v3-DELTA-F2/log.txt
-- scenario matrix_5x3-v3-DELTA-F3: evidence not found: runs/matrix_5x3-v3-DELTA-F3/log.txt
-- scenario matrix_5x3-v3-GAMMA-F1: evidence not found: runs/matrix_5x3-v3-GAMMA-F1/log.txt
-- scenario matrix_5x3-v3-GAMMA-F2: evidence not found: runs/matrix_5x3-v3-GAMMA-F2/log.txt
-- scenario matrix_5x3-v3-GAMMA-F3: evidence not found: runs/matrix_5x3-v3-GAMMA-F3/log.txt
+None.
 

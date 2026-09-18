@@ -1,7 +1,9 @@
 # ADR-0020 — The eta = 0 endpoint's external account: closure options
 
-- **Status:** proposed (awaiting the user's decision; the audit that motivates
-  it is settled, the choice is not)
+- **Status:** accepted (user instruction, 2026-09-18): **option C** — sectoral
+  wages at the eta = 0 endpoint — with option B retained as a future venue and
+  option A superseded by this choice. Specification and probe evidence below;
+  the audit in Context is unchanged.
 - **Date:** 2026-09-18
 - **Supersedes:** —
 - **Related:** ADR-0002, ADR-0004, ADR-0006, ADR-0010, ADR-0019;
@@ -76,28 +78,100 @@ pin does not.
 
 ## Decision
 
-Not taken yet — this record exists so the choice is made once, with the
-measurements above in hand, and so the v6 scope is visible before any code is
-written. The recommended sequence, for the user to confirm or reject:
+**Option C is accepted: sectoral wages at the eta = 0 endpoint.** The
+specification below was derived and then validated on the full-71 A-bill
+calibration before any `src/` change (probe evidence in the same section);
+promotion into the kernel still requires the ADR-0006 workflow (tests, a
+`matrix_5x3_v6` generation, registry rows) because a `src/` change invalidates
+the provenance of every existing run.
 
-1. **Adopt A now.** The v5 generation stays the citable one; the BF rows are
-   read from the resource side and the gap; the `labor.BF` open gate records
-   the non-identification. This is what the same-date corrections in
-   `docs/DOCS_ASSESSMENT.md` (Version 7, section 4.2), the v5 flow table and
-   the session log already do.
-2. **Choose B or C before any v6 run.** B if the paper needs an *identified*
-   BF external position and accepts BF = ALPHA at the aggregate level; C if
-   the BF row must carry the immobile-benchmark economics, which is what the
-   labour-closure narrative and `cbase2/review.md` section 1 ask for. B and C
-   are not exclusive: B closes the account, C gives the allocation content,
-   and a v6 could carry C with B's labour equation as the accounting closure.
+### Specification
 
-A third possibility is recorded so it is not re-litigated: dropping the BF
-row from the matrix and reporting ALPHA/GAMMA/DELTA only. It is not
-recommended — BF is the paper's friction arm — but if C is out of scope, the
-BF row currently duplicates ALPHA and the matrix loses nothing by saying so.
+The eta = 0 endpoint keeps the frozen sectoral allocation `L_i = labor_share_i`
+and replaces the single economy-wide wage by a wage per sector, set by that
+sector's own marginal product at the frozen allocation:
+
+- Unknowns: `X = [p(1:N); y(1:N); w(1:N); F]` — 3N + 1.
+- Equations: (1) zero-profit per sector, `p_i = cost_i(p, w_i)` (N); (2) the
+  sectoral first-order condition at the frozen allocation,
+  `log L^cm_i(p_i, y_i, w_i) = log labor_share_i` (N); (3) all-N clearing, with
+  household wage income `sum_i w_i L_i` and `E = (1 - tau) sum_i w_i L_i + F`
+  (N); (4) the CPI numeraire (1).
+
+`F` is kept, and this is the one substantive addition the counting forces: the
+block {zero-profit, FOC, clearing} is homogeneous of degree 1 in `(p, w, F)`,
+so its 3N equations determine 3N - 1 effective unknowns. Replacing the mobile
+system's single aggregate labour equation by N sectoral conditions adds N - 1
+equations, so the block has one equation more than it has directions to pin;
+the demand block needs one free scalar to be consistent with the supply side.
+`F` is that scalar, entering `E` after tax exactly as in ADR-0019. The
+alternative (drop one clearing equation) is the ADR-0010 shortcut that
+ADR-0019 retired, so it is not available.
+
+Two properties follow, both measured:
+
+- **The external account closes at eta = 0.** At a FOC solution the frozen
+  allocation is cost-minimizing at these wages, so the identity gap
+  `-(sum_i w_i L^cm_i - sum_i w_i L_i)` vanishes. The factor-market gap that
+  the `F = 0` pin left (up to -0.7936 percent of GDP) is gone by construction.
+- **Financing neutrality extends to eta = 0.** With `F` free, the same algebra
+  as ADR-0019 decision item 7 applies at the immobile endpoint: F2 and F3 have
+  identical real allocations and `F_F3 = F_F2 - B_gov`, hence identical booked
+  positions. The pin had destroyed this; the sectoral-wage closure restores it
+  in both regimes.
+
+### Probe evidence (2026-09-18, full-71 A-bill, `experiments/probes/probe7_sectoral_wages_eta0.jl`)
+
+| Cell | max abs residual | identity gap | `F` | `B_gov` | booked `F + B_gov` |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| BF-F1 | 1.4e-13 | +1.9e-14 | -0.00581497 | 0.00000000 | -0.00581497 |
+| BF-F2 | 4.2e-13 | -4.2e-13 | -0.00852841 | 0.00000000 | -0.00852841 |
+| BF-F3 | 1.7e-12 | -5.0e-13 | -0.02337469 | +0.01484628 | -0.00852841 |
+
+Also measured: the FOC gap `max|log L^cm - log L|` = 1.7e-12 at BF-F3;
+`F_F3 = F_F2 - B_gov` with BF-F2 and BF-F3 identical in allocation and booked
+position (neutrality at eta = 0); `F` identified with an F-column norm of 0.163
+in the finite-difference Jacobian; multi-start invariance at 2.1e-9 in the
+unknown vector (dF ~ 4e-12). Two caveats to carry into promotion: the Jacobian
+is stiffer than the mobile all-N system (condition number 9.4e7,
+`sigma_min/sigma_max` = 1.1e-8, against 52.8 for the ADR-0019 mobile system), so
+the acceptance gate and the polish target need to be set from measurement; and
+`B_gov` is priced at the eta = 0 equilibrium prices, which are not one (the
+sectoral wages move them), so the F3 booking reads +1.4846 percent of GDP here
+against the baseline +1.3310 percent. Sectoral wages at the baseline-type cell
+span 0.970 to 1.672 (ratio 1.7) around the CPI-pinned level, and the wage bill
+`sum_i w_i L_i` = 1.00702.
+
+### Status of the other options
+
+- **A (keep the pin, report the position as not identified)** is superseded by
+  this choice: it was the documentation-only response to the audit, and C
+  removes the problem it documented.
+- **B (labour equation instead of the pin, `F` free, common wage)** is retained
+  as a future venue, not adopted: it closes the account and identifies `F`, but
+  it collapses the BF row onto ALPHA in every aggregate (measured to 2.8e-17),
+  so it buys accounting coherence by giving up the immobile benchmark as a
+  distinct economy. It remains the cheapest closure if a generation needs a
+  closed account at eta = 0 without new kernel machinery; a future ADR can
+  supersede this decision to adopt it.
+- **Dropping the BF row** is not adopted: C gives the row its own economics.
+
+### Kernel changes required for promotion (not yet made)
+
+`_cost_minimizing_labor` must accept a wage vector (it hard-codes `log(w)` for
+a scalar); `_mobile_market_demand` needs the sectoral-wage variant (frozen
+`L_i`, income `sum_i w_i L_i`); `problem` needs the eta = 0 sectoral branch
+(3N + 1 unknowns, the four blocks above); `external_balance_canary` and
+`gdp_components` must accept the wage vector; `Solution.wages` already stores a
+vector, so the reporting layer needs no new field. `tests/test_external_closure.jl`
+currently asserts the pin and the measured pin-gaps at the BF cells and must be
+rewritten for the new contract (account closed to <= 1e-12 at eta = 0, `F`
+identified, neutrality at eta = 0).
 
 ## Consequences
+
+Operative choice: **C** (decision above). The A and B lines below are kept as
+the record of the alternatives considered.
 
 - Under A, no kernel, test, run or registry status changes; only the
   documentation of the reading changes, and `registry/closures.toml`

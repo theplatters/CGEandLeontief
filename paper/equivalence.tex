@@ -1,0 +1,623 @@
+% paper/equivalence.tex — Ex ante equivalence of the labour-closure endpoints
+% under demand-only shocks (ALPHA ≡ BETA, GAMMA ≡ DELTA).
+%
+% Repo: BFRep/(3)BeyondHulten, branch `reorg`, base commit c222f7b (2026-09-18).
+% Cited evidence: the matrix_5x3-v5-* runs (ADR-0019 generation, 15/15 executed
+% 2026-09-18) and paper/tables/matrix_5x3_v5_flows.md; the cbase2 analytic
+% equivalence test recorded in docs/DOCS_ASSESSMENT.md §4.2; the supply-side
+% pilot numbers from docs/ETAs.md.
+% Companion: docs/ETAs.md (the supply-side arm and the demand-sensitive-price
+% candidates); paper/closures_and_demand_shocks.md (the CGE-vs-IO framing);
+% ADR-0020 (proposed) for the eta = 0 external-position finding reflected in
+% the BF remarks.
+%
+% No LaTeX in the analysis container: compile on the Mac (pdflatex; the
+% bibliography below is a plain thebibliography, no .bib dependency).
+
+\documentclass[11pt]{article}
+
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2.2cm,bottom=2.2cm,left=3cm,right=3cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.45em}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+
+\numberwithin{equation}{section}
+
+\newcommand{\Lbar}{\bar{L}}
+\newcommand{\one}{\mathbf{1}}
+
+\title{Ex Ante Equivalence of the Labour-Closure Endpoints\\
+under Demand-Only Shocks\\[0.4em]
+\large ALPHA $\equiv$ BETA and GAMMA $\equiv$ DELTA in the \texttt{BeyondHulten} kernel}
+\author{Hermes Agent (Lt.\ Cmdr.\ Data), for Prof.\ Dr.\ J.\ Kapeller}
+\date{September 18, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The executed $5\times3$ closure matrix reports two exact coincidences: the
+BETA row reproduces ALPHA bit-for-bit, and the DELTA row reproduces GAMMA
+cell-for-cell, in every financing column. This note shows that both
+coincidences are derivable \emph{ex ante} from the structure of the kernel,
+states the conditions under which they hold exactly, and classifies what they
+mean for the manuscript: under a demand-only programme the price block is
+demand-invariant (a one-factor Samuelson nonsubstitution property), so the
+equilibrium real wage sits at its technology-determined anchor and the whole
+quantity system reduces to one linear Leontief multiplier system in which none
+of the elasticity parameters $(\theta,\epsilon,\sigma,\eta_s)$ appears. The
+four closure rows differ only in which scalar absorbs the shock: the external
+transfer $F$ (mobile rows, employment pinned), employment $L$ (fixed-wage
+rows, $F \equiv 0$), or neither (BF, no induced consumption round). The final
+section derives what would break the equivalences --- the analytic basis of
+the demand-sensitive-price program of \texttt{docs/ETAs.md} --- and proves a
+no-go corollary: nominal wage rules cannot create price variety in this
+framework.
+\end{abstract}
+
+\section{Purpose and summary}
+
+Reviewer 2's critique turns on the exact conditions under which the closure
+rows of the evaluation matrix are or are not equivalent
+(\texttt{docs/DOCS_ASSESSMENT.md}, section 4.2). The executed
+\texttt{matrix\_5x3\_v5} generation (ADR-0019; 15/15 cells, run ids
+\texttt{matrix\_5x3-v5-*}) measures two coincidences:
+
+\begin{itemize}
+\item \textbf{ALPHA $\equiv$ BETA.} The elastic-supply row
+      ($\eta_s = 0.5$) reports every metric of the full-employment row
+      identically: real GDP, the welfare index, employment, the external
+      account --- to all eight printed decimals, with the identity wedge at
+      $\sim 10^{-16}$. A direct comparison of stored solutions measured
+      $\max|\Delta y| = 6.2\times 10^{-17}$ (session of 2026-09-17).
+\item \textbf{GAMMA $\equiv$ DELTA.} The Leontief-corner row
+      ($( \theta_\delta, \epsilon_\delta, \sigma_\delta ) = (10^{-4},
+      10^{-4}, 10^{-4})$) reports every metric of the fixed-wage row at the
+      baseline CES elasticities $(\theta,\epsilon,\sigma) = (0.5,0.5,0.9)$
+      identically, in all three financing columns; the flow-table wedges
+      agree at the residual level ($\sim 10^{-12}$). The analytic
+      \texttt{leontief\_multiplier} test reproduces the nonlinear DELTA
+      solution with relative error $0.0$ (recorded in
+      \texttt{docs/DOCS\_ASSESSMENT.md} section 4.2).
+\end{itemize}
+
+Sections~\ref{sec:kernel}--\ref{sec:reduction} set up the common kernel and
+derive the demand-only reduction. Section~\ref{sec:equiv} states and proves
+the two equivalences and classifies them. Section~\ref{sec:gauge} isolates
+what \emph{does} differ across the rows (the scalar closure regimes).
+Section~\ref{sec:scope} derives the scope conditions: which model changes
+break the equivalences --- the menu behind the demand-sensitive-price program
+--- and which cannot.
+
+Throughout, ``demand-only shock'' means the matrix design: a programme bundle
+$g = m\,G_0\,\psi$ entering final demand under one of the three financing
+closures, with the supply shock at $A \equiv 1$ (unit productivity).
+
+\section{The common kernel}\label{sec:kernel}
+
+Let $N$ be the number of sectors. Prices $p_i$, wage $w$, gross output
+$y_i$, employment $L_i$. Data-calibrated objects: factor shares $\alpha_i$
+(labour), domestic bill coefficients $a_u = A^{bill}_u/\lambda_u$ with
+supplier-share matrix $\Omega$ ($\Omega_{iu}$ = sector $i$'s share of input
+$u$; rows sum to one), CPI weights $\omega_i$ ($\sum_i \omega_i = 1$),
+sector import margins $m_i$, saving rate $s$, exogenous government demand
+$g^G$, investment $inv$, exports $X$ (no margin), the programme bundle $g$,
+and the labour bar $\Lbar = \sum_i \bar{L}_i = 1$ (baseline income units,
+GDP $=1$). Elasticities: intermediate substitution $\theta$,
+labour--intermediate substitution $\epsilon$, consumption substitution
+$\sigma$, allocation $\eta \in \{0,1\}$ (ADR-0010), supply elasticity
+$\eta_s \geq 0$ (BETA only).
+
+\paragraph{Price block.} The CES intermediate price index and unit cost are
+\begin{align}
+P_i(p) &= \Big( \textstyle\sum_u \Omega_{iu}\, p_u^{\,1-\theta}
+   \Big)^{\frac{1}{1-\theta}}, \label{eq:ip}\\
+c_i(p,w;A) &= \Big( A_i^{\,\epsilon-1}\big( \alpha_i\, w^{1-\epsilon}
+   + (1-\alpha_i)\, P_i^{\,1-\epsilon} \big) \Big)^{\frac{1}{1-\epsilon}},
+   \label{eq:cost}
+\end{align}
+with the Cobb--Douglas limit $c_i = w^{\alpha_i} P_i^{\,1-\alpha_i}/A_i$ at
+$\epsilon = 1$. Zero profit requires
+\begin{equation}
+p_i = c_i(p,w;A) \qquad \forall\, i. \label{eq:zp}
+\end{equation}
+At the calibration point $(p,w,A) = (\one,1,\one)$ the unit cost equals one
+exactly, because $\sum_u \Omega_{iu} = 1$ makes $P_i = 1$; this is the
+calibration identity used throughout.
+
+\paragraph{Quantity block.} With full cost-minimizing allocation
+($\eta = 1$) the marginal-product condition inverts to
+\begin{equation}
+L_i = \big( p_i\, A_i^{(\epsilon-1)/\epsilon}\, \alpha_i^{1/\epsilon}\,
+      y_i^{1/\epsilon} / w \big)^{\epsilon}
+    = p_i^{\epsilon}\, A_i^{\epsilon-1}\, \alpha_i\, y_i / w^{\epsilon},
+\label{eq:labdemand}
+\end{equation}
+At $\eta = 0$ (the BF endpoint) the allocation is the frozen baseline,
+$L_i = \bar{L}_i$. Intermediate demand is charged with the \emph{domestic}
+bill (ADR-0012):
+\begin{equation}
+int_i = p_i^{-\theta} \sum_u \Omega_{ui}\,
+        p_u^{\epsilon} A_u^{\epsilon-1} P_u^{\theta-\epsilon}\, a_u\, y_u.
+\label{eq:int}
+\end{equation}
+Household demand is CES with CPI deflation and the financing weights
+$ds$ ($ds = 1$ except under F1, where $ds = d$, the preference tilt):
+\begin{equation}
+c_i = (1-s)(1-m_i)\,\omega_i\, ds_i\; E\; p_i^{-\sigma} \Big/
+      \textstyle\sum_j \omega_j ds_j\, p_j^{1-\sigma},
+\qquad
+E = (1-\tau)\, w \textstyle\sum_i L_i + F,
+\label{eq:cons}
+\end{equation}
+with the lump-sum tax rate $\tau = p\!\cdot\! g^G / (w \sum_i L_i)$ under
+F1/F3 and $\tau = p\!\cdot\!(g^G + g)/(w \sum_i L_i)$ under F2, and $F$ the
+net external transfer entering expenditure after tax (ADR-0019). Saving
+$sE$ leaks; the import content is charged margin by margin. Goods-market
+clearing reads
+\begin{equation}
+y_i = int_i + c_i + (1-m_i)\big( g^G_i + inv_i + g_i \big) + X_i,
+\label{eq:clearing}
+\end{equation}
+where $g_i$ appears only under the additive financings F2/F3
+($g_i = 0$ under F1; legacy manna is zero in the matrix).
+
+\paragraph{The four regimes.} The mobile systems solve for
+$X = (p, y, w, F) \in \mathbb{R}^{2N+2}$ with the numeraire
+$\Pi(p) = 1$, where
+\begin{equation}
+\Pi(p) = \Big( \textstyle\sum_i \omega_i\, p_i^{1-\sigma}
+   \Big)^{\frac{1}{1-\sigma}},
+\label{eq:cpi}
+\end{equation}
+and close with the labour equation
+\begin{align}
+\text{ALPHA:}\quad & \textstyle\sum_i L_i(p,y,w) = \Lbar,
+\label{eq:alpha}\\
+\text{BETA:}\quad & \textstyle\sum_i L_i(p,y,w)
+   = \Lbar \Big[ \frac{w/\Pi(p)}{w_0/\Pi_0} \Big]^{\eta_s},
+\qquad w_0/\Pi_0 = 1.
+\label{eq:beta}
+\end{align}
+The fixed-wage systems solve for $X = (p, y) \in \mathbb{R}^{2N}$ with the
+wage pinned $w \equiv 1$ and $F \equiv 0$; employment is a post-solve
+outcome. GAMMA runs them at the baseline elasticities, DELTA at the Leontief
+corner $(\theta_\delta,\epsilon_\delta,\sigma_\delta) = (10^{-4},10^{-4},
+10^{-4})$. BF is the mobile system at $\eta = 0$ with the $F = 0$ pin
+(decision D2 of ADR-0019). All rows in the matrix use $\eta = 1$ except BF.
+
+\section{The demand-only reduction}\label{sec:reduction}
+
+\begin{lemma}[Price block demand-invariance]\label{lem:price}
+The zero-profit system \eqref{eq:zp} is homogeneous of degree one in
+$(p,w)$ jointly and contains no demand variable. Consequently, for any
+technology $A$, every solution satisfies $p = w\,\pi(A)$, where
+$\pi(A) \in \mathbb{R}^N_{++}$ solves $c_i(\pi,1;A) = \pi_i$ for all $i$;
+relative prices and the ratio $p/w$ are functions of $A$ alone. Under the
+CPI numeraire, $w = 1/\Pi(\pi(A))$ and $p = \pi(A)/\Pi(\pi(A))$; under the
+fixed wage, $w = 1$ and $p = \pi(A)$. At $A \equiv \one$ the calibration
+identity gives $\pi = \one$, hence in both gauges
+\begin{equation}
+p = \one, \qquad w = 1, \qquad \Pi = 1,
+\end{equation}
+independently of the demand vector, of the financing closure, and of the
+shock size.
+\end{lemma}
+
+\begin{proof}
+Homogeneity: $c_i(tp, tw; A) = t\, c_i(p,w;A)$ for $t>0$, by inspection of
+\eqref{eq:cost}--\eqref{eq:ip}. Write $q = p/w$. Then \eqref{eq:zp} is
+equivalent to $q_i = c_i(q,1;A)$ for all $i$, i.e.\ $q = \pi(A)$, and the
+solution set of \eqref{eq:zp} is exactly the ray $\{(w\,\pi(A), w)\}$. The
+CPI \eqref{eq:cpi} is homogeneous of degree one in $p$, so
+$\Pi(w\,\pi) = w\,\Pi(\pi)$; the numeraire $\Pi = 1$ or the pin $w = 1$
+selects the scale. At $A \equiv \one$, $\pi = \one$ solves
+\eqref{eq:zp} at $w = 1$ because $c_i(\one,1;\one) = 1$ (the calibration
+identity), and $\Pi(\one) = 1$ because $\sum_i \omega_i = 1$.
+\end{proof}
+
+\begin{corollary}[Real-wage invariance]\label{cor:realwage}
+At every solution of the shared block,
+\begin{equation}
+\frac{w}{\Pi(p)} = \frac{1}{\Pi(\pi(A))},
+\end{equation}
+a function of technology alone. At $A \equiv \one$ this equals $1 =
+w_0/\Pi_0$: the equilibrium real wage sits at its anchor for every demand
+vector, every financing closure and every shock magnitude. (Measured in the
+matrix: the GDP deflator reads $1.000000$ in all 15 cells, and a demand
+shock of ten times the programme size moves $\max|p-\one|$ by
+$2.7\times10^{-15}$; \texttt{docs/ETAs.md}.)
+\end{corollary}
+
+\begin{lemma}[Elasticity-free affine quantity block]\label{lem:affine}
+Fix $\eta = 1$ and $A \equiv \one$, and evaluate the quantity block at the
+demand-only prices $(p,w) = (\one,1)$. Then for \emph{every} value of
+$(\theta,\epsilon,\sigma)$:
+\begin{align}
+int &= \Omega^{\!\top}\mathrm{diag}(a)\, y, &
+L &= \mathrm{diag}(\alpha)\, y, &
+\sum_i L_i &= \alpha^{\!\top} y,
+\label{eq:leontiefblocks}\\
+c &= (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)\; E, &
+E &= \alpha^{\!\top} y - \textstyle\sum g^G + F
+   \;\; (\text{F1/F3}), \nonumber
+\end{align}
+where $\tilde\omega(ds) = (\omega \odot ds)\,/\, \one^{\!\top}(\omega \odot
+ds)$ and $E = \alpha^{\!\top} y - \sum g^G - \sum g$ under F2. Hence the
+clearing system \eqref{eq:clearing} is exactly affine,
+\begin{equation}
+y = G\, y + b(F),
+\qquad
+G = \Omega^{\!\top}\mathrm{diag}(a)
+  + (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)\,\alpha^{\!\top},
+\label{eq:affine}
+\end{equation}
+\begin{equation}
+b(F) = (1-m)\odot\big( g^G + inv + g \big) + X
+     + (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)
+       \big( F - \textstyle\sum g^G - \textstyle\sum g \big),
+\label{eq:bvec}
+\end{equation}
+with $g$ present only under F2/F3 and the last bracket reduced accordingly.
+No elasticity parameter enters $G$ or $b$. At $\eta = 0$ (BF),
+$\sum_i L_i = \sum_i \bar{L}_i = \Lbar$ is a constant, $E$ does not depend
+on $y$, and the household round drops out of $G$:
+$G_{BF} = \Omega^{\!\top}\mathrm{diag}(a)$.
+\end{lemma}
+
+\begin{proof}
+At $p = w = A = \one$: $P_u = 1$ in \eqref{eq:int}, so all elasticity
+factors $p^{\epsilon}$, $P^{\theta-\epsilon}$, $p^{-\theta}$ equal $1$ and
+\eqref{eq:int} reduces to the fixed-coefficient round
+$\sum_u \Omega_{ui} a_u y_u$; \eqref{eq:labdemand} reduces to
+$L_i = \alpha_i y_i$ since every exponent collapses at unit prices; in
+\eqref{eq:cons} the terms $p_i^{-\sigma}$ and the normalizer reduce to
+$1$ and $\sum_j \omega_j ds_j$, giving the fixed spending weights
+$\tilde\omega(ds)$; and the tax rate $\tau = \sum g^G / \alpha^{\!\top}y$
+turns $E$ into the affine form shown. Collecting terms in
+\eqref{eq:clearing} gives \eqref{eq:affine}--\eqref{eq:bvec}: the
+intermediate round contributes the columns
+$\sum_i \Omega_{iu} a_u = a_u$ (row sums of $\Omega$ equal $1$) and the
+household round contributes $(1-s)\sum_i (1-m_i)\tilde\omega_i(ds)\,
+\alpha_u$ per unit of $y_u$.
+\end{proof}
+
+\begin{remark}[Nonsubstitution]\label{rem:samuelson}
+Lemma~\ref{lem:price} and Lemma~\ref{lem:affine} are the production side of
+the Samuelson nonsubstitution theorem: with one primary factor, constant
+returns and no joint production, the cost-minimizing technique --- and hence
+relative prices --- is independent of the demand vector, and final demand
+allocates quantities only (Samuelson 1951). The kernel's nested-CES
+structure is a smooth parametrisation of that corner; the demand-only matrix
+therefore inherits the theorem's rigidity, and this is what
+\texttt{docs/DOCS\_ASSESSMENT.md} section 4.2 records as the ``model-class
+property'' behind the coincidences. The IO endpoint makes the rigidity
+literal --- the Robinson (2006) fixed-price multiplier --- but, as
+Proposition~\ref{prop:gd} shows, it is not an approximation: \emph{every}
+elasticity triple in the fixed-wage gauge lives on the same corner.
+\end{remark}
+
+\section{The two equivalences}\label{sec:equiv}
+
+\begin{proposition}[ALPHA $\equiv$ BETA]\label{prop:ab}
+Let $A \equiv \one$ and $\eta = 1$. The ALPHA system
+\eqref{eq:zp},\eqref{eq:clearing},\eqref{eq:alpha},$\Pi = 1$ and the BETA
+system \eqref{eq:zp},\eqref{eq:clearing},\eqref{eq:beta},$\Pi = 1$ have
+identical solution sets, for every $\eta_s \geq 0$ and every financing
+closure.
+\end{proposition}
+
+\begin{proof}
+The two systems differ in exactly one equation. By
+Lemma~\ref{lem:price} and Corollary~\ref{cor:realwage}, every solution of
+the shared block satisfies $w/\Pi = 1 = w_0/\Pi_0$, so BETA's labour
+equation \eqref{eq:beta} reduces to $\sum_i L_i = \Lbar$, which is
+\eqref{eq:alpha}. Conversely, any solution of the ALPHA system satisfies
+BETA's equation by the same substitution. The systems are therefore
+equivalent, equation by equation.
+\end{proof}
+
+\begin{proposition}[GAMMA $\equiv$ DELTA]\label{prop:gd}
+Let $A \equiv \one$, $\eta = 1$, $F \equiv 0$, $w \equiv 1$. Then
+$(p,y) = (\one,\, y^{\ast})$ with
+$y^{\ast} = (I - G)^{-1} b(0)$ solves the fixed-wage system at
+\emph{every} elasticity triple $(\theta,\epsilon,\sigma)$; the employment
+outcome is $L^{\ast} = \alpha^{\!\top} y^{\ast}$, the consumption block is
+$c^{\ast} = (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)\,
+(L^{\ast} - \sum g^G - \sum g\,\mathbf{1}_{F2})$, where
+$\mathbf{1}_{F2}$ selects the tax-financed column, and the block
+decomposition \eqref{eq:leontiefblocks} holds verbatim. In particular GAMMA (baseline
+elasticities) and DELTA (the Leontief corner) share this solution, and the
+analytic system \eqref{eq:affine}--\eqref{eq:bvec} ---
+\texttt{leontief\_multiplier} in \texttt{src/closures/labor/labor.jl} ---
+computes it exactly.
+\end{proposition}
+
+\begin{proof}
+Existence and form: at $p = \one$ the price block holds by the calibration
+identity (Lemma~\ref{lem:price}), and by Lemma~\ref{lem:affine} the
+clearing block at $p = \one$ is the affine system, of which
+$y^{\ast} = (I-G)^{-1}b(0)$ is the solution. Uniqueness on the admitted
+branch: the scale-determinacy guard (ADR-0017) verifies at the reference
+prices that $(I - G)$ is nonsingular --- contraction if
+$\max_u \mathrm{colsum}_u(G) < 1$, otherwise a direct rank test --- and
+that the candidate $y^{\ast}$ is strictly positive; within the admitted
+branch the solution is unique, and the multi-init admissibility checks
+recorded for the F1 column (three distinct starting points converging to
+the same root) support root selection. Both the GAMMA and the DELTA solve
+are subject to the same guard, and both converged to this root (residuals
+$6.7\times10^{-14}$ to $4.4\times10^{-16}$ across the six fixed-wage cells,
+\texttt{runs/matrix\_5x3-v5-\{GAMMA,DELTA\}-*/manifest.toml}). The
+elasticity-independence is exact in the equations, not an $\epsilon$-limit
+artefact: the DELTA solve at $\epsilon_\delta = 10^{-4}$ reproduces the
+analytic $y^{\ast}$ with relative error $0.0$ (F2/F3 verification, recorded
+in \texttt{docs/DOCS\_ASSESSMENT.md} section 4.2), and the v5 flow metrics
+of the two rows agree to all printed decimals with residual-level wedge
+differences $\sim 10^{-12}$.
+\end{proof}
+
+\begin{corollary}[Classification]\label{cor:class}
+For the manuscript's framing of the matrix:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Coincidence & Status & What is unidentified \\
+\midrule
+GAMMA $\equiv$ DELTA & definitional in form, & $(\theta,\epsilon,\sigma)$ \\
+ & substantive in mechanism & in the fixed-wage gauge \\
+ & (Lemma~\ref{lem:affine}) & \\
+ALPHA $\equiv$ BETA & derivable & $\eta_s$ in the flexible-wage gauge \\
+ & (Cor.~\ref{cor:realwage}) & \\
+F2 $\equiv$ F3 (mobile rows) & derivable & the financing label; \\
+ & (Section~\ref{sec:gauge}) & $F_{F3} = F_{F2} - B_{gov}$ \\
+BF vs ALPHA & pin artifact, not an allocation & the $\eta=0$ external \\
+ & effect (ADR-0020 audit: the labour- & position is not \\
+ & clearing closure reproduces ALPHA & identified; never \\
+ & to $2.8\times10^{-17}$) & print it \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+None of these is a numerical accident; all four hold at machine precision
+in the executed generation, and none is a mis-specification. They are
+properties of the \emph{experiment}: a demand-only programme in a one-factor
+CRS economy cannot identify any elasticity of the kernel (the mechanism is
+Remark~\ref{rem:samuelson}).
+\end{corollary}
+
+\begin{remark}[Off the demand-only slice]\label{rem:supply}
+The equivalences fail the moment technology moves. At $A \neq \one$,
+Corollary~\ref{cor:realwage} gives $w/\Pi = 1/\Pi(\pi(A)) \neq 1$ in
+general, and BETA's labour equation reduces to
+$\alpha^{\!\top}y = \Lbar\,[1/\Pi(\pi(A))]^{\eta_s}$: employment is pinned
+to a \emph{technology-determined constant} that now depends on $\eta_s$.
+The supply-side pilot (+20\% in sector 1) measures exactly this separation
+--- the failure of Proposition~\ref{prop:ab}'s hypothesis $A \equiv \one$:
+$w = 1.004903$, with $L = 1.0024$ at $\eta_s = 0.5$ versus $L = 1.0098$ at
+$\eta_s = 2$ against ALPHA's $L = 1.0000$ (\texttt{docs/ETAs.md}). The
+identification of $\eta_s$ therefore requires a supply-side scenario ---
+the premise of the supply arm.
+\end{remark}
+
+\section{What actually differs across the rows}\label{sec:gauge}
+
+Lemma~\ref{lem:affine} shows that the demand-only matrix is a partition of
+\emph{scalar closure regimes} over one and the same linear system. Three
+regimes occur:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Rows & $F$ & Employment & Household round in $G$ \\
+\midrule
+ALPHA, BETA ($\eta = 1$) & free (instrument) & pinned, $L = \Lbar$ & active \\
+GAMMA, DELTA ($\eta = 1$) & $F \equiv 0$ & endogenous, $L = \alpha^{\!\top}y$ & active \\
+BF ($\eta = 0$) & $F \equiv 0$ & pinned via allocation & absent \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{The $F$-instrument.} In the mobile regime the labour pin selects
+the transfer. Writing $y(F) = (I-G)^{-1}(b_0 + f\,F)$ with
+$f = (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)$, the pin
+$\alpha^{\!\top}y = \Lbar$ gives
+\begin{equation}
+F^{\ast} = \frac{\Lbar - \alpha^{\!\top}(I-G)^{-1} b_0}
+               {\alpha^{\!\top}(I-G)^{-1} f}.
+\label{eq:finstrument}
+\end{equation}
+This instrument is why the mobile F2 and F3 columns are real-neutral: F2
+charges the programme through the lump-sum tax ($E = \alpha^{\!\top}y -
+\sum g^G - \sum g$), F3 through the external account ($E = \alpha^{\!\top}y
+- \sum g^G + F$), and the two $b$-vectors differ by exactly
+$f\,\sum g$. The pin \eqref{eq:finstrument} therefore yields
+$F^{\ast}_{F3} = F^{\ast}_{F2} - \sum g$, identical real allocations, and
+an identical net external position $F + B_{gov}$. Measured: $F_{F3} - F_{F2} = -0.01330991 = -G_0$ to eight
+decimals in every mobile row (Table~\ref{tab:v5}).
+
+\paragraph{Who pays.} The economically meaningful difference between the
+two paradigms is which margin absorbs the programme. In the mobile rows the
+labour pin forces the household to pay (consumption $-1.82\%$ under F2/F3;
+the $F$ instrument crowds it out exactly), while real GDP is flat by
+construction ($w\,\Lbar$ deflated, ADR-0018). In the fixed-wage rows
+employment is the margin: F3 expands employment by $1.78\%$ and consumption
+by $2.26\%$ (the Keynesian case), F2 leaves GDP nearly neutral
+($+0.13\%$) with a welfare loss from the tax, and F1 shifts composition
+slightly downward ($-0.10\%$ employment). BF is the degenerate third
+regime: with income constant and the household round absent, F3 leaves the
+welfare index at exactly $0.000000$. Two caveats from the ADR-0020 audit
+(proposed; \texttt{docs/log/2026-09.md}): the recorded BF/ALPHA differences
+are carried by the pin, not by the frozen allocation --- replacing the pin
+by the labour equation reproduces the ALPHA cells exactly
+($2.8\times10^{-17}$) and extends financing neutrality to $\eta = 0$ --- and
+the $\eta = 0$ external position is not identified (every pin value $F = c$
+is an exact root that moves the booked position one-for-one), so no BF
+external position should be printed.
+
+\paragraph{Admissibility.} All fifteen cells execute under the v5
+calibration. In particular the F1 column is admissible in the fixed-wage
+rows: the endogenous tax rate $\tau = \sum g^G/\alpha^{\!\top}y$ supplies
+the marginal leakage that keeps $\max \mathrm{colsum}(G) < 1$, as verified
+by the ADR-0017 criterion (the retired heuristic guard had blocked these
+cells in the v1 generation).
+
+\section{Scope conditions: what breaks the equivalences}\label{sec:scope}
+
+Both propositions rest on Lemma~\ref{lem:price}: the price block contains
+no demand variable. Any model change that lets demand into that block
+restores identification and creates variety in the published matrix. The
+doors are:
+
+\begin{enumerate}
+\item \textbf{Labour door --- sector-specific wages.} With $N$ sectoral
+      labour markets $w_i = \phi_i(L_i)$ instead of one common $w$, the
+      homogeneity argument of Lemma~\ref{lem:price} collapses: $L_i =
+      \alpha_i y_i$ depends on demand, so $w_i$ and through zero profit
+      $p_i$ become demand-sensitive. Zero profit is preserved (no rents),
+      the new parameters are sectoral supply elasticities of the same
+      family as $\eta_s$, and the variant repairs the BF row's
+      common-wage defect (ADR-0017's open gate). Ranked candidate 1 in
+      \texttt{docs/ETAs.md}.
+\item \textbf{Markup door --- demand-sensitive markups.} A pricing rule
+      $p_i = \mu_i(y_i)\, c_i(p,w)$, e.g.\ $\mu_i = 1 + \kappa\,(y_i/y_{i0}
+      - 1)$, breaks Lemma~\ref{lem:price} directly. The real cost is not
+      code but accounting: markup income is profit, so a
+      profit-income-and-spending closure is required or the external-account
+      identity behind the canary breaks. Nested at $\kappa = 0$. Candidate 2
+      in \texttt{docs/ETAs.md}.
+\item \textbf{Capacity door --- a fixed factor, or its reduced form.} A
+      sector-fixed factor with a rental schedule makes marginal cost rise
+      in $y_i$ (rents require a rental-income closure --- the largest
+      surgery, candidate 3 in \texttt{docs/ETAs.md}). The reduced-form
+      variant avoids all income-closure problems: an endogenous utilization
+      externality $A^{eff}_i = A_i\,(y_i/\lambda_i)^{-\delta}$ raises unit
+      cost with demand while keeping zero profit (the extra cost is paid to
+      no one), so a one-line change in the cost hook \eqref{eq:cost}
+      suffices. With the opposite sign ($\delta < 0$) it is the
+      Kaldor--Verdoorn case: increasing returns make prices \emph{fall}
+      with demand --- heterodox-friendly variety in the other direction.
+      (New candidate; see Section~\ref{sec:conclusion}.)
+\item \textbf{External door --- endogenous import prices.} An
+      upward-sloping foreign supply curve
+      $p^M_i = p^M_{i0}\,(M_i/M_{i0})^{\zeta}$, $\zeta \geq 0$, enters the
+      intermediate index \eqref{eq:ip} and the CPI through the margins, so
+      $\pi$ becomes a function of import volumes and hence of demand. The
+      surgery is moderate and it exploits precisely the external-account
+      machinery the paper has just built (ADR-0019): the programme's import
+      content would bid up import prices --- a structuralist
+      absorption/term-of-trade channel that fits the open-economy framing.
+      (New candidate.)
+\item \textbf{Technology door --- supply shocks.} $A \neq 1$ breaks
+      Corollary~\ref{cor:realwage} and separates BETA from ALPHA
+      (Remark~\ref{rem:supply}); this is the supply arm already designed in
+      \texttt{docs/ETAs.md}, not a repair of the demand-only matrix.
+\end{enumerate}
+
+\begin{corollary}[No-go for nominal wage rules]\label{cor:nogo}
+Within the kernel's one-factor CRS price block, no rule that writes the
+\emph{nominal} wage as a function of endogenous aggregates --- an aggregate
+wage curve $w = \bar{w}\,(\alpha^{\!\top}y/\Lbar)^{\varphi}$, nominal
+indexation, or a re-anchored numeraire --- can create demand-sensitive
+\emph{real} outcomes. By Lemma~\ref{lem:price}, $p = w\,\pi(A)$ and
+$\Pi(p) = w\,\Pi(\pi)$ at every solution, so the real wage
+$w/\Pi = 1/\Pi(\pi(A))$ is invariant to whatever sets $w$; the rule merely
+re-labels the nominal scale. With the CPI numeraire or the $w = 1$ pin such
+a rule is either vacuous or over-determines the system (in the fixed gauge
+it forces $\alpha^{\!\top}y = \Lbar$, i.e.\ silently reverts GAMMA to
+ALPHA). A rule on the \emph{real} wage, $w/\Pi = \phi(L)$, is BETA's
+equation \eqref{eq:beta} rearranged and is already in the model --- where
+it is pinned by technology under demand-only shocks. The numeraire lever is
+likewise dead (DE-0011).
+\end{corollary}
+
+Quantity-side levers (endogenous saving rates, endogenous export demand)
+change $G$ or $b$ but not the price block; they add variety between
+financing columns, not between closures, and leave Lemma~\ref{lem:price}
+intact.
+
+\section{Numerical evidence}\label{sec:conclusion}
+
+Table~\ref{tab:v5} extracts the four rows of the executed
+\texttt{matrix\_5x3\_v5} generation (income-side real GDP and the
+household-consumption welfare index, ADR-0018; employment; external
+account). The paired rows are identical to all printed decimals in every
+reported metric, including the full flow decomposition (saving, tax,
+investment plus exports, imports, taxes on intermediates; see
+\texttt{paper/tables/matrix\_5x3\_v5\_flows.md}). The GDP deflator reads
+$1.000000$ in all fifteen cells, the numerical face of
+Lemma~\ref{lem:price}.
+
+\begin{table}[htbp]
+\centering
+\caption{The equivalence rows in the \texttt{matrix\_5x3\_v5} generation
+(run ids \texttt{matrix\_5x3-v5-*}; deviations from the no-programme
+baseline).}
+\label{tab:v5}
+\begin{tabular}{llrrr}
+\toprule
+Row & Financing & Real GDP & Consumption (welfare) & Employment $L$ \\
+\midrule
+ALPHA & F1 & $+0.000000$ & $+0.001432$ & $1.000000$ \\
+BETA  & F1 & $+0.000000$ & $+0.001432$ & $1.000000$ \\
+ALPHA & F2 & $+0.000000$ & $-0.018226$ & $1.000000$ \\
+BETA  & F2 & $+0.000000$ & $-0.018226$ & $1.000000$ \\
+ALPHA & F3 & $+0.000000$ & $-0.018226$ & $1.000000$ \\
+BETA  & F3 & $+0.000000$ & $-0.018226$ & $1.000000$ \\
+\midrule
+GAMMA & F1 & $-0.000973$ & $-0.000806$ & $0.999027$ \\
+DELTA & F1 & $-0.000973$ & $-0.000806$ & $0.999027$ \\
+GAMMA & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
+DELTA & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
+GAMMA & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
+DELTA & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Implications for the manuscript.} (i) The two-paradigm reading
+is safe to state as a theorem-backed claim: the flexible-wage rows form one
+equivalence class (composition at pinned employment), the fixed-wage rows
+another (employment at pinned real wage), and the difference between the
+classes is the $F$-instrument --- a derivation, not an observation.
+(ii) The null results for $\eta_s$ and for $(\theta,\epsilon,\sigma)$ under
+demand-only shocks should be reported as identification statements
+(Corollary~\ref{cor:class}), which is precisely what reviewer 2's critique
+needs. (iii) The variety program for the demand-only matrix must route
+through one of the five doors of Section~\ref{sec:scope}; within it, the
+capacity door's utilization/Verdoorn variant and the external door are the
+cheap additions beyond the three candidates already ranked in
+\texttt{docs/ETAs.md}, while Corollary~\ref{cor:nogo} rules out the entire
+nominal-wage-rule family ex ante.
+
+\begin{thebibliography}{9}
+
+\bibitem{samuelson1951}
+Samuelson, P.\,A.\ (1951). Abstract of a theorem concerning substitutability
+in open Leontief models. In T.\,C.\ Koopmans (ed.),
+\emph{Activity Analysis of Production and Allocation}. Wiley, New York.
+
+\bibitem{robinson2006}
+Robinson, S.\ (2006). Macro models and multipliers: Leontief, Stone, Keynes,
+and CGE models. IFPRI, Washington, DC.
+
+\bibitem{baqaee2019}
+Baqaee, D.\,R., and E.\ Farhi (2019). Beyond Hulten's theorem.
+\emph{Econometrica} 87(3).
+
+\bibitem{lavoie2014}
+Lavoie, M.\ (2014). \emph{Post-Keynesian Economics: New Foundations}.
+Edward Elgar, Cheltenham.
+
+\end{thebibliography}
+
+\end{document}

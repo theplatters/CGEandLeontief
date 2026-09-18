@@ -54,3 +54,4 @@ settled question.
 | ADR-0015 | monotone polish to ~1e-10 (tolerance-independent metrics) | accepted |
 | ADR-0016 | CES-consistent valuation of the intermediate-bill leaks | accepted |
 | ADR-0017 | Actual-matrix scale determinacy for the fixed-wage η = 1 system | accepted |
+| ADR-0018 | Real GDP measurement in the open economy | accepted |

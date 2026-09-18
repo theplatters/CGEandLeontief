@@ -25,7 +25,7 @@ superseded design stays visible in git history).
 
 Each batch computes the design's reference continuation once and reuses its
 final solution as the warm start for all mobile cells and as the
-`real_gdp` reference. The continuation ports
+`consumption` reference (the GDP reference is 1 by construction). The continuation ports
 `cbase2/scripts/verify_v3.jl` (lines 18–77): `read_data` →
 `retained_dataset` → bisect `exo_scale` for the smallest scale with
 `saving_rate ≥ 0` → `exo_scale` steps × the θ ladder with
@@ -93,7 +93,7 @@ failure outside the cell's own manifest is reported as `error` for that
 cell). `TOML.print` may render some tables non-inline; the
 parsed structure is the contract.
 
-- Top level: `schema_version`, `run_id`, `design`, `cell`, `status`,
+- Top level: `schema_version` (= 2), `run_id`, `design`, `cell`, `status`,
   `date` (ISO), `actor`.
 - `[provenance]`: `git_commit`, `git_dirty`, `julia_version`,
   `manifest_sha256` (of `Manifest.toml`, or `"absent"`), `design_sha256`,
@@ -114,10 +114,15 @@ parsed structure is the contract.
   p, L)`; `labour` = the kernel `labor_market_residual` at `(L_sum, w)`
   below `labour_tol`; `wage` = `max|w_raw−1| < wage_tol` on the raw pinned
   wage (the CPI-normalized wage must not enter the gate).
-- `[metrics]`: `real_gdp`, `real_gdp_ref`, `real_gdp_rel`, `employment`,
-  `wage`, `nominal_gdp`, `max_abs_price_dev`.
+- `[metrics]`: `gdp`, `gdp_rel`, `gdp_expenditure`, `gdp_expenditure_rel`,
+  `gdp_deflator`, `gdp_wedge`, `consumption`, `consumption_rel`, `employment`,
+  `wage`, `nominal_gdp`, `max_abs_price_dev`. `gdp` is the ADR-0018
+  income-side real GDP index against the batch reference, `consumption` the
+  household-consumption (welfare) index; old v1 manifests (with `real_gdp*`)
+  stay as immutable history.
 - `[diagnostics]` (never gates): `canary_s`, `canary_ixm`, `canary_diff`
-  (`S = I + X − M`), `external_balance`, `public_budget`.
+  (`S = I + X − M`), `gdp_c`, `gdp_g`, `gdp_i`, `gdp_x`, `gdp_m_final`,
+  `gdp_m_int`, `gdp_t_int`, `external_balance`, `public_budget`.
 - `[artifacts]`: `log = "log.txt"`, `solution = "solution.csv" | ""`.
 
 ## Index (`runs/index.csv`)
@@ -127,7 +132,7 @@ Header exactly
 one row per run dir with a manifest, sorted by `run_id`, rewritten on
 every status transition. `closures = "<L>+<F>"`; `gate_summary` like
 `resid 1.20e-07<=1e-06 ok; budget 3e-12<=1e-09 ok`; `headline_metrics`
-like `gdp_rel=...; L=...; w=...`.
+like `gdp_rel=...; cons_rel=...; L=...; w=...`.
 
 Only `runs/index.csv` and `runs/*/manifest.toml` are tracked (see
 `.gitignore`); verify with `git check-ignore`.

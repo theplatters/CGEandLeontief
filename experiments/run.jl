@@ -14,7 +14,8 @@
 # - `--design`: execute cells in file order. Refuses to start (before creating
 #   any run dir) when the design file is not preregistered with a matching
 #   SHA-256. The design's reference continuation is computed once per batch
-#   and its final solution warm-starts all mobile cells and anchors `real_gdp`.
+#   and its final solution warm-starts all mobile cells and anchors `consumption`
+#   (the GDP reference is 1 by construction).
 #
 # Run layout: `runs/<run_id>/manifest.toml` (written `running` at cell start,
 # `executed`/`failed` at the end), `log.txt` (appended progress lines),
@@ -44,7 +45,7 @@ using CSV
 using DataFrames
 
 const RUN_SEED = 1234
-const RUN_SCHEMA_VERSION = 1
+const RUN_SCHEMA_VERSION = 2
 const RUN_IO_TABLE = "I-O_DE2019_formatiert.csv"
 const RUN_INDEX_HEADER = "run_id,date,design,closures,status,gate_summary,headline_metrics,commit"
 
@@ -523,8 +524,11 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
                 ("labour", abs(labor_market_residual(labor_closure(model.options), model, L_sum, w, cpi_val)),
                  labour_tol, abs(labor_market_residual(labor_closure(model.options), model, L_sum, w, cpi_val)) < labour_tol)
 
-    rgdp = real_gdp(sol)
-    rgdp_ref = real_gdp(ref_sol)
+    gdp = gdp_income(sol, ref_sol)
+    gdp_exp = gdp_expenditure(sol, ref_sol)
+    defl = gdp_deflator(sol, ref_sol)
+    cons = real_consumption(sol) / real_consumption(ref_sol)
+    wedge = gdp_wedge(sol)
     overall = (resid_pass && budget_pass && third_pass) ? "pass" : "fail"
     summary = gate_frag("resid", resid, residual_tol, resid_pass) * "; " *
         gate_frag("budget", budget, budget_tol, budget_pass) * "; " *
@@ -535,6 +539,7 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
     # omitted N-th market residual must equal S − (I+X−M).
     assert_external_canary(model, sol)
     canary = external_balance_canary(model, [p; q; fixed ? 1.0 : w])
+    comp = gdp_components(model, sol)
     return (
         gates = Dict{String,Any}(
             "residual" => Dict{String,Any}("value" => resid, "tolerance" => residual_tol, "pass" => resid_pass),
@@ -543,14 +548,19 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
             "overall" => overall),
         gate_summary = summary,
         metrics = Dict{String,Any}(
-            "real_gdp" => rgdp, "real_gdp_ref" => rgdp_ref,
-            "real_gdp_rel" => rgdp / rgdp_ref - 1,
+            "gdp" => gdp, "gdp_rel" => gdp - 1,
+            "gdp_expenditure" => gdp_exp, "gdp_expenditure_rel" => gdp_exp - 1,
+            "gdp_deflator" => defl, "gdp_wedge" => wedge,
+            "consumption" => cons, "consumption_rel" => cons - 1,
             "employment" => L_sum, "wage" => w,
             "nominal_gdp" => nominal_gdp(sol),
             "max_abs_price_dev" => maximum(abs.(p .- 1))),
         diagnostics = Dict{String,Any}(
             "canary_s" => canary.S, "canary_ixm" => canary.IX - canary.M,
             "canary_diff" => canary.diff,
+            "gdp_c" => comp.V[1], "gdp_g" => comp.V[2], "gdp_i" => comp.V[3],
+            "gdp_x" => comp.V[4], "gdp_m_final" => comp.V[5],
+            "gdp_m_int" => comp.V[6], "gdp_t_int" => comp.V[7],
             "external_balance" => external_balance(fin, model, p),
             "public_budget" => public_budget(fin, model, p)),
     )
@@ -634,8 +644,8 @@ function rewrite_index(; runs_dir::AbstractString)::Nothing
         else
             "overall=$(get(man, "status", "?"))"
         end
-        hm = haskey(me, "real_gdp_rel") ?
-            @sprintf("gdp_rel=%.6f; L=%.6f; w=%.6f", me["real_gdp_rel"], me["employment"], me["wage"]) : ""
+        hm = haskey(me, "gdp_rel") ?
+            @sprintf("gdp_rel=%.6f; cons_rel=%.6f; L=%.6f; w=%.6f", me["gdp_rel"], me["consumption_rel"], me["employment"], me["wage"]) : ""
         rows[string(man["run_id"])] = String[
             string(man["run_id"]), string(get(man, "date", "")),
             string(get(man, "design", "")), closures, string(get(man, "status", "")),
@@ -729,7 +739,7 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
         TOML.print(io, man)
     end
     run_log(rundir, "start $run_id design=$design actor=$actor commit=$(prov["git_commit"])")
-    run_log(rundir, "reference real_gdp_ref=$(real_gdp(ref_sol))")
+    run_log(rundir, "reference consumption_ref=$(real_consumption(ref_sol))")
     vintage = string(get(get(design_d, "data", Dict{String,Any}()), "vintage", "unknown"))
     update_scenario_row(run_id, design, cell, "running", prov["git_commit"]; root = root,
         vintage = vintage)
@@ -787,7 +797,7 @@ Execute a design's cells in file order (implements `--design`).
 Refuses to start — before creating any run dir — when the design file is
 not preregistered with a matching SHA-256. The reference continuation is
 computed once per batch; its final solution warm-starts every cell and
-anchors `real_gdp`. `--cell`/`--cells` select a subset; `--budget-seconds`
+anchors `consumption` (the GDP reference is 1 by construction). `--cell`/`--cells` select a subset; `--budget-seconds`
 stops the batch cleanly before a cell whose start would exceed the budget.
 Per-cell exceptions are caught by `execute_cell`; the batch continues.
 """

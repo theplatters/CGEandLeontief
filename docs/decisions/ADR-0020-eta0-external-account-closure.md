@@ -208,3 +208,55 @@ the record of the alternatives considered.
 
 Either of B or C is a new ADR superseding this one's Decision section; the
 measurements in Context stand as recorded evidence for both.
+
+## Implementation (promoted 2026-09-18)
+
+Option C is in the kernel and executed as the `matrix_5x3_v6` generation. The
+change is dispatch-only, so every η = 1 and fixed-wage path is bit-identical:
+
+- `_cost_minimizing_labor` evaluates `log.(w)`, so it accepts a wage vector and
+  reduces bit-identically to the scalar case; `_wage_bill(w::Real, L) = w·ΣL`
+  keeps the scalar arithmetic exact, while `w::AbstractVector` sums `w_i·L_i`.
+- `problem_sectoral` is the η = 0 system (3N+1 unknowns `[p; y; w(1:N); F]`: N
+  zero-profit, N sectoral FOC `log L^cm_i = log L̄_i`, N clearing, one CPI
+  numeraire). `problem` now rejects η = 0 (the pin branch is gone);
+  `equilibrium_residuals`, `market_clearing_residuals` and
+  `external_balance_canary` accept the 3N+1 vector and expand a legacy 2N+2
+  vector by replicating the scalar wage.
+- `solve` dispatches `problem_sectoral` at η = 0 with a tighter primary
+  tolerance (1e-8) and a longer polish ladder (6 steps, target 1e-13), because
+  the system is stiff (Jacobian condition ~9.4e7 against ~52.8 mobile); the
+  η = 1 settings are unchanged.
+- `gdp_components` uses the sectoral wage vector at η = 0; the harness reports
+  the wage-bill-weighted average as the scalar `wage` metric and the dispersion
+  as `wage_min` / `wage_max`; the η = 0 "third gate" is the sectoral
+  labour-market gap (`sectoral_labor_gap`, exported), and
+  `assert_external_account` now gates the identity in every regime.
+
+Enforcement as realised: the pin is absent, financing neutrality holds at
+η = 0 (`F_F3 = F_F2 − B_gov` to 3.5e-14), and the identity is gated. The gate
+value deviates from the 1e-12 written in the Enforcement section above: the
+measured floor of the stiff η = 0 system is 1.04e-11 (BF-F1, against 1.8e-13 at
+BF-F2/F3), so the harness gate is 1e-9 and the test assertion 1e-10 — set from
+the measured floor, not tuned to pass a failing cell.
+
+Results (15/15 cells executed, commit `6db1da5`):
+
+| Cell | `F` | `B_gov` | Net ext. pos. | Gap | Consumption rel. | Wage vector |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| BF-F1 | -0.005815 | 0 | -0.005815 | -1.0e-11 | +0.096 % | 0.9734 … 1.5249 |
+| BF-F2 | -0.008528 | 0 | -0.008528 | -1.8e-13 | -1.980 % | 0.9702 … 1.6719 |
+| BF-F3 | -0.023375 | +0.014846 | -0.008528 | -1.9e-13 | -1.980 % | 0.9702 … 1.6719 |
+
+v5 for comparison: net external position 0 / 0 / +1.331 % of GDP, gap
++4.3e-04 / -5.6e-04 / -7.9e-03, consumption rel. +0.043 % / -1.694 % /
+0.000 %.
+
+Verification: the twelve non-BF cells reproduce v5 (ALPHA/BETA to 6.7e-16,
+GAMMA/DELTA to 1.6e-11 — the near-singular fixed-wage warm-start noise, which
+appears identically on the pristine kernel, so it is not an effect of this
+change). Evidence: `experiments/probes/probe7_sectoral_wages_eta0.jl` (closure),
+`probe8_promotion_verification.jl` (kernel and harness),
+`probe9_nonbf_reproduction.jl` (baseline comparison),
+`probe10_repin_eta0_fixtures.jl` (fixture goldens); runs in
+`runs/matrix_5x3-v6-*`.

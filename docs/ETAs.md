@@ -7,6 +7,9 @@ tags: [beyondhulten, workplan, closures, eta_s, supply-shock, identification]
 last-updated: September 2026
 ---
 
+**Version 2** \textcolor{revisionV1}{(September 2026)}
+**Version 1** (September 2026)
+
 This document is the workplan for the supply-side arm, the cheapest of the
 candidates that restore variety inside the {BF, ALPHA, BETA} block (section
 4.2 of `docs/DOCS_ASSESSMENT.md`, ranked candidate 2). House rule: plans
@@ -195,7 +198,7 @@ Recorded with the design (ADR-0006), deviations are findings (ADR-0004):
    `registry/closures.toml [labor.BETA]` open gates; one
    `docs/log/2026-09.md` entry.
 
-# What the arm does not do
+# What the arm does not do \textcolor{revisionV1}{\normalsize [extended v2]}
 
 The arm moves prices **through technology only**: the zero-profit block
 contains no demand term, so $p \neq 1$ requires $A \neq 1$. Put the
@@ -223,6 +226,50 @@ on demand, i.e. one of:
 - **a fixed factor with capacity**: the standard short-run mechanism, but the
   largest surgery --- a second factor, a rental schedule and a rental-income
   closure.
+- \textcolor{revisionV1}{\textbf{the capacity door's reduced form} --- an
+  endogenous utilization externality $A^{\mathrm{eff}}_i = A_i\,(y_i /
+  \lambda_i)^{-\delta}$ inside the unit-cost hook: demand raises marginal
+  cost, zero profit is preserved, and \emph{no rent is created}, so there is
+  no income-closure problem at all --- a one-line change in the cost function
+  with one new parameter. With the opposite sign ($\delta < 0$) it is the
+  Kaldor--Verdoorn case: increasing returns make prices \emph{fall} with
+  demand --- variety in the opposite direction. The cheapest door of all.}
+- \textcolor{revisionV1}{\textbf{the external door} --- endogenous import
+  prices $p^M_i = p^M_{i0}\,(M_i / M_{i0})^{\zeta}$ with $\zeta \geq 0$: an
+  upward-sloping foreign supply curve. Import prices enter the intermediate
+  index and the CPI through the margins, so relative prices become functions
+  of import volumes and hence of demand. Moderate surgery, and it exploits
+  precisely the external-account machinery of ADR-0019: the programme's
+  import content bids up import prices --- a structuralist absorption /
+  terms-of-trade channel. New candidate.}
+- \textcolor{revisionV1}{\textbf{the technology door} --- supply shocks
+  $A \neq 1$: this arm, the present workplan; it separates BETA from ALPHA
+  but does not repair the demand-only matrix.}
+
+\textcolor{revisionV1}{\textbf{The five doors (added v2).} The ex ante
+derivation now lives in \texttt{paper/equivalence.tex}: the zero-profit
+block is homogeneous of degree one in $(p, w)$ and demand-free (Lemma 1
+there), so under $A = 1$ every regime sits at $p = w = \mathrm{CPI} = 1$
+and the real wage is pinned at its anchor --- the quantity block reduces to
+one affine multiplier system in which none of $(\theta, \epsilon, \sigma,
+\eta_s)$ appears. Variety therefore requires demand to enter the price
+block, and the list above is exactly the door menu: labour, markup,
+capacity (with its reduced form), external, technology.}
+
+\textcolor{revisionV1}{\textbf{Ruled out ex ante} (the no-go corollary,
+Corollary 3 of \texttt{paper/equivalence.tex}): no rule that writes the
+\emph{nominal} wage as a function of endogenous aggregates --- an aggregate
+wage curve $w = \bar{w}\,(\alpha^{\!\top} y / \bar{L})^{\varphi}$, nominal
+indexation, or a numeraire change --- can create demand-sensitive real
+outcomes. The price block still forces $p = w\,\pi(A)$ and
+$\mathrm{CPI}(p) = w\,\mathrm{CPI}(\pi)$, so the real wage is invariant to
+whatever sets $w$; in the fixed-wage gauge such a rule is either vacuous or
+over-determines the system (it forces $\alpha^{\!\top} y = \bar{L}$,
+silently reverting GAMMA to ALPHA). A rule on the \emph{real} wage is the
+BETA supply equation rearranged and is already in the model, where the
+demand-only design pins it to the anchor. Quantity-side levers (endogenous
+saving rates, endogenous export demand) move the multiplier, not the price
+block, and add no closure variety. Do not schedule this family.}
 
 Once prices respond to demand, BETA separates from ALPHA in the demand matrix
 as well: the numeraire then delivers a real wage that moves with the shock, so
@@ -231,6 +278,18 @@ supply-side arm first (cheap, earns the identification claim for $\eta_s$),
 then sector-specific wages (the repair that gives the published matrix
 variety), with the markup ladder kept as a robustness arm rather than as the
 headline mechanism.
+
+\textcolor{revisionV1}{\textbf{Sequencing update (v2).} The ranking now
+reads: the supply-side arm first (unchanged --- cheap, earns the
+identification claim for $\eta_s$); then sector-specific wages (the labour
+door, still candidate 1 for the published matrix --- it repairs the BF
+row's common-wage defect); the utilization/Verdoorn externality as the
+cheap third arm (no income-closure problem; with $\delta < 0$ it delivers
+Kaldorian variety in the opposite direction); the terms-of-trade arm as the
+open-economy candidate with the best fit to the ADR-0019 external account;
+the markup ladder and the explicit fixed factor kept as robustness arms.
+The nominal-wage-rule family is ruled out ex ante (see above) and stays off
+the workplan.}
 
 # Risks
 
@@ -255,3 +314,14 @@ headline mechanism.
   round-gain check fails under $A \neq 1$, a follow-up ADR.
 - `paper/tables/supply_etas_flows.md`, generated from the manifests and citing
   the run ids (ADR-0004).
+
+# Revision Log
+
+- **Version 1** (September 2026)
+- **Version 2** \textcolor{revisionV1}{(September 2026)} --- Section 5
+  extended: the three demand-sensitive-price candidates completed to the
+  five-door menu (new: the external door --- endogenous import prices /
+  terms of trade; the capacity door's reduced form --- the
+  utilization/Verdoorn externality with no income-closure problem); the
+  nominal-wage-rule family ruled out ex ante (Corollary 3 of
+  \texttt{paper/equivalence.tex}); sequencing updated.

@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-18 by `scripts/status.jl` · branch `reorg` · HEAD `1a92945` (dirty)
+Generated 2026-09-18 by `scripts/status.jl` · branch `reorg` · HEAD `068ff78` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -14,7 +14,7 @@ Generated 2026-09-18 by `scripts/status.jl` · branch `reorg` · HEAD `1a92945` 
 | Labour closures | 1 | 0 | 3 | 2 | 0 | 6 |
 | Financing closures | 0 | 0 | 0 | 3 | 0 | 3 |
 
-Scenarios: **51** rows — executed: 43, provisional: 3, failed: 5. Designs: `cbase2-v3`, `matrix_5x3`, `matrix_5x3_v2`, `matrix_5x3_v3`.
+Scenarios: **66** rows — planned: 15, executed: 43, provisional: 3, failed: 5. Designs: `cbase2-v3`, `matrix_5x3`, `matrix_5x3_v2`, `matrix_5x3_v3`, `matrix_5x3_v4`.
 
 ## Labour closures
 
@@ -39,11 +39,11 @@ Scenarios: **51** rows — executed: 43, provisional: 3, failed: 5. Designs: `cb
 
 | Labour \ Financing | F1 | F2 | F3 |
 | --- | --- | --- | --- |
-| ALPHA | failed, executed, executed, executed | provisional, executed, executed, executed | failed, executed, executed, executed |
-| BETA | executed, executed, executed | executed, executed, executed | failed, executed, executed, executed |
-| BF | executed, executed, executed | executed, executed, executed | executed, executed, executed |
-| DELTA | failed, executed, executed | provisional, executed, executed, executed | provisional, executed, executed, executed |
-| GAMMA | failed, executed, executed | executed, executed, executed | executed, executed, executed |
+| ALPHA | failed, executed, executed, executed, planned | provisional, executed, executed, executed, planned | failed, executed, executed, executed, planned |
+| BETA | executed, executed, executed, planned | executed, executed, executed, planned | failed, executed, executed, executed, planned |
+| BF | executed, executed, executed, planned | executed, executed, executed, planned | executed, executed, executed, planned |
+| DELTA | failed, executed, executed, planned | provisional, executed, executed, executed, planned | provisional, executed, executed, executed, planned |
+| GAMMA | failed, executed, executed, planned | executed, executed, executed, planned | executed, executed, executed, planned |
 | ZETA | — | — | — |
 
 ### Runs by design
@@ -118,6 +118,26 @@ Scenarios: **51** rows — executed: 43, provisional: 3, failed: 5. Designs: `cb
 | matrix_5x3-v3-GAMMA-F1 | GAMMA | F1 | executed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v3-GAMMA-F1/manifest.toml; runs/matrix_5x3-v3-GAMMA-F1/log.txt | parameters pinned in experiments/designs/matrix_5x3_v3.toml (full-71 A-bill, ADR-0012); planned \| failed 2026-09-17 (see runs/matrix_5x3-GAMMA-F1/manifest.toml) \| executed 2026-09-17 (see runs/matrix_5x3-v2-GAMMA-F1/manifest.toml) \| executed 2026-09-18 (see runs/matrix_5x3-v3-GAMMA-F1/manifest.toml) |
 | matrix_5x3-v3-GAMMA-F2 | GAMMA | F2 | executed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v3-GAMMA-F2/manifest.toml; runs/matrix_5x3-v3-GAMMA-F2/log.txt | parameters pinned in experiments/designs/matrix_5x3_v3.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-GAMMA-F2/manifest.toml) \| executed 2026-09-17 (see runs/matrix_5x3-v2-GAMMA-F2/manifest.toml) \| executed 2026-09-18 (see runs/matrix_5x3-v3-GAMMA-F2/manifest.toml) |
 | matrix_5x3-v3-GAMMA-F3 | GAMMA | F3 | executed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v3-GAMMA-F3/manifest.toml; runs/matrix_5x3-v3-GAMMA-F3/log.txt | parameters pinned in experiments/designs/matrix_5x3_v3.toml (full-71 A-bill, ADR-0012); planned \| executed 2026-09-17 (see runs/matrix_5x3-GAMMA-F3/manifest.toml) \| executed 2026-09-17 (see runs/matrix_5x3-v2-GAMMA-F3/manifest.toml) \| executed 2026-09-18 (see runs/matrix_5x3-v3-GAMMA-F3/manifest.toml) |
+
+#### `matrix_5x3_v4`
+
+| run_id | labour | financing | status | parameters | evidence | notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| matrix_5x3-v4-ALPHA-F1 | ALPHA | F1 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-ALPHA-F2 | ALPHA | F2 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-ALPHA-F3 | ALPHA | F3 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-BETA-F1 | BETA | F1 | planned | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-BETA-F2 | BETA | F2 | planned | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-BETA-F3 | BETA | F3 | planned | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-BF-F1 | BF | F1 | planned | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-BF-F2 | BF | F2 | planned | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-BF-F3 | BF | F3 | planned | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-DELTA-F1 | DELTA | F1 | planned | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-DELTA-F2 | DELTA | F2 | planned | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-DELTA-F3 | DELTA | F3 | planned | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-GAMMA-F1 | GAMMA | F1 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-GAMMA-F2 | GAMMA | F2 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
+| matrix_5x3-v4-GAMMA-F3 | GAMMA | F3 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v4.toml (full-71 A-bill, ADR-0012; ADR-0018 measurement generation: income-side real GDP, consumption index = welfare); planned |
 
 ## Freeze board
 
@@ -200,6 +220,7 @@ Scenarios: **51** rows — executed: 43, provisional: 3, failed: 5. Designs: `cb
 - [ADR-0015 — monotone polish to ~1e-10 (tolerance-independent metrics)](decisions/ADR-0015-monotone-polish.md)
 - [ADR-0016 — CES-consistent valuation of the intermediate-bill leaks](decisions/ADR-0016-ces-consistent-leak-valuation.md)
 - [ADR-0017 — actual-matrix scale determinacy for the fixed-wage η = 1 system](decisions/ADR-0017-actual-matrix-scale-determinacy.md)
+- [ADR-0018 — Real GDP measurement in the open economy](decisions/ADR-0018-real-gdp-measurement.md)
 
 ## Warnings
 

@@ -49,3 +49,7 @@ settled question.
 | ADR-0010 | Port the `cbase2/review.md` pipeline fixes | accepted |
 | ADR-0011 | Conform the frozen cbase2 notebook 01 to the canonical kernel | accepted |
 | ADR-0012 | A-bill calibration: domestic intermediate bill, clamp eliminated, s re-anchored | accepted |
+| ADR-0013 | the intermediate-bill tax term: row 75 booked as an external leak | accepted |
+| ADR-0014 | real-wage elastic supply and a verified scale-determinacy guard | accepted |
+| ADR-0015 | monotone polish to ~1e-10 (tolerance-independent metrics) | accepted |
+| ADR-0016 | CES-consistent valuation of the intermediate-bill leaks | accepted |

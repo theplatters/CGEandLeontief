@@ -1,0 +1,230 @@
+# experiments/designs/matrix_5x3_v3.toml — the 5×3 evaluation matrix (Phase 3)
+#
+# The 15 cells matrix_5x3-<L>-<F> for L in BF/ALPHA/BETA/GAMMA/DELTA and
+# F in F1/F2/F3. Pinned by preregistration: run
+#   julia --project=. experiments/run.jl --preregister matrix_5x3_v3
+# before executing; experiments/run.jl --design matrix_5x3_v3 refuses to start
+# when this file's SHA-256 does not match registry/preregistration.toml.
+# See experiments/README.md and ADR-0006.
+#
+# Calibration: FULL-71 A-bill (ADR-0012; designs/calibration_abill.toml).
+# The 70-sector v3 pin (drops = [71], cbase2 artifacts, old s) is superseded:
+# the intermediate demand is charged with the DOMESTIC bill (raw-table row 73),
+# the clamp is gone, the imported intermediates (row 74) are an explicit
+# external-account leak, and the household block is the table's own domestic
+# household final demand. drops = [] leaves the full table in place
+# (retained_dataset returns the full-table Data unchanged).
+#
+# This is the ADR-0015 generation: every cell is polished to ~1e-10, so the
+# reported metrics no longer depend on where the solver stopped (ADR-0015).
+#
+# ADR-0014:  the elastic-supply residual is deflated by
+# the CPI (real wage, DE-0004) and the fixed-wage η = 1 admissibility guard is
+# the verified round-gain criterion, so GAMMA-F1 and DELTA-F1 are executable
+# here (they failed the heuristic guard in the v1 generation).
+#
+# η ∈ {0, 1} only (ADR-0010): BF is the immobile endpoint (η = 0), ALPHA,
+# BETA, GAMMA, DELTA and the reference continuation use fully mobile
+# allocation (η = 1). The former interpolated η = 0.5 and its allocation wedge
+# are retired.
+
+schema_version = 1
+design = "matrix_5x3_v3"
+description = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration under ADR-0014/ADR-0015 (real-wage elastic supply; verified scale-determinacy guard; monotone polish to 1e-10). Supersedes the v1 and v2 generations, whose runs stay as history."
+smoke = false
+
+[data]
+vintage = "full-71-abill"
+drops = []
+calibration_root = "src"
+source_table = "data/I-O_DE2019_formatiert.csv"
+calibration_artifacts = []
+
+[calibration]
+# Informational (ADR-0012 anchors; not read by run.jl). The reference
+# continuation bisects exo_scale for the smallest scale with s >= 0 and ends at
+# exo_scale = 1, where the full-71 A-bill calibration gives s = 0.1199,
+# intermediate imports = 0.2214, household demand c0 = 0.6917 of GDP. The
+# external-identity canary is exact to machine precision once the row-75
+# product taxes on intermediate use are booked as the third leak of the
+# purchaser-price intermediate bill (T_int = 0.0257449 of GDP, ADR-0013);
+# before that term the omitted-market residual was short by exactly it.
+saving_rate = 0.1199
+intermediate_imports = 0.2214
+intermediate_taxes = 0.0257449423974625
+baseline_root_tol = 1e-12
+
+[programme]
+source = "cbase2/data_raw/impulses.csv"
+year = 2024
+column_slice = [3, 73]   # 1-based inclusive (sectors 1..71)
+total_eur_m = 40300.0
+f1_shift = "tilt_g0_over_c0"
+
+[reference]
+labor = "ALPHA"
+eta = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+exo_scale_steps = 6
+thetas = [2.0, 1.5, 1.2, 1.0, 0.8, 0.65, 0.5]
+
+[gates]
+residual_tol = 1e-6
+budget_tol = 1e-9
+labour_tol = 1e-6
+wage_tol = 1e-8
+
+[cells.matrix_5x3-v3-BF-F1]
+labor = "BF"
+financing = "F1"
+eta = 0.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "BF immobile baseline allocation (eta=0) with compositional F1 shift"
+
+[cells.matrix_5x3-v3-BF-F2]
+labor = "BF"
+financing = "F2"
+eta = 0.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "BF immobile baseline allocation (eta=0), tax-financed programme"
+
+[cells.matrix_5x3-v3-BF-F3]
+labor = "BF"
+financing = "F3"
+eta = 0.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "BF immobile baseline allocation (eta=0), externally financed programme"
+
+[cells.matrix_5x3-v3-ALPHA-F1]
+labor = "ALPHA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Full-employment mobile labour (eta=1) with compositional F1 shift"
+
+[cells.matrix_5x3-v3-ALPHA-F2]
+labor = "ALPHA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Full-employment mobile labour (eta=1), tax-financed programme"
+
+[cells.matrix_5x3-v3-ALPHA-F3]
+labor = "ALPHA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Full-employment mobile labour (eta=1), externally financed programme"
+
+[cells.matrix_5x3-v3-BETA-F1]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Elastic labour supply (eta_s=0.5), fully mobile allocation, compositional F1 shift"
+
+[cells.matrix_5x3-v3-BETA-F2]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Elastic labour supply (eta_s=0.5), fully mobile allocation, tax-financed programme"
+
+[cells.matrix_5x3-v3-BETA-F3]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Elastic labour supply (eta_s=0.5), fully mobile allocation, externally financed programme"
+
+[cells.matrix_5x3-v3-GAMMA-F1]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Fixed real wage with fully mobile allocation (eta=1), compositional F1 shift"
+
+[cells.matrix_5x3-v3-GAMMA-F2]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Fixed real wage with fully mobile allocation (eta=1), tax-financed programme"
+
+[cells.matrix_5x3-v3-GAMMA-F3]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Fixed real wage with fully mobile allocation (eta=1), externally financed programme"
+
+[cells.matrix_5x3-v3-DELTA-F1]
+labor = "DELTA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 1e-4
+epsilon = 1e-4
+sigma = 1e-4
+delta_epsilon = 1e-4
+note = "DELTA corner (Leontief limit at eps=1e-4, eta=1). F1 has no additive anchor and the fixed-wage eta=1 system is scale-indeterminate, so this cell is expected to fail the guard (kept visible)."
+
+[cells.matrix_5x3-v3-DELTA-F2]
+labor = "DELTA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 1e-4
+epsilon = 1e-4
+sigma = 1e-4
+delta_epsilon = 1e-4
+note = "DELTA corner (Leontief limit at eps=1e-4, eta=1), tax-financed programme"
+
+[cells.matrix_5x3-v3-DELTA-F3]
+labor = "DELTA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 1e-4
+epsilon = 1e-4
+sigma = 1e-4
+delta_epsilon = 1e-4
+note = "DELTA corner (Leontief limit at eps=1e-4, eta=1), externally financed programme"

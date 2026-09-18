@@ -128,10 +128,10 @@ v1–v3 runs stay as history (ADR-0004).
   eta = 1 rows (+0.06 % of GDP for F2, +0.85 % for F3). The expenditure-side
   Divisia index counts it; the income-side real GDP does not.
 - `M = M_final + M_int` (the `gdp_m_final`/`gdp_m_int` manifest diagnostics,
-  reported negative there); `T` is `gdp_t_int`. `S + M + T = I + X` holds to
-  machine precision at every cell except where the net external position is
-  nonzero (F1/F2 mobile and F3 mobile), which is exactly the `Net ext.
-  position` column.
+  reported negative there); `T` is `gdp_t_int`. The canary identity is
+  `S + M_canary + T - (I + X) = Net ext. position`, where `M_canary = M` for
+  F1/F2 and `M_canary = M - 0.013310` for F3 (the external inflow `F` is booked
+  as negative imports); it holds to 1e-16 at every cell.
 - `tax` is the `public_budget` diagnostic: government spending including the
   programme under F2 (`tau0 + G0`), and `tau0` otherwise.
 - All 15 cells pass their gates (residual <= 1.4e-13, ADR-0015 polish);

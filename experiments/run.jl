@@ -383,7 +383,9 @@ all-N clearings hold but the canary carries the documented
 fixed-allocation/factor-market gap (zero-profit prices the
 cost-minimizing labour demand, not the frozen baseline allocation;
 measured order 4e-4..8e-3 on full-71), so it is only checked for
-finiteness there, never gated.
+finiteness there, never gated. The matrix designs pass zero legacy manna
+(the ADR-0005 compatibility path); with nonzero manna the gap would include
+the unbooked `p·(A+G)`, so this gate applies to zero-manna designs only.
 """
 function assert_external_account(model::Model, sol::Solution;
         clearing_tol::Real = 1e-6, gap_tol::Real = 1e-9)

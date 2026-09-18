@@ -51,11 +51,15 @@ solve with the pin at ~2e-15, and the closed 2-sector tiny fixture
 4. **External programme financing is booked as `B_gov = Σ_i p_i g_i` under the
    ExternalDebt (F3) closure; `B_gov = 0` otherwise** (F1 compositional, F2
    lump-sum programme tax).
-5. **Exact identity at every all-N solution:**
+5. **Exact identity at every all-N solution (zero legacy manna):**
    `S + T_int + M − (I+X) = F + B_gov`, where `S = s·E` with E including F,
    M is the full import content (final-import margin plus the
    intermediate-import leak `M_int`, row 74), and `T_int` (row 75) stays in T
-   as before (ADR-0013).
+   as before (ADR-0013). With nonzero legacy manna (the ADR-0005
+   compatibility path) the unfinanced demand `p·(A+G)` is not booked in
+   `B_gov`: at an all-N η = 1 solution the gap reads exactly `p·(A+G)` and F
+   absorbs it (`F = −p·(A+G)` at zero programme; measured on a 3-sector
+   fixture). The matrix designs pass zero manna.
 6. **Baseline:** `F = 0` reproduces the calibration to machine precision; no
    recalibration.
 7. **FINANCING NEUTRALITY (theorem of this closure, η = 1 mobile regime).**
@@ -83,7 +87,9 @@ solve with the pin at ~2e-15, and the closed 2-sector tiny fixture
 - The canary `diff` (`external_balance_canary`) becomes the identity gap
   `S + T_int + M − (I+X) − (F + B_gov)`, evaluated with F threaded into S. It
   is ≈ 0 at every η = 1 solution (mobile ALPHA/BETA and fixed-wage
-  GAMMA/DELTA); at the BF η = 0 endpoint the all-N clearings hold but the
+  GAMMA/DELTA) when legacy manna is zero (the matrix designs); with nonzero
+  legacy manna the unfinanced `p·(A+G)` shows up in the gap and F absorbs it.
+  At the BF η = 0 endpoint the all-N clearings hold but the
   canary retains the documented fixed-allocation/factor-market gap (measured
   4.3e-4 / −5.6e-4 / −7.9e-3 on full-71 F1/F2/F3 — zero-profit prices the
   cost-minimizing labour demand, not the frozen baseline allocation), and the

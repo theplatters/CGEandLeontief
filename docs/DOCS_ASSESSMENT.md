@@ -402,7 +402,7 @@ Stage 2 run (headline quantities per cell; sectoral detail deferred):}
 | GAMMA (sticky real wage) | Composition shift; small positive employment response | The extensive-margin result: employment absorbs the shock (current: +19.3 pp at mult 10) | Employment absorbs the domestically-produced share; imports take the rest |
 | DELTA (IO endpoint, corner) | IO multiplier on the compositional shift (value-added effects) | IO multiplier net of the tax withdrawal | Full IO multiplier with import-adjusted inverse; external deficit = $F$ |
 
-\textcolor{revisionV4}{Measured values for every cell are in section 4.2. Three readings of the table above need correction: the BF row's label carries the retired interpolated eta-star (the endpoints eta in {0,1} are what runs); the parenthetical \"current: +19.3 pp at mult 10\" is a retired UNFINANCED result; and \"external deficit = F\" describes the gross external inflow, not the net position the model reports (section 4.2; the decomposition is in \texttt{paper/tables/matrix\_5x3\_v3\_flows.md}).}
+\textcolor{revisionV4}{Measured values for every cell are in section 4.2. Three readings of the table above need correction: the BF row's label carries the retired interpolated $\eta$-star (the endpoints $\eta \in \{0,1\}$ are what runs); the parenthetical "current: +19.3 pp at mult 10" is a retired UNFINANCED result; and \"external deficit = F\" describes the gross external inflow, not the net position the model reports (section 4.2; the decomposition is in \texttt{paper/tables/matrix\_5x3\_v3\_flows.md}).}
 
 \textcolor{revisionV1}{Limit relations across the matrix (reported as
 results, not hidden as redundancy): BF at $\eta = 1$ coincides with
@@ -515,7 +515,7 @@ same layout as above:}
 | DELTA (IO endpoint, corner) | ![](pictures/emoji/1f534.png){width=9pt} F1 cell pending | ![](pictures/emoji/2705.png){width=9pt} implemented and verified -- EXACT analytic equivalence (rel y error 0.0) | ![](pictures/emoji/2705.png){width=9pt} implemented and verified -- EXACT analytic equivalence (rel y error 0.0) |
 
 \textcolor{revisionV3}{Open items carried into Stage 1: the BETA
-verification (the eta-continuation runtime under v3), the ALPHA and GAMMA
+verification (the $\eta$-continuation runtime under v3), the ALPHA and GAMMA
 v3 re-runs at $\eta = 1$ and the CES elasticities, the F1 tilted-cell runs
 (the explicit tilt is ported to the canonical pipeline as
 \texttt{f1\_shift = tilt\_g0\_over\_c0}; the matrix cells are pending),
@@ -554,7 +554,7 @@ MATLAB): the recommended cbase2 route is a constrained-NLP formulation
 finite-difference/least-squares experiments do not suffice.}
 
 
-\textcolor{revisionV4}{The v4 numbers in this section are the CLAMPED cbase2 calibration and are superseded. The A-bill calibration (ADR-0012, ADR-0013) re-anchors the saving rate to s = 0.1199 (not 0.398), deletes the clamp entirely (the household residual is the table's own domestic household column, with zero negative sectors), books the product taxes on intermediate use (raw-table row 75) as the third external leak, and makes the omitted-market canary identity exact at 1.7e-16 on full-71 (9.6e-17 on the 70s variant). The fixed-wage indeterminacy reported above is superseded too: ADR-0014 replaced the heuristic admissibility guard with the verified round-gain criterion and the open calibration is determinate (full-rank Jacobian; three inits converge to one root). The raw table's own production-vs-expenditure residual (5.387 %) is unrelated and remains open.}
+\textcolor{revisionV4}{The v4 numbers in this section are the CLAMPED cbase2 calibration and are superseded. The A-bill calibration (ADR-0012, ADR-0013) re-anchors the saving rate to s = 0.1199 (not 0.398), deletes the clamp entirely (the household residual is the table's own domestic household column, with zero negative sectors), books the product taxes on intermediate use (raw-table row 75) as the third external leak, and makes the omitted-market canary identity exact at 1.7e-16 on full-71 (9.6e-17 on the 70s variant). The fixed-wage indeterminacy reported above is superseded too: ADR-0014 replaced the heuristic admissibility guard with the verified round-gain criterion and the open calibration is determinate (full-rank Jacobian; three inits converge to one root). The raw table's own production-vs-expenditure residual (5.387 \%) is unrelated and remains open.}
 
 ## Matrix results: the 5 x 3 evaluation on the A-bill calibration \textcolor{revisionV4}{\normalsize [added v5]}
 
@@ -581,12 +581,12 @@ finite-difference/least-squares experiments do not suffice.}
 \textcolor{revisionV4}{Findings against the pre-registered signatures -- deviations are findings, not failures (ADR-0004):}
 
 1. \textcolor{revisionV4}{The F1 column is admissible in the fixed-wage rows. \texttt{GAMMA-F1} and \texttt{DELTA-F1} were blocked by a heuristic guard whose premise is false on the open calibration: the Jacobian at the F1 point is full rank (sigma-min/sigma-max = 0.1586) and three different inits converge to the same root. The verified criterion (round-gain column sums below 1) admits them and still rejects closed fixtures, where the sums are exactly 1. The same criterion exposed a latent bug: the retired heuristic had admitted closed-fixture solves whenever manna was present, although manna is a constant and cannot remove a unit root.}
-2. \textcolor{revisionV4}{BETA reproduces ALPHA to machine precision. Under a demand-only programme the price block is demand-invariant (p = 1), so the equilibrium real wage sits at its anchor and L = Lbar * (w/w0)^eta_s = Lbar for any eta_s: the supply elasticity is unidentified by THIS experiment, not mis-specified. It bites under a supply-side scenario (a +20 % sector-1 shock moves the real wage to 1.0049 and separates eta_s = 0.5 from eta_s = 2: L = 1.0024 versus 1.0098).}
-3. \textcolor{revisionV4}{The F2 column is not \"aggregate ~ 0\" for the mobile rows: real GDP falls 1.69 % with employment pinned at exactly 1.0 -- a composition effect at fixed aggregate labour input, for a tax withdrawal of 1.33 % of GDP.}
-4. \textcolor{revisionV4}{The limit relations hold: BF at eta = 0 coincides with ALPHA in F1 and F2 at the aggregate, and GAMMA coincides with DELTA to 5e-12 in F2 and F3. F3 is the extensive-margin column -- employment rises 1.78 % in the fixed-wage rows.}
-5. \textcolor{revisionV4}{The external account: the F3 programme's gross inflow is F = 0.0133 of GDP, of which 0.0029 is its own import content; the NET position is -0.0085 in the mobile rows (the endogenous response offsets 36 % of the inflow) and zero to machine precision in the fixed-wage rows, where all N markets clear and the inflow is absorbed by imports.}
+2. \textcolor{revisionV4}{BETA reproduces ALPHA to machine precision. Under a demand-only programme the price block is demand-invariant (p = 1), so the equilibrium real wage sits at its anchor and L = Lbar * $(w/w_0)^{\eta_s}$ = Lbar for any $\eta_s$: the supply elasticity is unidentified by THIS experiment, not mis-specified. It bites under a supply-side scenario (a +20 \% sector-1 shock moves the real wage to 1.0049 and separates $\eta_s$ = 0.5 from $\eta_s$ = 2: L = 1.0024 versus 1.0098).}
+3. \textcolor{revisionV4}{The F2 column is not "aggregate ~ 0" for the mobile rows: real GDP falls 1.69 \% with employment pinned at exactly 1.0 -- a composition effect at fixed aggregate labour input, for a tax withdrawal of 1.33 % of GDP.}
+4. \textcolor{revisionV4}{The limit relations hold: BF at $\eta$ = 0 coincides with ALPHA in F1 and F2 at the aggregate, and GAMMA coincides with DELTA to 5e-12 in F2 and F3. F3 is the extensive-margin column -- employment rises 1.78 \% in the fixed-wage rows.}
+5. \textcolor{revisionV4}{The external account: the F3 programme's gross inflow is F = 0.0133 of GDP, of which 0.0029 is its own import content; the NET position is -0.0085 in the mobile rows (the endogenous response offsets 36 \% of the inflow) and zero to machine precision in the fixed-wage rows, where all N markets clear and the inflow is absorbed by imports.}
 
-\textcolor{revisionV4}{\textbf{Recombination option (left out).} The matrix varies two labour margins that the design parametrises independently: BF's allocation selector eta in {0,1} (who gets the labour) and BETA's aggregate supply elasticity eta_s (how much labour in total). The 5 x 3 samples three of the four corners -- ALPHA (eta = 1, eta_s = 0), BETA (1, 0.5) and BF (0, 0) -- and leaves out their recombination, the corner (eta = 0, eta_s = 0.5): immobile allocation WITH elastic supply. It is left out deliberately because it would be a null result here: with p = 1 the real wage sits at its anchor, so the recombined cell coincides with BF to about 1e-15, exactly as BETA coincides with ALPHA. It becomes informative only in the supply-side scenario of finding 2, where a (eta, eta_s) 2 x 2 would separate the two margins -- the allocation friction moving composition and the supply elasticity moving the level. Recorded as an available extension, not as a gap in the current design.}
+\textcolor{revisionV4}{\textbf{Recombination option (left out).} The matrix varies two labour margins that the design parametrises independently: BF's allocation selector $\eta \in \{0,1\}$ (who gets the labour) and BETA's aggregate supply elasticity $\eta_s$ (how much labour in total). The 5 x 3 samples three of the four corners -- ALPHA ($\eta$ = 1, $\eta_s$ = 0), BETA (1, 0.5) and BF (0, 0) -- and leaves out their recombination, the corner ($\eta$ = 0, $\eta_s$ = 0.5): immobile allocation WITH elastic supply. It is left out deliberately because it would be a null result here: with p = 1 the real wage sits at its anchor, so the recombined cell coincides with BF to about 1e-15, exactly as BETA coincides with ALPHA. It becomes informative only in the supply-side scenario of finding 2, where a ($\eta$, $\eta_s$) 2 x 2 would separate the two margins -- the allocation friction moving composition and the supply elasticity moving the level. Recorded as an available extension, not as a gap in the current design.}
 
 # Workplan \textcolor{revisionV3}{\normalsize [section 5 since v4; reworked v3]}
 
@@ -614,10 +614,10 @@ labour closures, then the guards:}
    $L^s = \bar L\,[(w/P)/(w_0/P_0)]^{\eta_s}$, with the labour--leisure
    interpretation and the numerical elasticity test
    $\mathrm{d}\log L / \mathrm{d}\log(w/P) \approx \eta_s$.
-   \textcolor{revisionV3}{-- Implemented ($\eta_s$, eta-continuation
+   \textcolor{revisionV3}{-- Implemented ($\eta_s$, $\eta$-continuation
    solver, single-point elasticity identification verified at the v2
    stage: 0.5/1.0/2.0 recovered); the v3 verification run is pending
-   (eta-continuation runtime).}
+   ($\eta$-continuation runtime).}
 3. **DELTA corner**: fixed real factor price, unconstrained factor
    quantity, Leontief limit of the CES core; document the exact
    equivalence conditions (R2's own point, answered).
@@ -681,7 +681,7 @@ nine-section structure (definitive guide Part III, adapted):}
    Tarr (1992); McGregor--Swales--Yin (1996); Shoven \& Whalley (1984);
    Mansur \& Whalley (1984); Willenbockel (1994) (R2.2; R1.8).
 3. **Data and accounting** -- the section 4.1 pipeline, import
-   separation, decomposed value added, the documented 5.387% residual,
+   separation, decomposed value added, the documented 5.387\% residual,
    the calibration table (R1.3; R2.4).
 4. **Model and closures** -- verbal model overview before equations
    (R1.2); static horizon stated; the two wedges as design dimensions;
@@ -901,6 +901,9 @@ evaluation matrix, and the workplan only.}
   same pointer; Stage 2's matrix item is marked done. Accounting: the A-bill
   calibration (row 73 domestic bill, row 74 imports, row 75 product taxes as
   three booked leaks) makes the external-identity canary exact at 1.7e-16; the
-  raw table's 5.387 % production-vs-expenditure residual stays open. Solver: the
+  raw table's 5.387 \% production-vs-expenditure residual stays open. Solver: the
   cbase2 ladder is retired (DE-0010) and the polish target is 1e-10 (ADR-0015),
-  so cell metrics no longer depend on where the solver stopped.
+  so cell metrics no longer depend on where the solver stopped. One
+  pre-existing unescaped percent sign (Stage 3, the documented production-vs-
+  expenditure residual) is escaped so the line no longer truncates its tail; no
+  other text changed.

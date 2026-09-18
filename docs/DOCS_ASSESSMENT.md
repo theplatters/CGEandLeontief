@@ -685,8 +685,10 @@ labour closures, then the guards:}
    \textcolor{revisionV3}{-- Implemented (analytic branch at
    $\varepsilon = 1$); the continuous-epsilon assertion is pending its
    v3 re-run.}
-6. **Full residual validation** (ROADMAP Phase 4): omitted-equation
-   invariance (rotating the omitted market), household-expenditure
+6. **Full residual validation** (ROADMAP Phase 4):
+   \textcolor{revisionV6}{all-N clearing
+   (ADR-0019; the omitted-market rotation is retired),}
+   household-expenditure
    exhaustion for every experiment type, homogeneity, multi-start
    convergence, Tornqvist consistency. Machine-precision residuals are
    the gate.
@@ -695,6 +697,13 @@ labour closures, then the guards:}
    clearings, the mobile regime enforces N-1 plus the CPI numeraire and
    asserts the omitted N-th market against S - (I+X-M) (ADR-0010); the
    omitted-equation rotation and multi-start battery are pending.}
+   \textcolor{revisionV6}{-- v7 update: every regime now enforces all N
+   clearings with the explicit external account (ADR-0019); the mobile
+   eta = 1 identity S + T_int + M - (I+X) = F + B_gov and the all-N
+   clearing residuals are gated in tests and experiments, with the eta = 0
+   factor-market gap reported rather than gated. The equation-ordering
+   rotation is retired with the omitted market; a multi-start battery on
+   the full grid remains open.}
 
 ## Stage 2: Simulation and sensitivity \textcolor{revisionV2}{\normalsize [reworked v3]}
 

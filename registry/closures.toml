@@ -28,7 +28,7 @@ dead_ends = ["DE-0001", "DE-0002", "DE-0004"]
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017", "ADR-0019"]
 open_gates = [
     "eta = 0 keeps one common wage with fixed quantities; BF's immobile case has sector-specific wages (cbase2/review.md §1)",
-    "Phase-4 residual gates (ROADMAP.md): omitted-equation invariance, household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency",
+    "Phase-4 residual gates (ROADMAP.md): all-N clearing residuals (ADR-0019; the omitted-equation rotation is retired), household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency",
     "run manifests recorded: runs/matrix_5x3-BF-F1|F2|F3/manifest.toml (executed, 2026-09-17; eta = 0 endpoint)",
     "at eta = 0 all N clearings are now enforced with the F = 0 pin (ADR-0019); the residual canary reading is the documented factor-market gap (4.3e-4..7.9e-3 on the full-71 v5 cells), not an external imbalance",
 ]

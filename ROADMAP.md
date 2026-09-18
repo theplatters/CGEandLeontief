@@ -122,6 +122,7 @@ Implement a common production and final-demand core with interchangeable labour-
 - Use an empirically defensible range for `η`.
 - Purpose: trace adjustment between fixed labour and a high-elasticity labour response.
 - Interpretation: voluntary labour-supply response, not involuntary unemployment.
+- BETA's identification is shock-side only (DE-0011): demand-only shocks leave `eta_s` unidentified, so the supply-side arm in Phase 5 is the planned route.
 
 ### Closure C: Unemployment or wage-curve closure
 
@@ -237,7 +238,7 @@ Add automated tests for:
 - [ ] convergence of the high-`η` model to the fixed-real-wage closure;
 - [ ] exact or qualified equivalence of Closure D and the IO model;
 - [ ] consistency of real-GDP, nominal-GDP, employment, and price indices.
-- [ ] **omitted-equation invariance** — repeat the diagnostic while omitting each possible commodity market in turn; real allocations must be invariant to that arbitrary choice, and every omitted goods-market residual must be small.
+- [ ] **all-N clearing** (ADR-0019; the omitted-equation rotation is retired) — every goods-market residual is small in every regime, and the solution is invariant to the variable/equation ordering since no market is omitted.
 - [ ] **household expenditure exhaustion** — verify `Σᵢ pᵢ cᵢʰ = Eʰ` (or the appropriate institutional total) exactly, for every experiment type.
 
 **Red-flag diagnostic:** if normalized prices and the real wage do not change across `η` but employment does, stop and identify the violated equation before using the results. (Note: the earlier reported "price invariance with changing employment" was an artifact of the rejected mobile-labor system, not a valid CGE finding.)
@@ -256,6 +257,7 @@ Add automated tests for:
 - [ ] Do not silently discard solver failures: retry with independent initial values and continuation; if any required factorial cell remains invalid, abort the decomposition; report the failed region as part of the feasible parameter domain. Use an unbalanced regression/ANOVA only as a separately named analysis with an explicitly chosen sum-of-squares convention.
 - [ ] Add essential sensitivity tests: a purely additive analytical function; a pure interaction function; nonuniform factor weights; a deliberately missing factorial cell (must raise an error); a solver result with a failed return code but finite `.u`; and invariance to grid traversal and warm-start order.
 - [ ] Repeat the analysis for alternative financing closures and reasonable shock magnitudes.
+- [ ] Run the supply-side BETA identification arm (`supply_etas` design: per-cell productivity shocks — sector-1 +20 %, programme-sector ladder, uniform small — × `eta_s` grid {0.5, 1, 2, 5} under F1/F2/F3); this requires an ADR for the `experiments/run.jl` shock schema (the pipeline hard-codes `Shocks(ones(N), ones(N), zeros(N))`) and preregistration before any run (pilot evidence: `experiments/probes/supply_identification.jl`, `eta_s` recovered exactly).
 - [ ] Assess solver failures as part of the feasible parameter domain, not as observations to discard silently.
 
 Primary outcomes:
@@ -391,7 +393,7 @@ The paper is ready for submission only when:
 - [ ] the IO endpoint is reproduced or its failure is explained analytically;
 - [ ] real GDP uses the common documented quantity index;
 - [ ] sensitivity shares are conditional on stated parameter distributions and include interactions, computed from a documented complete product probability measure with no renormalization over main effects;
-- [ ] residual validation includes omitted-equation invariance and household-expenditure exhaustion for every experiment type;
+- [ ] residual validation includes all-N clearing (ADR-0019; the omitted-equation rotation is retired) and household-expenditure exhaustion for every experiment type;
 - [ ] aggregate and sectoral conclusions are reported separately;
 - [ ] the manuscript no longer claims to discover the IO–CGE bridge or the use of CES functions;
 - [ ] the limitations of a static, aggregated-factor model are explicit;

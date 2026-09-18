@@ -60,11 +60,13 @@ unattributable.
 
 ## Model invariants pinned by ADR (do not re-derive, do not drift)
 
-- **Mobile labour closure**: the mobile system keeps N−1 market clearings plus
-  the CPI = 1 numeraire; the omitted N-th market is the residual external
-  account, exposed by `market_clearing_residuals` and asserted against the
-  external canary (ADR-0010). Employment allocation uses the endpoints
-  η ∈ {0, 1} only; the interpolated η* and the allocation wedge are retired.
+- **Mobile labour closure** (ADR-0019, superseding ADR-0010's N−1 decision):
+  every regime enforces **all N goods-market clearings**. The mobile η = 1
+  system carries the endogenous net external transfer `F` (canonical vector
+  `[p; y; w; F]`, `E = (1−τ)·w·ΣL + F`); the η = 0 endpoint pins `F = 0`; the
+  fixed-wage system clears all N with `F ≡ 0`. Employment allocation uses the
+  endpoints η ∈ {0, 1} only; the interpolated η* and the allocation wedge are
+  retired.
 - **A-bill intermediate-bill accounting** (ADR-0012, ADR-0013): intermediate
   demand is charged with the **domestic** bill `A_bill` (raw-table row 73). The
   other two components of the purchaser-price bill are explicit leaks booked in
@@ -72,10 +74,14 @@ unattributable.
   taxes on intermediate use `T_int` (row 75). Row 76 is their sum and
   `ΣA + ΣM_int + ΣT_int = Σλ − 1` holds to 2e-16. Leaving row 75 unbooked makes
   the canary short by exactly `ΣT_int` (2.5745e-2 of GDP).
-- **The canary identity is the acceptance test**: at a mobile η = 1 solution
-  `p·market_clearing_residuals = S − (I+X−M) + T`, verified at 1.7e-16 on
-  full-71 and 9.6e-17 on the 70s variant. Never threshold-fit it: if it fails,
-  a term is missing from the accounting.
+- **The external-account identity is the acceptance test** (ADR-0019): with
+  zero legacy manna, every η = 1 solution satisfies
+  `S + T_int + M − (I+X) = F + B_gov` (`B_gov = Σp·g` under F3, else 0) and
+  `market_clearing_residuals ≈ 0`; the fixed-wage and η = 0 endpoints clear
+  all N markets too, with the η = 0 canary carrying the documented
+  factor-market gap. The legacy-manna path adds `p·(A+G)` to the gap and `F`
+  absorbs it. Never threshold-fit it: if it fails, a term is missing from the
+  accounting.
 - **Labour supply is on the real wage** (ADR-0014, DE-0004):
   `L^s = L̄·[(w/P)/(w₀/P₀)]^{η_s}`, deflated by the CPI.
 - **Scale determinacy is verified** (ADR-0014): the fixed-wage η = 1 system is
@@ -154,16 +160,18 @@ visible (ADR-0004).
   changes and re-run as a new generation (`-v2`, `-v3`, …) rather than mixing
   generations in one table.
 - Current state: the matrix is executed on the full-71 A-bill calibration in
-  three generations — `matrix_5x3` (v1, two cells blocked by the retired
-  heuristic guard), `matrix_5x3_v2` (ADR-0014) and `matrix_5x3_v3` (ADR-0015,
-  15/15 executed, the generation the paper cites). Open items, in
-  `registry/closures.toml`, `docs/DOCS_ASSESSMENT.md` §4.2 and the ADRs: the
-  BETA row is unidentified for demand-only shocks (`η_s` needs a supply-side
-  scenario) and the recombination of the two labour margins (allocation ×
-  supply elasticity) is recorded as a deliberate omission; the raw table's own
-  production-vs-expenditure residual (5.387 %) and the government-side recycling
-  of `T_int` are open modelling items; the `70s` variant is a documented
-  robustness variant and `reduced` is deferred.
+  five generations — `matrix_5x3` (v1, two cells blocked by the retired
+  heuristic guard), `matrix_5x3_v2` (ADR-0014), `matrix_5x3_v3` (ADR-0015),
+  `matrix_5x3_v4` (ADR-0018 measurement) and `matrix_5x3_v5` (ADR-0019,
+  external-account closure; 15/15 executed, the generation to cite). Open
+  items, in `registry/closures.toml`, `docs/DOCS_ASSESSMENT.md` §4.2 and the
+  ADRs: the BETA row is unidentified for demand-only shocks (`η_s` needs a
+  supply-side scenario) and the recombination of the two labour margins
+  (allocation × supply elasticity) is recorded as a deliberate omission; the
+  raw table's own production-vs-expenditure residual (5.387 %), the
+  government-side recycling of `T_int`, and the η = 0 endpoint's
+  common-wage/frozen-allocation gap are open modelling items; the `70s`
+  variant is a documented robustness variant and `reduced` is deferred.
 
 ### Commits
 

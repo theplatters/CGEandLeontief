@@ -134,9 +134,10 @@ fixed-wage GAMMA/DELTA (position = B_gov, no external unknown).
   `(w.SigmaL)/(w.SigmaL)_ref - 1`: 0.000 % in every full-employment mobile row
   (BF/ALPHA/BETA), -0.097 % / +0.126 % / +1.780 % in the fixed-wage rows
   (GAMMA/DELTA) under F1/F2/F3. `Consumption rel.` is the household-consumption
-  (welfare) Törnqvist index: +0.143 % (mobile) / +0.043 % (BF) under F1,
-  -1.823 % (mobile) / -1.694 % (BF) under F2 and F3, 0.000 % (BF) /
-  +2.264 % (fixed) under F3.
+  (welfare) Törnqvist index: +0.143 % (mobile) / +0.043 % (BF) under F1;
+  -1.823 % in the mobile F2 and F3 rows, -1.694 % in BF-F2 and 0.000 % in
+  BF-F3 (the eta = 0 endpoint pins F = 0, so its F2/F3 rows differ); +2.264 %
+  in the fixed-wage F3 rows.
 - The booked identity `S + T_int + M - (I+X) = F + B_gov` holds to
   ~1e-16 at the mobile eta = 1 cells and to ~1e-12 at the fixed-wage eta = 1
   cells (at the level of their 1e-13 solver residuals; worst over all eta = 1

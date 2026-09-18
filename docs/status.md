@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-18 by `scripts/status.jl` · branch `reorg` · HEAD `0f37d9f` (dirty)
+Generated 2026-09-18 by `scripts/status.jl` · branch `reorg` · HEAD `49d7999` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -14,7 +14,7 @@ Generated 2026-09-18 by `scripts/status.jl` · branch `reorg` · HEAD `0f37d9f` 
 | Labour closures | 1 | 0 | 3 | 2 | 0 | 6 |
 | Financing closures | 0 | 0 | 0 | 3 | 0 | 3 |
 
-Scenarios: **81** rows — planned: 15, executed: 58, provisional: 3, failed: 5. Designs: `cbase2-v3`, `matrix_5x3`, `matrix_5x3_v2`, `matrix_5x3_v3`, `matrix_5x3_v4`, `matrix_5x3_v5`.
+Scenarios: **81** rows — executed: 73, provisional: 3, failed: 5. Designs: `cbase2-v3`, `matrix_5x3`, `matrix_5x3_v2`, `matrix_5x3_v3`, `matrix_5x3_v4`, `matrix_5x3_v5`.
 
 ## Labour closures
 
@@ -39,11 +39,11 @@ Scenarios: **81** rows — planned: 15, executed: 58, provisional: 3, failed: 5.
 
 | Labour \ Financing | F1 | F2 | F3 |
 | --- | --- | --- | --- |
-| ALPHA | failed, executed, executed, executed, executed, planned | provisional, executed, executed, executed, executed, planned | failed, executed, executed, executed, executed, planned |
-| BETA | executed, executed, executed, executed, planned | executed, executed, executed, executed, planned | failed, executed, executed, executed, executed, planned |
-| BF | executed, executed, executed, executed, planned | executed, executed, executed, executed, planned | executed, executed, executed, executed, planned |
-| DELTA | failed, executed, executed, executed, planned | provisional, executed, executed, executed, executed, planned | provisional, executed, executed, executed, executed, planned |
-| GAMMA | failed, executed, executed, executed, planned | executed, executed, executed, executed, planned | executed, executed, executed, executed, planned |
+| ALPHA | failed, executed, executed, executed, executed, executed | provisional, executed, executed, executed, executed, executed | failed, executed, executed, executed, executed, executed |
+| BETA | executed, executed, executed, executed, executed | executed, executed, executed, executed, executed | failed, executed, executed, executed, executed, executed |
+| BF | executed, executed, executed, executed, executed | executed, executed, executed, executed, executed | executed, executed, executed, executed, executed |
+| DELTA | failed, executed, executed, executed, executed | provisional, executed, executed, executed, executed, executed | provisional, executed, executed, executed, executed, executed |
+| GAMMA | failed, executed, executed, executed, executed | executed, executed, executed, executed, executed | executed, executed, executed, executed, executed |
 | ZETA | — | — | — |
 
 ### Runs by design
@@ -143,21 +143,21 @@ Scenarios: **81** rows — planned: 15, executed: 58, provisional: 3, failed: 5.
 
 | run_id | labour | financing | status | parameters | evidence | notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| matrix_5x3-v5-ALPHA-F1 | ALPHA | F1 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-ALPHA-F2 | ALPHA | F2 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-ALPHA-F3 | ALPHA | F3 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-BETA-F1 | BETA | F1 | planned | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-BETA-F2 | BETA | F2 | planned | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-BETA-F3 | BETA | F3 | planned | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-BF-F1 | BF | F1 | planned | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-BF-F2 | BF | F2 | planned | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-BF-F3 | BF | F3 | planned | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-DELTA-F1 | DELTA | F1 | planned | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-DELTA-F2 | DELTA | F2 | planned | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-DELTA-F3 | DELTA | F3 | planned | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-GAMMA-F1 | GAMMA | F1 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-GAMMA-F2 | GAMMA | F2 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
-| matrix_5x3-v5-GAMMA-F3 | GAMMA | F3 | planned | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 |  | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) |
+| matrix_5x3-v5-ALPHA-F1 | ALPHA | F1 | executed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-ALPHA-F1/manifest.toml; runs/matrix_5x3-v5-ALPHA-F1/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-ALPHA-F1/manifest.toml) |
+| matrix_5x3-v5-ALPHA-F2 | ALPHA | F2 | executed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-ALPHA-F2/manifest.toml; runs/matrix_5x3-v5-ALPHA-F2/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-ALPHA-F2/manifest.toml) |
+| matrix_5x3-v5-ALPHA-F3 | ALPHA | F3 | executed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-ALPHA-F3/manifest.toml; runs/matrix_5x3-v5-ALPHA-F3/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-ALPHA-F3/manifest.toml) |
+| matrix_5x3-v5-BETA-F1 | BETA | F1 | executed | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-BETA-F1/manifest.toml; runs/matrix_5x3-v5-BETA-F1/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-BETA-F1/manifest.toml) |
+| matrix_5x3-v5-BETA-F2 | BETA | F2 | executed | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-BETA-F2/manifest.toml; runs/matrix_5x3-v5-BETA-F2/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-BETA-F2/manifest.toml) |
+| matrix_5x3-v5-BETA-F3 | BETA | F3 | executed | eta=1.0, eta_s=0.5, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-BETA-F3/manifest.toml; runs/matrix_5x3-v5-BETA-F3/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-BETA-F3/manifest.toml) |
+| matrix_5x3-v5-BF-F1 | BF | F1 | executed | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-BF-F1/manifest.toml; runs/matrix_5x3-v5-BF-F1/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-BF-F1/manifest.toml) |
+| matrix_5x3-v5-BF-F2 | BF | F2 | executed | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-BF-F2/manifest.toml; runs/matrix_5x3-v5-BF-F2/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-BF-F2/manifest.toml) |
+| matrix_5x3-v5-BF-F3 | BF | F3 | executed | eta=0.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-BF-F3/manifest.toml; runs/matrix_5x3-v5-BF-F3/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-BF-F3/manifest.toml) |
+| matrix_5x3-v5-DELTA-F1 | DELTA | F1 | executed | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 | runs/matrix_5x3-v5-DELTA-F1/manifest.toml; runs/matrix_5x3-v5-DELTA-F1/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-DELTA-F1/manifest.toml) |
+| matrix_5x3-v5-DELTA-F2 | DELTA | F2 | executed | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 | runs/matrix_5x3-v5-DELTA-F2/manifest.toml; runs/matrix_5x3-v5-DELTA-F2/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-DELTA-F2/manifest.toml) |
+| matrix_5x3-v5-DELTA-F3 | DELTA | F3 | executed | eta=1.0, eta_s=0.0, theta=0.0001, epsilon=0.0001, sigma=0.0001 | runs/matrix_5x3-v5-DELTA-F3/manifest.toml; runs/matrix_5x3-v5-DELTA-F3/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-DELTA-F3/manifest.toml) |
+| matrix_5x3-v5-GAMMA-F1 | GAMMA | F1 | executed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-GAMMA-F1/manifest.toml; runs/matrix_5x3-v5-GAMMA-F1/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-GAMMA-F1/manifest.toml) |
+| matrix_5x3-v5-GAMMA-F2 | GAMMA | F2 | executed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-GAMMA-F2/manifest.toml; runs/matrix_5x3-v5-GAMMA-F2/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-GAMMA-F2/manifest.toml) |
+| matrix_5x3-v5-GAMMA-F3 | GAMMA | F3 | executed | eta=1.0, eta_s=0.0, theta=0.5, epsilon=0.5, sigma=0.9 | runs/matrix_5x3-v5-GAMMA-F3/manifest.toml; runs/matrix_5x3-v5-GAMMA-F3/log.txt | parameters pinned in experiments/designs/matrix_5x3_v5.toml (full-71 A-bill, ADR-0012; ADR-0019 external-account generation) \| executed 2026-09-18 (see runs/matrix_5x3-v5-GAMMA-F3/manifest.toml) |
 
 ## Freeze board
 

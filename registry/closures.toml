@@ -25,7 +25,7 @@ references = ["docs/labor_closures.md", "docs/DOCS_ASSESSMENT.md", "roadmaps/ver
 tests = ["tests/test_mobile_labor.jl", "tests/test_kernel_regression.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = ["DE-0001", "DE-0002", "DE-0004"]
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017"]
 open_gates = [
     "eta = 0 keeps one common wage with fixed quantities; BF's immobile case has sector-specific wages (cbase2/review.md §1)",
     "Phase-4 residual gates (ROADMAP.md): omitted-equation invariance, household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency",
@@ -86,11 +86,11 @@ references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_fixed_closure.jl"]
 evidence = []
 dead_ends = ["DE-0003"]
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017"]
 open_gates = [
     "the canonical one-sided wage floor with rationed employment is not implemented (that is ZETA; cbase2/review.md §1)",
-    "GAMMA-F2/F3 executed (runs/matrix_5x3-GAMMA-F2|F3/manifest.toml); GAMMA-F1 fails the scale-indeterminacy guard (fixed wage + eta = 1 + F1 has no additive anchor), the same structural cause as DELTA-F1, kept visible",
-    "the guard premise is FALSIFIED for the A-bill open economy (2026-09-17): the fixed-wage eta = 1 Jacobian at the F1 point is full rank (sigma_min/sigma_max = 0.1586, no singular value below 1e-8*sigma_max), and bypassing the guard the system solves to resid 4.4e-16 from three inits (lambda, 2*lambda, 0.5*lambda) that converge to the SAME root (L = 0.9990271532561, max|y - lambda| = 0.0063279836, agreeing to 1e-15) -- the cbase2 unit-root finding does not carry over to the open economy; replace the heuristic guard with a verified rank/scale test (pending ADR-0014)",
+    "GAMMA-F2/F3 executed (runs/matrix_5x3-GAMMA-F2|F3/manifest.toml); GAMMA-F1 failed the retired heuristic guard in v1 (fixed wage + eta = 1 + F1 has no additive anchor -- kept visible as history) and executes in the v2/v3 generations (runs/matrix_5x3-v2-GAMMA-F1, runs/matrix_5x3-v3-GAMMA-F1/manifest.toml) under the ADR-0017 actual-matrix assessment (column-sum shortcut, else (I − G) rank and positive-solution test)",
+    "the ADR-0014 closed-form round-gain trigger is corrected by ADR-0017: the fixed-wage eta = 1 admissibility guard assesses the actual clearing matrix G at the baseline prices (column-sum shortcut, else (I − G) rank and positive-solution test); on the full-71 A-bill calibration the actual max column sum is 0.8314 < 1, so all v2/v3 fixed-wage cells take the shortcut path",
 ]
 notes = "The two-sided uncapped peg is not the canonical Keynesian closure; the doc itself identifies it as BETA's eta_s to infinity limit, so it cannot be an independent paradigm (cbase2/review.md §1). Phase 2 adopts the cbase2 fixed formulation (all N clearings, w = 1 numeraire; ADR-0005), resolving the omitted-N open item. The historical +19.3 pp headline came from a retired unfinanced shock; the financed F2 run is roughly employment-neutral (cbase2/review.md §1; cbase2/process_comments.md, 2026-09-15). tests/test_fixed_closure.jl covers the fixed-closure contract by inspection (uncapped employment, scale guards)."
 
@@ -106,12 +106,12 @@ references = ["docs/closures/delta.md", "ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/scripts/verify_v3.jl"]
 dead_ends = []
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017"]
 open_gates = [
     "Type I vs Type II multiplier identification unresolved (cbase2/review.md §1)",
     "exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5)",
-    "matrix cells DELTA-F2/F3 executed (resid 8.7e-07 / 4.4e-16; runs/matrix_5x3-DELTA-F2|F3/manifest.toml); DELTA-F1 fails the scale-indeterminacy guard exactly as pre-registered in the design (kept visible)",
-    "the guard premise is FALSIFIED for the A-bill open economy (2026-09-17): the fixed-wage eta = 1 Jacobian at the F1 point is full rank (sigma_min/sigma_max = 0.1586, no singular value below 1e-8*sigma_max), and bypassing the guard the system solves to resid 4.4e-16 from three inits (lambda, 2*lambda, 0.5*lambda) that converge to the SAME root (L = 0.9990271532561, max|y - lambda| = 0.0063279836, agreeing to 1e-15) -- the cbase2 unit-root finding does not carry over to the open economy; replace the heuristic guard with a verified rank/scale test (pending ADR-0014)",
+    "matrix cells DELTA-F2/F3 executed (resid 8.7e-07 / 4.4e-16; runs/matrix_5x3-DELTA-F2|F3/manifest.toml); DELTA-F1 failed the retired heuristic guard in v1 exactly as pre-registered in the design (kept visible as history) and executes in the v2/v3 generations (runs/matrix_5x3-v2-DELTA-F1, runs/matrix_5x3-v3-DELTA-F1/manifest.toml) under the ADR-0017 actual-matrix assessment (column-sum shortcut, else (I − G) rank and positive-solution test)",
+    "the ADR-0014 closed-form round-gain trigger is corrected by ADR-0017: the fixed-wage eta = 1 admissibility guard assesses the actual clearing matrix G at the baseline prices (column-sum shortcut, else (I − G) rank and positive-solution test); on the full-71 A-bill calibration the actual max column sum is 0.8314 < 1, so all v2/v3 fixed-wage cells take the shortcut path",
 ]
 notes = "Promoted to src/closures/labor/labor.jl in Phase 2 (ADR-0005). DELTA is a corner reached as GAMMA plus Leontief technology (docs/DOCS_ASSESSMENT.md; cbase2/documentation.md); it is the endpoint row of the 5x3 matrix but not an independent mechanism (see ADR-0002 amendment 2026-09-17). The analytic counterpart leontief_multiplier includes endogenous consumption, saving and import leaks, i.e. a Type II/SAM-style multiplier rather than the (I-A)^-1 Type I inverse (cbase2/review.md §1). verify_v3.jl asserts relative agreement below 5e-3, not machine zero (cbase2/review.md §2.9)."
 
@@ -153,10 +153,10 @@ references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/d
 tests = ["tests/test_promoted_closures.jl", "tests/test_f1_tilt.jl"]
 evidence = ["cbase2/process_comments.md", "cbase2/scripts/verify_v3.jl"]
 dead_ends = ["DE-0001"]
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017"]
 open_gates = [
-    "F1 cells executed for BF/ALPHA/BETA (runs/matrix_5x3-*-F1/manifest.toml); GAMMA-F1 and DELTA-F1 fail the scale-indeterminacy guard because F1 has no additive anchor -- recorded, not dropped",
-    "the guard premise is FALSIFIED for the A-bill open economy (2026-09-17): the fixed-wage eta = 1 Jacobian at the F1 point is full rank (sigma_min/sigma_max = 0.1586, no singular value below 1e-8*sigma_max), and bypassing the guard the system solves to resid 4.4e-16 from three inits (lambda, 2*lambda, 0.5*lambda) that converge to the SAME root (L = 0.9990271532561, max|y - lambda| = 0.0063279836, agreeing to 1e-15) -- the cbase2 unit-root finding does not carry over to the open economy; replace the heuristic guard with a verified rank/scale test (pending ADR-0014)",
+    "F1 cells executed for BF/ALPHA/BETA (runs/matrix_5x3-*-F1/manifest.toml); GAMMA-F1 and DELTA-F1 failed the retired heuristic guard in v1 because F1 has no additive anchor (recorded, not dropped) and execute in the v2/v3 generations under the ADR-0017 actual-matrix assessment (column-sum shortcut, else (I − G) rank and positive-solution test)",
+    "the ADR-0014 closed-form round-gain trigger is corrected by ADR-0017: the fixed-wage eta = 1 admissibility guard assesses the actual clearing matrix G at the baseline prices; on the full-71 A-bill calibration the actual max column sum is 0.8314 < 1, so all v2/v3 fixed-wage cells take the shortcut path",
     "v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md)",
 ]
 notes = "A demand-composition shifter, not a financing closure in the CGE taxonomy (cbase2/review.md §1). Must never be described as an autonomous investment multiplier (ROADMAP.md section 4.3; docs/DOCS_ASSESSMENT.md, verdict warning). The explicit tilt is implemented in the canonical pipeline: experiments/run.jl f1_tilt_weights computes d = 1 .+ G0 .* ψ1 ./ c0 (ψ restricted to positive-baseline sectors and renormalised, G0 = sum(g), c0 = data.household_baseline), replacing the retired non-reference 1 .+ ψ tilt (ψ added directly instead of G0 .* ψ1 ./ c0) (f1_shift tilt_g0_over_c0)."

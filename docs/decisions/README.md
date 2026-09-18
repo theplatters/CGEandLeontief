@@ -53,3 +53,4 @@ settled question.
 | ADR-0014 | real-wage elastic supply and a verified scale-determinacy guard | accepted |
 | ADR-0015 | monotone polish to ~1e-10 (tolerance-independent metrics) | accepted |
 | ADR-0016 | CES-consistent valuation of the intermediate-bill leaks | accepted |
+| ADR-0017 | Actual-matrix scale determinacy for the fixed-wage η = 1 system | accepted |

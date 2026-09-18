@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-18 by `scripts/status.jl` · branch `reorg` · HEAD `3ee1f2f` (dirty)
+Generated 2026-09-18 by `scripts/status.jl` · branch `reorg` · HEAD `1a92945` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -23,15 +23,15 @@ Scenarios: **51** rows — executed: 43, provisional: 3, failed: 5. Designs: `cb
 | ALPHA | implemented | sum_i L_i = Lbar; one economy-wide flexible wage; full cost-minimizing allocation (BF eta = 1) | src/core/equilibrium.jl, src/closures/labor/types.jl | tests/test_mobile_labor.jl | DE-0002 | Phase-4 residual gates (ROADMAP.md); run manifests recorded: runs/matrix_5x3-ALPHA-F1\|F2\|F3/manifest.toml (executed, 2026-09-17) |
 | BETA | tested | sum_i L_i = Lbar * ((w/P)/(w0/P0))^eta_s | src/closures/labor/types.jl, src/closures/labor/labor.jl, src/core/equilibrium.jl | tests/test_promoted_closures.jl | DE-0004 | labour-leisure income effect not implemented (cbase2/review.md §1); w0 anchor vs baseline wage (cbase2/review.md §3.4); 70-sector BETA continuation margin unverified after promotion (cbase2 timeout, cbase2/process_comments.md 2026-09-16; 3-sector contract tests converge); matrix cells BETA-F1\|F2\|F3 executed but numerically IDENTICAL to ALPHA (max\|dy\| = 6.2e-17, max\|dp\| = 0, w_raw = 1.000000000000001 in every cell): eta_s is unidentified in the matrix gauge because the equilibrium real wage sits at its baseline value, so the supply curve returns L = Lbar for any eta_s -- the BETA row carries no information beyond ALPHA as designed (2026-09-17, runs/matrix_5x3-BETA-*); the degeneracy is SHOCK-side, not anchor-side: under the demand-only programme eta_s = 0.5 / 2 / 5 give solutions identical to ~1e-15 (w/P = 0.9999999999999989, L = 1.0), while under a +20 % sector-1 supply shock the real wage moves to 1.00490 and eta_s bites (L = 1.00245 at eta_s = 0.5 vs 1.00983 at eta_s = 2.0) -- BETA is identifiable only with a supply-side scenario (2026-09-17). The documented closure form is the REAL wage (DE-0004) while the implementation uses raw w on the grounds that the CPI numeraire makes P = 1; an explicit CPI deflation is proposed (pending ADR-0014) |
 | BF | implemented | eta selects the kept BF endpoints: eta = 0 keeps the baseline allocation L_fixed_i, eta = 1 uses the cost-minimizing demand L_costmin_i; the flexible wage clears the labour market (ADR-0010) | src/core/equilibrium.jl, src/closures/labor/types.jl | tests/test_mobile_labor.jl, tests/test_kernel_regression.jl | DE-0001, DE-0002, DE-0004 | eta = 0 keeps one common wage with fixed quantities; BF's immobile case has sector-specific wages (cbase2/review.md §1); Phase-4 residual gates (ROADMAP.md): omitted-equation invariance, household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency; run manifests recorded: runs/matrix_5x3-BF-F1\|F2\|F3/manifest.toml (executed, 2026-09-17; eta = 0 endpoint) |
-| DELTA | tested | GAMMA (w/P = 1) + Leontief limit of the CES core (theta, epsilon, sigma -> 0+) with full cost-minimizing allocation (eta = 1) | src/closures/labor/labor.jl, src/core/equilibrium.jl | tests/test_promoted_closures.jl |  | Type I vs Type II multiplier identification unresolved (cbase2/review.md §1); exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5); matrix cells DELTA-F2/F3 executed (resid 8.7e-07 / 4.4e-16; runs/matrix_5x3-DELTA-F2\|F3/manifest.toml); DELTA-F1 fails the scale-indeterminacy guard exactly as pre-registered in the design (kept visible); the guard premise is FALSIFIED for the A-bill open economy (2026-09-17): the fixed-wage eta = 1 Jacobian at the F1 point is full rank (sigma_min/sigma_max = 0.1586, no singular value below 1e-8*sigma_max), and bypassing the guard the system solves to resid 4.4e-16 from three inits (lambda, 2*lambda, 0.5*lambda) that converge to the SAME root (L = 0.9990271532561, max\|y - lambda\| = 0.0063279836, agreeing to 1e-15) -- the cbase2 unit-root finding does not carry over to the open economy; replace the heuristic guard with a verified rank/scale test (pending ADR-0014) |
-| GAMMA | implemented | w/P = wbar (= 1); employment endogenous and uncapped | src/core/equilibrium.jl, src/closures/labor/types.jl | tests/test_fixed_closure.jl | DE-0003 | the canonical one-sided wage floor with rationed employment is not implemented (that is ZETA; cbase2/review.md §1); GAMMA-F2/F3 executed (runs/matrix_5x3-GAMMA-F2\|F3/manifest.toml); GAMMA-F1 fails the scale-indeterminacy guard (fixed wage + eta = 1 + F1 has no additive anchor), the same structural cause as DELTA-F1, kept visible; the guard premise is FALSIFIED for the A-bill open economy (2026-09-17): the fixed-wage eta = 1 Jacobian at the F1 point is full rank (sigma_min/sigma_max = 0.1586, no singular value below 1e-8*sigma_max), and bypassing the guard the system solves to resid 4.4e-16 from three inits (lambda, 2*lambda, 0.5*lambda) that converge to the SAME root (L = 0.9990271532561, max\|y - lambda\| = 0.0063279836, agreeing to 1e-15) -- the cbase2 unit-root finding does not carry over to the open economy; replace the heuristic guard with a verified rank/scale test (pending ADR-0014) |
+| DELTA | tested | GAMMA (w/P = 1) + Leontief limit of the CES core (theta, epsilon, sigma -> 0+) with full cost-minimizing allocation (eta = 1) | src/closures/labor/labor.jl, src/core/equilibrium.jl | tests/test_promoted_closures.jl |  | Type I vs Type II multiplier identification unresolved (cbase2/review.md §1); exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5); matrix cells DELTA-F2/F3 executed (resid 8.7e-07 / 4.4e-16; runs/matrix_5x3-DELTA-F2\|F3/manifest.toml); DELTA-F1 failed the retired heuristic guard in v1 exactly as pre-registered in the design (kept visible as history) and executes in the v2/v3 generations (runs/matrix_5x3-v2-DELTA-F1, runs/matrix_5x3-v3-DELTA-F1/manifest.toml) under the ADR-0017 actual-matrix assessment (column-sum shortcut, else (I − G) rank and positive-solution test); the ADR-0014 closed-form round-gain trigger is corrected by ADR-0017: the fixed-wage eta = 1 admissibility guard assesses the actual clearing matrix G at the baseline prices (column-sum shortcut, else (I − G) rank and positive-solution test); on the full-71 A-bill calibration the actual max column sum is 0.8314 < 1, so all v2/v3 fixed-wage cells take the shortcut path |
+| GAMMA | implemented | w/P = wbar (= 1); employment endogenous and uncapped | src/core/equilibrium.jl, src/closures/labor/types.jl | tests/test_fixed_closure.jl | DE-0003 | the canonical one-sided wage floor with rationed employment is not implemented (that is ZETA; cbase2/review.md §1); GAMMA-F2/F3 executed (runs/matrix_5x3-GAMMA-F2\|F3/manifest.toml); GAMMA-F1 failed the retired heuristic guard in v1 (fixed wage + eta = 1 + F1 has no additive anchor -- kept visible as history) and executes in the v2/v3 generations (runs/matrix_5x3-v2-GAMMA-F1, runs/matrix_5x3-v3-GAMMA-F1/manifest.toml) under the ADR-0017 actual-matrix assessment (column-sum shortcut, else (I − G) rank and positive-solution test); the ADR-0014 closed-form round-gain trigger is corrected by ADR-0017: the fixed-wage eta = 1 admissibility guard assesses the actual clearing matrix G at the baseline prices (column-sum shortcut, else (I − G) rank and positive-solution test); on the full-71 A-bill calibration the actual max column sum is 0.8314 < 1, so all v2/v3 fixed-wage cells take the shortcut path |
 | ZETA | idea | 0 <= Lbar - L _\|_ w/P - omega_bar >= 0 (complementarity / one-sided real-wage floor) |  |  | DE-0007 | equations; calibration; implementation; tests; MPEC/smoothing formulation required because plain square solvers cannot express it (cbase2/review.md §4) |
 
 ## Financing closures
 
 | ID | Status | Formulation | Implementation | Tests | Dead ends | Open gates |
 | --- | --- | --- | --- | --- | --- | --- |
-| F1 | tested | beta_tilde_i = beta_i d_i / sum_j beta_j d_j; sum_i p_i c_i^h = E_h; budget-neutral composition shift | src/closures/financing/financing.jl | tests/test_promoted_closures.jl, tests/test_f1_tilt.jl | DE-0001 | F1 cells executed for BF/ALPHA/BETA (runs/matrix_5x3-*-F1/manifest.toml); GAMMA-F1 and DELTA-F1 fail the scale-indeterminacy guard because F1 has no additive anchor -- recorded, not dropped; the guard premise is FALSIFIED for the A-bill open economy (2026-09-17): the fixed-wage eta = 1 Jacobian at the F1 point is full rank (sigma_min/sigma_max = 0.1586, no singular value below 1e-8*sigma_max), and bypassing the guard the system solves to resid 4.4e-16 from three inits (lambda, 2*lambda, 0.5*lambda) that converge to the SAME root (L = 0.9990271532561, max\|y - lambda\| = 0.0063279836, agreeing to 1e-15) -- the cbase2 unit-root finding does not carry over to the open economy; replace the heuristic guard with a verified rank/scale test (pending ADR-0014); v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md) |
+| F1 | tested | beta_tilde_i = beta_i d_i / sum_j beta_j d_j; sum_i p_i c_i^h = E_h; budget-neutral composition shift | src/closures/financing/financing.jl | tests/test_promoted_closures.jl, tests/test_f1_tilt.jl | DE-0001 | F1 cells executed for BF/ALPHA/BETA (runs/matrix_5x3-*-F1/manifest.toml); GAMMA-F1 and DELTA-F1 failed the retired heuristic guard in v1 because F1 has no additive anchor (recorded, not dropped) and execute in the v2/v3 generations under the ADR-0017 actual-matrix assessment (column-sum shortcut, else (I − G) rank and positive-solution test); the ADR-0014 closed-form round-gain trigger is corrected by ADR-0017: the fixed-wage eta = 1 admissibility guard assesses the actual clearing matrix G at the baseline prices; on the full-71 A-bill calibration the actual max column sum is 0.8314 < 1, so all v2/v3 fixed-wage cells take the shortcut path; v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md) |
 | F2 | tested | sum_i p_i g_i = T(p); lump-sum / balanced-budget tax | src/closures/financing/financing.jl | tests/test_promoted_closures.jl |  | F2 cells executed for all five labour rows (runs/matrix_5x3-*-F2/manifest.toml, 2026-09-17); the mobile rows read real_gdp_rel = -1.69e-2 with employment pinned at 1.0, which deviates from the pre-registered 'aggregate ~ 0' signature -- a composition/Tornqvist effect at fixed aggregate labour input, to be interpreted before the manuscript; budget helper pricing inconsistency noted in review §2.7; v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md) |
 | F3 | tested | sum_i p_i g_i = F; external balance F | src/closures/financing/financing.jl | tests/test_promoted_closures.jl |  | F3 cells executed for all five labour rows (runs/matrix_5x3-*-F3/manifest.toml, 2026-09-17); the recorded external position is canary_diff = -8.5e-3 for the mobile eta = 1 rows and ~1e-16 for the fixed-wage rows, while the programme value F = dot(p, g) = 1.33e-2 -- the pre-registered 'external deficit = F' signature needs an agreed definition; external_balance returns only the programme's import content (review §2.8); v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md) |
 
@@ -198,8 +198,54 @@ Scenarios: **51** rows — executed: 43, provisional: 3, failed: 5. Designs: `cb
 - [ADR-0013 — the intermediate-bill tax term: row 75 booked as an external leak](decisions/ADR-0013-intermediate-bill-tax-term.md)
 - [ADR-0014 — real-wage elastic supply and a verified scale-determinacy guard](decisions/ADR-0014-real-wage-supply-and-scale-guard.md)
 - [ADR-0015 — monotone polish to ~1e-10 (tolerance-independent metrics)](decisions/ADR-0015-monotone-polish.md)
+- [ADR-0016 — CES-consistent valuation of the intermediate-bill leaks](decisions/ADR-0016-ces-consistent-leak-valuation.md)
+- [ADR-0017 — actual-matrix scale determinacy for the fixed-wage η = 1 system](decisions/ADR-0017-actual-matrix-scale-determinacy.md)
 
 ## Warnings
 
-None.
+- scenario matrix_5x3-ALPHA-F1: evidence not found: runs/matrix_5x3-ALPHA-F1/log.txt
+- scenario matrix_5x3-ALPHA-F2: evidence not found: runs/matrix_5x3-ALPHA-F2/log.txt
+- scenario matrix_5x3-ALPHA-F3: evidence not found: runs/matrix_5x3-ALPHA-F3/log.txt
+- scenario matrix_5x3-BETA-F1: evidence not found: runs/matrix_5x3-BETA-F1/log.txt
+- scenario matrix_5x3-BETA-F2: evidence not found: runs/matrix_5x3-BETA-F2/log.txt
+- scenario matrix_5x3-BETA-F3: evidence not found: runs/matrix_5x3-BETA-F3/log.txt
+- scenario matrix_5x3-BF-F1: evidence not found: runs/matrix_5x3-BF-F1/log.txt
+- scenario matrix_5x3-BF-F2: evidence not found: runs/matrix_5x3-BF-F2/log.txt
+- scenario matrix_5x3-BF-F3: evidence not found: runs/matrix_5x3-BF-F3/log.txt
+- scenario matrix_5x3-DELTA-F1: evidence not found: runs/matrix_5x3-DELTA-F1/log.txt
+- scenario matrix_5x3-DELTA-F2: evidence not found: runs/matrix_5x3-DELTA-F2/log.txt
+- scenario matrix_5x3-DELTA-F3: evidence not found: runs/matrix_5x3-DELTA-F3/log.txt
+- scenario matrix_5x3-GAMMA-F1: evidence not found: runs/matrix_5x3-GAMMA-F1/log.txt
+- scenario matrix_5x3-GAMMA-F2: evidence not found: runs/matrix_5x3-GAMMA-F2/log.txt
+- scenario matrix_5x3-GAMMA-F3: evidence not found: runs/matrix_5x3-GAMMA-F3/log.txt
+- scenario matrix_5x3-v2-ALPHA-F1: evidence not found: runs/matrix_5x3-v2-ALPHA-F1/log.txt
+- scenario matrix_5x3-v2-ALPHA-F2: evidence not found: runs/matrix_5x3-v2-ALPHA-F2/log.txt
+- scenario matrix_5x3-v2-ALPHA-F3: evidence not found: runs/matrix_5x3-v2-ALPHA-F3/log.txt
+- scenario matrix_5x3-v2-BETA-F1: evidence not found: runs/matrix_5x3-v2-BETA-F1/log.txt
+- scenario matrix_5x3-v2-BETA-F2: evidence not found: runs/matrix_5x3-v2-BETA-F2/log.txt
+- scenario matrix_5x3-v2-BETA-F3: evidence not found: runs/matrix_5x3-v2-BETA-F3/log.txt
+- scenario matrix_5x3-v2-BF-F1: evidence not found: runs/matrix_5x3-v2-BF-F1/log.txt
+- scenario matrix_5x3-v2-BF-F2: evidence not found: runs/matrix_5x3-v2-BF-F2/log.txt
+- scenario matrix_5x3-v2-BF-F3: evidence not found: runs/matrix_5x3-v2-BF-F3/log.txt
+- scenario matrix_5x3-v2-DELTA-F1: evidence not found: runs/matrix_5x3-v2-DELTA-F1/log.txt
+- scenario matrix_5x3-v2-DELTA-F2: evidence not found: runs/matrix_5x3-v2-DELTA-F2/log.txt
+- scenario matrix_5x3-v2-DELTA-F3: evidence not found: runs/matrix_5x3-v2-DELTA-F3/log.txt
+- scenario matrix_5x3-v2-GAMMA-F1: evidence not found: runs/matrix_5x3-v2-GAMMA-F1/log.txt
+- scenario matrix_5x3-v2-GAMMA-F2: evidence not found: runs/matrix_5x3-v2-GAMMA-F2/log.txt
+- scenario matrix_5x3-v2-GAMMA-F3: evidence not found: runs/matrix_5x3-v2-GAMMA-F3/log.txt
+- scenario matrix_5x3-v3-ALPHA-F1: evidence not found: runs/matrix_5x3-v3-ALPHA-F1/log.txt
+- scenario matrix_5x3-v3-ALPHA-F2: evidence not found: runs/matrix_5x3-v3-ALPHA-F2/log.txt
+- scenario matrix_5x3-v3-ALPHA-F3: evidence not found: runs/matrix_5x3-v3-ALPHA-F3/log.txt
+- scenario matrix_5x3-v3-BETA-F1: evidence not found: runs/matrix_5x3-v3-BETA-F1/log.txt
+- scenario matrix_5x3-v3-BETA-F2: evidence not found: runs/matrix_5x3-v3-BETA-F2/log.txt
+- scenario matrix_5x3-v3-BETA-F3: evidence not found: runs/matrix_5x3-v3-BETA-F3/log.txt
+- scenario matrix_5x3-v3-BF-F1: evidence not found: runs/matrix_5x3-v3-BF-F1/log.txt
+- scenario matrix_5x3-v3-BF-F2: evidence not found: runs/matrix_5x3-v3-BF-F2/log.txt
+- scenario matrix_5x3-v3-BF-F3: evidence not found: runs/matrix_5x3-v3-BF-F3/log.txt
+- scenario matrix_5x3-v3-DELTA-F1: evidence not found: runs/matrix_5x3-v3-DELTA-F1/log.txt
+- scenario matrix_5x3-v3-DELTA-F2: evidence not found: runs/matrix_5x3-v3-DELTA-F2/log.txt
+- scenario matrix_5x3-v3-DELTA-F3: evidence not found: runs/matrix_5x3-v3-DELTA-F3/log.txt
+- scenario matrix_5x3-v3-GAMMA-F1: evidence not found: runs/matrix_5x3-v3-GAMMA-F1/log.txt
+- scenario matrix_5x3-v3-GAMMA-F2: evidence not found: runs/matrix_5x3-v3-GAMMA-F2/log.txt
+- scenario matrix_5x3-v3-GAMMA-F3: evidence not found: runs/matrix_5x3-v3-GAMMA-F3/log.txt
 

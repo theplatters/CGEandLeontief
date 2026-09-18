@@ -7,6 +7,7 @@ tags: [assessment, docs-audit, revision, beyondhulten, metroeconomica]
 last-updated: September 2026
 ---
 
+**Version 7** \textcolor{revisionV6}{(September 2026)}
 **Version 6** \textcolor{revisionV5}{(September 2026)}
 **Version 5** \textcolor{revisionV4}{(September 2026)}
 **Version 4** \textcolor{revisionV3}{(September 2026)}
@@ -28,6 +29,8 @@ Governing documents: \texttt{ROADMAP.md} and
 \textcolor{revisionV4}{Version 5 reports the executed 5 x 3 matrix on the re-anchored A-bill calibration, the accounting correction that closed the external-identity canary, and the two closure fixes (real-wage supply, verified scale determinacy) that made the fixed-wage rows executable. Section 4.2 is new; where the earlier intermediate-results section disagrees with it, section 4.2 governs.}
 
 \textcolor{revisionV5}{Version 6 separates real GDP from welfare in the measurement layer (ADR-0018). Real GDP is now the income-side index w*sum(L) deflated by a seven-component Tornqvist GDP deflator, with the expenditure-side Divisia index as its dual and the external wedge reported as a diagnostic; the legacy household-consumption index is relabelled as welfare and is no longer reported as GDP. Because the kernel measurement layer changed, the matrix is re-minted as matrix\_5x3\_v4 (the same 15 cells and parameters as v3; v1-v3 stay as history, ADR-0004). Under the demand-only design the deflator is exactly one, so real GDP is flat (0.000 percent) in every full-employment mobile row: the F2 column shows the tax-financed programme as GDP-neutral with a 1.69 percent welfare loss, not as a GDP contraction. The v5 reading of the F2 column is corrected in section 4.2; the manifest-generated v4 flow tables are in \texttt{paper/tables/matrix\_5x3\_v4\_flows.md}.}
+
+\textcolor{revisionV6}{Version 7 harmonizes the external account (ADR-0019). All N goods-market clearings are now enforced in every regime: the mobile eta = 1 system carries the endogenous net external transfer F with E = (1-tau) w sum(L) + F, the eta = 0 endpoint pins F = 0, and programme financing under F3 is booked as B\_gov = sum(p g), so the booked identity S + T\_int + M - (I+X) = F + B\_gov holds to about 1e-16 at the mobile cells. Because the kernel changed, the matrix is re-minted as matrix\_5x3\_v5 (15 of 15 cells executed; v1-v4 stay as history, ADR-0004); the manifest-generated flow tables are in \texttt{paper/tables/matrix\_5x3\_v5\_flows.md}. Financing neutrality is the generation's finding: F2 and F3 have identical real allocations in the mobile regime with F\_F3 = F\_F2 - B\_gov and an identical net external position, so the F2/F3 differences reported in v1-v4 were artifacts of the omitted-market shortcut, not economics. Measured movement against v4: mobile F1 welfare +0.043 percent becomes +0.143 percent, mobile F2/F3 welfare -1.694 percent becomes -1.823 percent, and the fixed rows and the BF rows are unchanged.}
 
 \textcolor{revisionV3}{Version 4 reports the intermediate implementation
 results of the notebook pipeline \texttt{cbase2/} (v3 open-economy
@@ -613,6 +616,32 @@ finite-difference/least-squares experiments do not suffice.}
 
 \textcolor{revisionV5}{The full per-cell accounting decomposition -- the seven GDP components (C, G plus programme, I, X, M\_final, M\_int, T\_int), the external wedge Sigma(V) - w*sum(L), and the deflator -- is in \texttt{paper/tables/matrix\_5x3\_v4\_flows.md}. Findings 1, 2, 4 and 5 of the v5 list stand: the limit relations, the unidentified supply elasticity under demand-only shocks, and the external-account reading are unchanged, and the v4 runs reproduce the v3 equilibria to 1.2e-11, so only the measurement changed. The recombination option remains a deliberate omission.}
 
+\textcolor{revisionV6}{\normalsize [added v7: the ADR-0019 generation]}
+
+\textcolor{revisionV6}{Design \texttt{matrix\_5x3\_v5} (the ADR-0019 generation): 15 of 15 cells executed under the all-N closure with the explicit external transfer, no locked and no dropped scenarios. The headline set below adds the booked external account (F, B\_gov, net position F + B\_gov) to the v6 columns; the per-cell accounting decomposition is in \texttt{paper/tables/matrix\_5x3\_v5\_flows.md}, and the paper cites the \texttt{matrix\_5x3-v5-*} run ids.}
+
+| Cell | Real GDP rel. | Consumption rel. | Employment | F | B_gov | Net ext. pos. |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `BF-F1` | +0.000000 | +0.000433 | 1.000000 | +0.00000000 | 0.00000000 | +0.00000000 |
+| `BF-F2` | +0.000000 | -0.016936 | 1.000000 | +0.00000000 | 0.00000000 | +0.00000000 |
+| `BF-F3` | +0.000000 | +0.000000 | 1.000000 | +0.00000000 | 0.01330991 | +0.01330991 |
+| `ALPHA-F1` | +0.000000 | +0.001432 | 1.000000 | +0.00078481 | 0.00000000 | +0.00078481 |
+| `ALPHA-F2` | +0.000000 | -0.018226 | 1.000000 | -0.00101403 | 0.00000000 | -0.00101403 |
+| `ALPHA-F3` | +0.000000 | -0.018226 | 1.000000 | -0.01432394 | 0.01330991 | -0.00101403 |
+| `BETA-F1` | +0.000000 | +0.001432 | 1.000000 | +0.00078481 | 0.00000000 | +0.00078481 |
+| `BETA-F2` | +0.000000 | -0.018226 | 1.000000 | -0.00101403 | 0.00000000 | -0.00101403 |
+| `BETA-F3` | +0.000000 | -0.018226 | 1.000000 | -0.01432394 | 0.01330991 | -0.00101403 |
+| `GAMMA-F1` | -0.000973 | -0.000806 | 0.999027 | +0.00000000 | 0.00000000 | +0.00000000 |
+| `GAMMA-F2` | +0.001260 | -0.015333 | 1.001260 | +0.00000000 | 0.00000000 | +0.00000000 |
+| `GAMMA-F3` | +0.017796 | +0.022644 | 1.017796 | +0.00000000 | 0.01330991 | +0.01330991 |
+| `DELTA-F1` | -0.000973 | -0.000806 | 0.999027 | +0.00000000 | 0.00000000 | +0.00000000 |
+| `DELTA-F2` | +0.001260 | -0.015333 | 1.001260 | +0.00000000 | 0.00000000 | +0.00000000 |
+| `DELTA-F3` | +0.017796 | +0.022644 | 1.017796 | +0.00000000 | 0.01330991 | +0.01330991 |
+
+\textcolor{revisionV6}{Three earlier readings are superseded by ADR-0019. First, the pre-registered external deficit = F signature: F3's gross programme inflow is B\_gov = 1.331 percent of GDP while the net position is F + B\_gov (-0.101 percent in the mobile rows, +1.331 percent in the fixed-wage and BF rows). Second, the wedge-as-external-position reading: gdp\_wedge is now minus the identity gap (about 1e-16 at the mobile eta = 1 cells, about 1e-12 at the fixed-wage eta = 1 cells at residual level, and the documented factor-market gap of +4.34e-04 / -5.62e-04 / -7.94e-03 at the BF eta = 0 cells), and the external position is the booked F + B\_gov. Third, the F2/F3 separation: the two columns are real-neutral in the mobile regime (identical consumption at -1.823 percent and identical net position to about 2.6e-17, with F\_F3 = F\_F2 - B\_gov), so their v1-v4 differences were artifacts of the omitted-market shortcut. Findings 1, 2 and 4 of the v5 list stand unchanged, finding 3 stands in its v6 corrected form, and the recombination option remains a deliberate omission.}
+
+\textcolor{revisionV6}{Sources of the recorded deviations (classification). None of the recorded deviations was an accounting error: the identities (zero-profit, budgets, the booked external account) hold to machine precision throughout. They fall into four classes. (i) Measurement--definition: the legacy "Real GDP" column is the household-consumption welfare index; corrected by the income-side measure (ADR-0018, version 6). (ii) Closure artifact: the F2/F3 separation and the earlier external-position readings came from the omitted N-th market; corrected by all-N clearing with the booked external account (ADR-0019, this version; the approaches considered are catalogued in its 2026-09-18 amendment), under which the mobile F2 and F3 cells are real-neutral. (iii) Model-class property: BETA coincides with ALPHA under demand-only shocks because the one-factor CRS price block is demand-invariant (Samuelson nonsubstitution), and DELTA's exactness rests on the same p = 1; eta\_s is identifiable only under a supply-side scenario or with a second production factor -- a property of the closure design, not a mis-specification. (iv) Corrected admissibility mathematics: the GAMMA/DELTA-F1 rejections were a retired heuristic guard, replaced by the measured actual-matrix criterion (ADR-0014, ADR-0017).}
+
 # Workplan \textcolor{revisionV3}{\normalsize [section 5 since v4; reworked v3]}
 
 ## Stage 1: Model completion \textcolor{revisionV2}{\normalsize [reworked v3]}
@@ -947,3 +976,28 @@ evaluation matrix, and the workplan only.}
   income GDP flat, -1.69 percent is welfare); the manifest-generated flow
   tables are in \texttt{paper/tables/matrix\_5x3\_v4\_flows.md}. The F2 open
   gate in \texttt{registry/closures.toml} is resolved by the same runs.
+
+- **Version 7** \textcolor{revisionV6}{(September 2026)} --- The external
+  account harmonized (ADR-0019): all N clearings enforced in every regime,
+  the mobile eta = 1 system carrying the endogenous net external transfer F
+  and F3 booking the programme financing as B\_gov, with the booked identity
+  S + T\_int + M - (I+X) = F + B\_gov. The matrix is re-minted as
+  matrix\_5x3\_v5 (15 of 15 cells executed; v1-v4 stay as history); section
+  4.2 carries the v7 headline table with the booked external account and
+  corrects the superseded readings (external deficit = F, the
+  wedge-as-external-position, the F2/F3 separation); the manifest-generated
+  flow tables are in \texttt{paper/tables/matrix\_5x3\_v5\_flows.md}. The
+  generation's finding is financing neutrality (F2 and F3 real-neutral in
+  the mobile regime; the v1-v4 F2/F3 differences were omitted-market
+  shortcut artifacts). Measured movement against v4: mobile F1 welfare
+  +0.043 percent to +0.143 percent, mobile F2/F3 welfare -1.694 percent to
+  -1.823 percent, fixed and BF rows unchanged. The F3 definition gates in
+  \texttt{registry/closures.toml} are resolved by the same runs; the
+  \texttt{revisionV6} colour used here assumes the render template defines
+  it (as \texttt{revisionV5} was introduced for Version 6). Section 4.2 also
+  classifies the sources of the recorded deviations (measurement definition,
+  closure artifact, model-class property, corrected admissibility
+  mathematics), and the ADR-0019 amendment of the same date records the
+  harmonization approaches considered (status-quo canary, all-N plus transfer
+  F, savings-driven investment, Armington expenditure switching, direct
+  external-balance imposition).

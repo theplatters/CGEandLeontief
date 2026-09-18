@@ -58,10 +58,14 @@ solve with the pin at ~2e-15, and the closed 2-sector tiny fixture
    as before (ADR-0013).
 6. **Baseline:** `F = 0` reproduces the calibration to machine precision; no
    recalibration.
-7. **FINANCING NEUTRALITY (theorem of this closure).** Because F is an
-   unrestricted after-tax household transfer, F2 and F3 have identical real
-   equilibria `(p, y, w)`, with `F_F3 = F_F2 − B_gov` and identical net
-   external position `F + B_gov`. *Algebra:* write baseline after-tax labour
+7. **FINANCING NEUTRALITY (theorem of this closure, η = 1 mobile regime).**
+   Because F is an unrestricted after-tax household transfer in the mobile
+   η = 1 system, F2 and F3 have identical real equilibria `(p, y, w)`, with
+   `F_F3 = F_F2 − B_gov` and identical net external position `F + B_gov`.
+   The neutrality requires F to be free; at the η = 0 endpoint (F pinned to
+   zero) and in the fixed-wage regime (no F) it does not apply, and the
+   F2/F3 rows there differ through the tax/employment margins.
+   *Algebra:* write baseline after-tax labour
    income `Y_d = (1−τ)·w·ΣL` and programme cost `G_prog = Σ_i p_i g_i`. Under
    F2 the programme is taxed domestically (`B_gov = 0`) so
    `E_2 = Y_d − G_prog + F_2`; under F3 the household is untaxed and the
@@ -120,3 +124,33 @@ solve with the pin at ~2e-15, and the closed 2-sector tiny fixture
   cell asserts the all-N clearing residual; η = 1 cells additionally assert
   the identity gap; the manifest records `external_transfer`,
   `programme_financing`, and `external_position = F + B_gov`.
+
+## Amendment 2026-09-18 — harmonization approaches considered
+
+The all-N form admits several coherent closures; the alternatives below were
+weighed before the decision and are recorded so the option set is not
+re-litigated (a future change is a new ADR, not an edit here). All of them
+share the accounting skeleton `S + T_int + M − (I+X) = F + B_gov`; they
+differ in which margin is made behavioral.
+
+| Approach | Mechanism | Status and trade-off |
+| --- | --- | --- |
+| N−1 clearings + CPI with the residual canary (ADR-0010; the v1–v4 generations) | One goods market is not imposed; its p-weighted residual is reported as the external account | Corrected by this ADR (the N−1 decision only): leaves one market uncleared, and the F2/F3 differences measured under it were artifacts (Decision item 7) |
+| All-N clearings + explicit scalar transfer F (this ADR) | `F` enters after-tax household income, `E = (1−τ)·w·ΣL + F`; the booked identity is asserted at every solution | Chosen: square system, identified F (Context), exact accounting, financing neutrality |
+| Savings-driven investment closure | The investment scale (or the saving rate) adjusts so the account clears at a chosen `F`, e.g. `F = 0` | Not chosen: the programme itself is an investment-demand shock; endogenizing investment would make the shock partly self-financing and redefine the financing axis. Revival: if the experiment needs an endogenous saving–investment margin |
+| Armington-type trade with expenditure switching | Relative-price-sensitive imports and exports balance the trade account behaviorally (real exchange rate) | Not chosen in this generation: needs foreign prices and new elasticities `sigma_m`, `eta_x`; scope-locked as optional open-economy depth (DOCS_ASSESSMENT scope locks: "Armington extension optional"). Revival: any claim that hinges on expenditure switching or a real exchange rate |
+| Direct imposition of the external-balance equation (`cbase2/review.md`, the mobile N−1 finding) | The review's recommended fix | Without an added variable this is the over-determined form measured at the 4.4e-4 floor (Context); with a variable it is this ADR's approach. The review's alternative (define the account residually and assert the canary) was the ADR-0010 form |
+
+Recorded limitations of the chosen closure: `F` is a residual transfer, not a
+behavioral current-account mechanism (no interest rate, no portfolio choice,
+no exchange-rate margin; foreign prices are fixed), and the static model
+cannot distinguish external debt from a transfer (the financing-design note in
+DOCS_ASSESSMENT). `B_gov = Σ p·g` under F3 is a booked financing entry, not a
+bond instrument.
+
+Not a harmonization approach (recorded to prevent a category error): adding a
+second production factor (capital) would strengthen factor-price responses and
+the BETA identification, but it would not close the external account by
+itself. Under domestic ownership the representative household's total income
+is invariant to the wage/rental split, so the account still needs an explicit
+margin; the choice recorded here would remain.

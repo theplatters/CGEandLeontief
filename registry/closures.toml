@@ -22,16 +22,17 @@ status = "implemented"
 symbols = ["MobileLaborCES"]
 files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
 references = ["docs/labor_closures.md", "docs/DOCS_ASSESSMENT.md", "roadmaps/vertdict.md", "ROADMAP.md"]
-tests = ["tests/test_mobile_labor.jl", "tests/test_kernel_regression.jl"]
-evidence = ["cbase2/process_comments.md"]
+tests = ["tests/test_mobile_labor.jl", "tests/test_kernel_regression.jl", "tests/test_external_closure.jl"]
+evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v5-BF-F1/manifest.toml", "runs/matrix_5x3-v5-BF-F2/manifest.toml", "runs/matrix_5x3-v5-BF-F3/manifest.toml"]
 dead_ends = ["DE-0001", "DE-0002", "DE-0004"]
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017", "ADR-0019"]
 open_gates = [
     "eta = 0 keeps one common wage with fixed quantities; BF's immobile case has sector-specific wages (cbase2/review.md §1)",
     "Phase-4 residual gates (ROADMAP.md): omitted-equation invariance, household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency",
     "run manifests recorded: runs/matrix_5x3-BF-F1|F2|F3/manifest.toml (executed, 2026-09-17; eta = 0 endpoint)",
+    "at eta = 0 all N clearings are now enforced with the F = 0 pin (ADR-0019); the residual canary reading is the documented factor-market gap (4.3e-4..7.9e-3 on the full-71 v5 cells), not an external imbalance",
 ]
-notes = "ADR-0010 retires the interpolated 0 < eta < 1 cases and the ad hoc allocation wedge (never derived as a CES allocative-loss coefficient; cbase2/review.md §1, §2.4). The mobile system keeps N-1 clearing equations plus the CPI = 1 numeraire; the omitted N-th market is the residual external account, exposed by market_clearing_residuals and asserted against S - (I+X-M) by external_balance_canary in tests and experiments. tests/test_mobile_labor.jl covers the endpoint contract (closure taxonomy, solve, residuals, rejected intermediates); tests/test_kernel_regression.jl pins the eta = 0/1 goldens."
+notes = "ADR-0010 retires the interpolated 0 < eta < 1 cases and the ad hoc allocation wedge (never derived as a CES allocative-loss coefficient; cbase2/review.md §1, §2.4). ADR-0019 replaces the N-1/omitted-market reading (ADR-0010): all N clearings are enforced in every regime; the mobile eta = 1 system carries the endogenous net external transfer F with E = (1-tau)wΣL + F, the eta = 0 endpoint pins F = 0, and the booked identity is S + T_int + M - (I+X) = F + B_gov (the ADR-0010 endpoints eta in {0,1} and the retired wedge stand). tests/test_mobile_labor.jl covers the endpoint contract (closure taxonomy, solve, residuals, rejected intermediates); tests/test_kernel_regression.jl pins the eta = 0/1 goldens; tests/test_external_closure.jl covers the all-N contract, the identity gap and financing neutrality."
 
 [labor.ALPHA]
 id = "ALPHA"
@@ -42,15 +43,15 @@ status = "implemented"
 symbols = ["MobileLaborCES", "FlexibleWageClosure"]
 files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
 references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
-tests = ["tests/test_mobile_labor.jl"]
-evidence = []
+tests = ["tests/test_mobile_labor.jl", "tests/test_external_closure.jl"]
+evidence = ["runs/matrix_5x3-v5-ALPHA-F1/manifest.toml", "runs/matrix_5x3-v5-ALPHA-F2/manifest.toml", "runs/matrix_5x3-v5-ALPHA-F3/manifest.toml"]
 dead_ends = ["DE-0002"]
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0019"]
 open_gates = [
     "Phase-4 residual gates (ROADMAP.md)",
     "run manifests recorded: runs/matrix_5x3-ALPHA-F1|F2|F3/manifest.toml (executed, 2026-09-17)",
 ]
-notes = "Nested in BF at eta = 1 by construction; the coincidence is definitional in the code, not a result (cbase2/review.md §1). FlexibleWageClosure is defined in src/closures/labor/types.jl and referenced by src/core/equilibrium.jl. tests/test_mobile_labor.jl covers the mobile closure contract."
+notes = "Nested in BF at eta = 1 by construction; the coincidence is definitional in the code, not a result (cbase2/review.md §1). FlexibleWageClosure is defined in src/closures/labor/types.jl and referenced by src/core/equilibrium.jl. tests/test_mobile_labor.jl covers the mobile closure contract. ADR-0019: the mobile eta = 1 system enforces all N clearings with the endogenous net external transfer F (E = (1-tau)wΣL + F); the booked identity S + T_int + M - (I+X) = F + B_gov holds to ~1e-16 on the v5 ALPHA cells (runs/matrix_5x3-v5-ALPHA-F1|F2|F3/manifest.toml, executed 2026-09-18, commit f0af583)."
 
 [labor.BETA]
 id = "BETA"
@@ -62,7 +63,7 @@ symbols = ["ElasticLaborClosure"]
 files = ["src/closures/labor/types.jl", "src/closures/labor/labor.jl", "src/core/equilibrium.jl"]
 references = ["docs/closures/beta.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md", "ROADMAP.md"]
 tests = ["tests/test_promoted_closures.jl"]
-evidence = ["cbase2/process_comments.md"]
+evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v5-BETA-F1/manifest.toml", "runs/matrix_5x3-v5-BETA-F2/manifest.toml", "runs/matrix_5x3-v5-BETA-F3/manifest.toml"]
 dead_ends = ["DE-0004"]
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
 open_gates = [
@@ -84,7 +85,7 @@ symbols = ["FixedWageClosure"]
 files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
 references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_fixed_closure.jl"]
-evidence = []
+evidence = ["runs/matrix_5x3-v5-GAMMA-F1/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F2/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F3/manifest.toml"]
 dead_ends = ["DE-0003"]
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017"]
 open_gates = [
@@ -104,7 +105,7 @@ symbols = ["delta_elasticities", "delta_model", "leontief_multiplier"]
 files = ["src/closures/labor/labor.jl", "src/core/equilibrium.jl"]
 references = ["docs/closures/delta.md", "ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_promoted_closures.jl"]
-evidence = ["cbase2/scripts/verify_v3.jl"]
+evidence = ["cbase2/scripts/verify_v3.jl", "runs/matrix_5x3-v5-DELTA-F1/manifest.toml", "runs/matrix_5x3-v5-DELTA-F2/manifest.toml", "runs/matrix_5x3-v5-DELTA-F3/manifest.toml"]
 dead_ends = []
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017"]
 open_gates = [
@@ -190,13 +191,13 @@ status = "tested"
 symbols = ["ExternalDebt"]
 files = ["src/closures/financing/financing.jl"]
 references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
-tests = ["tests/test_promoted_closures.jl"]
-evidence = ["cbase2/process_comments.md"]
+tests = ["tests/test_promoted_closures.jl", "tests/test_external_closure.jl"]
+evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v5-ALPHA-F3/manifest.toml", "runs/matrix_5x3-v5-BETA-F3/manifest.toml", "runs/matrix_5x3-v5-BF-F3/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F3/manifest.toml", "runs/matrix_5x3-v5-DELTA-F3/manifest.toml"]
 dead_ends = []
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0019"]
 open_gates = [
-    "F3 cells executed for all five labour rows (runs/matrix_5x3-*-F3/manifest.toml, 2026-09-17); the recorded external position is canary_diff = -8.5e-3 for the mobile eta = 1 rows and ~1e-16 for the fixed-wage rows, while the programme value F = dot(p, g) = 1.33e-2 -- the pre-registered 'external deficit = F' signature needs an agreed definition",
-    "external_balance returns only the programme's import content (review §2.8)",
+    "F3 cells executed for all five labour rows (runs/matrix_5x3-*-F3/manifest.toml, 2026-09-17); the recorded external position is canary_diff = -8.5e-3 for the mobile eta = 1 rows and ~1e-16 for the fixed-wage rows, while the programme value F = dot(p, g) = 1.33e-2 -- the pre-registered 'external deficit = F' signature needs an agreed definition. RESOLVED by ADR-0019 and the matrix_5x3_v5 generation (15/15 executed 2026-09-18, commit f0af583): the programme financing is booked as B_gov = Σ p·g, the net external position is F + B_gov, and F2/F3 are real-neutral in the mobile regime (identical p, y, w; F_F3 = F_F2 - B_gov)",
+    "external_balance returns only the programme's import content (review §2.8) -- RESOLVED as a definition question by ADR-0019 (the diagnostic keeps returning the programme's import content; the external position is the booked F + B_gov)",
     "v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md)",
 ]
-notes = "Not a full current-account closure (cbase2/review.md §1). external_balance returns only the programme's import content (cbase2/review.md §2.8), and the recorded F = 0.00147 figure is ambiguous: about half of dot(p, m .* g) at baseline. ADR-0010 adds the asserted external-account canary: at mobile eta = 1 solutions the omitted N-th market residual equals S - (I+X-M) via external_balance_canary, asserted by tests and experiments."
+notes = "Not a full current-account closure (cbase2/review.md §1). external_balance returns only the programme's import content (cbase2/review.md §2.8), and the recorded F = 0.00147 figure is ambiguous: about half of dot(p, m .* g) at baseline. ADR-0010 adds the asserted external-account canary: at mobile eta = 1 solutions the omitted N-th market residual equals S - (I+X-M) via external_balance_canary, asserted by tests and experiments. ADR-0019 supersedes the omitted-market reading: all N clearings are enforced, the programme financing is booked as B_gov = Σ p·g (B_gov = 0 otherwise), the net position is F + B_gov, and F2/F3 are real-neutral in the mobile regime (v5: B_gov = +1.331% of GDP, F_F3 = -1.432%, F_F2 = -0.101%, identical external position to ~2.6e-17). tests/test_external_closure.jl asserts the neutrality contract."

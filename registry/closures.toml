@@ -173,9 +173,9 @@ references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/d
 tests = ["tests/test_promoted_closures.jl"]
 evidence = ["cbase2/process_comments.md"]
 dead_ends = []
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010"]
+adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0018"]
 open_gates = [
-    "F2 cells executed for all five labour rows (runs/matrix_5x3-*-F2/manifest.toml, 2026-09-17); the mobile rows read real_gdp_rel = -1.69e-2 with employment pinned at 1.0, which deviates from the pre-registered 'aggregate ~ 0' signature -- a composition/Tornqvist effect at fixed aggregate labour input, to be interpreted before the manuscript",
+    "F2 cells executed for all five labour rows. RESOLVED by ADR-0018 and the matrix_5x3_v4 generation (runs/matrix_5x3-v4-*-F2/manifest.toml, 2026-09-18): the mobile full-employment rows read gdp_rel = 0.0 (income-side real GDP, flat -- the pre-registered 'aggregate ~ 0' signature holds) while consumption_rel = -1.69e-2 is the household-welfare contraction from the tax; the v3 real_gdp_rel = -1.69e-2 column was the welfare index, not GDP",
     "budget helper pricing inconsistency noted in review §2.7",
     "v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md)",
 ]

@@ -7,6 +7,7 @@ tags: [assessment, docs-audit, revision, beyondhulten, metroeconomica]
 last-updated: September 2026
 ---
 
+**Version 6** \textcolor{revisionV5}{(September 2026)}
 **Version 5** \textcolor{revisionV4}{(September 2026)}
 **Version 4** \textcolor{revisionV3}{(September 2026)}
 **Version 3** \textcolor{revisionV2}{(September 2026)}
@@ -25,6 +26,8 @@ Governing documents: \texttt{ROADMAP.md} and
 \texttt{docs/reviews/}.}
 
 \textcolor{revisionV4}{Version 5 reports the executed 5 x 3 matrix on the re-anchored A-bill calibration, the accounting correction that closed the external-identity canary, and the two closure fixes (real-wage supply, verified scale determinacy) that made the fixed-wage rows executable. Section 4.2 is new; where the earlier intermediate-results section disagrees with it, section 4.2 governs.}
+
+\textcolor{revisionV5}{Version 6 separates real GDP from welfare in the measurement layer (ADR-0018). Real GDP is now the income-side index w*sum(L) deflated by a seven-component Tornqvist GDP deflator, with the expenditure-side Divisia index as its dual and the external wedge reported as a diagnostic; the legacy household-consumption index is relabelled as welfare and is no longer reported as GDP. Because the kernel measurement layer changed, the matrix is re-minted as matrix\_5x3\_v4 (the same 15 cells and parameters as v3; v1-v3 stay as history, ADR-0004). Under the demand-only design the deflator is exactly one, so real GDP is flat (0.000 percent) in every full-employment mobile row: the F2 column shows the tax-financed programme as GDP-neutral with a 1.69 percent welfare loss, not as a GDP contraction. The v5 reading of the F2 column is corrected in section 4.2; the manifest-generated v4 flow tables are in \texttt{paper/tables/matrix\_5x3\_v4\_flows.md}.}
 
 \textcolor{revisionV3}{Version 4 reports the intermediate implementation
 results of the notebook pipeline \texttt{cbase2/} (v3 open-economy
@@ -588,6 +591,28 @@ finite-difference/least-squares experiments do not suffice.}
 
 \textcolor{revisionV4}{\textbf{Recombination option (left out).} The matrix varies two labour margins that the design parametrises independently: BF's allocation selector $\eta \in \{0,1\}$ (who gets the labour) and BETA's aggregate supply elasticity $\eta_s$ (how much labour in total). The 5 x 3 samples three of the four corners -- ALPHA ($\eta$ = 1, $\eta_s$ = 0), BETA (1, 0.5) and BF (0, 0) -- and leaves out their recombination, the corner ($\eta$ = 0, $\eta_s$ = 0.5): immobile allocation WITH elastic supply. It is left out deliberately because it would be a null result here: with p = 1 the real wage sits at its anchor, so the recombined cell coincides with BF to about 1e-15, exactly as BETA coincides with ALPHA. It becomes informative only in the supply-side scenario of finding 2, where a ($\eta$, $\eta_s$) 2 x 2 would separate the two margins -- the allocation friction moving composition and the supply elasticity moving the level. Recorded as an available extension, not as a gap in the current design.}
 
+\textcolor{revisionV5}{Version 6 measurement update (ADR-0018). The v5 table above reports the household-consumption Tornqvist index in its "Real GDP rel." column; under ADR-0018 that index is the welfare aggregator, not GDP. Real GDP is the income-side index w*sum(L) deflated by the seven-component GDP deflator, which is exactly one here because the design pins all prices at one. The matrix\_5x3\_v4 generation records both concepts; the table below is taken from the 15 v4 manifests. Finding 3 above is corrected: the F2 mobile rows are GDP-neutral (0.000 percent), and the -1.69 percent is the tax-induced welfare loss.}
+
+| Cell | Real GDP rel. | Consumption rel. | Employment | Net external position |
+| --- | ---: | ---: | ---: | ---: |
+| `BF-F1` | +0.000000 | +0.000433 | 1.000000 | +0.000452 |
+| `BF-F2` | +0.000000 | -0.016936 | 1.000000 | -0.000548 |
+| `BF-F3` | +0.000000 | +0.000000 | 1.000000 | -0.007947 |
+| `ALPHA-F1` | +0.000000 | +0.000433 | 1.000000 | +0.000465 |
+| `ALPHA-F2` | +0.000000 | -0.016936 | 1.000000 | -0.000601 |
+| `ALPHA-F3` | +0.000000 | +0.000000 | 1.000000 | -0.008495 |
+| `BETA-F1` | +0.000000 | +0.000433 | 1.000000 | +0.000465 |
+| `BETA-F2` | +0.000000 | -0.016936 | 1.000000 | -0.000601 |
+| `BETA-F3` | +0.000000 | +0.000000 | 1.000000 | -0.008495 |
+| `GAMMA-F1` | -0.000973 | -0.000806 | 0.999027 | -0.000000 |
+| `GAMMA-F2` | +0.001260 | -0.015333 | 1.001260 | -0.000000 |
+| `GAMMA-F3` | +0.017796 | +0.022644 | 1.017796 | -0.000000 |
+| `DELTA-F1` | -0.000973 | -0.000806 | 0.999027 | -0.000000 |
+| `DELTA-F2` | +0.001260 | -0.015333 | 1.001260 | -0.000000 |
+| `DELTA-F3` | +0.017796 | +0.022644 | 1.017796 | -0.000000 |
+
+\textcolor{revisionV5}{The full per-cell accounting decomposition -- the seven GDP components (C, G plus programme, I, X, M\_final, M\_int, T\_int), the external wedge Sigma(V) - w*sum(L), and the deflator -- is in \texttt{paper/tables/matrix\_5x3\_v4\_flows.md}. Findings 1, 2, 4 and 5 of the v5 list stand: the limit relations, the unidentified supply elasticity under demand-only shocks, and the external-account reading are unchanged, and the v4 runs reproduce the v3 equilibria to 1.2e-11, so only the measurement changed. The recombination option remains a deliberate omission.}
+
 # Workplan \textcolor{revisionV3}{\normalsize [section 5 since v4; reworked v3]}
 
 ## Stage 1: Model completion \textcolor{revisionV2}{\normalsize [reworked v3]}
@@ -907,3 +932,18 @@ evaluation matrix, and the workplan only.}
   pre-existing unescaped percent sign (Stage 3, the documented production-vs-
   expenditure residual) is escaped so the line no longer truncates its tail; no
   other text changed.
+
+- **Version 6** \textcolor{revisionV5}{(September 2026)} --- Real GDP and
+  welfare separated in the measurement layer (ADR-0018): income-side real GDP
+  w*sum(L) deflated by a seven-component Tornqvist GDP deflator, the
+  expenditure Divisia index as its dual, and the external wedge
+  Sigma(V) - w*sum(L) reported as a diagnostic. New kernel API
+  (gdp\_components, gdp\_deflator, gdp\_income, gdp\_expenditure, gdp\_wedge,
+  real\_consumption); manifest schema v2 records the gdp and consumption
+  metric keys plus the seven component diagnostics. Because the measurement
+  layer changed, the matrix is re-minted as matrix\_5x3\_v4: 15 of 15 cells
+  executed, all gates pass, and the v4 equilibria reproduce v3 to 1.2e-11.
+  Section 4.2 carries the v6 table and corrects the v5 F2 reading (mobile
+  income GDP flat, -1.69 percent is welfare); the manifest-generated flow
+  tables are in \texttt{paper/tables/matrix\_5x3\_v4\_flows.md}. The F2 open
+  gate in \texttt{registry/closures.toml} is resolved by the same runs.

@@ -55,23 +55,33 @@ stays at `tau0`); `T = -gdp_t_int`; `F`, `B_gov` and `Net ext. pos.` are
 the `external_transfer`, `programme_financing` and `external_position`
 metrics (`Net ext. pos. = F + B_gov`).
 
-| Cell | Real GDP rel. | Consumption rel. | L | S | tax | I + X | M | T | F | B_gov | Net ext. pos. |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| `BF-F1` | +0.000000 | +0.000433 | 1.000000 | 0.094223 | 0.214101 | 0.584313 | 0.464869 | 0.025655 | +0.00000000 | 0.00000000 | +0.00000000 |
-| `BF-F2` | +0.000000 | -0.016936 | 1.000000 | 0.092628 | 0.227411 | 0.584313 | 0.465445 | 0.025678 | +0.00000000 | 0.00000000 | +0.00000000 |
-| `BF-F3` | +0.000000 | +0.000000 | 1.000000 | 0.094223 | 0.227411 | 0.584313 | 0.469599 | 0.025864 | +0.00000000 | 0.01330991 | +0.01330991 |
-| `ALPHA-F1` | +0.000000 | +0.001432 | 1.000000 | 0.094317 | 0.214101 | 0.584313 | 0.465114 | 0.025666 | +0.00078481 | 0.00000000 | +0.00078481 |
-| `ALPHA-F2` | +0.000000 | -0.018226 | 1.000000 | 0.092506 | 0.227411 | 0.584313 | 0.465128 | 0.025664 | -0.00101403 | 0.00000000 | -0.00101403 |
-| `ALPHA-F3` | +0.000000 | -0.018226 | 1.000000 | 0.092506 | 0.227411 | 0.584313 | 0.465128 | 0.025664 | -0.01432394 | 0.01330991 | -0.00101403 |
-| `BETA-F1` | +0.000000 | +0.001432 | 1.000000 | 0.094317 | 0.214101 | 0.584313 | 0.465114 | 0.025666 | +0.00078481 | 0.00000000 | +0.00078481 |
-| `BETA-F2` | +0.000000 | -0.018226 | 1.000000 | 0.092506 | 0.227411 | 0.584313 | 0.465128 | 0.025664 | -0.00101403 | 0.00000000 | -0.00101403 |
-| `BETA-F3` | +0.000000 | -0.018226 | 1.000000 | 0.092506 | 0.227411 | 0.584313 | 0.465128 | 0.025664 | -0.01432394 | 0.01330991 | -0.00101403 |
-| `GAMMA-F1` | -0.000973 | -0.000806 | 0.999027 | 0.094107 | 0.214101 | 0.584313 | 0.464565 | 0.025641 | +0.00000000 | 0.00000000 | +0.00000000 |
-| `GAMMA-F2` | +0.001260 | -0.015333 | 1.001260 | 0.092779 | 0.227411 | 0.584313 | 0.465838 | 0.025696 | +0.00000000 | 0.00000000 | +0.00000000 |
-| `GAMMA-F3` | +0.017796 | +0.022644 | 1.017796 | 0.096357 | 0.227411 | 0.584313 | 0.475154 | 0.026112 | +0.00000000 | 0.01330991 | +0.01330991 |
-| `DELTA-F1` | -0.000973 | -0.000806 | 0.999027 | 0.094107 | 0.214101 | 0.584313 | 0.464565 | 0.025641 | +0.00000000 | 0.00000000 | +0.00000000 |
-| `DELTA-F2` | +0.001260 | -0.015333 | 1.001260 | 0.092779 | 0.227411 | 0.584313 | 0.465838 | 0.025696 | +0.00000000 | 0.00000000 | +0.00000000 |
-| `DELTA-F3` | +0.017796 | +0.022644 | 1.017796 | 0.096357 | 0.227411 | 0.584313 | 0.475154 | 0.026112 | +0.00000000 | 0.01330991 | +0.01330991 |
+The `Resource side` and `Gap` columns were added on 2026-09-18 (correction,
+see Notes). `Resource side = S + T + M - (I+X)` is the imbalance the model's
+own flows imply; `Gap = Resource side - Net ext. pos.` is the identity gap
+`canary_diff`. At the twelve `eta = 1` cells the two positions agree to
+machine precision, so `Net ext. pos.` is a closed-account quantity there. At
+the three BF `eta = 0` cells they do not: `Net ext. pos.` is the *booked*
+financing entry `F + B_gov`, which the `F = 0` pin (ADR-0019 D2) reduces to
+the programme cost `B_gov`, and the account is open by `Gap`. Read the BF
+rows from `Resource side` plus the Notes, never from `Net ext. pos.`.
+
+| Cell | Real GDP rel. | Consumption rel. | L | S | tax | I + X | M | T | F | B_gov | Net ext. pos. | Resource side | Gap |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `BF-F1` | +0.000000 | +0.000433 | 1.000000 | 0.094223 | 0.214101 | 0.584313 | 0.464869 | 0.025655 | +0.00000000 | 0.00000000 | +0.00000000 | +0.00043438 | 4.34e-04 |
+| `BF-F2` | +0.000000 | -0.016936 | 1.000000 | 0.092628 | 0.227411 | 0.584313 | 0.465445 | 0.025678 | +0.00000000 | 0.00000000 | +0.00000000 | -0.00056182 | -5.62e-04 |
+| `BF-F3` | +0.000000 | +0.000000 | 1.000000 | 0.094223 | 0.227411 | 0.584313 | 0.469599 | 0.025864 | +0.00000000 | 0.01330991 | +0.01330991 | +0.00537381 | -7.94e-03 |
+| `ALPHA-F1` | +0.000000 | +0.001432 | 1.000000 | 0.094317 | 0.214101 | 0.584313 | 0.465114 | 0.025666 | +0.00078481 | 0.00000000 | +0.00078481 | +0.00078481 | -2.00e-16 |
+| `ALPHA-F2` | +0.000000 | -0.018226 | 1.000000 | 0.092506 | 0.227411 | 0.584313 | 0.465128 | 0.025664 | -0.00101403 | 0.00000000 | -0.00101403 | -0.00101403 | -4.09e-16 |
+| `ALPHA-F3` | +0.000000 | -0.018226 | 1.000000 | 0.092506 | 0.227411 | 0.584313 | 0.465128 | 0.025664 | -0.01432394 | 0.01330991 | -0.00101403 | -0.00101403 | -4.35e-16 |
+| `BETA-F1` | +0.000000 | +0.001432 | 1.000000 | 0.094317 | 0.214101 | 0.584313 | 0.465114 | 0.025666 | +0.00078481 | 0.00000000 | +0.00078481 | +0.00078481 | -2.05e-16 |
+| `BETA-F2` | +0.000000 | -0.018226 | 1.000000 | 0.092506 | 0.227411 | 0.584313 | 0.465128 | 0.025664 | -0.00101403 | 0.00000000 | -0.00101403 | -0.00101403 | -4.13e-16 |
+| `BETA-F3` | +0.000000 | -0.018226 | 1.000000 | 0.092506 | 0.227411 | 0.584313 | 0.465128 | 0.025664 | -0.01432394 | 0.01330991 | -0.00101403 | -0.00101403 | -4.37e-16 |
+| `GAMMA-F1` | -0.000973 | -0.000806 | 0.999027 | 0.094107 | 0.214101 | 0.584313 | 0.464565 | 0.025641 | +0.00000000 | 0.00000000 | +0.00000000 | -0.00000000 | -1.14e-12 |
+| `GAMMA-F2` | +0.001260 | -0.015333 | 1.001260 | 0.092779 | 0.227411 | 0.584313 | 0.465838 | 0.025696 | +0.00000000 | 0.00000000 | +0.00000000 | -0.00000000 | -3.74e-12 |
+| `GAMMA-F3` | +0.017796 | +0.022644 | 1.017796 | 0.096357 | 0.227411 | 0.584313 | 0.475154 | 0.026112 | +0.00000000 | 0.01330991 | +0.01330991 | +0.01330991 | -7.07e-12 |
+| `DELTA-F1` | -0.000973 | -0.000806 | 0.999027 | 0.094107 | 0.214101 | 0.584313 | 0.464565 | 0.025641 | +0.00000000 | 0.00000000 | +0.00000000 | -0.00000000 | -4.75e-12 |
+| `DELTA-F2` | +0.001260 | -0.015333 | 1.001260 | 0.092779 | 0.227411 | 0.584313 | 0.465838 | 0.025696 | +0.00000000 | 0.00000000 | +0.00000000 | -0.00000000 | -6.19e-12 |
+| `DELTA-F3` | +0.017796 | +0.022644 | 1.017796 | 0.096357 | 0.227411 | 0.584313 | 0.475154 | 0.026112 | +0.00000000 | 0.01330991 | +0.01330991 | +0.01330991 | -5.03e-16 |
 
 ## Table 2b -- Expenditure components (manifest diagnostics)
 
@@ -93,22 +103,38 @@ metrics (`Net ext. pos. = F + B_gov`).
 | `DELTA-F2` | 0.681070 | 0.227411 | 0.162367 | 0.421945 | -0.243147 | -0.222691 | -0.025696 | 6.19e-12 | 1.000000 |
 | `DELTA-F3` | 0.707337 | 0.227411 | 0.162367 | 0.421945 | -0.249699 | -0.225455 | -0.026112 | 6.66e-16 | 1.000000 |
 
-`gdp_wedge` is `-canary_diff`: ~1e-16 at the mobile eta = 1 cells and ~1e-12
-(at residual level) at the fixed-wage eta = 1 cells, so income- and
+`gdp_wedge` is `-canary_diff` = `-Gap`: ~1e-16 at the mobile eta = 1 cells and
+~1e-12 (at residual level) at the fixed-wage eta = 1 cells, so income- and
 expenditure-side real GDP coincide there; at the BF eta = 0 cells it is the
-documented factor-market gap (see Notes).
+labour-market residual the `F = 0` pin leaves behind,
+`-w * (sum L^cm - sum L)`, where `sum L^cm` is the cost-minimizing aggregate
+labour demand at the pinned equilibrium and `sum L` the labour supplied (the
+frozen bar at eta = 0, the demand-determined allocation in every eta = 1
+regime; see Notes).
 
 ## Table 3 -- The external account by labour endpoint
 
-Net external position by financing row: BF (eta = 0, position = B_gov,
-F pinned to 0), mobile ALPHA/BETA (eta = 1, position = F + B_gov),
-fixed-wage GAMMA/DELTA (position = B_gov, no external unknown).
+Booked financing (`F + B_gov`) and the resource-side imbalance
+(`S + T + M - (I+X)`) by financing row: BF (eta = 0, `F` pinned to 0), mobile
+ALPHA/BETA (eta = 1, `F` solved), fixed-wage GAMMA/DELTA (no external unknown).
 
-| Financing | BF (eta = 0) | Mobile ALPHA/BETA (eta = 1) | Fixed GAMMA/DELTA |
-| --- | ---: | ---: | ---: |
-| F1 | +0.00000000 | +0.00078481 / +0.00078481 | +0.00000000 / +0.00000000 |
-| F2 | +0.00000000 | -0.00101403 / -0.00101403 | +0.00000000 / +0.00000000 |
-| F3 | +0.01330991 | -0.00101403 / -0.00101403 | +0.01330991 / +0.01330991 |
+| Financing | Quantity | BF (eta = 0) | Mobile ALPHA/BETA (eta = 1) | Fixed GAMMA/DELTA |
+| --- | --- | ---: | ---: | ---: |
+| F1 | booked | +0.00000000 | +0.00078481 / +0.00078481 | +0.00000000 / +0.00000000 |
+| F1 | resource side | +0.00043438 | +0.00078481 / +0.00078481 | -0.00000000 / -0.00000000 |
+| F2 | booked | +0.00000000 | -0.00101403 / -0.00101403 | +0.00000000 / +0.00000000 |
+| F2 | resource side | -0.00056182 | -0.00101403 / -0.00101403 | -0.00000000 / -0.00000000 |
+| F3 | booked | +0.01330991 | -0.00101403 / -0.00101403 | +0.01330991 / +0.01330991 |
+| F3 | resource side | +0.00537381 | -0.00101403 / -0.00101403 | +0.01330991 / +0.01330991 |
+
+Correction (2026-09-18): in the `eta = 1` columns the two quantities agree to
+machine precision, so either may be read as the net external position. In the
+BF column they differ by the open account, and the `booked` entry is not an
+external position at all: it is the exogenous F3 programme booking
+`B_gov = sum p . g` = 1.3310 percent of GDP, identical to the last digit in
+BF-F3, GAMMA-F3 and DELTA-F3 because it is a design constant, not a result.
+At the eta = 0 endpoint the external position is not identified (the closure
+pins `F = 0`; see the Notes).
 
 ## Status
 
@@ -143,20 +169,28 @@ fixed-wage GAMMA/DELTA (position = B_gov, no external unknown).
   cells (at the level of their 1e-13 solver residuals; worst over all eta = 1
   cells is 7.1e-12).
 - Financing neutrality (ADR-0019, theorem of the closure): F2 and F3 have
-  identical real allocations `(p, y, w)` in the mobile regime, with
+  identical real allocations `(p, y, w)` in the MOBILE regime, with
   `F_F3 = F_F2 - B_gov` and an identical net external position. F3's
   decomposition books `B_gov = +1.331 %` of GDP and a household transfer
   `F = -1.432 %`; F2 books only `F = -0.101 %`. The F2/F3 differences
   reported in v1-v4 were artifacts of the omitted-market shortcut, not
-  economics. F1 (compositional) remains distinct.
-- The BF eta = 0 cells carry the documented factor-market gap (reported,
-  not gated): `canary_diff` = +4.3438e-04 (F1), -5.6182e-04 (F2),
-  -7.9361e-03 (F3). Zero-profit prices the cost-minimizing labour
-  demand, not the frozen baseline allocation; all N clearings are enforced
-  with the F = 0 pin.
-- The external position is now the booked `F + B_gov`, not the v1-v4
-  residual canary. The fixed-wage rows close through employment (L moves)
-  with no external transfer.
+  economics. F1 (compositional) remains distinct. The eta = 0 rows are
+  excluded from this reading: the theorem needs a free `F`, and the BF
+  endpoint pins it (ADR-0019 D2, decision item 7).
+- The BF eta = 0 cells carry the labour-market residual that the `F = 0` pin
+  leaves behind (reported, not gated): `Gap` = `canary_diff` = +4.3438e-04
+  (F1), -5.6182e-04 (F2), -7.9361e-03 (F3). Zero-profit prices the
+  cost-minimizing labour demand, and at the pinned point that demand stands
+  at `sum L^cm` = 0.9995656 / 1.0005618 / 1.0079361 against the frozen bar
+  `sum L` = 1, so `Gap = -w * (sum L^cm - sum L)`. The frozen sectoral
+  allocation is not what creates the gap: the gap closes when the pin is set
+  to the labour-clearing value (see the correction below).
+- The external position is the booked `F + B_gov`, not the v1-v4 residual
+  canary. The fixed-wage rows close through employment (L moves) with no
+  external transfer, and their account closes to ~1e-12, so `Net ext. pos.`
+  is a genuine position there. At the BF eta = 0 rows the booked entry is
+  the exogenous financing entry alone and the account is open by `Gap`: see
+  the correction below before reading any BF entry as an external position.
 - `tax` is the `public_budget` diagnostic except under F3, where the
   programme is booked as `B_gov` and `public_budget` stays at `tau0`
   (see Table 2 header).
@@ -164,3 +198,58 @@ fixed-wage GAMMA/DELTA (position = B_gov, no external unknown).
   v5 reproduces the v4 equilibrium values on the fixed rows and BF rows,
   while the mobile F1/F2/F3 rows move with the explicit external account
   (see the v4 table for the superseded decomposition).
+
+## Correction (2026-09-18) -- the BF eta = 0 external position
+
+Audit of the BF-F3 entry (+0.01330991), prompted by its move from -0.007947
+in v4. The manifests are reproduced exactly (independently re-solved through
+the same harness: every metric of all 15 cells agrees to <= 1e-11, mostly
+1e-16), so no arithmetic error is involved. The finding is about what the
+entry is.
+
+It is the booked financing, not an equilibrium object. `external_position =
+F + B_gov`, and the eta = 0 endpoint pins `F = 0`, so the entry collapses to
+`B_gov = sum p . g` = the programme cost = 1.3310 percent of GDP. It is
+identical to the last digit in BF-F3, GAMMA-F3 and DELTA-F3 -- a quantity no
+labour closure can move is not a labour-market result. The three rows are
+not alike either: GAMMA/DELTA-F3 close their account to ~1e-12 (employment
+rises to 1.017796 and the resources genuinely arrive from abroad), while
+BF-F3 is open by -0.7936 percent of GDP.
+
+Its own resource side says something else. `S + T + M - (I+X)` = +0.5374
+percent of GDP at BF-F3, against the booked +1.3310 percent; the difference
+is `Gap` = -0.7936 percent, i.e. the labour-market residual of the pin. So
+the entry overstates the imbalance the model's flows imply by 0.79 percentage
+points -- 60 percent of its own size. The same holds at BF-F1 (booked
++0.0000 vs resource +0.0434) and BF-F2 (booked +0.0000 vs resource -0.0562).
+
+The position is not identified at eta = 0. Replacing the closure's pin by
+`F = c` leaves every `c` an exact root (residual 2.2e-15) and moves the
+reported entry one-for-one: `c` in {-0.02, -0.01, 0, +0.01, +0.02} gives
+-0.669 / +0.331 / +1.331 / +2.331 / +3.331 percent of GDP, and the resource
+side moves with it (-0.355 / +0.091 / +0.537 / +0.983 / +1.429 percent). The
+`F = 0` pin (ADR-0019 D2) is a normalisation of the immobile benchmark, not
+an equilibrium condition on the external account; it substitutes for the
+labour-supply row, which is identically zero at eta = 0.
+
+What the pin does and does not carry. Solving the eta = 0 system with the pin
+set to ALPHA's solved `F` reproduces the ALPHA cell to 2.8e-17 in the
+canonical vector, in household expenditure and in the consumption block;
+replacing the pin by the labour equation `sum L^cm = Lbar` closes the account
+to ~4e-16 and returns BF-F1/F2/F3 = ALPHA-F1/F2/F3 exactly (+0.00078481 /
+-0.00101403 / -0.00101403 percent of GDP), with financing neutrality then
+holding at eta = 0 as well (`F_F3 = F_F2 - B_gov` to 4e-17). In this
+demand-only design the frozen sectoral allocation enters nothing aggregate
+(only `sum L_i`, which equals the bar either way), so the entire BF/ALPHA
+difference -- including BF-F3's "welfare unchanged (0.000 percent)" entry,
+which becomes -1.8226 percent at the labour-clearing `F` -- is carried by the
+pin. The allocation margin needs a design in which it reaches prices or
+aggregate demand (sector-specific wages at eta = 0, a supply-side shock, or a
+second factor).
+
+Consequences for the paper. Read the BF rows from `Resource side` and `Gap`;
+do not read `Net ext. pos.` at the BF rows as an external position, and do
+not compare BF-F3's entry with the mobile or fixed-wage entries. ADR-0020
+(proposed) records the closure options for eta = 0 and their scope for a v6
+generation. Evidence: `experiments/probes/probe5_bf_f3_external_position.jl`,
+`probe5b_bf_f3_followups.jl`, `probe5c_bf_pin_equivalence.jl`.

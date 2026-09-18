@@ -1,0 +1,74 @@
+design = "matrix_5x3_v3"
+date = "2026-09-18"
+status = "executed"
+run_id = "matrix_5x3-v3-BETA-F3"
+actor = "hermes-agent"
+schema_version = 1
+cell = "matrix_5x3-v3-BETA-F3"
+
+[metrics]
+nominal_gdp = 1.0000000000000013
+employment = 1.0000000000000007
+max_abs_price_dev = 2.6645352591003757e-15
+real_gdp = 1.0000000000000002
+real_gdp_ref = 0.9999999999999997
+real_gdp_rel = 6.661338147750939e-16
+wage = 1.0000000000000007
+
+[gates]
+overall = "pass"
+
+    [gates.budget]
+    value = 0.0
+    pass = true
+    tolerance = 1.0e-9
+
+    [gates.labour]
+    value = 1.4432899320127035e-15
+    pass = true
+    tolerance = 1.0e-6
+
+    [gates.residual]
+    value = 2.220446049250313e-15
+    pass = true
+    tolerance = 1.0e-6
+
+[provenance]
+git_commit = "3ee1f2f200cd51766a54309abb8631ee38eab935"
+julia_version = "1.12.7"
+design_sha256 = "7206b0ca07231f76560157c701c396b8aca3340acd5d2f4d420392196713726e"
+git_dirty = false
+seed = 1234
+manifest_sha256 = "435f907d20c8accb1a53ded7a2dcb49a41e50f84bdfaab06ca5d04629050f833"
+
+    [provenance.data_sha256]
+    "data/I-O_DE2019_formatiert.csv" = "e9c3299731940f7ce683f0e508495c62ad255f0a5536cf1da63c02478058914d"
+    "experiments/designs/matrix_5x3_v3.toml" = "7206b0ca07231f76560157c701c396b8aca3340acd5d2f4d420392196713726e"
+    "cbase2/data_raw/impulses.csv" = "5545c748d848ec121fa5aff21d0c46a55c8d00462518718d3d54374c7f0b8c5f"
+
+[scenario]
+sigma = 0.9
+theta = 0.5
+magnitude = 1.0
+epsilon = 0.5
+labour = "BETA"
+eta = 1.0
+eta_s = 0.5
+financing = "F3"
+shock = "impulses.csv"
+
+[solver]
+init = "warm:reference-final"
+algorithm = "kernel solve / solve_beta (Newton + residual-gated LM polish)"
+reference = "batch-continuation"
+
+[diagnostics]
+external_balance = 0.0028511702985504605
+canary_diff = -0.008495177614153485
+public_budget = 0.21410137597438153
+canary_ixm = 0.12850198958029385
+canary_s = 0.0942233246868359
+
+[artifacts]
+log = "log.txt"
+solution = "solution.csv"

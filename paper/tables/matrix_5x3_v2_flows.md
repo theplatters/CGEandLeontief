@@ -1,7 +1,13 @@
 # Flow tables — the 5×3 matrix on the A-bill calibration (ADR-0014 generation)
 
 Generated from `runs/matrix_5x3-v2-*/manifest.toml` and a re-solve of the same
-15 design cells (commit `8132f26`). All flows are in model units: GDP at basic
+15 design cells (commit `8132f26`).
+
+**Superseded for the paper by the
+`matrix_5x3-v3-*` generation** (ADR-0015 monotone polish): four cells' metrics
+move at the 1e-5 relative level (`GAMMA-F1`, `GAMMA-F2`, `DELTA-F2`, `BF-F1`)
+and the other eleven are unchanged to machine precision. Regenerate this file
+from the v3 manifests before submission. All flows are in model units: GDP at basic
 prices = 1, so a flow of 0.1 is 10 % of GDP (GDP_P = 3 027 818 EUR m). Paper
 text cites the `matrix_5x3-v2-*` run ids; never retype these numbers.
 

@@ -588,7 +588,7 @@ finite-difference/least-squares experiments do not suffice.}
 
 1. \textcolor{revisionV4}{The F1 column is admissible in the fixed-wage rows. \texttt{GAMMA-F1} and \texttt{DELTA-F1} were blocked by a heuristic guard whose premise is false on the open calibration: the Jacobian at the F1 point is full rank (sigma-min/sigma-max = 0.1586) and three different inits converge to the same root. The verified criterion (round-gain column sums below 1) admits them and still rejects closed fixtures, where the sums are exactly 1. The same criterion exposed a latent bug: the retired heuristic had admitted closed-fixture solves whenever manna was present, although manna is a constant and cannot remove a unit root.}
 2. \textcolor{revisionV4}{BETA reproduces ALPHA to machine precision. Under a demand-only programme the price block is demand-invariant (p = 1), so the equilibrium real wage sits at its anchor and L = Lbar * $(w/w_0)^{\eta_s}$ = Lbar for any $\eta_s$: the supply elasticity is unidentified by THIS experiment, not mis-specified. It bites under a supply-side scenario (a +20 \% sector-1 shock moves the real wage to 1.0049 and separates $\eta_s$ = 0.5 from $\eta_s$ = 2: L = 1.0024 versus 1.0098).}
-3. \textcolor{revisionV4}{The F2 column is not "aggregate ~ 0" for the mobile rows: real GDP falls 1.69 \% with employment pinned at exactly 1.0 -- a composition effect at fixed aggregate labour input, for a tax withdrawal of 1.33 % of GDP.}
+3. \textcolor{revisionV4}{The F2 column is not "aggregate ~ 0" for the mobile rows: real GDP falls 1.69 \% with employment pinned at exactly 1.0 -- a composition effect at fixed aggregate labour input, for a tax withdrawal of 1.33 \% of GDP.}
 4. \textcolor{revisionV4}{The limit relations hold: BF at $\eta$ = 0 coincides with ALPHA in F1 and F2 at the aggregate, and GAMMA coincides with DELTA to 5e-12 in F2 and F3. F3 is the extensive-margin column -- employment rises 1.78 \% in the fixed-wage rows.}
 5. \textcolor{revisionV4}{The external account: the F3 programme's gross inflow is F = 0.0133 of GDP, of which 0.0029 is its own import content; the NET position is -0.0085 in the mobile rows (the endogenous response offsets 36 \% of the inflow) and zero to machine precision in the fixed-wage rows, where all N markets clear and the inflow is absorbed by imports.}
 
@@ -699,7 +699,7 @@ labour closures, then the guards:}
    omitted-equation rotation and multi-start battery are pending.}
    \textcolor{revisionV6}{-- v7 update: every regime now enforces all N
    clearings with the explicit external account (ADR-0019); the mobile
-   eta = 1 identity S + T_int + M - (I+X) = F + B_gov and the all-N
+   eta = 1 identity S + $T_{\mathrm{int}}$ + M - (I+X) = F + $B_{\mathrm{gov}}$ and the all-N
    clearing residuals are gated in tests and experiments, with the eta = 0
    factor-market gap reported rather than gated. The equation-ordering
    rotation is retired with the omitted market; a multi-start battery on

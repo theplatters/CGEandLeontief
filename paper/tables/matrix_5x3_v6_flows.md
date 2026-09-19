@@ -186,7 +186,7 @@ endogenous transfer `F = -2.337 %`, so its net position is `-0.853 %`.
   residuals (ADR-0015), unchanged at 1e-6.
 - The twelve non-BF cells reproduce the v5 generation: ALPHA/BETA to 6.7e-16,
   GAMMA/DELTA to ≤ 1.6e-11. The GAMMA/DELTA difference is the documented
-  near-singular fixed-wage sensitivity to the warm start (identical with and
+  fixed-wage sensitivity to the warm start (identical with and
   without the ADR-0020 kernel change, verified 2026-09-18): their solve stops
   at a slightly different residual (e.g. 8.9e-16 against 1.0e-13 in the v5
   manifest) and the consumption index moves in the 11th digit. Compare those

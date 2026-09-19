@@ -250,6 +250,8 @@ second factor).
 Consequences for the paper. Read the BF rows from `Resource side` and `Gap`;
 do not read `Net ext. pos.` at the BF rows as an external position, and do
 not compare BF-F3's entry with the mobile or fixed-wage entries. ADR-0020
-(proposed) records the closure options for eta = 0 and their scope for a v6
+(accepted, option C; executed as the `matrix_5x3_v6` generation, whose flow
+table `paper/tables/matrix_5x3_v6_flows.md` carries the current BF row)
+records the closure options for eta = 0 and their scope for a v6
 generation. Evidence: `experiments/probes/probe5_bf_f3_external_position.jl`,
 `probe5b_bf_f3_followups.jl`, `probe5c_bf_pin_equivalence.jl`.

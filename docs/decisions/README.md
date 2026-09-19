@@ -57,3 +57,4 @@ settled question.
 | ADR-0018 | Real GDP measurement in the open economy | accepted |
 | ADR-0019 | All-N goods-market clearing with an explicit external account | accepted |
 | ADR-0020 | The eta = 0 endpoint's external account: closure options | accepted (option C) |
+| ADR-0021 | Wage structure in the fixed-wage closure (GAMMA) | proposed |

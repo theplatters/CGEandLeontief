@@ -253,7 +253,7 @@ v5 for comparison: net external position 0 / 0 / +1.331 % of GDP, gap
 0.000 %.
 
 Verification: the twelve non-BF cells reproduce v5 (ALPHA/BETA to 6.7e-16,
-GAMMA/DELTA to 1.6e-11 — the near-singular fixed-wage warm-start noise, which
+GAMMA/DELTA to 1.6e-11 — the fixed-wage warm-start sensitivity (well-conditioned Jacobian, cond ≈ 6.3; the metric layer amplifies the residual level), which
 appears identically on the pristine kernel, so it is not an effect of this
 change). Evidence: `experiments/probes/probe7_sectoral_wages_eta0.jl` (closure),
 `probe8_promotion_verification.jl` (kernel and harness),

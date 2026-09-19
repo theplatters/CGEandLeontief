@@ -23,3 +23,13 @@ BF identification, capacity, closed forms; the session entry in
 after ADR-0020/0021 and matrix_5x3_v6 the live registry citations are
 `probe5*/5b/5c`, `probe7` and `probe11`; DE-0011 and the DELTA/F1/F2
 closed-form gates still cite the four scripts above.
+
+- `probe12_segmented_wages.jl` — Step 1 of `docs/WORKPLAN_SENSITIVE_PRICES.md`:
+  the segmented-wage (sticky set + one free wage) prototype. Measures the
+  endpoint nesting (S = empty bit-exact onto ALPHA/BETA; S = all onto GAMMA),
+  the sticky-share ladder x financing, the tilted-pin case, the pure-pin level
+  control, and the segmented pin-level behaviour. Result: the restricted
+  segmented closure nests, closes the account and moves employment, but its
+  prices and its free wage are demand-free (the free wage is pinned by zero
+  profit + the CPI numeraire), so it delivers Door-1 heterogeneity, not
+  demand-sensitivity.

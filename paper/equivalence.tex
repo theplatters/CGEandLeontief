@@ -1,15 +1,24 @@
 % paper/equivalence.tex — Ex ante equivalence of the labour-closure endpoints
 % under demand-only shocks (ALPHA ≡ BETA, GAMMA ≡ DELTA).
 %
-% Repo: BFRep/(3)BeyondHulten, branch `reorg`, base commit c222f7b (2026-09-18).
-% Cited evidence: the matrix_5x3-v5-* runs (ADR-0019 generation, 15/15 executed
-% 2026-09-18) and paper/tables/matrix_5x3_v5_flows.md; the cbase2 analytic
-% equivalence test recorded in docs/DOCS_ASSESSMENT.md §4.2; the supply-side
-% pilot numbers from docs/ETAs.md.
+% Repo: BFRep/(3)BeyondHulten, branch `reorg`, base commit ac3d12a (2026-09-19).
+% Cited evidence: the matrix_5x3-v6-* runs (ADR-0019 + ADR-0020 option C
+% generation, 15/15 executed 2026-09-18, commit 6db1da5) and
+% paper/tables/matrix_5x3_v6_flows.md; the cbase2 analytic equivalence test
+% recorded in docs/DOCS_ASSESSMENT.md §4.2; the supply-side pilot numbers from
+% docs/ETAs.md.
 % Companion: docs/ETAs.md (the supply-side arm and the demand-sensitive-price
 % candidates); paper/closures_and_demand_shocks.md (the CGE-vs-IO framing);
-% ADR-0020 (proposed) for the eta = 0 external-position finding reflected in
-% the BF remarks.
+% ADR-0020 (accepted: sectoral wages at the eta = 0 endpoint) and ADR-0021
+% (proposed: the pinned wage vector in the fixed-wage row) for the BF and
+% wage-structure remarks.
+%
+% Version 2 (September 2026): the evidence layer moved from the matrix_5x3_v5
+% generation to matrix_5x3_v6; the BF remarks were rewritten for the
+% sectoral-wage eta = 0 endpoint of ADR-0020 option C (the v5 pin's
+% "position unidentified, never print it" reading describes the superseded
+% generation); the classification row for BF against ALPHA was updated; the
+% v6 flow table is now cited. Versions 1 -> 2 change no proposition or proof.
 %
 % No LaTeX in the analysis container: compile on the Mac (pdflatex; the
 % bibliography below is a plain thebibliography, no .bib dependency).
@@ -20,6 +29,13 @@
 \usepackage[a4paper,top=2.2cm,bottom=2.2cm,left=3cm,right=3cm]{geometry}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
+\usepackage{xcolor}
+\providecolor{revisionV1}{HTML}{800080}
+\providecolor{revisionV2}{HTML}{CC5500}
+\providecolor{revisionV3}{HTML}{006400}
+\providecolor{revisionV4}{HTML}{0000CD}
+\providecolor{revisionV5}{HTML}{808080}
+\providecolor{revisionV6}{HTML}{8B0000}
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
 
 \setlength\parindent{0pt}
@@ -39,10 +55,15 @@
 under Demand-Only Shocks\\[0.4em]
 \large ALPHA $\equiv$ BETA and GAMMA $\equiv$ DELTA in the \texttt{BeyondHulten} kernel}
 \author{Hermes Agent (Lt.\ Cmdr.\ Data), for Prof.\ Dr.\ J.\ Kapeller}
-\date{September 18, 2026}
+\date{September 19, 2026}
 
 \begin{document}
 \maketitle
+
+\begin{center}\small
+\textbf{Version 2} \textcolor{revisionV1}{(September 2026)}\quad$\vert$\quad
+\textbf{Version 1} (September 2026)
+\end{center}
 
 \begin{abstract}
 The executed $5\times3$ closure matrix reports two exact coincidences: the
@@ -54,10 +75,12 @@ mean for the manuscript: under a demand-only programme the price block is
 demand-invariant (a one-factor Samuelson nonsubstitution property), so the
 equilibrium real wage sits at its technology-determined anchor and the whole
 quantity system reduces to one linear Leontief multiplier system in which none
-of the elasticity parameters $(\theta,\epsilon,\sigma,\eta_s)$ appears. The
-four closure rows differ only in which scalar absorbs the shock: the external
-transfer $F$ (mobile rows, employment pinned), employment $L$ (fixed-wage
-rows, $F \equiv 0$), or neither (BF, no induced consumption round). The final
+of the elasticity parameters $(\theta,\epsilon,\sigma,\eta_s)$ appears.
+\textcolor{revisionV1}{The closures differ in which margin absorbs the shock:
+the external transfer $F$ (mobile rows, employment pinned), employment $L$
+(fixed-wage rows, $F \equiv 0$), or --- at the $\eta = 0$ endpoint --- the
+sectoral wage vector, whose dispersion is what gives the frozen allocation a
+price channel (ADR-0020).} The final
 section derives what would break the equivalences --- the analytic basis of
 the demand-sensitive-price program of \texttt{docs/ETAs.md} --- and proves a
 no-go corollary: nominal wage rules cannot create price variety in this
@@ -68,9 +91,10 @@ framework.
 
 Reviewer 2's critique turns on the exact conditions under which the closure
 rows of the evaluation matrix are or are not equivalent
-(\texttt{docs/DOCS_ASSESSMENT.md}, section 4.2). The executed
-\texttt{matrix\_5x3\_v5} generation (ADR-0019; 15/15 cells, run ids
-\texttt{matrix\_5x3-v5-*}) measures two coincidences:
+(\texttt{docs/DOCS\_ASSESSMENT.md}, section 4.2). The executed
+\texttt{matrix\_5x3\_v6} generation (ADR-0019 \textcolor{revisionV1}{together
+with the ADR-0020 option C endpoint}; 15/15 cells, run ids
+\texttt{matrix\_5x3-v6-*}) measures two coincidences:
 
 \begin{itemize}
 \item \textbf{ALPHA $\equiv$ BETA.} The elastic-supply row
@@ -79,6 +103,9 @@ rows of the evaluation matrix are or are not equivalent
       account --- to all eight printed decimals, with the identity wedge at
       $\sim 10^{-16}$. A direct comparison of stored solutions measured
       $\max|\Delta y| = 6.2\times 10^{-17}$ (session of 2026-09-17).
+      \textcolor{revisionV1}{The v6 generation reproduces the v5 ALPHA/BETA
+      cells to $6.7\times 10^{-16}$, so the coincidence survives the endpoint
+      change.}
 \item \textbf{GAMMA $\equiv$ DELTA.} The Leontief-corner row
       ($( \theta_\delta, \epsilon_\delta, \sigma_\delta ) = (10^{-4},
       10^{-4}, 10^{-4})$) reports every metric of the fixed-wage row at the
@@ -142,8 +169,11 @@ L_i = \big( p_i\, A_i^{(\epsilon-1)/\epsilon}\, \alpha_i^{1/\epsilon}\,
     = p_i^{\epsilon}\, A_i^{\epsilon-1}\, \alpha_i\, y_i / w^{\epsilon},
 \label{eq:labdemand}
 \end{equation}
-At $\eta = 0$ (the BF endpoint) the allocation is the frozen baseline,
-$L_i = \bar{L}_i$. Intermediate demand is charged with the \emph{domestic}
+At $\eta = 0$ the allocation is the frozen baseline, $L_i = \bar{L}_i$;
+\textcolor{revisionV1}{under ADR-0020 option C the wage $w$ in
+\eqref{eq:labdemand} is then a per-sector $w_i$, solved from
+$L^{cm}_i(p, y_i, w_i) = \bar{L}_i$ jointly with \eqref{eq:zp}.}
+Intermediate demand is charged with the \emph{domestic}
 bill (ADR-0012):
 \begin{equation}
 int_i = p_i^{-\theta} \sum_u \Omega_{ui}\,
@@ -161,7 +191,9 @@ E = (1-\tau)\, w \textstyle\sum_i L_i + F,
 \end{equation}
 with the lump-sum tax rate $\tau = p\!\cdot\! g^G / (w \sum_i L_i)$ under
 F1/F3 and $\tau = p\!\cdot\!(g^G + g)/(w \sum_i L_i)$ under F2, and $F$ the
-net external transfer entering expenditure after tax (ADR-0019). Saving
+net external transfer entering expenditure after tax (ADR-0019).
+\textcolor{revisionV1}{At $\eta = 0$ the wage bill is
+$\sum_i w_i \bar{L}_i$ in \eqref{eq:cons}.} Saving
 $sE$ leaks; the import content is charged margin by margin. Goods-market
 clearing reads
 \begin{equation}
@@ -192,8 +224,13 @@ The fixed-wage systems solve for $X = (p, y) \in \mathbb{R}^{2N}$ with the
 wage pinned $w \equiv 1$ and $F \equiv 0$; employment is a post-solve
 outcome. GAMMA runs them at the baseline elasticities, DELTA at the Leontief
 corner $(\theta_\delta,\epsilon_\delta,\sigma_\delta) = (10^{-4},10^{-4},
-10^{-4})$. BF is the mobile system at $\eta = 0$ with the $F = 0$ pin
-(decision D2 of ADR-0019). All rows in the matrix use $\eta = 1$ except BF.
+10^{-4})$. \textcolor{revisionV1}{BF is the sectoral-wage system at
+$\eta = 0$ (ADR-0020 option C, superseding the ADR-0019 $F = 0$ pin): the
+allocation stays frozen at the baseline, $L_i = \bar{L}_i$, and $N$ sectoral
+wages $w_i$ are solved from each sector's own first-order condition
+$L^{cm}_i(p, y_i, w_i) = \bar{L}_i$ jointly with zero profit, with unknowns
+$[\,p;\; y;\; w(1{:}N);\; F\,]$ and the external transfer $F$ free.} All rows
+in the matrix use $\eta = 1$ except BF.
 
 \section{The demand-only reduction}\label{sec:reduction}
 
@@ -210,7 +247,10 @@ identity gives $\pi = \one$, hence in both gauges
 p = \one, \qquad w = 1, \qquad \Pi = 1,
 \end{equation}
 independently of the demand vector, of the financing closure, and of the
-shock size.
+shock size. \textcolor{revisionV1}{The lemma is a statement about the
+\emph{single-wage} price block: with a per-sector wage vector (the
+$\eta = 0$ endpoint, ADR-0020) homogeneity in $(p, w)$ no longer holds
+sector by sector and the argument does not apply.}
 \end{lemma}
 
 \begin{proof}
@@ -233,7 +273,8 @@ At every solution of the shared block,
 a function of technology alone. At $A \equiv \one$ this equals $1 =
 w_0/\Pi_0$: the equilibrium real wage sits at its anchor for every demand
 vector, every financing closure and every shock magnitude. (Measured in the
-matrix: the GDP deflator reads $1.000000$ in all 15 cells, and a demand
+matrix: the GDP deflator reads $1.000000$ in \textcolor{revisionV1}{the
+twelve $\eta = 1$ cells}, and a demand
 shock of ten times the programme size moves $\max|p-\one|$ by
 $2.7\times10^{-15}$; \texttt{docs/ETAs.md}.)
 \end{corollary}
@@ -268,10 +309,13 @@ b(F) = (1-m)\odot\big( g^G + inv + g \big) + X
 \label{eq:bvec}
 \end{equation}
 with $g$ present only under F2/F3 and the last bracket reduced accordingly.
-No elasticity parameter enters $G$ or $b$. At $\eta = 0$ (BF),
-$\sum_i L_i = \sum_i \bar{L}_i = \Lbar$ is a constant, $E$ does not depend
-on $y$, and the household round drops out of $G$:
-$G_{BF} = \Omega^{\!\top}\mathrm{diag}(a)$.
+No elasticity parameter enters $G$ or $b$. \textcolor{revisionV1}{At
+$\eta = 0$ the aggregate is still pinned, $\sum_i L_i = \Lbar$, but the
+unit-price reduction below describes only the \emph{retired} common-wage
+pin: there $E$ did not depend on $y$ and the household round dropped out,
+$G_{BF} = \Omega^{\!\top}\mathrm{diag}(a)$. Under the ADR-0020 sectoral-wage
+closure the wages $w_i$ move with the demand composition, the prices leave
+the unit point, and this affine form does not describe the $\eta = 0$ row.}
 \end{lemma}
 
 \begin{proof}
@@ -355,12 +399,12 @@ branch the solution is unique, and the multi-init admissibility checks
 recorded for the F1 column (three distinct starting points converging to
 the same root) support root selection. Both the GAMMA and the DELTA solve
 are subject to the same guard, and both converged to this root (residuals
-$6.7\times10^{-14}$ to $4.4\times10^{-16}$ across the six fixed-wage cells,
-\texttt{runs/matrix\_5x3-v5-\{GAMMA,DELTA\}-*/manifest.toml}). The
+$4.4\times10^{-16}$ to $1.8\times10^{-13}$ across the six fixed-wage cells,
+\texttt{runs/matrix\_5x3-v6-\{GAMMA,DELTA\}-*/manifest.toml}). The
 elasticity-independence is exact in the equations, not an $\epsilon$-limit
 artefact: the DELTA solve at $\epsilon_\delta = 10^{-4}$ reproduces the
 analytic $y^{\ast}$ with relative error $0.0$ (F2/F3 verification, recorded
-in \texttt{docs/DOCS\_ASSESSMENT.md} section 4.2), and the v5 flow metrics
+in \texttt{docs/DOCS\_ASSESSMENT.md} section 4.2), and the v6 flow metrics
 of the two rows agree to all printed decimals with residual-level wedge
 differences $\sim 10^{-12}$.
 \end{proof}
@@ -380,19 +424,25 @@ ALPHA $\equiv$ BETA & derivable & $\eta_s$ in the flexible-wage gauge \\
  & (Cor.~\ref{cor:realwage}) & \\
 F2 $\equiv$ F3 (mobile rows) & derivable & the financing label; \\
  & (Section~\ref{sec:gauge}) & $F_{F3} = F_{F2} - B_{gov}$ \\
-BF vs ALPHA & pin artifact, not an allocation & the $\eta=0$ external \\
- & effect (ADR-0020 audit: the labour- & position is not \\
- & clearing closure reproduces ALPHA & identified; never \\
- & to $2.8\times10^{-17}$) & print it \\
+\textcolor{revisionV1}{BF vs ALPHA} & \textcolor{revisionV1}{not a coincidence:} & \textcolor{revisionV1}{--- (the $\eta=0$ row is an} \\
+ & \textcolor{revisionV1}{ADR-0020 option C gives the} & \textcolor{revisionV1}{identified equilibrium: own} \\
+ & \textcolor{revisionV1}{frozen allocation a price} & \textcolor{revisionV1}{prices, wage vector} \\
+ & \textcolor{revisionV1}{channel, so it is a distinct} & \textcolor{revisionV1}{$0.97$--$1.67$, own position)} \\
+ & \textcolor{revisionV1}{economy} & \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-None of these is a numerical accident; all four hold at machine precision
-in the executed generation, and none is a mis-specification. They are
-properties of the \emph{experiment}: a demand-only programme in a one-factor
-CRS economy cannot identify any elasticity of the kernel (the mechanism is
-Remark~\ref{rem:samuelson}).
+\textcolor{revisionV1}{The first three entries are not numerical
+accidents; they hold at machine precision in the executed generation, and
+none is a mis-specification. They are properties of the \emph{experiment}: a
+demand-only programme in a one-factor CRS economy cannot identify any
+elasticity of the kernel (the mechanism is Remark~\ref{rem:samuelson}). The
+fourth entry is different in kind: the BF/ALPHA coincidence held only in the
+superseded $F = 0$ pin generation (ADR-0019 D2), where the frozen allocation
+had no channel to prices; under ADR-0020 option C the $\eta = 0$ row carries
+sectoral wages and is an identified equilibrium, so no BF quantity is left
+unidentified and none must be withheld.}
 \end{corollary}
 
 \begin{remark}[Off the demand-only slice]\label{rem:supply}
@@ -412,19 +462,23 @@ the premise of the supply arm.
 \section{What actually differs across the rows}\label{sec:gauge}
 
 Lemma~\ref{lem:affine} shows that the demand-only matrix is a partition of
-\emph{scalar closure regimes} over one and the same linear system. Three
-regimes occur:
+\emph{scalar closure regimes} over one and the same linear system.
+\textcolor{revisionV1}{Three scalar regimes occur across the $\eta = 1$
+rows, and the $\eta = 0$ endpoint is now a fourth, genuinely nonlinear
+regime (the sectoral-wage system):}
 
 \begin{center}
+{\small
 \begin{tabular}{lccc}
 \toprule
 Rows & $F$ & Employment & Household round in $G$ \\
 \midrule
 ALPHA, BETA ($\eta = 1$) & free (instrument) & pinned, $L = \Lbar$ & active \\
 GAMMA, DELTA ($\eta = 1$) & $F \equiv 0$ & endogenous, $L = \alpha^{\!\top}y$ & active \\
-BF ($\eta = 0$) & $F \equiv 0$ & pinned via allocation & absent \\
+\textcolor{revisionV1}{BF ($\eta = 0$)} & \textcolor{revisionV1}{free (solved)} & \textcolor{revisionV1}{pinned via allocation} & \textcolor{revisionV1}{active (wage bill)} \\
 \bottomrule
 \end{tabular}
+}
 \end{center}
 
 \paragraph{The $F$-instrument.} In the mobile regime the labour pin selects
@@ -443,7 +497,7 @@ charges the programme through the lump-sum tax ($E = \alpha^{\!\top}y -
 $f\,\sum g$. The pin \eqref{eq:finstrument} therefore yields
 $F^{\ast}_{F3} = F^{\ast}_{F2} - \sum g$, identical real allocations, and
 an identical net external position $F + B_{gov}$. Measured: $F_{F3} - F_{F2} = -0.01330991 = -G_0$ to eight
-decimals in every mobile row (Table~\ref{tab:v5}).
+decimals in every mobile row (Table~\ref{tab:v6}).
 
 \paragraph{Who pays.} The economically meaningful difference between the
 two paradigms is which margin absorbs the programme. In the mobile rows the
@@ -453,19 +507,24 @@ construction ($w\,\Lbar$ deflated, ADR-0018). In the fixed-wage rows
 employment is the margin: F3 expands employment by $1.78\%$ and consumption
 by $2.26\%$ (the Keynesian case), F2 leaves GDP nearly neutral
 ($+0.13\%$) with a welfare loss from the tax, and F1 shifts composition
-slightly downward ($-0.10\%$ employment). BF is the degenerate third
-regime: with income constant and the household round absent, F3 leaves the
-welfare index at exactly $0.000000$. Two caveats from the ADR-0020 audit
-(proposed; \texttt{docs/log/2026-09.md}): the recorded BF/ALPHA differences
-are carried by the pin, not by the frozen allocation --- replacing the pin
-by the labour equation reproduces the ALPHA cells exactly
-($2.8\times10^{-17}$) and extends financing neutrality to $\eta = 0$ --- and
-the $\eta = 0$ external position is not identified (every pin value $F = c$
-is an exact root that moves the booked position one-for-one), so no BF
-external position should be printed.
+slightly downward ($-0.10\%$ employment). \textcolor{revisionV1}{The
+$\eta = 0$ row is no longer degenerate: at the sectoral-wage endpoint the
+welfare index reads $+0.096\%$ (F1) and $-1.980\%$ (F2/F3), the deflator
+moves ($1.0063$ / $1.0072$), and the external account closes in every
+column. Two caveats from the ADR-0020 audit now describe the
+\emph{superseded} v5 pin generation: there the recorded BF/ALPHA
+differences were carried by the pin, not by the frozen allocation
+(replacing the pin by the labour equation reproduced the ALPHA cells to
+$2.8\times10^{-17}$), and the $\eta = 0$ external position was not
+identified (every pin value $F = c$ an exact root that moved the booked
+position one-for-one). Option C resolves both: the account closes to
+$\le 1.04\times10^{-11}$ at BF, $F$ is a solved equilibrium object,
+financing neutrality extends to $\eta = 0$ ($F_{F3} = F_{F2} - B_{gov}$ to
+$3.5\times10^{-14}$), and no BF entry need be withheld.}
 
-\paragraph{Admissibility.} All fifteen cells execute under the v5
-calibration. In particular the F1 column is admissible in the fixed-wage
+\paragraph{Admissibility.} All fifteen cells execute under the
+\textcolor{revisionV1}{v6} calibration. In particular the F1 column is
+admissible in the fixed-wage
 rows: the endogenous tax rate $\tau = \sum g^G/\alpha^{\!\top}y$ supplies
 the marginal leakage that keeps $\max \mathrm{colsum}(G) < 1$, as verified
 by the ADR-0017 criterion (the retired heuristic guard had blocked these
@@ -487,7 +546,13 @@ doors are:
       the new parameters are sectoral supply elasticities of the same
       family as $\eta_s$, and the variant repairs the BF row's
       common-wage defect (ADR-0017's open gate). Ranked candidate 1 in
-      \texttt{docs/ETAs.md}.
+      \texttt{docs/ETAs.md}. \textcolor{revisionV1}{ADR-0020 option C is
+      this door, adopted at the $\eta = 0$ endpoint: it is why the v6 BF
+      row is a distinct economy rather than a normalisation of ALPHA.
+      ADR-0021 (proposed) reuses the vector-wage apparatus in the
+      fixed-wage row, but with an \emph{exogenous} pin --- that delivers
+      design heterogeneity, not demand-sensitivity, because the pinned
+      vector keeps the price block demand-free.}
 \item \textbf{Markup door --- demand-sensitive markups.} A pricing rule
       $p_i = \mu_i(y_i)\, c_i(p,w)$, e.g.\ $\mu_i = 1 + \kappa\,(y_i/y_{i0}
       - 1)$, breaks Lemma~\ref{lem:price} directly. The real cost is not
@@ -538,6 +603,10 @@ ALPHA). A rule on the \emph{real} wage, $w/\Pi = \phi(L)$, is BETA's
 equation \eqref{eq:beta} rearranged and is already in the model --- where
 it is pinned by technology under demand-only shocks. The numeraire lever is
 likewise dead (DE-0011).
+\textcolor{revisionV1}{A single common wage curve is also what a
+\emph{single-wage} price block can express; the sectoral-wage door above
+escapes the corollary precisely by breaking the single-wage homogeneity on
+which it rests.}
 \end{corollary}
 
 Quantity-side levers (endogenous saving rates, endogenous export demand)
@@ -547,22 +616,26 @@ intact.
 
 \section{Numerical evidence}\label{sec:conclusion}
 
-Table~\ref{tab:v5} extracts the four rows of the executed
-\texttt{matrix\_5x3\_v5} generation (income-side real GDP and the
-household-consumption welfare index, ADR-0018; employment; external
-account). The paired rows are identical to all printed decimals in every
+Table~\ref{tab:v6} extracts the rows of the executed
+\texttt{matrix\_5x3\_v6} generation (income-side real GDP and the
+household-consumption welfare index, ADR-0018; employment). The paired rows
+(ALPHA/BETA, GAMMA/DELTA) are identical to all printed decimals in every
 reported metric, including the full flow decomposition (saving, tax,
 investment plus exports, imports, taxes on intermediates; see
-\texttt{paper/tables/matrix\_5x3\_v5\_flows.md}). The GDP deflator reads
-$1.000000$ in all fifteen cells, the numerical face of
-Lemma~\ref{lem:price}.
+\texttt{paper/tables/matrix\_5x3\_v6\_flows.md}). \textcolor{revisionV1}{The
+three BF rows are included for contrast: the $\eta = 0$ sectoral-wage
+endpoint is a distinct economy, not a normalisation of ALPHA.} The GDP
+deflator reads $1.000000$ in \textcolor{revisionV1}{the twelve $\eta = 1$
+cells --- the numerical face of Lemma~\ref{lem:price} --- while the three BF
+$\eta = 0$ cells carry a deflator of $1.006326$ (F1) and $1.007181$
+(F2/F3), the price response the sectoral wages create.}
 
 \begin{table}[htbp]
 \centering
-\caption{The equivalence rows in the \texttt{matrix\_5x3\_v5} generation
-(run ids \texttt{matrix\_5x3-v5-*}; deviations from the no-programme
+\caption{The equivalence rows in the \texttt{matrix\_5x3\_v6} generation
+(run ids \texttt{matrix\_5x3-v6-*}; deviations from the no-programme
 baseline).}
-\label{tab:v5}
+\label{tab:v6}
 \begin{tabular}{llrrr}
 \toprule
 Row & Financing & Real GDP & Consumption (welfare) & Employment $L$ \\
@@ -580,6 +653,10 @@ GAMMA & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
 DELTA & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
 GAMMA & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
 DELTA & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
+\midrule
+BF & F1 & $-0.000110$ & $+0.000963$ & $1.000000$ \\
+BF & F2 & $-0.000162$ & $-0.019800$ & $1.000000$ \\
+BF & F3 & $-0.000162$ & $-0.019800$ & $1.000000$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -597,7 +674,36 @@ through one of the five doors of Section~\ref{sec:scope}; within it, the
 capacity door's utilization/Verdoorn variant and the external door are the
 cheap additions beyond the three candidates already ranked in
 \texttt{docs/ETAs.md}, while Corollary~\ref{cor:nogo} rules out the entire
-nominal-wage-rule family ex ante.
+nominal-wage-rule family ex ante. \textcolor{revisionV1}{The labour door is
+no longer hypothetical: ADR-0020 option C delivers it at the $\eta = 0$
+endpoint, and the general sectoral-labour-market form extends it across the
+$\eta = 1$ rows.}
+
+\section*{Revision log}
+
+\noindent\textbf{Version 2} \textcolor{revisionV1}{(September 2026)} ---
+Evidence layer moved from the \texttt{matrix\_5x3\_v5} generation to
+\texttt{matrix\_5x3\_v6}: the coincidence measurements, the fixed-wage
+residual range in Proposition~\ref{prop:gd}'s proof, and the numerical table
+(caption, run ids, and now the three BF rows) all cite v6, and the v6 flow
+table \texttt{paper/tables/matrix\_5x3\_v6\_flows.md} replaces the v5 one.
+The BF remarks rewritten for the sectoral-wage $\eta = 0$ endpoint (ADR-0020
+option C): the kernel section states the 3N+1 system; Lemma~\ref{lem:price},
+Lemma~\ref{lem:affine} and Corollary~\ref{cor:realwage} note the
+single-wage scope of the demand-invariance argument; the ``who pays''
+paragraph replaces the degenerate-BF reading and the pin caveats with the
+identified-position reading; the classification row for BF against ALPHA
+records that it is no longer a coincidence. The scope section records that
+option C is the labour door deployed and that ADR-0021's pinned vector is
+not (design heterogeneity, not demand-sensitivity). No proposition or proof
+changed.
+
+\noindent\textbf{Version 1} (September 2026) --- Initial note (commit
+\texttt{8f94f55}): the ex ante derivation of ALPHA $\equiv$ BETA and GAMMA
+$\equiv$ DELTA under demand-only shocks, the $F$-instrument proof of mobile
+F2 $\equiv$ F3, the classification table, and the five-door scope section
+with the nominal-wage no-go corollary, on the \texttt{matrix\_5x3\_v5}
+evidence.
 
 \begin{thebibliography}{9}
 

@@ -2,7 +2,7 @@
 #
 # Reconstruct runs/<id>/log.txt from the committed manifest.
 #
-# Why: the v4 and v5 generations have no log.txt in the working copy (only
+# Why: the v4-v6 generations have no log.txt in some working copies (only
 # v1-v3 do; log.txt and solution.csv are gitignored working artefacts, ADR-0004
 # tracks only runs/index.csv and runs/*/manifest.toml). The repository gate
 # requires the journal to exist for every run dir, so the journals are rebuilt
@@ -11,13 +11,15 @@
 #
 #   <ts> start <run_id> design=<design> actor=<actor> commit=<git_commit>
 #   <ts> reference <name>=<real_consumption(ref_sol)>
-#   <ts> <status>: <gate summary: "resid ...; budget ...; <labour|wage> ...">
+#   <ts> <status>: <gate summary: "resid ...; budget ...; <labour|wage|sectoral> ...">
 #
 # The reference metric is named `real_gdp_ref` in the v1-v3 code and
-# `consumption_ref` from ADR-0018 on (the v4/v5 code); each generation is
-# rebuilt with its own name. The value is computed from the design's reference
-# continuation here, never typed. The gate summary is rebuilt from the
-# manifest's [gates] table with the same `gate_frag` format string.
+# `consumption_ref` from ADR-0018 on (the v4-v6 code); each generation is
+# rebuilt with its own name. The third gate is `labour` (mobile), `wage`
+# (fixed) or `sectoral` (the eta = 0 ADR-0020 endpoint). The value is computed
+# from the design's reference continuation here, never typed. The gate summary
+# is rebuilt from the manifest's [gates] table with the same `gate_frag`
+# format string.
 #
 # The timestamp is the manifest's own mtime (the artefact write time — a bulk
 # write, so all cells of a generation share it), not an invented solve time.
@@ -30,13 +32,13 @@ include(joinpath(@__DIR__, "..", "run.jl"))
 
 using Printf, Dates, TOML
 
-const REF_NAME = "consumption_ref"   # v4/v5 code path (ADR-0018 rename)
-const GENERATIONS = ["matrix_5x3-v4", "matrix_5x3-v5"]
+const REF_NAME = "consumption_ref"   # v4-v6 code path (ADR-0018 rename)
+const GENERATIONS = ["matrix_5x3-v4", "matrix_5x3-v5", "matrix_5x3-v6"]
 
 "Rebuild the three journal lines for one manifest."
 function journal_lines(man::Dict{String,Any}, ts::String, ref_value::Float64)
     g = man["gates"]
-    third = first(k for k in ("labour", "wage") if haskey(g, k))
+    third = first(k for k in ("labour", "wage", "sectoral") if haskey(g, k))
     frag(name, key) = @sprintf("%s %.3g<=%.0e %s", name,
         Float64(g[key]["value"]), Float64(g[key]["tolerance"]),
         g[key]["pass"] ? "ok" : "FAIL")
@@ -60,8 +62,8 @@ function reconstruct_main(args)
     runs_dir = default_runs_dir(root)
 
     # The reference value: computed from the design's reference continuation.
-    # The two generations share the design parameters, so one continuation
-    # covers both (verified against the value recorded in the v1-v3 journals).
+    # The generations share the design parameters, so one continuation covers
+    # all of them (verified against the value recorded in the v1-v3 journals).
     design_d = load_design("matrix_5x3_v5"; root = root)
     ref = build_reference(design_d; root = root)
     ref_value = real_consumption(ref.sol)

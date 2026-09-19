@@ -391,9 +391,11 @@ function assert_external_account(model::Model, sol::Solution;
         clearing_tol::Real = 1e-6, gap_tol::Real = 1e-9)
     fixed = labor_closure(model.options) isa FixedWageClosure
     p, q = sol.prices_raw, sol.quantities
-    # eta = 0 carries the sectoral wage vector (ADR-0020 option C); every
-    # eta = 1 regime carries one common wage.
-    w = model.options.elasticities.η == 0.0 ? sol.wages_raw : sol.wages_raw[1]
+    # eta = 0 carries the sectoral wage vector (ADR-0020 option C); an ADR-0022
+    # sectoral cell (eta_s_vec) carries one too; every other eta = 1 regime
+    # carries one common wage.
+    w = (model.options.elasticities.η == 0.0 ||
+         model.options.elasticities.eta_s_vec !== nothing) ? sol.wages_raw : sol.wages_raw[1]
     X = fixed ? [p; q] : [p; q; w; sol.external_transfer]
     clearing = maximum(abs, market_clearing_residuals(model, X))
     clearing < clearing_tol || error(
@@ -462,8 +464,41 @@ function cell_financing(fin::AbstractString, ψ::Vector{Float64}, g::Vector{Floa
 end
 
 """
+Per-cell sectoral elasticity vector (ADR-0022), or `nothing` for the scalar
+BETA closure. A cell opts into the N-market system with `eta_s_rigid_group`:
+
+  "scalar" (or absent) -> `nothing` (the 2N+2 single-wage BETA system)
+  "none"               -> uniform `eta_s` across all N sectors (3N+1)
+  "programme"          -> rigid (`eta_s,i = 0`) on the programme sectors,
+                          `eta_s` elsewhere
+  "largest_half"       -> rigid on the largest half by baseline employment
+
+An explicit `eta_s_vec` list in the cell overrides the rule.
+"""
+function cell_eta_s_vec(cell::Dict{String,Any}, data::Data,
+        ψ::Vector{Float64})::Union{Nothing,Vector{Float64}}
+    haskey(cell, "eta_s_vec") && return Float64.(cell["eta_s_vec"])
+    grp = string(get(cell, "eta_s_rigid_group", "scalar"))
+    grp == "scalar" && return nothing
+    N = length(data.factor_share)
+    eta = Float64(get(cell, "eta_s", 0.0))
+    grp == "none" && return fill(eta, N)
+    mask = if grp == "programme"
+        ψ .> 0
+    elseif grp == "largest_half"
+        order = sortperm(data.labor_share; rev = true)
+        m = falses(N); m[order[1:cld(N, 2)]] .= true; m
+    else
+        throw(ArgumentError("unknown eta_s_rigid_group \"$grp\""))
+    end
+    v = fill(eta, N); v[mask] .= 0.0
+    return v
+end
+
+"""
 Equilibrium model for a design cell (no solve). BF/ALPHA: mobile at η;
-BETA: `:beta` via `mobile_labor_model` (solved with `solve_beta`);
+BETA: `:beta` via `mobile_labor_model` (solved with `solve_beta`, or the
+sectoral 3N+1 system when the cell pins an elasticity vector, ADR-0022);
 GAMMA: `:fixed`; DELTA: `delta_model` at `delta_epsilon`. Shocks are always
 `Shocks(ones(N), ones(N), zeros(N))`.
 """
@@ -478,9 +513,13 @@ function build_cell_model(cell::Dict{String,Any}, design_d::Dict{String,Any},
             Float64(cell["epsilon"]), Float64(cell["sigma"]), Float64(cell["eta"]);
             financing = fin)
     elseif labor == "BETA"
+        esv = cell_eta_s_vec(cell, data, ψ)
+        esv === nothing && return mobile_labor_model(data, shocks,
+            Float64(cell["theta"]), Float64(cell["epsilon"]), Float64(cell["sigma"]),
+            Float64(cell["eta"]); financing = fin, eta_s = Float64(cell["eta_s"]))
         return mobile_labor_model(data, shocks, Float64(cell["theta"]),
             Float64(cell["epsilon"]), Float64(cell["sigma"]), Float64(cell["eta"]);
-            financing = fin, eta_s = Float64(cell["eta_s"]))
+            financing = fin, eta_s = Float64(cell["eta_s"]), eta_s_vec = esv)
     elseif labor == "GAMMA"
         return mobile_labor_model(data, shocks, Float64(cell["theta"]),
             Float64(cell["epsilon"]), Float64(cell["sigma"]), Float64(cell["eta"]);
@@ -491,11 +530,15 @@ function build_cell_model(cell::Dict{String,Any}, design_d::Dict{String,Any},
     throw(ArgumentError("unknown labor id $labor"))
 end
 
-"""Solve a cell model (BETA via `solve_beta`, else `solve`), warm-started."""
+"""Solve a cell model (BETA via `solve_beta`, else `solve`), warm-started.
+A sectoral BETA cell (ADR-0022) solves its own 3N+1 system directly."""
 function solve_cell(cell::Dict{String,Any}, design_d::Dict{String,Any}, data::Data,
         ψ::Vector{Float64}, g::Vector{Float64}, init_warm::Vector{Float64})::Solution
     model = build_cell_model(cell, design_d, data, ψ, g)
     if cell["labor"] == "BETA"
+        # ADR-0022: the sectoral form is solved by the kernel's own dispatcher.
+        model.options.elasticities.eta_s_vec === nothing ||
+            return solve(model; init = init_warm)
         N = length(data.factor_share)
         shocks = Shocks(ones(N), ones(N), zeros(N))
         return solve_beta(data, shocks, Float64(cell["theta"]), Float64(cell["epsilon"]),
@@ -530,17 +573,22 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
     fixed = labor_closure(model.options) isa FixedWageClosure
 
     p, q = sol.prices_raw, sol.quantities
-    # eta = 0 carries the sectoral wage vector (ADR-0020 option C); every
-    # eta = 1 regime carries one common wage.
+    # eta = 0 carries the sectoral wage vector (ADR-0020 option C); an ADR-0022
+    # sectoral cell (eta_s_vec) carries one too; every other eta = 1 regime
+    # carries one common wage.
     η0 = model.options.elasticities.η == 0.0
-    w = η0 ? sol.wages_raw : sol.wages_raw[1]
+    sect = η0 || model.options.elasticities.eta_s_vec !== nothing
+    w = sect ? sol.wages_raw : sol.wages_raw[1]
     X = fixed ? [p; q] : [p; q; w; sol.external_transfer]
     resid = maximum(abs, equilibrium_residuals(model, X))
     L_i = sectoral_labor_demand(p, q, w, model)
     L_sum = sum(L_i)
     # eta = 0: household wage income is the sectoral wage bill sum_i w_i L_i
-    # (L_i = data.labor_share there); eta = 1: the common wage times L_sum.
-    wage_income = η0 ? sum(sol.wages_raw .* data.labor_share) : w * L_sum
+    # (L_i = data.labor_share there); sectoral (ADR-0022): the same bill at the
+    # solved L^cm_i; eta = 1 single-wage regimes: the common wage times L_sum.
+    wage_income = η0 ? sum(sol.wages_raw .* data.labor_share) :
+        model.options.elasticities.eta_s_vec !== nothing ? sum(w .* L_i) :
+        w * L_sum
     E = household_expenditure(fin, model, wage_income, p, L_sum;
         external_transfer = sol.external_transfer)
     budget = abs(dot(p, sol.consumption) - (1 - data.saving_rate) * E)
@@ -557,6 +605,12 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
              # block that replaces the aggregate labour equation there.
              ("sectoral", sectoral_labor_gap(model, p, q, w), labour_tol,
               sectoral_labor_gap(model, p, q, w) < labour_tol) :
+        model.options.elasticities.eta_s_vec !== nothing ?
+             # ADR-0022: the N sectoral labour markets replace the aggregate
+             # labour equation, so the gate is the sectoral supply gap (which
+             # reduces to sectoral_labor_gap at eta_s,i = 0).
+             ("sectoral", sectoral_supply_gap(model, p, q, w), labour_tol,
+              sectoral_supply_gap(model, p, q, w) < labour_tol) :
                 ("labour", abs(labor_market_residual(labor_closure(model.options), model, L_sum, w, cpi_val)),
                  labour_tol, abs(labor_market_residual(labor_closure(model.options), model, L_sum, w, cpi_val)) < labour_tol)
 
@@ -577,12 +631,14 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
     assert_external_account(model, sol)
     canary = external_balance_canary(model, X)
     comp = gdp_components(model, sol)
-    # `wage` must be a SCALAR metric: at η = 0 the endpoint carries SECTORAL
-    # wages (ADR-0020 option C), so the reported aggregate is the
-    # wage-bill-weighted average wage; at η = 1 it is the common wage
-    # (bit-identical to the pre-ADR-0020 metric). Dispersion is reported in the
-    # diagnostics (wage_min / wage_max).
-    w_metric = η0 ? sum(sol.wages_raw .* data.labor_share) / sum(data.labor_share) : w
+    # `wage` must be a SCALAR metric: the η = 0 endpoint and the ADR-0022
+    # sectoral closure carry SECTORAL wages, so the reported aggregate is the
+    # wage-bill-weighted average wage; at η = 1 with one common wage it is that
+    # wage (bit-identical to the pre-ADR-0020 metric). Dispersion is reported in
+    # the diagnostics (wage_min / wage_max).
+    w_metric = η0 ? sum(sol.wages_raw .* data.labor_share) / sum(data.labor_share) :
+        model.options.elasticities.eta_s_vec !== nothing ?
+            sum(sol.wages_raw .* L_i) / sum(L_i) : w
     return (
         gates = Dict{String,Any}(
             "residual" => Dict{String,Any}("value" => resid, "tolerance" => residual_tol, "pass" => resid_pass),
@@ -782,6 +838,13 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
     )
     if haskey(cell, "delta_epsilon")
         man["scenario"]["delta_epsilon"] = Float64(cell["delta_epsilon"])
+    end
+    # ADR-0022: record the sectoral elasticity vector so the provenance of a
+    # sectoral cell is explicit in the manifest.
+    esv = cell_eta_s_vec(cell, data, ψ)
+    if esv !== nothing
+        man["scenario"]["eta_s_vec"] = esv
+        man["scenario"]["eta_s_rigid_group"] = string(get(cell, "eta_s_rigid_group", "explicit"))
     end
     open(joinpath(rundir, "manifest.toml"), "w") do io
         TOML.print(io, man)

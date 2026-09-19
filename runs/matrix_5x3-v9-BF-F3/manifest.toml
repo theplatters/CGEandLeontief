@@ -1,0 +1,91 @@
+design = "matrix_5x3_v9"
+date = "2026-09-19"
+status = "executed"
+run_id = "matrix_5x3-v9-BF-F3"
+actor = "hermes-agent"
+schema_version = 2
+cell = "matrix_5x3-v9-BF-F3"
+
+[metrics]
+consumption_rel = -0.01979977017637935
+gdp_rel = -0.00016191748549632123
+gdp_deflator = 1.007181146349825
+external_position = -0.008528406008572537
+max_abs_price_dev = 0.2790086801915117
+gdp_expenditure_rel = -0.00016191748530280936
+programme_financing = 0.014846284392665651
+wage = 1.0070180661111694
+nominal_gdp = 1.0070180661111694
+external_transfer = -0.02337469040123819
+employment = 1.0
+gdp = 0.9998380825145037
+consumption = 0.9802002298236207
+gdp_wedge = 1.9451107391432743e-13
+gdp_expenditure = 0.9998380825146972
+
+[gates]
+overall = "pass"
+
+    [gates.sectoral]
+    value = 6.039613253960852e-13
+    pass = true
+    tolerance = 1.0e-6
+
+    [gates.budget]
+    value = 2.220446049250313e-16
+    pass = true
+    tolerance = 1.0e-9
+
+    [gates.residual]
+    value = 6.039613253960852e-13
+    pass = true
+    tolerance = 1.0e-6
+
+[provenance]
+git_commit = "bc83d5ae9df9d5191c76e1e46fb3f21eef7d88bb"
+julia_version = "1.12.7"
+design_sha256 = "2d9b5586bda451dc186c229a543dd6f028fe906ff1e2df746a844c815ffab8f3"
+git_dirty = true
+seed = 1234
+manifest_sha256 = "435f907d20c8accb1a53ded7a2dcb49a41e50f84bdfaab06ca5d04629050f833"
+
+    [provenance.data_sha256]
+    "data/I-O_DE2019_formatiert.csv" = "e9c3299731940f7ce683f0e508495c62ad255f0a5536cf1da63c02478058914d"
+    "experiments/designs/matrix_5x3_v9.toml" = "2d9b5586bda451dc186c229a543dd6f028fe906ff1e2df746a844c815ffab8f3"
+    "cbase2/data_raw/impulses.csv" = "5545c748d848ec121fa5aff21d0c46a55c8d00462518718d3d54374c7f0b8c5f"
+
+[scenario]
+sigma = 0.9
+theta = 0.5
+magnitude = 1.0
+epsilon = 0.5
+labour = "BF"
+eta = 0.0
+eta_s = 0.0
+financing = "F3"
+shock = "impulses.csv"
+
+[solver]
+init = "warm:reference-final"
+algorithm = "kernel solve / solve_beta (Newton + residual-gated LM polish)"
+reference = "batch-continuation"
+
+[diagnostics]
+external_balance = 0.003172690875118272
+gdp_m_final = -0.2440542081606845
+wage_max = 1.6719354507963997
+gdp_g = 0.228151619279405
+gdp_c = 0.6779803128412959
+wage_min = 0.9702358687050822
+canary_ixm = 0.12671800976564446
+gdp_x = 0.427252457375826
+gdp_m_int = -0.22493095892764395
+canary_diff = -1.9438270437710514e-13
+public_budget = 0.21410137597438153
+gdp_t_int = -0.025831875774981392
+gdp_i = 0.1684507194781468
+canary_s = 0.09235772798189619
+
+[artifacts]
+log = "log.txt"
+solution = "solution.csv"

@@ -85,6 +85,23 @@ actor = "hermes-agent"
     eta = 1.0
     programme_year = 2024
 
+[designs.matrix_5x3_v9]
+git_commit = "bc83d5ae9df9d5191c76e1e46fb3f21eef7d88bb"
+note = "Labour x financing evaluation matrix with the ADR-0022 sectoral-labour cells, on the full-71 A-bill calibration and the verified kernel. Supersedes matrix_5x3_v7 and matrix_5x3_v8 (both aborted by promotion-plumbing defects, see the file header) and, through them, v6. All thirty-three cells run on the fixed kernel."
+registered_at = "2026-09-19T22:04:26"
+design_sha256 = "2d9b5586bda451dc186c229a543dd6f028fe906ff1e2df746a844c815ffab8f3"
+actor = "hermes-agent"
+
+    [designs.matrix_5x3_v9.pinned]
+    sigma = 0.9
+    theta = 0.5
+    f1_shift = "tilt_g0_over_c0"
+    epsilon = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    eta = 1.0
+    programme_year = 2024
+
 [designs.matrix_5x3_v6]
 git_commit = "6db1da59fa5582a31c249714d59ca3ba27e8937f"
 note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration under ADR-0014/ADR-0015/ADR-0018/ADR-0019/ADR-0020 (real-wage elastic supply; verified scale-determinacy guard; monotone polish; income-side real GDP vs welfare measurement; all-N clearing with the explicit external account F and F3 programme financing B_gov; eta = 0 solved as the sectoral-wage endpoint so that the identity closes in every regime). Supersedes the v5 generation for citation, whose runs stay as history."
@@ -102,6 +119,23 @@ actor = "hermes-agent"
     eta = 1.0
     programme_year = 2024
 
+[designs.matrix_5x3_v7]
+git_commit = "bc83d5ae9df9d5191c76e1e46fb3f21eef7d88bb"
+note = "Labour x financing evaluation matrix with the ADR-0022 sectoral-labour cells, on the full-71 A-bill calibration. The fifteen matrix cells are re-run for provenance (a src/ change supersedes the v6 generation, ADR-0004); the eighteen sectoral cells trace the elasticity ladder and the two-group rigidity variants. Supersedes v6 for citation once executed; v6 stays as history."
+registered_at = "2026-09-19T21:35:05"
+design_sha256 = "33fc85bb29764e5a174f186a40c37d2cc049784a36c2eac4e2dc9f6950ed593d"
+actor = "hermes-agent"
+
+    [designs.matrix_5x3_v7.pinned]
+    sigma = 0.9
+    theta = 0.5
+    f1_shift = "tilt_g0_over_c0"
+    epsilon = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    eta = 1.0
+    programme_year = 2024
+
 [designs.matrix_5x3_v5]
 git_commit = "0f37d9f5deeb000c8c3081234020502a8b5eda6a"
 note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration under ADR-0014/ADR-0015/ADR-0018/ADR-0019 (real-wage elastic supply; verified scale-determinacy guard; monotone polish to 1e-10; income-side real GDP vs welfare measurement; all-N clearing with the explicit external account F and F3 programme financing B_gov). Supersedes the v4 generation for citation, whose runs stay as history."
@@ -110,6 +144,23 @@ design_sha256 = "9997dea0f4e6c9743f9ef2d4e24805ca86ee52602f129ce7b60e0924c07b444
 actor = "hermes-agent"
 
     [designs.matrix_5x3_v5.pinned]
+    sigma = 0.9
+    theta = 0.5
+    f1_shift = "tilt_g0_over_c0"
+    epsilon = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    eta = 1.0
+    programme_year = 2024
+
+[designs.matrix_5x3_v8]
+git_commit = "bc83d5ae9df9d5191c76e1e46fb3f21eef7d88bb"
+note = "Labour x financing evaluation matrix with the ADR-0022 sectoral-labour cells, on the full-71 A-bill calibration and the complete kernel. Supersedes matrix_5x3_v7 (incomplete promotion: sectoral cells failed gate evaluation) and, through it, v6; the fifteen matrix cells and the eighteen sectoral cells all run on the fixed kernel."
+registered_at = "2026-09-19T21:52:43"
+design_sha256 = "166fb7cf8e6873306dbc8a55e5a6b92b0248e35995e77c28cbd251e8195a6a8b"
+actor = "hermes-agent"
+
+    [designs.matrix_5x3_v8.pinned]
     sigma = 0.9
     theta = 0.5
     f1_shift = "tilt_g0_over_c0"

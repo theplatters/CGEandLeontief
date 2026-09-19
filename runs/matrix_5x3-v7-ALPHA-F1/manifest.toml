@@ -1,0 +1,91 @@
+design = "matrix_5x3_v7"
+date = "2026-09-19"
+status = "executed"
+run_id = "matrix_5x3-v7-ALPHA-F1"
+actor = "hermes-agent"
+schema_version = 2
+cell = "matrix_5x3-v7-ALPHA-F1"
+
+[metrics]
+consumption_rel = 0.0014318300383984184
+gdp_rel = 2.220446049250313e-16
+gdp_deflator = 1.0
+external_position = 0.0007848066821671896
+max_abs_price_dev = 2.6645352591003757e-15
+gdp_expenditure_rel = 1.1102230246251565e-15
+programme_financing = 0.0
+wage = 1.0000000000000007
+nominal_gdp = 1.0000000000000009
+external_transfer = 0.0007848066821671896
+employment = 1.0000000000000002
+gdp = 1.0000000000000002
+consumption = 1.0014318300383984
+gdp_wedge = 4.440892098500626e-16
+gdp_expenditure = 1.000000000000001
+
+[gates]
+overall = "pass"
+
+    [gates.budget]
+    value = 0.0
+    pass = true
+    tolerance = 1.0e-9
+
+    [gates.labour]
+    value = 2.220446049250313e-16
+    pass = true
+    tolerance = 1.0e-6
+
+    [gates.residual]
+    value = 2.220446049250313e-15
+    pass = true
+    tolerance = 1.0e-6
+
+[provenance]
+git_commit = "bc83d5ae9df9d5191c76e1e46fb3f21eef7d88bb"
+julia_version = "1.12.7"
+design_sha256 = "33fc85bb29764e5a174f186a40c37d2cc049784a36c2eac4e2dc9f6950ed593d"
+git_dirty = true
+seed = 1234
+manifest_sha256 = "435f907d20c8accb1a53ded7a2dcb49a41e50f84bdfaab06ca5d04629050f833"
+
+    [provenance.data_sha256]
+    "data/I-O_DE2019_formatiert.csv" = "e9c3299731940f7ce683f0e508495c62ad255f0a5536cf1da63c02478058914d"
+    "cbase2/data_raw/impulses.csv" = "5545c748d848ec121fa5aff21d0c46a55c8d00462518718d3d54374c7f0b8c5f"
+    "experiments/designs/matrix_5x3_v7.toml" = "33fc85bb29764e5a174f186a40c37d2cc049784a36c2eac4e2dc9f6950ed593d"
+
+[scenario]
+sigma = 0.9
+theta = 0.5
+magnitude = 1.0
+epsilon = 0.5
+labour = "ALPHA"
+eta = 1.0
+eta_s = 0.0
+financing = "F1"
+shock = "impulses.csv"
+
+[solver]
+init = "warm:reference-final"
+algorithm = "kernel solve / solve_beta (Newton + residual-gated LM polish)"
+reference = "batch-continuation"
+
+[diagnostics]
+external_balance = 0.0
+gdp_m_final = -0.24265356611787908
+wage_max = 1.0000000000000007
+gdp_g = 0.21410137597438175
+gdp_c = 0.6923660136118666
+wage_min = 1.0000000000000007
+canary_ixm = 0.11919813376149402
+gdp_x = 0.4219454405780009
+gdp_m_int = -0.22246083145507373
+canary_diff = -4.508112633194727e-16
+public_budget = 0.21410137597438153
+gdp_t_int = -0.02566552334774099
+gdp_i = 0.1623670907564459
+canary_s = 0.0943174170959197
+
+[artifacts]
+log = "log.txt"
+solution = "solution.csv"

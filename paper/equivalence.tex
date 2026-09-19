@@ -20,6 +20,16 @@
 % generation); the classification row for BF against ALPHA was updated; the
 % v6 flow table is now cited. Versions 1 -> 2 change no proposition or proof.
 %
+% Version 3 (September 2026): adds the new section sec:sectoral -- the
+% sectoral-labour-market family (ADR-0022), the proposition and proof that its
+% rigid corner is the eta = 0 endpoint, the interpolation remark relating it to
+% the BF and GAMMA rows, and the measured ladder and rigid-group variants from
+% the matrix_5x3_v9 generation (Table tab:v9). The abstract, the section
+% roadmap, the classification table of Cor. cor:class and the labour-door entry
+% of sec:scope cross-reference it; the numerical section records that the
+% fifteen matrix cells re-executed as v9 on the extended kernel reproduce the
+% v6 numbers bit-for-bit. No earlier proposition or proof changed.
+%
 % No LaTeX in the analysis container: compile on the Mac (pdflatex; the
 % bibliography below is a plain thebibliography, no .bib dependency).
 
@@ -61,6 +71,7 @@ under Demand-Only Shocks\\[0.4em]
 \maketitle
 
 \begin{center}\small
+\textbf{Version 3} \textcolor{revisionV2}{(September 2026)}\quad$\vert$\quad
 \textbf{Version 2} \textcolor{revisionV1}{(September 2026)}\quad$\vert$\quad
 \textbf{Version 1} (September 2026)
 \end{center}
@@ -85,6 +96,11 @@ section derives what would break the equivalences --- the analytic basis of
 the demand-sensitive-price program of \texttt{docs/ETAs.md} --- and proves a
 no-go corollary: nominal wage rules cannot create price variety in this
 framework.
+\textcolor{revisionV2}{A further section extends the analysis beyond the executed
+matrix: the sectoral-labour-market family (ADR-0022) has the matrix's $\eta = 0$
+endpoint as its rigid corner --- an exact equivalence, proved here and verified to
+machine precision --- and interpolates between the two rigidity rows, BF and GAMMA,
+while delivering demand-sensitive prices inside a flexible-wage closure.}
 \end{abstract}
 
 \section{Purpose and summary}
@@ -119,7 +135,11 @@ with the ADR-0020 option C endpoint}; 15/15 cells, run ids
 
 Sections~\ref{sec:kernel}--\ref{sec:reduction} set up the common kernel and
 derive the demand-only reduction. Section~\ref{sec:equiv} states and proves
-the two equivalences and classifies them. Section~\ref{sec:gauge} isolates
+the two equivalences and classifies them.
+\textcolor{revisionV2}{Section~\ref{sec:sectoral} records a third exact
+equivalence, of a different kind: the rigid corner of the sectoral-labour-market
+family is the $\eta = 0$ endpoint itself, and the family interpolates between the
+matrix's two rigidity rows.} Section~\ref{sec:gauge} isolates
 what \emph{does} differ across the rows (the scalar closure regimes).
 Section~\ref{sec:scope} derives the scope conditions: which model changes
 break the equivalences --- the menu behind the demand-sensitive-price program
@@ -429,6 +449,8 @@ F2 $\equiv$ F3 (mobile rows) & derivable & the financing label; \\
  & \textcolor{revisionV1}{frozen allocation a price} & \textcolor{revisionV1}{prices, wage vector} \\
  & \textcolor{revisionV1}{channel, so it is a distinct} & \textcolor{revisionV1}{$0.97$--$1.67$, own position)} \\
  & \textcolor{revisionV1}{economy} & \\
+\textcolor{revisionV2}{sectoral corner $\equiv$ BF} & \textcolor{revisionV2}{exact, by construction} & \textcolor{revisionV2}{--- (the corner \emph{is} the} \\
+\textcolor{revisionV2}{($\eta_{s,i} = 0$; Prop.~\ref{prop:nest})} & \textcolor{revisionV2}{(Prop.~\ref{prop:nest})} & \textcolor{revisionV2}{endpoint: the same equations)} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -443,6 +465,10 @@ superseded $F = 0$ pin generation (ADR-0019 D2), where the frozen allocation
 had no channel to prices; under ADR-0020 option C the $\eta = 0$ row carries
 sectoral wages and is an identified equilibrium, so no BF quantity is left
 unidentified and none must be withheld.}
+\textcolor{revisionV2}{The fifth entry is an equivalence between two
+\emph{closures} rather than between two rows of the executed matrix, and it is
+exact by construction: the sectoral family's rigid corner reproduces the
+$\eta = 0$ endpoint, which is why no separate rigid sectoral cell is reported.}
 \end{corollary}
 
 \begin{remark}[Off the demand-only slice]\label{rem:supply}
@@ -458,6 +484,158 @@ $\eta_s = 2$ against ALPHA's $L = 1.0000$ (\texttt{docs/ETAs.md}). The
 identification of $\eta_s$ therefore requires a supply-side scenario ---
 the premise of the supply arm.
 \end{remark}
+
+\section{The sectoral family and its rigid corner}\label{sec:sectoral}
+
+{\color{revisionV2}
+The two equivalences above are coincidences \emph{within} the executed matrix.
+This section records a third, of a different kind: an equivalence between two
+\emph{closures}, one of which is the matrix's $\eta = 0$ endpoint and the other
+a corner of a family that extends beyond the matrix. It is exact rather than
+asymptotic, and it is what makes the labour door of Section~\ref{sec:scope}
+concrete.
+
+\paragraph{The family.} Replace the single aggregate supply equation
+\eqref{eq:beta} by $N$ sectoral labour markets,
+\begin{equation}
+L^{cm}_i(p, y_i, w_i) \;=\; \bar{L}_i\,
+   \Big[ \frac{w_i}{\Pi(p)} \Big]^{\eta_{s,i}},
+\qquad i = 1, \dots, N, \qquad \eta_{s,i} \geq 0,
+\label{eq:etas}
+\end{equation}
+solved jointly with zero profit \eqref{eq:zp}, clearing \eqref{eq:clearing},
+the numeraire $\Pi(p) = 1$ and a free transfer $F$, in the unknowns
+$X = (p, y, w(1{:}N), F) \in \mathbb{R}^{3N+1}$ (ADR-0022). The scalar closure
+\eqref{eq:beta} is the member of this family with one common wage and
+$\eta_{s,i} \equiv \eta_s$; the matrix's BETA row is therefore the scalar
+\emph{special case} of a family, not a separate mechanism. Because the $N$
+wages enter the $N$ zero-profit conditions \eqref{eq:zp} through the price
+index \eqref{eq:ip}, the price block now depends on the $N$ employment levels
+and Lemma~\ref{lem:price} no longer applies: demand reaches prices through the
+wage structure, $p = \pi(A, w)$.
+
+\paragraph{Two rigidities, one equation.} In both closures labour is immobile,
+but for different reasons. At the $\eta = 0$ endpoint the allocation is frozen
+\emph{by assumption}: $L_i = \bar{L}_i$ is a datum of the quantity block, and
+the sectoral wage is whatever clears cost-minimizing demand against it. At
+$\eta_{s,i} = 0$ each sector has a \emph{vertical} supply curve,
+$L^s_i = \bar{L}_i$ for every $w_i$, so the market clears at the same
+allocation with a demand-determined wage. A constraint imposed on a quantity
+and an infinitely inelastic price response turn out to be the same row of
+algebra --- which is the content of the proposition below.
+
+\begin{proposition}[The rigid corner is the $\eta = 0$ endpoint]\label{prop:nest}
+Set $\eta_{s,i} = 0$ for every $i$. Then the sectoral system \eqref{eq:etas}
+and the $\eta = 0$ endpoint of ADR-0020 option C have the same solution set.
+\end{proposition}
+
+\begin{proof}
+Write both systems in the unknowns $X = (p, y, w, F)$ as four row blocks:
+\begin{align*}
+\text{(P)} \quad & p_i = c_i(p, w_i; A), & & i = 1,\dots,N,
+   & & \text{\eqref{eq:zp}} \\
+\text{(Y)} \quad & y_i = int_i + c_i + (1-m_i)(g^G_i + inv_i + g_i) + X_i,
+   & & i = 1,\dots,N, & & \text{\eqref{eq:clearing}} \\
+\text{(W)} \quad & \log L^{cm}_i(p,y_i,w_i) - \log \bar{L}_i
+   - \eta_{s,i} \log \frac{w_i}{\Pi(p)} = 0, & & i = 1,\dots,N, & & \\
+\text{(E)} \quad & \Pi(p) = 1. & & & &
+\end{align*}
+The quantity block (Y) draws labour income from the wage bill
+$\sum_i w_i L_i$ inside \eqref{eq:cons} and from the tax rate $\tau$; this is
+the only place, besides (W), where the two systems differ. The $\eta = 0$
+endpoint is the same four blocks with two changes: (W) drops the supply term
+($\eta_{s,i} = 0$), and (Y) evaluates the wage bill at the \emph{frozen}
+allocation, $L_i := \bar{L}_i$, instead of at the cost-minimizing demand
+$L^{cm}_i$.
+
+\emph{(i)} Let $X$ solve the sectoral system at $\eta_{s,i} \equiv 0$. Its (W)
+gives $L^{cm}_i(X) = \bar{L}_i$ for every $i$, the supply term vanishing
+identically. Substituting $L^{cm}_i = \bar{L}_i$ into its (Y) makes that block
+equal the endpoint's (Y); (P) and (E) are identical in the two systems by
+inspection. Hence $X$ solves the endpoint system.
+
+\emph{(ii)} Let $X$ solve the endpoint system. Its (W) gives
+$L^{cm}_i(X) = \bar{L}_i$, which satisfies the sectoral (W) at
+$\eta_{s,i} \equiv 0$; substituting it into (Y) yields the sectoral (Y). Hence
+$X$ solves the sectoral system. Both systems are square --- $3N+1$ unknowns,
+$3N+1$ equations --- and their residual maps agree on the common solution set,
+so the solution sets coincide.
+\end{proof}
+
+\begin{remark}[Why the family interpolates, and where it does not close]
+Sweeping $\eta_{s,i}$ moves the adjustment from quantities to prices. At
+$\eta_{s,i} = 0$ the allocation is pinned and the $N$ wages absorb the shock;
+as $\eta_{s,i} \to \infty$ the supply curves become infinitely elastic, the
+real wage returns to its technology-determined anchor and employment becomes
+the absorbing margin --- GAMMA-like prices and GAMMA's absorbing margin. The
+two ends of the family are therefore the matrix's own rigidity rows: BF
+(allocation frozen, wages free) at the rigid corner, GAMMA (real wage pinned,
+allocation free) at the elastic one. Two qualifications are exact and matter
+for reading the table below. First, the elastic end is a \emph{limit}, not a
+cell: the supply slope diverges and the direct solve eventually fails
+($\eta_s = 10^6$; probe13). Second, the family keeps the transfer $F$ free,
+whereas the fixed-wage system pins $F \equiv 0$; the family therefore
+\emph{spans} the two rigidity rows without terminating in either.
+\end{remark}
+
+\paragraph{Measured.} Table~\ref{tab:v9} reports the executed sectoral cells
+(\texttt{matrix\_5x3-v9-BETA-*}; ADR-0022). Four readings.
+
+\emph{(a) Prices move, and with the demand composition.} Every sectoral cell
+carries a deflator different from one and a $\max|p-1|$ that differs between F1
+and F2/F3 --- the signature no single-wage closure produces (all twelve
+$\eta = 1$ cells of the matrix read exactly $0.000000$).
+\emph{(b) The elasticity splits the adjustment.} As $\eta_s$ rises from $0.25$
+to $2$, the price response falls monotonically ($0.1529 \to 0.0372$ at F2)
+while employment rises ($1.000864 \to 1.001914$): the family trades price
+adjustment for quantity adjustment, and the welfare cost falls with it
+($-1.69\% \to -1.39\%$). The F1 column, whose programme is financed by a
+preference tilt rather than a tax, is the exception: its welfare index is
+positive ($+0.42\%$ at $\eta_s = 0.5$).
+\emph{(c) Incidence matters more than the level.} Making the \emph{programme}
+sectors rigid ($\eta_{s,i} = 0$ there, $\eta_s = 0.5$ elsewhere) more than
+doubles the price response ($0.2720$ against $0.1057$) and \emph{reverses} the
+employment effect: employment falls by $0.34\%$ and the welfare index by
+$2.69\%$, against $+0.13\%$ and $-1.57\%$ for the uniform cell. Rigidity on the
+largest half by baseline employment instead gives $0.1234$ with a near-neutral
+$+0.02\%$.
+\emph{(d) Wage dispersion is large.} The mechanism moves relative wages:
+$\max_i w_i / \min_i w_i$ reads $1.26$ at $\eta_s = 0.5$ and $1.70$ for the
+rigid-programme variant, against $1.72$ at the $\eta = 0$ endpoint --- for a
+programme worth $1.33\%$ of GDP.
+
+\begin{table}[htbp]
+\centering
+\caption{The sectoral family in the \texttt{matrix\_5x3\_v9} generation
+(\texttt{matrix\_5x3-v9-BETA-*}; deviations from the no-programme baseline;
+F2 and F3 agree to all printed decimals in every cell).}
+\label{tab:v9}
+\begin{tabular}{lrrrr}
+\toprule
+Sectoral cell & $\max|p-1|$ & $\max|p-1|$ & Employment & Consumption \\
+ & (F1) & (F2) & (F2) & (F2) \\
+\midrule
+uniform $\eta_s = 0.25$ & $0.133610$ & $0.152897$ & $1.000864$ & $-0.016888$ \\
+uniform $\eta_s = 0.5$  & $0.095839$ & $0.105666$ & $1.001255$ & $-0.015712$ \\
+uniform $\eta_s = 1$    & $0.061283$ & $0.065422$ & $1.001627$ & $-0.014669$ \\
+uniform $\eta_s = 2$    & $0.035629$ & $0.037171$ & $1.001914$ & $-0.013912$ \\
+\midrule
+rigid programme, $\eta_s = 0.5$ & $0.215061$ & $0.272033$ & $0.996621$ & $-0.026914$ \\
+rigid largest half, $\eta_s = 0.5$ & $0.109583$ & $0.123362$ & $1.000196$ & $-0.019053$ \\
+\midrule
+BF ($\eta_{s,i} = 0$) & $0.221442$ & $0.279009$ & $1.000000$ & $-0.019800$ \\
+GAMMA (fixed wage) & $0.000000$ & $0.000000$ & $1.001260$ & $-0.015333$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{The corner is the endpoint, numerically.} Solving the sectoral system at
+$\eta_{s,i} = 0$ from the $\eta = 0$ solution reproduces $(p, y, w, F)$ exactly
+--- $\max|\Delta| = 0.00 \times 10^0$ in all four blocks, and below $10^{-10}$
+from a cold start --- as Proposition~\ref{prop:nest} requires. No separate
+rigid sectoral cell is therefore reported: the corner \emph{is} the BF row of
+Table~\ref{tab:v6}.
+}
 
 \section{What actually differs across the rows}\label{sec:gauge}
 
@@ -553,6 +731,13 @@ doors are:
       fixed-wage row, but with an \emph{exogenous} pin --- that delivers
       design heterogeneity, not demand-sensitivity, because the pinned
       vector keeps the price block demand-free.}
+      \textcolor{revisionV2}{ADR-0022 (accepted) generalises this door across
+      the $\eta = 1$ rows: $N$ sectoral labour markets with supply elasticities
+      $\eta_{s,i}$ (Section~\ref{sec:sectoral}), whose rigid corner is precisely
+      the option C endpoint proved in Proposition~\ref{prop:nest}. It breaks the
+      single-wage homogeneity on which Lemma~\ref{lem:price} rests, requires no
+      income closure (no rents are created), and its scalar member is the
+      existing BETA row.}
 \item \textbf{Markup door --- demand-sensitive markups.} A pricing rule
       $p_i = \mu_i(y_i)\, c_i(p,w)$, e.g.\ $\mu_i = 1 + \kappa\,(y_i/y_{i0}
       - 1)$, breaks Lemma~\ref{lem:price} directly. The real cost is not
@@ -616,6 +801,16 @@ intact.
 
 \section{Numerical evidence}\label{sec:conclusion}
 
+\textcolor{revisionV2}{The fifteen matrix cells were re-executed as the
+\texttt{matrix\_5x3\_v9} generation on the extended kernel that carries the
+sectoral family (ADR-0022): every headline metric and diagnostic of the fifteen
+cells reproduces the v6 values bit-for-bit ($\max|\Delta| = 0$ on
+\texttt{gdp\_rel}, \texttt{consumption\_rel}, employment, the deflator,
+$\max|p-1|$, the external transfer, the wage extremes and the identity
+residual), so the equivalences and the table below are invariant to the
+extension. The sectoral cells of the same generation are reported separately in
+Table~\ref{tab:v9}.}
+
 Table~\ref{tab:v6} extracts the rows of the executed
 \texttt{matrix\_5x3\_v6} generation (income-side real GDP and the
 household-consumption welfare index, ADR-0018; employment). The paired rows
@@ -678,8 +873,32 @@ nominal-wage-rule family ex ante. \textcolor{revisionV1}{The labour door is
 no longer hypothetical: ADR-0020 option C delivers it at the $\eta = 0$
 endpoint, and the general sectoral-labour-market form extends it across the
 $\eta = 1$ rows.}
+\textcolor{revisionV2}{(iv) The labour door is now an implemented mechanism
+rather than a proposal: the sectoral family of Section~\ref{sec:sectoral} is
+promoted, tested and executed (ADR-0022), it delivers demand-sensitive prices
+inside a flexible-wage closure, and it leaves the executed matrix bit-for-bit
+unchanged. The manuscript can therefore state three exact equivalences and
+present the family as the answer to the variety question --- with two caveats
+that must travel with it: under demand-only shocks $\eta_{s,i}$ is a
+\emph{sensitivity} parameter, not an estimate, so the level of the price
+response is identified only by the supply arm (Remark~\ref{rem:supply}); and
+the rule that makes a subset of sectors rigid is a modelling choice, to be
+reported as a band rather than a point.}
 
 \section*{Revision log}
+
+\noindent\textbf{Version 3} \textcolor{revisionV2}{(September 2026)} ---
+Adds Section~\ref{sec:sectoral}: the sectoral-labour-market family (ADR-0022),
+its $3N+1$ system \eqref{eq:etas}, the proposition and proof that its rigid
+corner is the $\eta = 0$ endpoint (exact, verified to machine precision), the
+interpolation remark relating the family to the BF and GAMMA rows, and the
+measured ladder and rigid-group variants from the \texttt{matrix\_5x3\_v9}
+generation (Table~\ref{tab:v9}). The abstract, the section roadmap, the
+classification table of Corollary~\ref{cor:class} and the labour-door entry of
+Section~\ref{sec:scope} cross-reference the new result, and
+Section~\ref{sec:conclusion} records that the fifteen matrix cells re-executed
+as v9 on the extended kernel reproduce the v6 numbers bit-for-bit. No earlier
+proposition or proof changed.
 
 \noindent\textbf{Version 2} \textcolor{revisionV1}{(September 2026)} ---
 Evidence layer moved from the \texttt{matrix\_5x3\_v5} generation to

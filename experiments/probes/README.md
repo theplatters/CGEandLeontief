@@ -33,3 +33,18 @@ closed-form gates still cite the four scripts above.
   prices and its free wage are demand-free (the free wage is pinned by zero
   profit + the CPI numeraire), so it delivers Door-1 heterogeneity, not
   demand-sensitivity.
+- `probe13_sectoral_labour.jl` — the successor: the **general**
+  sectoral-labour-market closure (workplan v4; unknowns [p; y; w(1:N); F],
+  N sectoral supply conditions). Measures the `eta_s,i = 0` corner against the
+  executed v6 `BF` row, the uniform-`eta_s` ladder, the two-group variant, the
+  demand sensitivity across the financing cells, and the conditioning.
+- `probe14_s1_s5_comparison.jl` — the five scenario slots `S1`..`S5` of the
+  workplan measured side by side on full-71: `S1` the rigid `eta = 0` row,
+  `S2` the uniform-`eta_s` closure, `S3` the two-group variant, `S4` the pinned
+  wage vector (ADR-0021), `S5` the utilization/Verdoorn externality
+  (`delta = +-0.5`, cost-hook reduced form). Discriminator: whether
+  `max abs(p-1)` differs across F1/F2/F3 (demand-sensitive) or is identical
+  (exogenous heterogeneity). Result: `S4` is the only heterogeneous-only slot;
+  `S1`, `S2`, `S3` and `S5` are demand-sensitive, and `S5` reaches the same
+  price magnitude as `S2` with a single parameter and no wage or employment
+  movement.

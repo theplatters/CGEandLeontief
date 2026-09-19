@@ -36,6 +36,48 @@ real wage IS w; the anchor is w0 = 1 (baseline numeraire wage).
 - `cbase2/src/calibration.jl` was NOT promoted (Phase 3); `solve_beta` here
   runs on the root `Data` with its compatibility defaults.
 
+## The sectoral form (ADR-0022, 2026-09-19)
+
+`SectoralElasticLaborClosure(η_s_vec)` — the N-market generalisation of the
+scalar closure. The single aggregate equation is replaced by N sectoral ones,
+
+    L^cm_i(p, y, w_i) = Lbar_i · (w_i / P)^{η_s,i},   i = 1..N,   P = CPI,
+
+solved as a `3N+1` system `[p; y; w(1:N); F]`. The closure is selected by
+`MobileLaborCESElasticities.eta_s_vec` (`nothing` = the scalar 2N+2 form), so
+the registry id stays `BETA`: the sectoral form is BETA's N-market
+generalisation, not a new closure.
+
+**Endpoints.** `η_s,i = 0` for every sector is *exactly* the `η = 0` endpoint of
+ADR-0020 option C — the allocation frozen by a vertical supply curve instead of
+by a datum — proved analytically in ADR-0022 and asserted in
+`tests/test_sectoral_labour.jl` (`0.00e+00` when warm-started from the endpoint
+solution, `< 1e-10` cold). The `η_s,i → ∞` limit is the GAMMA corner (the real
+wage pinned, employment absorbing); it is a limit, not a cell — the direct
+formulation stiffens and eventually fails to solve.
+
+**Why it is the demand-sensitive form.** With one wage, zero profit (N
+equations) plus the CPI numeraire pin `p` and `w` under demand-only shocks, so
+the price block is demand-free (this is the `BETA ≡ ALPHA` degeneracy). With N
+sectoral labour markets the N wages are tied to N employment levels, so demand
+enters the price block through the wage structure: `max|p−1|` differs across
+F1/F2/F3, which no single-wage closure achieves. The measured ladder
+(`matrix_5x3-v9-BETA-F2-etas*`): 0.152897 (0.25), 0.105666 (0.5), 0.065422 (1),
+0.037171 (2). Rigid-group variants: programme sectors rigid 0.272033, largest
+half rigid 0.109583 (F1).
+
+`η_s,i = 0` for every i is exactly the ADR-0020 option C endpoint (the executed
+`matrix_5x3_v6` BF row) — the promotion's nesting canary; `η_s,i → ∞` is
+GAMMA-like in prices, approached only asymptotically (the supply slope
+diverges).
+
+Unlike the scalar form, the sectoral form moves prices with the demand
+composition: on full-71 a uniform `η_s = 0.5` gives `max|p-1|` ≈ 0.10 across the
+financing columns, against `2.7e-15` for the scalar closure at the same
+elasticity. The scalar row stays degenerate under demand-only shocks *by
+design*; the sectoral vector is the labour door of `docs/ETAs.md` candidate 1 /
+`paper/equivalence.tex` Section 6.
+
 ## Remaining gates and caveats
 
 Source: `registry/closures.toml` (`[labor.BETA]` `open_gates`) and

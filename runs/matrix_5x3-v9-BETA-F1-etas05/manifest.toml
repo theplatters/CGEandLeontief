@@ -1,0 +1,93 @@
+design = "matrix_5x3_v9"
+date = "2026-09-19"
+status = "executed"
+run_id = "matrix_5x3-v9-BETA-F1-etas05"
+actor = "hermes-agent"
+schema_version = 2
+cell = "matrix_5x3-v9-BETA-F1-etas05"
+
+[metrics]
+consumption_rel = 0.004226739005694702
+gdp_rel = -0.004413868817878419
+gdp_deflator = 1.0027013794179704
+external_position = -0.0008729184936235176
+max_abs_price_dev = 0.09583900128730516
+gdp_expenditure_rel = -0.002506814161416737
+programme_financing = 0.0
+wage = 1.0027255920987104
+nominal_gdp = 1.0039195598099473
+external_transfer = -0.0008729184936235176
+employment = 1.001190722287977
+gdp = 0.9955861311821216
+consumption = 1.0042267390056947
+gdp_wedge = 0.0019122063346591611
+gdp_expenditure = 0.9974931858385833
+
+[gates]
+overall = "pass"
+
+    [gates.sectoral]
+    value = 2.380144692448738e-13
+    pass = true
+    tolerance = 1.0e-6
+
+    [gates.budget]
+    value = 1.1102230246251565e-16
+    pass = true
+    tolerance = 1.0e-9
+
+    [gates.residual]
+    value = 4.4888962338895944e-13
+    pass = true
+    tolerance = 1.0e-6
+
+[provenance]
+git_commit = "bc83d5ae9df9d5191c76e1e46fb3f21eef7d88bb"
+julia_version = "1.12.7"
+design_sha256 = "2d9b5586bda451dc186c229a543dd6f028fe906ff1e2df746a844c815ffab8f3"
+git_dirty = true
+seed = 1234
+manifest_sha256 = "435f907d20c8accb1a53ded7a2dcb49a41e50f84bdfaab06ca5d04629050f833"
+
+    [provenance.data_sha256]
+    "data/I-O_DE2019_formatiert.csv" = "e9c3299731940f7ce683f0e508495c62ad255f0a5536cf1da63c02478058914d"
+    "experiments/designs/matrix_5x3_v9.toml" = "2d9b5586bda451dc186c229a543dd6f028fe906ff1e2df746a844c815ffab8f3"
+    "cbase2/data_raw/impulses.csv" = "5545c748d848ec121fa5aff21d0c46a55c8d00462518718d3d54374c7f0b8c5f"
+
+[scenario]
+sigma = 0.9
+theta = 0.5
+eta_s_rigid_group = "none"
+labour = "BETA"
+magnitude = 1.0
+eta = 1.0
+eta_s = 0.5
+financing = "F1"
+eta_s_vec = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+epsilon = 0.5
+shock = "impulses.csv"
+
+[solver]
+init = "warm:reference-final"
+algorithm = "kernel solve / solve_beta (Newton + residual-gated LM polish)"
+reference = "batch-continuation"
+
+[diagnostics]
+external_balance = 0.0
+gdp_m_final = -0.24249827784516603
+wage_max = 1.2202843260329497
+gdp_g = 0.21385031911644944
+gdp_c = 0.6896103254147833
+wage_min = 0.9880976892733697
+canary_ixm = 0.12125864771508676
+gdp_x = 0.42381390734525715
+gdp_m_int = -0.22355614426967504
+canary_diff = -4.4937643016440543e-13
+public_budget = 0.21410137597438153
+gdp_t_int = -0.025767035365314384
+gdp_i = 0.164734699004039
+canary_s = 0.09461869385569945
+
+[artifacts]
+log = "log.txt"
+solution = "solution.csv"

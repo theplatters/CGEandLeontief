@@ -7,6 +7,7 @@ tags: [assessment, docs-audit, revision, beyondhulten, metroeconomica]
 last-updated: September 2026
 ---
 
+**Version 8** \textcolor{revisionV7}{(September 2026)}
 **Version 7** \textcolor{revisionV6}{(September 2026)}
 **Version 6** \textcolor{revisionV5}{(September 2026)}
 **Version 5** \textcolor{revisionV4}{(September 2026)}
@@ -25,6 +26,8 @@ Governing documents: \texttt{ROADMAP.md} and
 \texttt{roadmaps/vertdict.md}; active references:
 \texttt{definitive\_guide.md}, \texttt{labor\_closures.md}, and
 \texttt{docs/reviews/}.}
+
+\textcolor{revisionV7}{Version 8 re-measures the probe findings on the ADR-0019 kernel and records them: the eta = 0 quantity vector is identified again (max abs change 2.8e-17 across warm starts), the supply-side identification of eta\_s survives to every printed digit, the numeraire is not a channel (DE-0011), the mobile closed forms are retired because F enters household income, and ALPHA-F3 no longer stalls at the tested scales through k = 10. The supply-side arm is carried in \texttt{ROADMAP.md}; no kernel change was made.}
 
 \textcolor{revisionV4}{Version 5 reports the executed 5 x 3 matrix on the re-anchored A-bill calibration, the accounting correction that closed the external-identity canary, and the two closure fixes (real-wage supply, verified scale determinacy) that made the fixed-wage rows executable. Section 4.2 is new; where the earlier intermediate-results section disagrees with it, section 4.2 governs.}
 
@@ -642,6 +645,18 @@ finite-difference/least-squares experiments do not suffice.}
 
 \textcolor{revisionV6}{Sources of the recorded deviations (classification). None of the recorded deviations was an accounting error: the identities (zero-profit, budgets, the booked external account) hold to machine precision throughout. They fall into four classes. (i) Measurement--definition: the legacy "Real GDP" column is the household-consumption welfare index; corrected by the income-side measure (ADR-0018, version 6). (ii) Closure artifact: the F2/F3 separation and the earlier external-position readings came from the omitted N-th market; corrected by all-N clearing with the booked external account (ADR-0019, this version; the approaches considered are catalogued in its 2026-09-18 amendment), under which the mobile F2 and F3 cells are real-neutral. (iii) Model-class property: BETA coincides with ALPHA under demand-only shocks because the one-factor CRS price block is demand-invariant (Samuelson nonsubstitution), and DELTA's exactness rests on the same p = 1; eta\_s is identifiable only under a supply-side scenario or with a second production factor -- a property of the closure design, not a mis-specification. (iv) Corrected admissibility mathematics: the GAMMA/DELTA-F1 rejections were a retired heuristic guard, replaced by the measured actual-matrix criterion (ADR-0014, ADR-0017).}
 
+### Probe re-measurement on the ADR-0019 kernel \textcolor{revisionV7}{\normalsize [added v8]}
+
+\textcolor{revisionV7}{Four read-only probes under \texttt{experiments/probes/} create no runs. At eta = 0 the ADR-0019 F = 0 pin closes the old null direction: BF-F1, BF-F2 and BF-F3 restarted from the stored v5 solution and from a 1 \% jittered start agree to max abs dq = 2.8e-17 (ALPHA-F3 control 1.1e-16), so the BF sectoral quantity vector is identified on the current kernel. The factor-market gap remains L\_costmin(y) minus sum(labor\_share) = -4.344e-4 / +5.618e-4 / +7.936e-3, and it is exactly what the canary carries: a closure accounting gap, not an identification failure.}
+
+\textcolor{revisionV7}{Supply-side identification survives: under a +20 \% sector-1 shock, w = 1.0049029745 and L = 1.0024484897 / 1.0049029745 / 1.0098299882 / 1.0247564458 at eta\_s = 0.5 / 1 / 2 / 5, the implied elasticities are recovered exactly, max abs dp = 0.196, and every cell is within the 1e-5 gate (residual at most 6.3e-13 for ALPHA, 1.8e-14 for BETA). F2 and F3 agree in gdp\_rel and consumption\_rel at every eta\_s, so financing neutrality extends to supply shocks; F1 is distinct.}
+
+\textcolor{revisionV7}{Numeraire (DE-0011): demand-only scaling to k = 10 leaves w = 1.0000000000, L = 1.0 and max abs dp at most 4.1e-15; the real wage is pinned by the zero-profit block, whose only moving input is technology. The pre-ADR-0019 mobile closed forms are retired: with F in E, mobile F2 and F3 consumption\_rel coincide at -1.82262e-2 (k = 1) and the welfare index 1 - 1.82262e-2 times k scales linearly, while income gdp\_rel stays 0; the old forms hold exactly only at the BF row, where the tilt-Tornqvist predictions 1.000432787271 / 0.983064081649 / 1 are reproduced to about 4e-16.}
+
+\textcolor{revisionV7}{Fixed-row equivalences are unchanged: GAMMA and DELTA reproduce the analytic Leontief multiplier, with L = 1.0177957289 (F3) and L = 1.0012598064 (F2) identical to the analytic values, DELTA-F3 to 5.6e-17 and GAMMA at its about 1e-12 residual floor. The pre-ADR-0019 ALPHA-F3 stall is gone at the tested scales: k = 1 / 2 / 5 / 10 all solve (L = 1, max abs dp at most 3.4e-15, F = -0.01432394 times k, linear); GAMMA-F3 remains the extensive-margin control (L = 1.0178 / 1.0356 / 1.0890 / 1.1780).}
+
+\textcolor{revisionV7}{Ranking for variety inside the flexible-wage block: sector-specific wages at eta = 0 remain the remedy for the factor-market gap (it closes by construction), the supply-side arm makes eta\_s identifiable with no kernel change, demand-sensitive pricing (markup or capacity) is the direct fix for p = 1 but needs a profit-income closure, and the numeraire is rejected (DE-0011). The supply-side arm is carried in \texttt{ROADMAP.md} and needs a shock-schema ADR before any change to \texttt{experiments/run.jl}.}
+
 # Workplan \textcolor{revisionV3}{\normalsize [section 5 since v4; reworked v3]}
 
 ## Stage 1: Model completion \textcolor{revisionV2}{\normalsize [reworked v3]}
@@ -1010,3 +1025,5 @@ evaluation matrix, and the workplan only.}
   harmonization approaches considered (status-quo canary, all-N plus transfer
   F, savings-driven investment, Armington expenditure switching, direct
   external-balance imposition).
+
+- **Version 8** \textcolor{revisionV7}{(September 2026)} --- Probe re-measurement on the ADR-0019 kernel: the eta = 0 identification is restored by the F = 0 pin (max abs dq = 2.8e-17), the supply-shock eta\_s identification survives to every printed digit with F2 = F3 neutrality, the mobile closed forms are retired (F enters E; BF-exact only), ALPHA-F3 loses its capacity limit, and DE-0011 records that the numeraire cannot move the real wage. Four read-only probes under \texttt{experiments/probes/} carry the measurements; registry gates updated; no kernel change.

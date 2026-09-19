@@ -47,3 +47,5 @@ the conditions under which it could be revived.
 | DE-0007 | Adopting Baqaee–Farhi (2022) wholesale as the base model |
 | DE-0008 | Open-economy calibration without a saving rate (cbase2 v2) |
 | DE-0009 | Orphan src files archived |
+| DE-0010 | The cbase2 multi-stage solver ladder |
+| DE-0011 | Re-gauging the numeraire to give eta_s a channel |

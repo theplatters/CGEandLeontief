@@ -48,13 +48,7 @@ closure, and it is the only door that adds a *continuous* dimension.
 
 ## Door 2: sectoral supply shocks
 
-Already an input of the design schema, no code change: a sectorally concentrated
-cost shifter moves prices with the wage pinned, so real wages, employment and the
-external position all move. This door also makes the allocation margin bite,
-which is why the assessment records that `eta_s` is identifiable only under a
-supply-side scenario. It is the cheapest way to widen GAMMA's outcome range, and
-it is complementary to Door 1 rather than a substitute: Door 1 varies the wage
-structure at a given shock, Door 2 varies the shock at a given wage structure.
+\textcolor{revisionV1}{The kernel takes a supply shock (the first argument of \texttt{Shocks}), but the design schema and \texttt{build\_cell\_model} do not expose one: they hard-code \texttt{Shocks(ones(N), ones(N), zeros(N))}, so every matrix cell so far has been a demand-side shock by construction.} A sectorally concentrated cost shifter moves prices with the wage pinned, so real wages, employment and the external position all move. This door therefore needs \textcolor{revisionV1}{a per-cell supply-shock specification in the design schema and in the harness -- a design-and-harness batch and a new generation, but no kernel change,} so it remains the cheapest door in kernel terms while not being free. It also makes the allocation margin bite, which is why the assessment records that `eta_s` is identifiable only under a supply-side scenario. \textcolor{revisionV1}{Its reach is wider than GAMMA: since the GAMMA/DELTA coincidence and the BETA/ALPHA coincidence both rest on prices not moving, one supply-side design restores the identifiability of three rows at once.} It is complementary to Door 1 rather than a substitute: Door 1 varies the wage structure at a given shock, Door 2 varies the shock at a given wage structure. \textcolor{revisionV1}{The demand-shock framing of the paper makes an ad hoc supply shock awkward to present, so the thematic version of this door -- a climate-change scenario with a sectorally differentiated incidence vector, in a damage and a transition variant -- is recorded as \texttt{docs/ideas/IDEA-0001-climate-productivity-shocks.md} rather than proposed here; the mechanical content is the same and the register holds it until a referee or a follow-up paper asks for a supply side. The demand-side alternative, which generates the price response from the wage block instead, is scoped in \texttt{docs/WORKPLAN\_SENSITIVE\_PRICES.md}.}
 
 ## Door 3: segmented wage setting
 
@@ -69,10 +63,7 @@ it needs its own ADR.
 
 A fixed *nominal* wage (real wage falling with the CPI) is a different closure: it
 needs a nominal anchor other than the wage, which the current model does not
-have. `docs/ETAs.md` records a no-go on aggregate nominal wage rules; that record
-was not re-read for this document and Door 4 is therefore not proposed. If it is
-ever pursued, it must be checked against that no-go first, and the indexation
-degree would be its parameter.
+have. \textcolor{revisionV1}{Door 4 is now closed by proof rather than left unread: Corollary 3 of \texttt{paper/equivalence.tex} (the no-go for nominal wage rules) shows that no rule writing the nominal wage as a function of endogenous aggregates --- an aggregate wage curve, nominal indexation, or a numeraire change --- can create demand-sensitive real outcomes, because the price block still forces $p = w\,\pi(A)$ and the real wage is invariant to whatever sets $w$; in the fixed-wage gauge such a rule is either vacuous or over-determines the system, silently reverting GAMMA to ALPHA. The family is closed and stays off the workplan.}
 
 # The wage-structure door in detail
 
@@ -99,7 +90,7 @@ and by determinacy it is the solution. Measured on the `GAMMA-F2` cell:
 | `wbar = 0.9` | 6.7e-16 | 1.00125981 | 0.90000000 | 1.00125981 |
 | `wbar = 1.1` | 8.9e-16 | 1.00125981 | 1.10000000 | 1.00125981 |
 
-Two consequences. First, a statement about wage *restraint* (a level statement)
+\textcolor{revisionV1}{This is Corollary 1 of \texttt{paper/equivalence.tex} (real-wage invariance) applied to the pin, and it is the same property that makes ALPHA equivalent to BETA and GAMMA to DELTA on the demand-only slice (Propositions 1 and 2 there).} Two consequences. First, a statement about wage *restraint* (a level statement)
 is outside this closure's language: the closure can only speak about the wage
 *structure*. Second, the invariance is a property of this model class, not a
 general truth: it holds because there is no nominal anchor besides the wage. With
@@ -220,7 +211,7 @@ Per option, what it needs and where the evidence stands.
 | Option | What it needs | Evidence today |
 | --- | --- | --- |
 | Door 1, wage structure | Thread `wbar` into `problem_fixed` and `_solve_fixed`; extend the canary and `gdp_components`; new closure id, ADR, design | `experiments/probes/probe11_gamma_wage_structure.jl`; the measurements above; ADR-0020 for the vector-wage apparatus |
-| Door 2, sectoral supply shocks | A design with sectoral supply shocks; no code change | The shock schema in `experiments/README.md`; the assessment's identifiability note on `eta_s` |
+| Door 2, sectoral supply shocks | \textcolor{revisionV1}{A per-cell supply-shock spec in the design schema and \texttt{build\_cell\_model} (the harness hard-codes a null shock); no kernel change} | \textcolor{revisionV1}{The kernel's \texttt{Shocks} already accepts it; the assessment's identifiability note on \texttt{eta\_s} and on the CES-versus-Leontief contrast} |
 | Door 3, segmented wages | A new closure: pinned subset plus one flexible wage; ADR and admission check | None yet; sketched here only |
 | Door 4, nominal wage rules | A nominal anchor the model does not have; check `docs/ETAs.md` no-go first | `docs/ETAs.md` (not re-read here) |
 
@@ -250,8 +241,7 @@ Open items, in the order a promotion would meet them:
 - \textcolor{revisionV1}{The identity under a tilted vector is measured (v2), so this item no longer blocks: what remains is that the relation used to measure it is an equilibrium statement, not a universal algebraic identity (a price perturbation gives -1.95), and that the kernel canary pins w = 1 on its 2N branch. A promotion must extend the canary and gdp\_components so that the acceptance gate runs on kernel arithmetic, and must re-assert the identity per scenario.}
 - The wage-structure scenarios must be fixed by preregistration before the run,
   otherwise the variation is tuned rather than reported.
-- `docs/ETAs.md` carries a no-go on aggregate nominal wage rules that was not
-  re-read here; Door 4 stays closed until it is.
+- \textcolor{revisionV1}{Door 4 (nominal wage rules) is closed by proof, not by convention: Corollary 3 of \texttt{paper/equivalence.tex}, read on 2026-09-18 after this document's first version. The doors that remain open are catalogued in \texttt{docs/ideas/IDEA-0002-five-doors-demand-sensitive-prices.md}.}
 - Door 3 needs an admission check of its own (the fixed-wage regime's criterion
   does not apply unchanged once one wage is free).
 - A DELTA companion and a sectoral supply-shock design are unexplored, and
@@ -260,4 +250,4 @@ Open items, in the order a promotion would meet them:
 # Revision Log
 
 - **Version 1** (September 2026)
-- **Version 2** \textcolor{revisionV1}{(September 2026)} --- The decisive claim of Version 1 is measured: the external account closes under a tilted wage vector, at the solver-residual level (2.9e-16 at the degenerate pin, at most 7.0e-12 under a tilt), via the price-weighted clearing residual, validated against the kernel canary off equilibrium along quantity perturbations (ratio 1.0000). The reproduction table and the provenance table were updated accordingly, the open-items entry that blocked on the missing measurement was rewritten, and the code-surface note now distinguishes the closure question (answered) from the gate question (the canary must still take the vector). ADR-0021 (proposed) records the adoption decision; the reference to it was added in the reproduction section.
+- **Version 2** \textcolor{revisionV1}{(September 2026)} --- The decisive claim of Version 1 is measured: the external account closes under a tilted wage vector, at the solver-residual level (2.9e-16 at the degenerate pin, at most 7.0e-12 under a tilt), via the price-weighted clearing residual, validated against the kernel canary off equilibrium along quantity perturbations (ratio 1.0000). The reproduction table and the provenance table were updated accordingly, the open-items entry that blocked on the missing measurement was rewritten, and the code-surface note now distinguishes the closure question (answered) from the gate question (the canary must still take the vector). ADR-0021 (proposed) records the adoption decision; the reference to it was added in the reproduction section. \textcolor{revisionV1}{Correction to Version 1, same round: Door 2 was described as available with no code change. That was wrong -- the harness (\texttt{build\_cell\_model}) hard-codes a null supply shock (\texttt{Shocks(ones(N), ones(N), zeros(N))}), so no matrix cell has ever carried one. Door 2 needs a per-cell supply-shock specification in the design schema and the harness, i.e. a design-and-harness batch and a new generation, though still no kernel change. The options table and ADR-0021's option C were corrected in place, and the reach of the door is wider than GAMMA alone.} \textcolor{revisionV1}{Same round, added: the thematic version of that door --- a climate-change scenario with a sectorally differentiated incidence vector, in a damage and a transition variant --- is recorded as \texttt{docs/ideas/IDEA-0001-climate-productivity-shocks.md}, in the new ideas register (\texttt{docs/ideas/README.md}, \texttt{IDEA-NNNN}, status vocabulary separate from the ADRs); and the demand-side route to demand-sensitive prices, which turns out to be a free wage rather than a pinned vector, is scoped as \texttt{docs/WORKPLAN\_SENSITIVE\_PRICES.md}.} \textcolor{revisionV1}{Same round, further: Door 4 (nominal wage rules) is closed by proof rather than left as an unread convention --- Corollary 3 of \texttt{paper/equivalence.tex}, read on 2026-09-18 after this document's first version --- and the level-invariance result is credited to Corollary 1 and to Propositions 1 and 2 of the same paper, which is where the demand-only equivalences of ALPHA with BETA and of GAMMA with DELTA are proved. The workplan was revised in parallel (its Version 2) to reconcile the two specifications of the labour door with that paper's ranking.}

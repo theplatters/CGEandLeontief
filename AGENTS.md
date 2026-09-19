@@ -18,7 +18,7 @@ Version 5).
 | `tests/` | Test suite (entry `tests/runtests.jl`, shimmed by `test/runtests.jl`). |
 | `scripts/` | Repository tooling — `scripts/status.jl` generates the status board, `scripts/check_repo.jl` is the pre/post-batch gate (ADR-0007). |
 | `registry/` | Machine-readable single source of truth: `closures.toml`, `scenarios.csv`, `freeze.toml`, `preregistration.toml`. Schema: `registry/README.md`. |
-| `docs/` | `status.md` (generated status board), `decisions/` (ADRs), `dead-ends/` (DE register), `log/` (lab session log), `archive/` (closed historical docs). |
+| `docs/` | `status.md` (generated status board), `decisions/` (ADRs), `dead-ends/` (DE register), `ideas/` (unexplored-idea register, `IDEA-NNNN`; see its README for the status vocabulary), `log/` (lab session log), `archive/` (closed historical docs). |
 | `experiments/` | Single run entry point `run.jl` plus pinned designs in `experiments/designs/` (schemas: `experiments/README.md`; ADR-0006). |
 | `runs/` | One `runs/<run_id>/manifest.toml` + `log.txt` (`solution.csv` on success) per run; committed `runs/index.csv` holds one row per run (ADR-0004). Only the index and manifests are tracked. |
 | `paper/tables/` | Paper-facing accounting and flow tables generated from the run manifests (cite `run_id`s; never hand-typed numbers). |
@@ -130,8 +130,7 @@ visible (ADR-0004).
   `scenarios.csv` rows; `freeze.toml` only via ADR.
 - Regenerate `docs/status.md` (`julia --project=. scripts/status.jl`); never
   hand-edit it, and it must show **0 warnings**.
-- Add an ADR for a decision, a DE record for an abandoned approach, and one
-  entry in `docs/log/YYYY-MM.md` for the session.
+- Add an ADR for a decision, a DE record for an abandoned approach, an `IDEA-NNNN` note under `docs/ideas/` for a route worth remembering but not tested (an idea is not a decision: it carries no registry entry and no weight in the paper, and promoting it follows the ADR path), and one entry in `docs/log/YYYY-MM.md` for the session.
 - Revising `docs/DOCS_ASSESSMENT.md`: increment the version, colour every new or
   changed word with `\textcolor{revisionV<N-1>}{...}` (Version 5 = blue), add the
   line to the top version block and an entry to the Revision Log — see the

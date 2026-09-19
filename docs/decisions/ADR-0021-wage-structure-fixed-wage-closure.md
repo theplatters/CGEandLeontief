@@ -52,7 +52,7 @@ Measured evidence (full-71 A-bill, `GAMMA-F2` cell,
 | --- | --- | --- | --- |
 | A. Pinned wage vector as a parameter of the existing closure | `problem_fixed` / `_solve_fixed` take `wbar` (default: the scalar 1, so every current cell is bit-identical); the design pins `wbar` per cell | Dispatch-only change; the canary and `gdp_components` must accept the vector on their 2N branch; a new generation for provenance | Recommended: no new closure, the degenerate case is preserved by construction, and the wage structure becomes a design dimension |
 | B. A separate closure id (for example `GAMMA-W`) | A new registry entry, its own formulation, tests and ADR | Registry and test surface grow for what is one parameter | Rejected: the closure is "a fixed real wage"; the scalar is its degenerate point, not a different closure |
-| C. No kernel change; widen GAMMA through sectoral supply shocks only | A design with sectoral supply shocks | None | Viable and available today, and it also makes the allocation margin bite; kept as the zero-cost fallback and as a complement, not as a substitute (it cannot vary the wage structure at a given shock) |
+| C. No kernel change; widen GAMMA through sectoral supply shocks only | A per-cell supply-shock spec in the design schema and `build_cell_model` (the kernel already takes a supply shock; the harness hard-codes a null one) | No kernel change, but a design-and-harness batch and a new generation | Viable, and it also restores the identifiability of `eta_s` and of the CES-versus-Leontief contrast; kept as the complement rather than a substitute |
 
 ## Decision (proposed)
 

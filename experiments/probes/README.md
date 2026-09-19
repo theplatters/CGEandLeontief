@@ -17,6 +17,9 @@ The scripts need the local (gitignored) input table and the stored `runs/matrix_
 - `analytic_headlines.jl` — Leontief/closed-form headline re-measurement on
   the v5 runs (capacity, neutrality, curvature).
 
-Registry gates citing them: BF identification, ALPHA capacity, BETA
-identification and numeraire (DE-0011), GAMMA/DELTA Leontief re-check, F1/F2/F3
-closed-form and neutrality (see `registry/closures.toml`).
+These four are the measurements of the 2026-09-18 v5-kernel session (DE-0011,
+BF identification, capacity, closed forms; the session entry in
+`docs/log/2026-09.md`). The `probe1..probe11` scripts are the later lineage:
+after ADR-0020/0021 and matrix_5x3_v6 the live registry citations are
+`probe5*/5b/5c`, `probe7` and `probe11`; DE-0011 and the DELTA/F1/F2
+closed-form gates still cite the four scripts above.

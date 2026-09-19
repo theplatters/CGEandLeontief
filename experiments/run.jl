@@ -370,44 +370,39 @@ end
 """
     assert_external_account(model, sol; clearing_tol = 1e-6, gap_tol = 1e-9)
 
-ADR-0019 external-account acceptance gate. Every regime enforces all N
-goods-market clearings with the explicit external account: build the
-canonical vector `X = [p; q]` (fixed) or `[p; q; w; F]` (mobile, with
-`F = sol.external_transfer`) and assert
-`maximum(abs, market_clearing_residuals(model, X)) < clearing_tol` for
-every closure. At η = 1 (non-fixed mobile and fixed-wage) additionally
-assert the external-account identity gap
+ADR-0019 / ADR-0020 external-account acceptance gate. Every regime enforces all
+N goods-market clearings with the explicit external account: build the canonical
+vector `X = [p; q]` (fixed), `[p; q; w; F]` (mobile eta = 1) or
+`[p; q; w(1:N); F]` (eta = 0 sectoral wages, ADR-0020 option C) and assert
+`maximum(abs, market_clearing_residuals(model, X)) < clearing_tol` for every
+closure, and the external-account identity gap
 `abs(external_balance_canary(model, X).diff) < gap_tol`, where
-`diff = S + T + M − (I+X) − (F + B_gov)`. At the η = 0 (BF) endpoint the
-all-N clearings hold but the canary carries the documented
-fixed-allocation/factor-market gap (zero-profit prices the
-cost-minimizing labour demand, not the frozen baseline allocation;
-measured order 4e-4..8e-3 on full-71), so it is only checked for
-finiteness there, never gated. The matrix designs pass zero legacy manna
-(the ADR-0005 compatibility path); with nonzero manna the gap would include
-the unbooked `p·(A+G)`, so this gate applies to zero-manna designs only.
+`diff = S + T + M − (I+X) − (F + B_gov)`.
+
+Since ADR-0020 (option C) the gap is gated in EVERY regime: the eta = 0
+endpoint is the sectoral-wage system, whose solution makes the frozen
+allocation cost-minimizing, so its identity gap vanishes by construction
+(measured <= 5e-13 on full-71, against the up to -0.79 percent of GDP the
+retired `F = 0` pin left open). The matrix designs pass zero legacy manna (the
+ADR-0005 compatibility path); with nonzero manna the gap would include the
+unbooked `p·(A+G)`, so this gate applies to zero-manna designs only.
 """
 function assert_external_account(model::Model, sol::Solution;
         clearing_tol::Real = 1e-6, gap_tol::Real = 1e-9)
     fixed = labor_closure(model.options) isa FixedWageClosure
     p, q = sol.prices_raw, sol.quantities
-    w = sol.wages_raw[1]
+    # eta = 0 carries the sectoral wage vector (ADR-0020 option C); every
+    # eta = 1 regime carries one common wage.
+    w = model.options.elasticities.η == 0.0 ? sol.wages_raw : sol.wages_raw[1]
     X = fixed ? [p; q] : [p; q; w; sol.external_transfer]
     clearing = maximum(abs, market_clearing_residuals(model, X))
     clearing < clearing_tol || error(
         "external-account clearing failure: max|market_clearing_residuals| = $clearing " *
         ">= $clearing_tol (ADR-0019: all N markets must clear)")
-    model.options.elasticities.η == 1.0 || begin
-        # η = 0 (BF) endpoint: the identity gap is the fixed-allocation /
-        # factor-market gap, reported but not gated.
-        gap = external_balance_canary(model, X).diff
-        isfinite(gap) || error("external-account identity gap is non-finite at η = 0: $gap")
-        return nothing
-    end
     gap = abs(external_balance_canary(model, X).diff)
     gap < gap_tol || error(
         "external-account identity gap failure: |diff| = $gap >= $gap_tol " *
-        "(ADR-0019: S + T + M − (I+X) = F + B_gov at η = 1)")
+        "(ADR-0019/ADR-0020: S + T + M − (I+X) = F + B_gov in every regime)")
     return nothing
 end
 
@@ -535,11 +530,18 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
     fixed = labor_closure(model.options) isa FixedWageClosure
 
     p, q = sol.prices_raw, sol.quantities
-    w = sol.wages_raw[1]
+    # eta = 0 carries the sectoral wage vector (ADR-0020 option C); every
+    # eta = 1 regime carries one common wage.
+    η0 = model.options.elasticities.η == 0.0
+    w = η0 ? sol.wages_raw : sol.wages_raw[1]
     X = fixed ? [p; q] : [p; q; w; sol.external_transfer]
     resid = maximum(abs, equilibrium_residuals(model, X))
-    L_sum = sum(sectoral_labor_demand(p, q, w, model))
-    E = household_expenditure(fin, model, w * L_sum, p, L_sum;
+    L_i = sectoral_labor_demand(p, q, w, model)
+    L_sum = sum(L_i)
+    # eta = 0: household wage income is the sectoral wage bill sum_i w_i L_i
+    # (L_i = data.labor_share there); eta = 1: the common wage times L_sum.
+    wage_income = η0 ? sum(sol.wages_raw .* data.labor_share) : w * L_sum
+    E = household_expenditure(fin, model, wage_income, p, L_sum;
         external_transfer = sol.external_transfer)
     budget = abs(dot(p, sol.consumption) - (1 - data.saving_rate) * E)
     resid_pass = resid < residual_tol
@@ -551,6 +553,10 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
         # folds in the CPI numeraire and must not enter the gate.
         fixed ? ("wage", maximum(abs.(sol.wages_raw .- 1)), wage_tol,
                  maximum(abs.(sol.wages_raw .- 1)) < wage_tol) :
+        η0 ? # eta = 0 (ADR-0020 option C): the sectoral labour-market gap, the
+             # block that replaces the aggregate labour equation there.
+             ("sectoral", sectoral_labor_gap(model, p, q, w), labour_tol,
+              sectoral_labor_gap(model, p, q, w) < labour_tol) :
                 ("labour", abs(labor_market_residual(labor_closure(model.options), model, L_sum, w, cpi_val)),
                  labour_tol, abs(labor_market_residual(labor_closure(model.options), model, L_sum, w, cpi_val)) < labour_tol)
 
@@ -564,13 +570,19 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
         gate_frag("budget", budget, budget_tol, budget_pass) * "; " *
         gate_frag(third_name, third_value, third_tol, third_pass)
 
-    # ADR-0019 external account: every cell asserts all-N clearing; η = 1
-    # cells additionally assert the identity gap
-    # S + T + M − (I+X) − (F + B_gov) ≈ 0 (at η = 0 the gap is the
-    # fixed-allocation factor-market gap, reported but not gated).
+    # ADR-0019/ADR-0020 external account: every cell asserts all-N clearing and
+    # the identity gap S + T + M − (I+X) − (F + B_gov) ≈ 0. Both hold at every
+    # endpoint: at η = 0 the sectoral wages satisfy the per-sector FOC, which is
+    # what closes the identity there.
     assert_external_account(model, sol)
     canary = external_balance_canary(model, X)
     comp = gdp_components(model, sol)
+    # `wage` must be a SCALAR metric: at η = 0 the endpoint carries SECTORAL
+    # wages (ADR-0020 option C), so the reported aggregate is the
+    # wage-bill-weighted average wage; at η = 1 it is the common wage
+    # (bit-identical to the pre-ADR-0020 metric). Dispersion is reported in the
+    # diagnostics (wage_min / wage_max).
+    w_metric = η0 ? sum(sol.wages_raw .* data.labor_share) / sum(data.labor_share) : w
     return (
         gates = Dict{String,Any}(
             "residual" => Dict{String,Any}("value" => resid, "tolerance" => residual_tol, "pass" => resid_pass),
@@ -583,7 +595,7 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
             "gdp_expenditure" => gdp_exp, "gdp_expenditure_rel" => gdp_exp - 1,
             "gdp_deflator" => defl, "gdp_wedge" => wedge,
             "consumption" => cons, "consumption_rel" => cons - 1,
-            "employment" => L_sum, "wage" => w,
+            "employment" => L_sum, "wage" => w_metric,
             "nominal_gdp" => nominal_gdp(sol),
             "max_abs_price_dev" => maximum(abs.(p .- 1)),
             "external_transfer" => sol.external_transfer,
@@ -592,6 +604,8 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
         diagnostics = Dict{String,Any}(
             "canary_s" => canary.S, "canary_ixm" => canary.IX - canary.M,
             "canary_diff" => canary.diff,
+            "wage_min" => minimum(sol.wages_raw),
+            "wage_max" => maximum(sol.wages_raw),
             "gdp_c" => comp.V[1], "gdp_g" => comp.V[2], "gdp_i" => comp.V[3],
             "gdp_x" => comp.V[4], "gdp_m_final" => comp.V[5],
             "gdp_m_int" => comp.V[6], "gdp_t_int" => comp.V[7],

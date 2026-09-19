@@ -1,0 +1,259 @@
+# experiments/designs/matrix_5x3_v6.toml — the 5×3 evaluation matrix (Phase 3, ADR-0020)
+#
+# The 15 cells matrix_5x3-v6-<L>-<F> for L in BF/ALPHA/BETA/GAMMA/DELTA and
+# F in F1/F2/F3. Pinned by preregistration: run
+#   julia --project=. experiments/run.jl --preregister matrix_5x3_v6
+# before executing; experiments/run.jl --design matrix_5x3_v6 refuses to start
+# when this file's SHA-256 does not match registry/preregistration.toml.
+# See experiments/README.md and ADR-0006.
+#
+# Calibration: FULL-71 A-bill (ADR-0012; designs/calibration_abill.toml).
+# The 70-sector v3 pin (drops = [71], cbase2 artifacts, old s) is superseded:
+# the intermediate demand is charged with the DOMESTIC bill (raw-table row 73),
+# the clamp is gone, the imported intermediates (row 74) are an explicit
+# external-account leak, and the household block is the table's own domestic
+# household final demand. drops = [] leaves the full table in place
+# (retained_dataset returns the full-table Data unchanged).
+#
+# This is the ADR-0020 external-account generation (matrix_5x3-v6-*): all N
+# goods-market clearings are enforced in every regime and the external-account
+# identity S + T_int + M − (I+X) = F + B_gov closes in EVERY regime.
+#   eta = 1 (ALPHA/BETA/GAMMA/DELTA): the mobile system carries the endogenous
+#   net external transfer F (canonical unknown vector [p; y; w; F]).
+#   eta = 0 (BF): the endpoint is the SECTORAL-WAGE system (ADR-0020 option C,
+#   3N+1 unknowns [p; y; w(1:N); F]) — the per-sector wage is solved so that
+#   the frozen baseline allocation is cost-minimizing at the equilibrium
+#   quantities. This replaces the ADR-0019 D2 pin F = 0, under which the BF
+#   external position was NOT identified (it collapsed to B_gov = Σp·g).
+#   F3 books the programme value B_gov = Σp·g at eta = 0 prices (+1.4846% of GDP).
+# The F2/F3 financing neutrality holds at both endpoints: identical real
+# allocations (p, y, w) with F_F3 = F_F2 − B_gov and an identical external
+# position F + B_gov.
+# v5 stays as history (ADR-0004); v6 supersedes v5 for citation. The BF row is
+# the only row whose numbers move; the twelve non-BF cells reproduce v5 (the
+# GAMMA/DELTA rows to ~1e-11, the near-singular fixed-wage warm-start noise
+# documented in docs/log/2026-09.md).
+#
+# ADR-0014:  the elastic-supply residual is deflated by
+# the CPI (real wage, DE-0004) and the fixed-wage η = 1 admissibility guard is
+# the verified round-gain criterion, so GAMMA-F1 and DELTA-F1 are executable
+# here (they failed the heuristic guard in the v1 generation).
+#
+# η ∈ {0, 1} only (ADR-0010): BF is the immobile endpoint (η = 0), ALPHA,
+# BETA, GAMMA, DELTA and the reference continuation use fully mobile
+# allocation (η = 1). The former interpolated η = 0.5 and its allocation wedge
+# are retired.
+#
+# ADR-0018 measurement (kept from v4): every cell is polished to ~1e-10
+# (ADR-0015), and the reported metrics separate national-accounts real GDP
+# (income side, deflated) from the household-consumption (welfare) index --
+# the legacy real_gdp column of v1-v3 was the welfare index. The design cells
+# and all parameters are identical to matrix_5x3_v4; only the external-account
+# closure changed (ADR-0019).
+
+schema_version = 1
+design = "matrix_5x3_v6"
+description = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration under ADR-0014/ADR-0015/ADR-0018/ADR-0019/ADR-0020 (real-wage elastic supply; verified scale-determinacy guard; monotone polish; income-side real GDP vs welfare measurement; all-N clearing with the explicit external account F and F3 programme financing B_gov; eta = 0 solved as the sectoral-wage endpoint so that the identity closes in every regime). Supersedes the v5 generation for citation, whose runs stay as history."
+smoke = false
+
+[data]
+vintage = "full-71-abill"
+drops = []
+calibration_root = "src"
+source_table = "data/I-O_DE2019_formatiert.csv"
+calibration_artifacts = []
+
+[calibration]
+# Informational (ADR-0012 anchors; not read by run.jl). The reference
+# continuation bisects exo_scale for the smallest scale with s >= 0 and ends at
+# exo_scale = 1, where the full-71 A-bill calibration gives s = 0.1199,
+# intermediate imports = 0.2214, household demand c0 = 0.6917 of GDP. The
+# external-account identity S + T_int + M − (I+X) = F + B_gov closes to
+# machine precision at η = 1 (ADR-0019) once the row-75 product taxes on
+# intermediate use stay booked as the third leak of the purchaser-price
+# intermediate bill (T_int = 0.0257449 of GDP, ADR-0013); before that term the
+# identity was short by exactly it.
+saving_rate = 0.1199
+intermediate_imports = 0.2214
+intermediate_taxes = 0.0257449423974625
+baseline_root_tol = 1e-12
+
+[programme]
+source = "cbase2/data_raw/impulses.csv"
+year = 2024
+column_slice = [3, 73]   # 1-based inclusive (sectors 1..71)
+total_eur_m = 40300.0
+f1_shift = "tilt_g0_over_c0"
+
+[reference]
+labor = "ALPHA"
+eta = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+exo_scale_steps = 6
+thetas = [2.0, 1.5, 1.2, 1.0, 0.8, 0.65, 0.5]
+
+# ADR-0020: the eta = 0 sectoral system is stiffer (Jacobian condition ~9.4e7
+# against ~52.8 mobile), so its polish target is 1e-13 and the acceptance gate
+# stays the actual residual (< residual_tol); the identity gate is
+# assert_external_account (gap_tol 1e-9), measured worst |gap| = 1.04e-11 at
+# BF-F1 and <= 2e-13 at BF-F2/F3.
+[gates]
+residual_tol = 1e-6
+budget_tol = 1e-9
+labour_tol = 1e-6
+wage_tol = 1e-8
+
+[cells.matrix_5x3-v6-BF-F1]
+labor = "BF"
+financing = "F1"
+eta = 0.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "BF sectoral-wage endpoint (eta=0, ADR-0020 option C: frozen allocation, per-sector wages) with compositional F1 shift"
+
+[cells.matrix_5x3-v6-BF-F2]
+labor = "BF"
+financing = "F2"
+eta = 0.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "BF sectoral-wage endpoint (eta=0, ADR-0020 option C), tax-financed programme"
+
+[cells.matrix_5x3-v6-BF-F3]
+labor = "BF"
+financing = "F3"
+eta = 0.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "BF sectoral-wage endpoint (eta=0, ADR-0020 option C), externally financed programme"
+
+[cells.matrix_5x3-v6-ALPHA-F1]
+labor = "ALPHA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Full-employment mobile labour (eta=1) with compositional F1 shift"
+
+[cells.matrix_5x3-v6-ALPHA-F2]
+labor = "ALPHA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Full-employment mobile labour (eta=1), tax-financed programme"
+
+[cells.matrix_5x3-v6-ALPHA-F3]
+labor = "ALPHA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Full-employment mobile labour (eta=1), externally financed programme"
+
+[cells.matrix_5x3-v6-BETA-F1]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Elastic labour supply (eta_s=0.5), fully mobile allocation, compositional F1 shift"
+
+[cells.matrix_5x3-v6-BETA-F2]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Elastic labour supply (eta_s=0.5), fully mobile allocation, tax-financed programme"
+
+[cells.matrix_5x3-v6-BETA-F3]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Elastic labour supply (eta_s=0.5), fully mobile allocation, externally financed programme"
+
+[cells.matrix_5x3-v6-GAMMA-F1]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Fixed real wage with fully mobile allocation (eta=1), compositional F1 shift"
+
+[cells.matrix_5x3-v6-GAMMA-F2]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Fixed real wage with fully mobile allocation (eta=1), tax-financed programme"
+
+[cells.matrix_5x3-v6-GAMMA-F3]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+note = "Fixed real wage with fully mobile allocation (eta=1), externally financed programme"
+
+[cells.matrix_5x3-v6-DELTA-F1]
+labor = "DELTA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 1e-4
+epsilon = 1e-4
+sigma = 1e-4
+delta_epsilon = 1e-4
+note = "DELTA corner (Leontief limit at eps=1e-4, eta=1). F1: the ADR-0017 actual-matrix guard admits the full-71 calibration (the v1 heuristic rejection is superseded)."
+
+[cells.matrix_5x3-v6-DELTA-F2]
+labor = "DELTA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 1e-4
+epsilon = 1e-4
+sigma = 1e-4
+delta_epsilon = 1e-4
+note = "DELTA corner (Leontief limit at eps=1e-4, eta=1), tax-financed programme"
+
+[cells.matrix_5x3-v6-DELTA-F3]
+labor = "DELTA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 1e-4
+epsilon = 1e-4
+sigma = 1e-4
+delta_epsilon = 1e-4
+note = "DELTA corner (Leontief limit at eps=1e-4, eta=1), externally financed programme"

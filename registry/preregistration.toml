@@ -85,6 +85,23 @@ actor = "hermes-agent"
     eta = 1.0
     programme_year = 2024
 
+[designs.matrix_5x3_v6]
+git_commit = "6db1da59fa5582a31c249714d59ca3ba27e8937f"
+note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration under ADR-0014/ADR-0015/ADR-0018/ADR-0019/ADR-0020 (real-wage elastic supply; verified scale-determinacy guard; monotone polish; income-side real GDP vs welfare measurement; all-N clearing with the explicit external account F and F3 programme financing B_gov; eta = 0 solved as the sectoral-wage endpoint so that the identity closes in every regime). Supersedes the v5 generation for citation, whose runs stay as history."
+registered_at = "2026-09-18T21:56:55"
+design_sha256 = "a815c062e57814309e3bca39c05ea8ef04b28b8bf25eff4e19558f9bf7bb6f07"
+actor = "hermes-agent"
+
+    [designs.matrix_5x3_v6.pinned]
+    sigma = 0.9
+    theta = 0.5
+    f1_shift = "tilt_g0_over_c0"
+    epsilon = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    eta = 1.0
+    programme_year = 2024
+
 [designs.matrix_5x3_v5]
 git_commit = "0f37d9f5deeb000c8c3081234020502a8b5eda6a"
 note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration under ADR-0014/ADR-0015/ADR-0018/ADR-0019 (real-wage elastic supply; verified scale-determinacy guard; monotone polish to 1e-10; income-side real GDP vs welfare measurement; all-N clearing with the explicit external account F and F3 programme financing B_gov). Supersedes the v4 generation for citation, whose runs stay as history."

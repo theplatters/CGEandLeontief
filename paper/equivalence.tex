@@ -635,6 +635,17 @@ $\eta_{s,i} = 0$ from the $\eta = 0$ solution reproduces $(p, y, w, F)$ exactly
 from a cold start --- as Proposition~\ref{prop:nest} requires. No separate
 rigid sectoral cell is therefore reported: the corner \emph{is} the BF row of
 Table~\ref{tab:v6}.
+
+\emph{The proof never uses $A = 1$.} Nothing in the four row blocks of the
+proposition's proof refers to the technology shock, so the nesting is not a
+demand-only property. Verified directly: under a $+20\%$ productivity shock in
+sector 1 the canary again reads $0.00 \times 10^0$ in all four blocks
+(\texttt{probe15\_sectoral\_supply.jl}). The same probe shows why $\eta_{s,i}$
+matters outside the demand-only slice: the rungs separate under the shock
+(employment $1.000000$, $1.002187$, $1.008218$ and the real-wage spread
+$1.215$, $1.105$, $1.043$ at $\eta_s = 0, 0.5, 2$), so the sectoral elasticity
+is identifiable only with a supply-side scenario, while under a demand-only
+programme it is a sensitivity parameter.
 }
 
 \section{What actually differs across the rows}\label{sec:gauge}

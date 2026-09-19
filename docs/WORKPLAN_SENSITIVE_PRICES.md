@@ -7,6 +7,8 @@ tags: [workplan, labour-closure, sectoral-wages, prices, adr-annexe, handoff]
 last-updated: September 2026
 ---
 
+**Version 7** \textcolor{revisionV6}{(September 2026)}
+**Version 6** \textcolor{revisionV5}{(September 2026)}
 **Version 5** \textcolor{revisionV4}{(September 2026)}
 **Version 4** \textcolor{revisionV3}{(September 2026)}
 **Version 3** \textcolor{revisionV2}{(September 2026)}
@@ -22,6 +24,22 @@ records that Step 1 has now been run (probe 12) and that its result replaced the
 restricted sticky-set specification with the general sectoral-labour-market
 closure. The general closure is now the specification; the restricted variant is
 kept below as a measured dead end.}
+\textcolor{revisionV5}{Version 6 records the executed state. The closure is no
+longer a specification: it is implemented, promoted, tested and executed as the
+\texttt{matrix\_5x3\_v9} generation --- thirty-three cells (the fifteen matrix
+cells plus eighteen sectoral cells), all gates pass --- its rigid corner is
+\emph{proved} to be the executed \texttt{BF} endpoint (Proposition 3 of
+\texttt{paper/equivalence.tex} v3, Section 5), and the framing consequences are
+pinned in \texttt{paper/framing\_gamma.tex}. What remains is no longer
+implementation but choice and measurement: the level of $\eta_s$, the grouping
+rule, and the interaction with the supply arm. This version adds the executed
+numbers, the promotion's plumbing record and the revised decision points.}
+\textcolor{revisionV6}{Version 7 adds the second key outcome: the \textbf{GAMMA
+menu}, seven fixed-wage variants measured side by side on the same calibration
+(\texttt{probe17}, \texttt{probe18}, \texttt{probe19} and the executed
+\texttt{matrix\_5x3\_v9} cells), each classified by the one property the
+revision turns on --- whether prices see the demand composition. The compact
+cross-document overview is \texttt{docs/CONCISE\_SUMMARY.md}.}
 
 # The goal, and what it excludes
 
@@ -169,6 +187,167 @@ is reported. The slots cover the general closure.
 
 \textcolor{revisionV4}{Three readings, all of which bear on the design choice. (i) \texttt{S4} is the only slot whose price movement is exogenous --- identical to five digits across the financing columns --- so the Door-1/Door-3 distinction is visible in the numbers, not only in the derivation. (ii) The uniform-$\eta_s$ slot \texttt{S2} needs \textbf{no sectoral heterogeneity assumption}: one elasticity for every sector, the same parameter count as BETA, and it already moves prices with demand. The heterogeneity that produces the variety sits in the quantities (N separate labour markets), not in the preferences. The two-group \texttt{S3} is therefore an optional refinement rather than the headline. (iii) The capacity door's reduced form \texttt{S5} reaches the \texttt{S2} magnitude with a single parameter, no wage dispersion and no employment movement at all, and with $\delta < 0$ it reverses the ordering of the financing columns (the Kaldor--Verdoorn sign) --- so it is a genuine alternative route to the same goal, not merely a robustness arm.}
 
+## The executed generation \textcolor{revisionV5}{\normalsize [added v6]}
+
+\textcolor{revisionV5}{The slots above were measured by probe; they are now
+executed. \texttt{matrix\_5x3\_v9} runs all five labour ids plus the sectoral
+cells in one batch (33 cells, 15 matrix + 18 sectoral, all gates pass; a
+\texttt{src/} change supersedes provenance, so the fifteen matrix cells re-run
+alongside and reproduce the \texttt{v6} values bit-for-bit --- every headline
+metric and diagnostic at $\max|\Delta| = 0$). The price table of the
+measurement section therefore stands unchanged and the equivalences of
+\texttt{paper/equivalence.tex} are invariant to the extension.}
+
+| Executed cell | `max abs(p-1)` F1 / F2 / F3 | employment (F2) | consumption (F2) | deflator (F2) | wage max/min |
+| --- | --- | ---: | ---: | ---: | ---: |
+| uniform $\eta_s = 0.25$ | 0.133610 / 0.152897 / 0.152897 | 1.000864 | -0.016888 | 1.004096 | 1.38 |
+| uniform $\eta_s = 0.5$ | 0.095839 / 0.105666 / 0.105666 | 1.001255 | -0.015712 | 1.002872 | 1.26 |
+| uniform $\eta_s = 1$ | 0.061283 / 0.065422 / 0.065422 | 1.001627 | -0.014669 | 1.001802 | 1.16 |
+| uniform $\eta_s = 2$ | 0.035629 / 0.037171 / 0.037171 | 1.001914 | -0.013912 | 1.001033 | 1.09 |
+| rigid programme sectors, $\eta_s = 0.5$ | 0.215061 / 0.272033 / 0.272033 | 0.996621 | -0.026914 | 1.006206 | 1.70 |
+| rigid largest half, $\eta_s = 0.5$ | 0.109583 / 0.123362 / 0.123362 | 1.000196 | -0.019053 | 1.006294 | 1.28 |
+| BF ($\eta = 0$ endpoint) | 0.221442 / 0.279009 / 0.279009 | 1.000000 | -0.019800 | 1.007181 | 1.72 |
+| GAMMA (fixed wage) | 0.000000 / 0.000000 / 0.000000 | 1.001260 | -0.015333 | 1.000000 | 1.00 |
+
+\textcolor{revisionV5}{Four readings. (i) The goal is met in the executed
+matrix: prices move with the demand \emph{composition} in every sectoral cell
+(F1 distinct from F2 = F3 at every rung), which no single-wage closure achieves.
+(ii) The elasticity splits the adjustment: as $\eta_s$ rises the price response
+falls (0.1529 to 0.0372 at F2) while employment rises (1.000864 to 1.001914) and
+the welfare cost falls (-1.69\% to -1.39\%). (iii) \textbf{Incidence dominates
+the level}: making the programme sectors rigid more than doubles the price
+response (0.2720 against 0.1057) and \emph{reverses} the employment effect
+(-0.34\% against +0.13\%); rigidity on the largest half instead gives 0.1234 with
+a near-neutral +0.02\%. (iv) \textbf{Wage dispersion is large}:
+$\max_i w_i/\min_i w_i$ reads 1.26 at $\eta_s = 0.5$ and 1.70 in the
+rigid-programme variant, against 1.72 at the $\eta = 0$ endpoint --- for a
+programme worth 1.33\% of GDP. The F1 column is the exception on welfare: its
+index is positive (+0.42\% at $\eta_s = 0.5$), because its programme is financed
+by a preference tilt rather than a tax.}
+
+## What the two new probes settle \textcolor{revisionV5}{\normalsize [added v6]}
+
+\textcolor{revisionV5}{The "what is needed" list of
+\texttt{paper/framing\_gamma.tex} has five items. Two are now measured, one is
+resolved by a structural limitation, and two remain polish.}
+
+\textcolor{revisionV5}{\textbf{(1) The level of $\eta_s$: identified only by the
+supply arm, now demonstrated.} \texttt{probe15\_sectoral\_supply.jl} runs the
+sectoral closure under a $+20\%$ productivity shock in sector 1. The rungs
+separate: employment $1.000000$ / $1.002187$ / $1.008218$ and the real-wage
+spread $1.215$ / $1.105$ / $1.043$ at $\eta_s = 0$ / $0.5$ / $2$, against a
+$0.02\%$ employment movement over the same ladder under the demand-only
+programme. So $\eta_s$ is identifiable with a supply-side scenario and the
+executed demand-only ladder is a sensitivity band --- what the framing note
+claimed, now measured. The nesting canary holds \textbf{bit-exactly under the
+shock} ($\max|\Delta| = 0$ in all four blocks at $A[1] = 1.2$), which confirms
+that Proposition 3 never uses $A = 1$; the point is recorded in
+\texttt{paper/equivalence.tex} v3, Section 5.}
+
+\textcolor{revisionV5}{\textbf{(3) The interaction with the supply arm:
+measured, and the two channels do not add linearly.} The shock roughly doubles
+the price response ($\max|p-1|$ $0.1057 \to 0.2284$ at $\eta_s = 0.5$ with the
+programme) and flips the sign of the welfare effect (supply-only $+1.20\%$,
+supply $+$ programme $-0.40\%$, demand-only $-1.57\%$). One precision must
+travel with any supply-arm table: under a supply shock $\max|p-1|$ is \textbf{not}
+a demand-sensitivity measure --- the technology shock alone moves prices by
+$0.226$ with no programme at all --- so the demand channel must be read from the
+F1/F2/F3 differences, as in the demand-only cells. The mechanism stays
+first-order, but it is not the dominant price force once technology moves.}
+
+\textcolor{revisionV5}{\textbf{(2) The grouping rule: the band is measured, and
+\emph{which} sectors are rigid dominates \emph{how many}.}
+\texttt{probe16\_rigidity\_share.jl} sweeps the rigid share $s$ in
+$\{0, 0.25, 0.5, 0.75, 1\}$ under two rankings, and compares three rankings at
+$s = 0.5$. With the programme ranking the price response saturates immediately
+($0.2731$ at $s = 0.25$ against $0.2790$ at $s = 1$, because the seven programme
+sectors are already inside the rigid group); with the employment ranking it
+crawls ($0.1057$ to $0.1262$) and only jumps when the whole economy is rigid. At
+$s = 0.5$: $0.2734$ (programme), $0.1234$ (largest employers), $0.1068$ (least
+exposed), against $0.1057$ uniform. Employment is non-monotone under the
+programme ranking ($1.001255$ / $0.996911$ / $0.997300$ / $0.999370$ /
+$1.000000$), so its sign is rule-dependent. The reportable band is price
+response $[0.0969, 0.2790]$, employment $[-0.31\%, +0.16\%]$, consumption
+$[-2.63\%, -1.50\%]$. Both rankings coincide at $s = 1$ ($0.279009$ = the
+executed \texttt{BF} value), a consistency check on the sweep.
+\textbf{Conclusion: report the band, not a point, and state the rule.}}
+
+\textcolor{revisionV5}{\textbf{(4) The welfare metric: the dispersion-aware
+statement is not available in this kernel.} The T\"ornqvist index on household
+consumption is dispersion-blind, and the model cannot supply the missing part:
+the labour supply has no leisure term and no income effect (DE-0004), so there
+is no apparatus in which the employment and relative-wage movement could be
+valued. The honest form is therefore the restrictive one --- report the
+consumption effect and present employment and wage dispersion as \emph{allocation}
+facts, not welfare claims. That is a structural limitation of the closure rather
+than a metric choice, and it belongs in the manuscript's caveats.}
+
+\textcolor{revisionV5}{\textbf{(5) Polish, still open.} A finer ladder
+($\eta_s \in \{0.1, 5\}$) to fill the tails, and a sign-robustness probe for the
+rigid-group employment effect under a different shock vector (a broader
+programme, or a uniform shock). Neither would change a conclusion; both would
+tighten the band.}
+
+## The GAMMA menu, measured \textcolor{revisionV6}{\normalsize [added v7]}
+
+\textcolor{revisionV6}{The labour door is one route to demand-sensitive prices.
+The fixed-wage closure offers a second, and the revision's framing turns on which
+one it uses. Seven GAMMA variants are now measured on the full-71 calibration.
+The discriminator is the same as everywhere in this file: \textbf{``sees
+demand''} means $\max|p-1|$ differs across the financing columns F1/F2/F3;
+identical movement in every column is exogenous heterogeneity.}
+
+| Variant | Financing | `max abs(p-1)` | Deflator | Employment | Consumption | Sees demand |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| \textcolor{revisionV6}{1. baseline ($w \equiv 1$)} | F1 | 0.000000 | 1.000000 | 0.999027 | -0.081% | no |
+| | F2 | 0.000000 | 1.000000 | 1.001260 | -1.533% | no |
+| | F3 | 0.000000 | 1.000000 | 1.017796 | +2.264% | no |
+| \textcolor{revisionV6}{2. DELTA ($\equiv$ baseline)} | all | 0.000000 | 1.000000 | = baseline | = baseline | no |
+| \textcolor{revisionV6}{3. pinned wage structure (+10% tilt)} | all | 0.057820 | --- | 1.006865 | --- | no |
+| \textcolor{revisionV6}{4. capacity channel $\delta = +0.5$} | F1 | 0.098457 | 1.003027 | 1.004167 | +0.459% | yes |
+| | F2 | 0.110761 | 1.005379 | 1.008489 | -1.082% | yes |
+| | F3 | 0.128463 | 1.021461 | 1.038814 | +2.199% | yes |
+| \textcolor{revisionV6}{5. Kaldor--Verdoorn $\delta = -0.5$} | F1 | 0.123462 | 1.003454 | 0.997837 | -1.211% | yes |
+| | F2 | 0.115629 | 1.001283 | 0.998527 | -2.464% | yes |
+| | F3 | 0.128014 | 0.985336 | 1.003370 | +2.266% | yes |
+| \textcolor{revisionV6}{6. BF allocation rule ($\eta = 0$)} | F1 | 0.000000 | 1.000000 | 1.000000 | +0.043% | no |
+| | F2 | 0.000000 | 1.000000 | 1.000000 | -1.694% | no |
+| | F3 | 0.000000 | 1.000000 | 1.000000 | +0.000% | no |
+| \textcolor{revisionV6}{7. dual labour market (insiders rigid)} | F1 | 0.024701 | 1.000438 | 0.989569 | -1.338% | yes |
+| | F2 | 0.027768 | 1.000492 | 0.991179 | -2.881% | yes |
+| | F3 | 0.030189 | 1.000648 | 1.005996 | +0.689% | yes |
+
+\textcolor{revisionV6}{Sources: variants 1 and 2 are the executed
+\texttt{matrix\_5x3-v9-GAMMA-*} cells; 3 is \texttt{probe14} (the pinned
+vector, measured on the 2N fixed-wage system); 4 and 5 are
+\texttt{probe17\_gamma\_capacity.jl} (the utilization externality inside the
+fixed-wage closure, solved by the fixed-point iteration the reduced form
+implies, canary $\delta = 0$ reproducing the executed cells exactly); 6 is
+\texttt{probe18\_gamma\_bf\_eta.jl} (the BF allocation elasticity at its rigid
+value, i.e. the fixed wage plus the frozen allocation); 7 is
+\texttt{probe19\_gamma\_dual\_labour.jl} (the pressured sectors' employment
+frozen, the rest adjusting; canary: the empty insider mask reproduces the
+executed GAMMA-F2 cell exactly).}
+
+\textcolor{revisionV6}{Four readings. (i) \textbf{Two variants are
+demand-sensitive and two different things are being measured.} The capacity
+channel moves prices with the demand composition through the \emph{cost}, and
+the dual labour market through \emph{rationing}: insider prices move $0.0278$
+against $0.0015$ in the outsider sectors at F2 --- a $19\times$ dualism
+signature with identical wages in both segments. (ii) \textbf{The dual labour
+market is the only fixed-wage variant where the programme destroys employment}
+(total employment $-1.04\%$ / $-0.88\%$ / $+0.60\%$ across F1/F2/F3), because
+the bottleneck is transmitted economy-wide through intermediate costs; the
+price-based rigidity is milder ($-0.34\%$ at F2), since a vertical supply curve
+still lets the wage absorb. (iii) \textbf{The BF allocation rule is the
+double-rigidity corner}: employment is a datum, prices are pinned, and under F3
+household consumption is literally unchanged ($+0.000\%$). (iv) \textbf{The
+capacity channel's sign is the economics}: $\delta > 0$ is capacity pressure
+(F3 deflator $1.0215$) and $\delta < 0$ the Kaldor--Verdoorn case (F3 deflator
+$0.9853$, prices falling with demand) --- a $3.6$ percentage-point deflator
+range from one parameter's sign. The full discussion is
+\texttt{paper/framing\_gamma.tex} Section 5.}
+
 ## Controls, not scenarios
 
 These belong in the test suite as much as in the design, and they are the
@@ -313,6 +492,12 @@ lift it. Four consequences for this workplan, none of which changes its priority
   same batch rather than mixed with it.
 - **Step 6, records.** Flow table from the new manifests, the assessment block on
   demand-sensitive prices, the registry and log entries, the board, the gate.
+  \textcolor{revisionV5}{Status (v6): the flow table is generated from the
+  \texttt{matrix\_5x3\_v9} manifests (\texttt{paper/tables/matrix\_5x3\_v9\_flows.md}),
+  the registry rows and manifests are in place, the board is regenerated at zero
+  warnings and \texttt{scripts/check\_repo.jl} reports zero violations. Still
+  open: the assessment block in \texttt{docs/DOCS\_ASSESSMENT.md} and the
+  manuscript pass (the paper text still cites v3/v4 numbers).}
 
 # Decision points for the operator
 
@@ -330,6 +515,17 @@ lift it. Four consequences for this workplan, none of which changes its priority
   single-parameter route with no labour-market heterogeneity at all, the
   capacity door's reduced form (\texttt{S5}) reaches the same price magnitude with one
   parameter $\delta$ and no wage dispersion.}
+  \textcolor{revisionV5}{Measured consequence, and the revised open item: the
+  grouping rule is now known to be the single most consequential choice, because
+  it \emph{flips the sign} of the employment effect (rigid programme sectors:
+  $-0.34\%$; rigid largest half: $+0.02\%$; uniform: $+0.13\%$), while the
+  elasticity level only scales the magnitude. Either a principled rule is found
+  (sectoral supply elasticities, hiring frictions, an institutional criterion) or
+  the range across rules is reported as a band and the sign is presented as
+  rule-dependent. The second open item is the \emph{level} of $\eta_s$: under
+  demand-only shocks it is unidentified, so the executed ladder is a sensitivity
+  band, not an estimate --- closing it needs the supply arm (the supply-shock
+  scenario identifies $\eta_s$ from the wage--employment response).}
 - **The flexible segment's supply elasticity.** `eta_s = 0` makes the family
   nest `S1` at one end; larger values trace the ladder. \textcolor{revisionV3}{The
   calibration choice determines how far the family departs from the executed
@@ -363,6 +559,20 @@ lift it. Four consequences for this workplan, none of which changes its priority
   restricted variant's measured failure is itself the demonstration that the
   distinction between the two doors is substantive, and it should be cited when
   the four closures are compared.}
+- \textcolor{revisionV5}{\textbf{The promotion plumbing, measured twice.} The
+  batch was opened three times. \texttt{matrix\_5x3\_v7} failed because the new
+  closure had no diagnostics method: the eighteen sectoral cells solved and then
+  died at \emph{gate evaluation}. \texttt{matrix\_5x3\_v8} failed because the
+  ADR-0019 acceptance gate (and the reported \texttt{wage} metric) collapsed the
+  sectoral wage vector to a scalar, so the goods-market clearing check was
+  evaluated at a wrong common wage. Both defects were caught by existing gates
+  rather than by inspection, and both generations are retained with their causes
+  annotated in the registry. The lesson is procedural: a closure change must be
+  audited at every consumer of the old closure's shape (grep for
+  \texttt{wages\_raw[1]} and for the $\eta = 0$-versus-else branches), and the
+  corrected batch should be opened only after a \emph{full-path} pre-flight
+  (\texttt{build\_cell\_model} $\to$ \texttt{solve\_cell} $\to$
+  \texttt{evaluate\_gates}) over one cell of every type.}
 
 # Evidence base
 
@@ -380,7 +590,20 @@ promotion's verification pattern); `runs/matrix_5x3-v6-*` (the price table
 above, and the `S1` cells the general closure nests onto);
 `docs/VariationinGamma.md` (the four doors and the claim-by-claim
 provenance); ADR-0020 and ADR-0021; the `eta_s` identifiability item in
-`docs/DOCS_ASSESSMENT.md`.
+`docs/DOCS_ASSESSMENT.md`; \textcolor{revisionV5}{\texttt{runs/matrix\_5x3-v9-\*} (the
+executed generation behind the table above, and the flow table
+\texttt{paper/tables/matrix\_5x3\_v9\_flows.md});
+\texttt{paper/equivalence.tex} v3 Section 5 (Proposition 3 and its proof) and
+\texttt{paper/framing\_gamma.tex} (the framing note);
+\texttt{tests/test\_sectoral\_labour.jl} (the canary, the sensitivity assertion
+and the scalar contrast); the \texttt{matrix\_5x3\_v7} /
+\texttt{matrix\_5x3\_v8} manifests as the record of the two aborted attempts;
+\texttt{probe15\_sectoral\_supply.jl} (the supply arm: identification, the
+interaction, the nesting under a shock), \texttt{probe16\_rigidity\_share.jl}
+(the grouping-rule band), \texttt{probe17\_gamma\_capacity.jl},
+\texttt{probe18\_gamma\_bf\_eta.jl} and \texttt{probe19\_gamma\_dual\_labour.jl}
+(the GAMMA menu), and \texttt{docs/CONCISE\_SUMMARY.md} (the cross-document
+overview).}
 
 # Revision Log
 
@@ -389,3 +612,5 @@ provenance); ADR-0020 and ADR-0021; the `eta_s` identifiability item in
 - **Version 3** \textcolor{revisionV2}{(September 2026)} --- Added the scenario section (section 4, with its three subsections), which the operator flagged as missing: six slots (`S0` the re-run baseline, `S1` the already-executed `eta = 0` row, `S2` the uniform elasticity ladder, `S3` the two-group rigidity share, `S4` the pinned-vector complement, `S5` the optional Verdoorn companion), three controls that act as implementation canaries (the nesting check at `eta_s,i = 0`, the F2/F3 neutrality control, the level control), an explicit statement of what the general formulation captures that the restricted one does not, and a single reporting unit (a pass-through per percentage point of programme spending) so that the slots read as a curve rather than a table of vectors. The specification bullet of the reconciliation section gained the employment-behaviour difference between the two variants.
 - **Version 4** \textcolor{revisionV3}{(September 2026)} --- Step 1 executed (`probe12_segmented_wages.jl`) and the restricted sticky-set specification **refuted**: with a single free wage, zero profit plus the CPI numeraire already determine the prices and that wage, so the flexible labour-market condition never reaches the wage (positions: S = empty nests ALPHA/BETA and S = all nests GAMMA bit-exactly; the account closes to 1e-16; employment responds; but `w_f = 1`, `max abs(p-1)` ~ 1e-14 in every financing cell, and a +10\% tilted pin moves prices 5.5e-2 identically across F1/F2/F3). The title, the specification section and the reconciliation now state the **general sectoral-labour-market closure** (N supply conditions, `eta_s` vector), whose all-rigid corner is the executed `BF` (v6) row, and Step 1 gains `probe13_sectoral_labour.jl` as its successor. Decision points updated (the elasticity-vector rule replaces the sticky-set rule; the closure-role question replaces the GAMMA-role question), the level control is sharpened (Corollary 1 holds on the single-wage slice, not in general), and the evidence base and risks record probe 12.
 - **Version 5** \textcolor{revisionV4}{(September 2026)} --- Added the measured comparison of the five scenario slots (`S1`..`S5`) from `experiments/probes/probe14_s1_s5_comparison.jl`: `S4` (the pinned vector) is the only slot whose price movement is exogenous (identical across F1/F2/F3), while `S1`, `S2`, `S3` and `S5` are demand-sensitive; the uniform-`eta_s` slot reaches the goal with a single elasticity and no sectoral-heterogeneity assumption, and the capacity door's reduced form reaches the same magnitude with one parameter and no wage or employment movement. The decision points record the resulting default (uniform `eta_s` as the headline, the two-group as robustness).
+- **Version 6** \textcolor{revisionV5}{(September 2026)} --- Records the executed state and the closing of the implementation steps. Step 5 delivered as `matrix_5x3_v9` (33 cells, all gates pass): the per-cell `eta_s_rigid_group` schema, the preregistration, and the executed ladder and rigid-group variants, with the fifteen matrix cells reproducing v6 bit-for-bit. Two aborted generations (`v7`, `v8`) are recorded with their plumbing defects. The nesting check gains a proof (Proposition 3 of `paper/equivalence.tex` v3: the rigid corner is the `eta = 0` endpoint, in the same equations rather than asymptotically), the executed numbers replace the probe measurements in the comparison section, and the decision points are revised: the grouping rule is now the top open item because it flips the sign of the employment effect, and the level of `eta_s` requires the supply arm. The framing consequences are pinned separately in `paper/framing_gamma.tex`.
+- **Version 7** \textcolor{revisionV6}{(September 2026)} --- Adds the GAMMA menu as the second key outcome: seven fixed-wage variants measured side by side (baseline, DELTA, the pinned wage structure, the capacity channel at both signs, the BF allocation rule, and the dual labour market), each classified by whether prices see the demand composition. Two are demand-sensitive (the capacity channel through cost, the dual labour market through rationing), the dual variant is the only one where the programme reduces employment, and the BF rule is the double-rigidity corner. Evidence base extended with probes 15-19 and the cross-document overview `docs/CONCISE_SUMMARY.md`.

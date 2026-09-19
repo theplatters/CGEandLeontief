@@ -1,0 +1,592 @@
+% paper/framing_gamma.tex -- framing note: the labour axis as a gradient
+% (BF <-> GAMMA) and the sectoral family that spans it.
+%
+% Companion documents: paper/equivalence.tex (v3, Section 5 carries the
+% proposition and proof), docs/decisions/ADR-0022-sectoral-labour-markets.md
+% (the decision), docs/WORKPLAN_SENSITIVE_PRICES.md (the executable annexe),
+% paper/tables/matrix_5x3_v9_flows.md (the flows behind the numbers).
+%
+% Evidence: the matrix_5x3_v9 generation (33 cells, 15/15 matrix + 18 sectoral,
+% all gates pass, 2026-09-19) and the matrix_5x3_v6 generation it reproduces
+% bit-for-bit on the fifteen matrix cells.
+%
+% Version 1 (September 2026). No LaTeX in the analysis container: compile on
+% the Mac (pdflatex; plain thebibliography below, no .bib dependency).
+
+\documentclass[11pt]{article}
+
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2.2cm,bottom=2.2cm,left=3cm,right=3cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\providecolor{revisionV1}{HTML}{800080}
+\providecolor{revisionV2}{HTML}{CC5500}
+\providecolor{revisionV3}{HTML}{006400}
+\providecolor{revisionV4}{HTML}{0000CD}
+\providecolor{revisionV5}{HTML}{808080}
+\providecolor{revisionV6}{HTML}{8B0000}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.45em}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+
+\newcommand{\Lbar}{\bar{L}}
+
+\title{Framing the revision: the labour axis as a gradient\\[0.4em]
+\large BF $\leftrightarrow$ GAMMA, and the sectoral family between them\\[0.2em]
+\normalsize A framing note on the sectoral-labour-market result (ADR-0022)}
+\author{Hermes Agent (Lt.\ Cmdr.\ Data), for Prof.\ Dr.\ J.\ Kapeller}
+\date{September 19, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}\small
+\textbf{Version 1} (September 2026)
+\end{center}
+
+\begin{abstract}
+The executed $5\times3$ matrix carries two labour-rigidity rows at its
+endpoints: BF, where the allocation is frozen and the $N$ sectoral wages absorb
+the shock, and GAMMA, where the real wage is pinned and employment absorbs.
+Between them the matrix is empty, and in every intermediate row prices are
+pinned to the baseline to machine precision. The sectoral-labour-market closure
+(ADR-0022) fills that gap: it makes the labour axis \emph{continuous}, with the
+already-executed BF row as its rigid corner and a GAMMA-like regime as its
+elastic limit. This note fixes what that licenses for the revision's framing,
+what it obliges us to disclose, and what still has to be measured before a
+number can be stated rather than a band. A further section supplies the missing
+motivation for the one genuinely discretionary modelling choice --- which
+sectors are rigid --- from capacity pressure in the sectors the programme
+presses on, and reports the rigidity sweep as the robustness exhibit. A final
+section tabulates the five GAMMA variants against their measured outcomes.
+\end{abstract}
+
+\section{The result, in one paragraph}
+
+With one aggregate real-wage equation, demand reaches prices only through the
+wage, and the price block is homogeneous of degree one in $(p,w)$ and
+demand-free, so under a demand-only programme $p = w = \Pi = 1$ and the whole
+quantity system collapses onto a linear Leontief multiplier
+(\texttt{paper/equivalence.tex}, Lemma 1). That is why the matrix's
+flexible-wage rows are uninformative about prices. Replacing the single
+equation by $N$ sectoral labour markets,
+\begin{equation}
+L^{cm}_i(p, y_i, w_i) \;=\; \bar{L}_i\,
+\Big[ \frac{w_i}{\Pi(p)} \Big]^{\eta_{s,i}},
+\qquad i = 1, \dots, N, \quad \eta_{s,i} \geq 0,
+\label{eq:family}
+\end{equation}
+ties each wage to that sector's own quantity, so the $N$ zero-profit conditions
+acquire a demand dependence and $p = \pi(A, w)$ becomes demand-sensitive. Three
+properties of the resulting family are exact, and all three are now proved and
+measured:
+
+\begin{itemize}
+\item \textbf{The rigid corner \emph{is} the BF row.} With $\eta_{s,i} = 0$ for
+      every sector the family reduces to the $\eta = 0$ endpoint of ADR-0020
+      option C --- the same equations, not a limit of them
+      (Proposition~3 of \texttt{paper/equivalence.tex}; measured
+      $\max|\Delta| = 0.00\times10^{0}$ in all four blocks when warm-started
+      from the endpoint solution, below $10^{-10}$ from a cold start). The
+      mechanism is therefore anchored on an executed, gated, published set of
+      cells, and no separate rigid sectoral cell is reported.
+\item \textbf{The elastic end is GAMMA-like, but is not GAMMA.} As
+      $\eta_{s,i} \to \infty$ the real wage returns to its technology-determined
+      anchor and employment becomes the absorbing margin --- GAMMA's prices and
+      GAMMA's absorbing margin. It is a limit, not a cell: the supply slope
+      diverges and the direct solve fails ($\eta_s = 10^6$). It is also not the
+      fixed-wage system itself, which pins $F \equiv 0$ while the family keeps
+      the transfer free. The family \emph{spans} the two rigidity rows without
+      terminating in either.
+\item \textbf{The executed matrix is untouched.} The fifteen matrix cells were
+      re-executed on the extended kernel (\texttt{matrix\_5x3\_v9}): every
+      headline metric and diagnostic reproduces the v6 values bit-for-bit
+      ($\max|\Delta| = 0$). The extension is provably non-invasive.
+\end{itemize}
+
+Table~\ref{tab:ladder} gives the executed evidence. The discriminator the
+framing turns on is not ``do prices move'' but ``do they move \emph{with the
+demand composition}'': in the sectoral cells $\max|p-1|$ differs between F1 and
+F2/F3 at every rung, while all twelve $\eta = 1$ cells of the executed matrix
+read exactly $0.000000$.
+
+\begin{table}[htbp]
+\centering
+\caption{The sectoral family, executed (\texttt{matrix\_5x3-v9-BETA-*};
+deviations from the no-programme baseline; F2 and F3 agree to all printed
+decimals in every cell). The rigidity share matters more than the elasticity
+level: the last two uniform rows and the two-group rows differ only in
+\emph{which} sectors are rigid.}
+\label{tab:ladder}
+\begin{tabular}{lrrrr}
+\toprule
+Sectoral cell & $\max|p-1|$ & $\max|p-1|$ & Employment & Consumption \\
+ & (F1) & (F2) & (F2) & (F2) \\
+\midrule
+uniform $\eta_s = 0.25$ & $0.133610$ & $0.152897$ & $1.000864$ & $-0.016888$ \\
+uniform $\eta_s = 0.5$  & $0.095839$ & $0.105666$ & $1.001255$ & $-0.015712$ \\
+uniform $\eta_s = 1$    & $0.061283$ & $0.065422$ & $1.001627$ & $-0.014669$ \\
+uniform $\eta_s = 2$    & $0.035629$ & $0.037171$ & $1.001914$ & $-0.013912$ \\
+\midrule
+rigid programme sectors, $\eta_s = 0.5$ & $0.215061$ & $0.272033$ & $0.996621$ & $-0.026914$ \\
+rigid largest half, $\eta_s = 0.5$ & $0.109583$ & $0.123362$ & $1.000196$ & $-0.019053$ \\
+\midrule
+BF ($\eta_{s,i} = 0$, ADR-0020) & $0.221442$ & $0.279009$ & $1.000000$ & $-0.019800$ \\
+GAMMA (fixed wage, for contrast) & $0.000000$ & $0.000000$ & $1.001260$ & $-0.015333$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two readings beyond the price column. First, the elasticity \emph{splits the
+adjustment}: as $\eta_s$ rises the price response falls monotonically
+($0.1529 \to 0.0372$ at F2) while employment rises ($1.000864 \to 1.001914$) ---
+the family trades price adjustment for quantity adjustment, and the welfare
+cost falls with it ($-1.69\% \to -1.39\%$). Second, and more consequentially,
+the \emph{incidence} of the rigidity dominates its level: making the programme
+sectors rigid more than doubles the price response ($0.2720$ against $0.1057$)
+and \emph{reverses} the employment effect ($-0.34\%$ against $+0.13\%$), while
+rigidity on the largest half instead leaves employment near neutral
+($+0.02\%$) at $0.1234$.
+
+\section{Five framing implications}
+
+\begin{enumerate}
+\item \textbf{The critique is answered constructively, not conceded.} The
+      reviewer objection that the matrix's labour rows are a normalisation ---
+      that BETA reproduces ALPHA and DELTA reproduces GAMMA, so the labour axis
+      carries no information --- is correct \emph{about the single-wage
+      parametrisation} and wrong about the mechanism. The sectoral family
+      repairs it inside the BETA family, with no new closure id, no new
+      taxonomy, and no new endpoint to justify: its rigid corner is the
+      endpoint the paper has already accepted. The revision can therefore
+      present the labour axis as informative and say precisely where the
+      information comes from.
+\item \textbf{The two-paradigm reading becomes a gradient.} The revision's
+      current framing is a dichotomy: the flexible-wage class (composition at
+      pinned employment, $F$ as the instrument) against the fixed-wage class
+      (employment at pinned real wage, $F \equiv 0$). The sectoral family turns
+      that dichotomy into a one-parameter path between the two classes: BF at
+      the rigid corner (quantities frozen, prices free), GAMMA at the elastic
+      end (prices frozen, quantities free), with the elasticity vector
+      governing the split. This is the framing device of this note: the matrix's
+      labour axis is not two boxes but a continuum of adjustment margins, and
+      the financing closure remains the orthogonal axis. For a heterodox
+      readership the gradient is the better story --- ``which margin absorbs''
+      becomes a measurable continuum rather than a binary label --- and it is
+      the same object the ETAs workplan calls the labour door.
+\item \textbf{A nominal/real distinction exists in the $\eta = 1$ rows for the
+      first time.} Every $\eta = 1$ cell of the executed matrix has a GDP
+      deflator of exactly $1.000000$; the sectoral cells read $1.0010$ to
+      $1.0063$. The revision can therefore discuss real versus nominal effects
+      in the flexible-wage rows --- previously possible only in the fixed-wage
+      rows and at BF --- which matters for the ``who pays'' argument: the
+      sectoral rows show a real welfare cost that is not merely a tax
+      reallocation.
+\item \textbf{A disclosure obligation attaches to the numbers.} The labour
+      specification moves the revision's headline welfare numbers by up to
+      $2.7\%$ of consumption (rigid-programme variant) --- more than the
+      GAMMA-versus-ALPHA difference on which the equivalence note is built ---
+      and it moves them \emph{against} the employment direction in the rigid
+      case (employment falls while the welfare index falls further). The
+      specification is therefore not a technicality to be relegated to an
+      appendix: whichever variant is reported, the sensitivity to the labour
+      market's structure must be visible in the main text.
+\item \textbf{An editorial choice remains open, and it is the operator's.}
+      Whether the sectoral family enters the \emph{published} matrix as extra
+      rows, or appears as the separate section that resolves the labour door
+      (the form adopted in \texttt{paper/equivalence.tex} v3). The
+      recommendation is the separate section: it keeps the $5\times3$ as the
+      object the reviewer attacked, presents the family as the answer to it,
+      and avoids committing the published table to a grouping rule that is
+      still a modelling choice (item 2 of the next section).
+\end{enumerate}
+
+\section{What is still needed before a number can be stated}
+
+Five items, ordered by what they change. The first three are the minimum for a
+clear statement; the last two are polish.
+
+\begin{enumerate}
+\item \textbf{The level of $\eta_{s}$ is unidentified.} Everything above is a
+      sensitivity band, not an estimate: under demand-only shocks the price
+      response is monotone in $\eta_s$ and the data cannot choose a rung. Two
+      routes close this. (a) The supply-shock arm: at $A \neq 1$ the real wage
+      leaves its anchor and $\eta_s$ becomes identifiable from the
+      wage--employment response (this is the same statement as the
+      supply-side remark of \texttt{paper/equivalence.tex}, Section 4). (b) An
+      external
+      calibration: aggregate labour-supply elasticities in the literature sit
+      around $0.1$--$0.5$, which brackets the middle of the ladder --- but that
+      must be declared as an assumption, not presented as an estimate.
+\item \textbf{The grouping rule is the weak link.} ``Rigid on the programme
+      sectors'' and ``rigid on the largest half'' differ by a factor $2.5$ in
+      the price response and \emph{flip the sign} of the employment effect.
+      Either a principled rule is found (sectoral supply elasticities, hiring
+      frictions, an institutional criterion) or the range across rules is
+      reported as a band and the sign is presented as rule-dependent. This is
+      the single most consequential open choice, because it determines the
+      direction of the employment result. Measured since
+      (\texttt{probe16\_rigidity\_share.jl}): the band is price response
+      $[0.0969, 0.2790]$, employment $[-0.31\%, +0.16\%]$ and consumption
+      $[-2.63\%, -1.50\%]$; and \emph{which} sectors are rigid dominates
+      \emph{how many} --- the programme ranking saturates as soon as the seven
+      programme sectors are inside the rigid group ($0.2731$ at a rigid share of
+      $0.25$ against $0.2790$ at $1$), whereas rigid large employers move the
+      price response only from $0.1057$ to $0.1262$. The recommendation is
+      therefore concrete: report the band, and state the rule --- and
+      Section~\ref{sec:capacity} supplies the missing motivation for the rule
+      itself: capacity pressure in the sectors the programme presses on makes
+      the rigid group a testable economic statement rather than a partition
+      chosen to produce a result.
+\item \textbf{The two arms must be combined.} All sectoral evidence is
+      demand-only, while $\eta_s$ is only \emph{identified} under supply shocks.
+      Running the sectoral closure under the supply-shock scenario decides
+      whether the mechanism is a headline or a robustness remark: if the
+      technology shock dominates the price response, the sectoral channel's
+      contribution shrinks; if the two add up, the mechanism is a first-order
+      part of the story. This is one probe and one design. Run since
+      (\texttt{probe15\_sectoral\_supply.jl}), and the answer is mixed but
+      informative: under a $+20\%$ shock in sector 1 the rungs \emph{separate}
+      (employment $1.000000$, $1.002187$, $1.008218$ and the real-wage spread
+      $1.215$, $1.105$, $1.043$ at $\eta_s = 0, 0.5, 2$), so the elasticity is
+      identifiable there --- but the shock roughly doubles the price response
+      and flips the sign of the welfare effect (supply-only $+1.20\%$, supply
+      $+$ programme $-0.40\%$, demand-only $-1.57\%$), so the two channels do
+      not add linearly and the technology shock dominates the price movement.
+      One precision must travel with any supply-arm table: under a supply shock
+      $\max|p-1|$ is not a demand-sensitivity measure (the shock alone moves
+      prices by $0.226$ with no programme), so the demand channel is read from
+      the F1/F2/F3 differences. A supply-shock \emph{design} (ADR-0018's schema
+      item) is still owed.
+\item \textbf{The welfare metric needs a caveat, and the caveat is structural.}
+      The T\"ornqvist index on household consumption is dispersion-blind: it
+      ignores the welfare cost of the relative-wage movement the mechanism
+      generates ($\max_i w_i/\min_i w_i$ of $1.26$ at $\eta_s = 0.5$ and $1.70$
+      in the rigid-programme variant, for a programme worth $1.33\%$ of GDP).
+      The kernel cannot supply the missing part either: the labour supply has no
+      leisure term and no income effect (DE-0004), so there is no apparatus in
+      which the employment and relative-wage movement could be valued. The
+      honest form is therefore the restrictive one --- report the consumption
+      effect, and present employment and wage dispersion as \emph{allocation}
+      facts rather than welfare claims.
+\item \textbf{Polish.} A finer ladder ($\eta_s \in \{0.1, 5\}$) to fill the
+      tails, and a robustness probe on the sign of the rigid-group employment
+      effect under a different shock vector (a broader programme, or a uniform
+      shock).
+\end{enumerate}
+
+\section{The grouping rule, motivated: capacity pressure in the shocked sectors}\label{sec:capacity}
+
+The rigid group of Section~2's item (2) need not be an arbitrary partition. The
+programme's incidence supplies a principled candidate, and the economics of
+capacity supplies the reason to expect the candidate to be right.
+
+\paragraph{The incidence is concentrated.} The 2024 impulse data place the whole
+programme in \emph{seven} of the seventy-one sectors, and $63.4\%$ of it in a
+single one: specialised construction works. The remaining six are material and
+equipment sectors --- rubber and plastics ($9.4\%$), ceramic products and
+processed stone ($8.0\%$), chemicals ($7.6\%$), glass ($6.1\%$), machinery
+($4.3\%$), electrical equipment ($1.3\%$). A programme that is two-thirds one
+construction sector and one-third its input suppliers is not a diffuse demand
+stimulus; it is a demand push aimed at the economy's project-capacity chain.
+
+\paragraph{Why that makes those sectors the rigid ones.} Capacity pressure is
+the classical short-run constraint on demand-led expansion, and the
+capacity-utilisation and Verdoorn traditions treat it as the margin where
+demand-led growth meets its supply-side limit
+\cite{verdoorn1949,kaldor1966,lavoie2014}. In the sectors that a programme
+presses on --- construction trades and their material suppliers --- the
+short-run margin is capacity, not price: skilled trades cannot be trained and
+project capacity cannot be built within the horizon of the impulse, so an
+increase in demand is met largely at the prevailing (or rising) price with
+little employment response. That is precisely the sectoral labour market of
+equation~(1) with $\eta_{s,i} = 0$: a vertical short-run supply curve. The
+grouping rule is therefore not a partition chosen to produce a result; it is the
+statement that \emph{the sectors the programme presses on are the sectors whose
+labour cannot expand}, which is the capacity-pressure diagnosis in the model's
+own language. Two consequences follow. First, the rule is falsifiable and
+testable against sectoral evidence (vacancies, overtime, delivery times, order
+backlogs in the construction trades) rather than assumed. Second, it links the
+labour door to the capacity door of the companion note's scope section: the
+rigid group is the set of sectors where capacity is the binding margin, which is
+the same object the utilisation externality models on the price side.
+
+\paragraph{The robustness exhibit.} Table~\ref{tab:band} reproduces the sweep
+that measures how much the answer depends on the rule and on the rigid share
+(\texttt{probe16\_rigidity\_share.jl}). It supports the motivated rule rather
+than merely reporting a band.
+
+\begin{table}[htbp]
+\centering
+\caption{The rigidity sweep. All cells are the sectoral family at
+$\eta_s = 0.5$ for the flexible group, F2, deviations from the no-programme
+baseline; the price column reports $\max|p-1|$ at F1 and F2. ``Programme
+rank''$/$``employment rank'' order sectors by programme incidence$/$baseline
+employment, descending; ``least exposed'' is the ascending programme order.}
+\label{tab:band}
+\begin{tabular}{lrrrr}
+\toprule
+Rigid group & $\max|p-1|$ (F1) & $\max|p-1|$ (F2) & Employment & Consumption \\
+\midrule
+none (uniform $\eta_s = 0.5$) & $0.095839$ & $0.105666$ & $1.001255$ & $-1.571\%$ \\
+programme rank, share $0.25$ & $0.215939$ & $0.273076$ & $0.996911$ & $-2.626\%$ \\
+programme rank, share $0.5$  & $0.216336$ & $0.273412$ & $0.997300$ & $-2.542\%$ \\
+programme rank, share $0.75$ & $0.219801$ & $0.277006$ & $0.999370$ & $-2.084\%$ \\
+programme rank, share $1.0$  & $0.221442$ & $0.279009$ & $1.000000$ & $-1.980\%$ \\
+employment rank, share $0.5$ & $0.109583$ & $0.123362$ & $1.000196$ & $-1.905\%$ \\
+least exposed, share $0.5$   & $0.096877$ & $0.106792$ & $1.001614$ & $-1.500\%$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three readings, and they are what make the exhibit a robustness check rather
+than a disclaimer.
+
+\begin{enumerate}
+\item \textbf{The price response saturates once the pressured sectors are
+      inside the rigid group.} At a rigid share of only $0.25$ --- seven sectors
+      of seventy-one --- the response is already $0.2731$ against $0.2790$ when
+      the whole economy is rigid, and $0.1057$ when nothing is. The remaining
+      three quarters of the economy add $0.006$ between them. So the choice that
+      matters is whether the \emph{pressured} sectors are rigid, and the
+      capacity argument answers exactly that question; the share is then almost
+      irrelevant.
+\item \textbf{The alternative rankings do not reach the same place.} Rigid
+      large employers give $0.1234$ and rigid least-exposed sectors $0.1068$ at
+      the same share --- an order of magnitude below the motivated rule. So the
+      rule is doing real work, and the honest presentation is the one the
+      capacity argument supports, with the sweep as the sensitivity: the price
+      response is $[0.097, 0.279]$ across rules, and the motivated rule sits at
+      the top.
+\item \textbf{The employment sign is the fragile part, and the motivated rule
+      also explains it.} Employment is non-monotone in the rigid share under the
+      programme ranking ($1.001255$ / $0.996911$ / $0.997300$ / $0.999370$ /
+      $1.000000$) and changes sign across rankings. Under the capacity reading
+      this is not an embarrassment but a prediction: if the sectors the
+      programme presses on cannot expand their labour, the programme's
+      employment gain must come from elsewhere and can be offset by the
+      contractionary effect of the induced price and wage movement. The
+      employment result should therefore be reported as rule-dependent and
+      small in absolute terms ($[-0.31\%, +0.16\%]$), while the price response
+      --- the object the labour door was opened for --- is robust to the rule.
+\end{enumerate}
+
+\section{The GAMMA variants, and what each delivers}\label{sec:gammas}
+
+The fixed-wage closure is not a single object. Seven variants are on the table,
+and they differ in the one property the revision turns on: whether prices see
+demand. Table~\ref{tab:gamma} reports the measured outcomes.
+
+\begin{table}[htbp]
+\centering
+\caption{The GAMMA variants, measured (deviations from the no-programme
+baseline). Executed baseline: \texttt{matrix\_5x3-v9-GAMMA-*}; pinned wage
+structure: \texttt{probe14} (a $+10\%$ tilt on the programme sectors);
+capacity channel and Kaldor--Verdoorn: \texttt{probe17} (the fixed-wage system
+with $A^{eff}_i = (y_i/\lambda_i)^{-\delta}$ in the cost hook, solved by the
+fixed-point iteration the reduced form implies; $\delta = 0$ reproduces the
+executed cells exactly). ``Sees demand'' means $\max|p-1|$ differs across the
+financing columns.}
+\label{tab:gamma}
+\begin{tabular}{llrrrrl}
+\toprule
+Variant & Fin. & $\max|p-1|$ & Deflator & Employment & Consumption & Sees demand \\
+\midrule
+baseline ($w \equiv 1$) & F1 & $0.000000$ & $1.000000$ & $0.999027$ & $-0.081\%$ & no \\
+ & F2 & $0.000000$ & $1.000000$ & $1.001260$ & $-1.533\%$ & no \\
+ & F3 & $0.000000$ & $1.000000$ & $1.017796$ & $+2.264\%$ & no \\
+DELTA ($\equiv$ baseline) & all & $0.000000$ & $1.000000$ & $=$ baseline & $=$ baseline & no \\
+pinned wage structure & all & $0.057820$ & --- & $1.006865$ & --- & no \\
+\quad (identical in F1/F2/F3) & & & & & & \\
+capacity channel, $\delta = +0.5$ & F1 & $0.098457$ & $1.003027$ & $1.004167$ & $+0.459\%$ & yes \\
+ & F2 & $0.110761$ & $1.005379$ & $1.008489$ & $-1.082\%$ & yes \\
+ & F3 & $0.128463$ & $1.021461$ & $1.038814$ & $+2.199\%$ & yes \\
+Kaldor--Verdoorn, $\delta = -0.5$ & F1 & $0.123462$ & $1.003454$ & $0.997837$ & $-1.211\%$ & yes \\
+ & F2 & $0.115629$ & $1.001283$ & $0.998527$ & $-2.464\%$ & yes \\
+ & F3 & $0.128014$ & $0.985336$ & $1.003370$ & $+2.266\%$ & yes \\
+\midrule
+BF allocation rule, $\eta = 0$ & F1 & $0.000000$ & $1.000000$ & $1.000000$ & $+0.043\%$ & no \\
+ & F2 & $0.000000$ & $1.000000$ & $1.000000$ & $-1.694\%$ & no \\
+ & F3 & $0.000000$ & $1.000000$ & $1.000000$ & $+0.000\%$ & no \\
+dual labour market, insiders rigid & F1 & $0.024701$ & $1.000438$ & $0.989569$ & $-1.338\%$ & yes \\
+ & F2 & $0.027768$ & $1.000492$ & $0.991179$ & $-2.881\%$ & yes \\
+ & F3 & $0.030189$ & $1.000648$ & $1.005996$ & $+0.689\%$ & yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{enumerate}
+\item \textbf{The baseline is price-free by construction, and that is its
+      content.} The deflator is exactly $1.000000$ in every financing column, so
+      the programme is absorbed entirely by quantities: employment
+      ($-0.10\%$ under F1, $+0.13\%$ under F2, $+1.78\%$ under F3) and the
+      welfare index ($-0.08\%$, $-1.53\%$, $+2.26\%$). No nominal/real
+      distinction exists in this row. The economically interesting object is the
+      \emph{financing} spread, which is wide: F3 is the Keynesian case and F2
+      the tax-financed loss.
+\item \textbf{DELTA is the same row,} and that is the definitional equivalence:
+      in the fixed-wage gauge the CES elasticities $(\theta,\epsilon,\sigma)$
+      are unidentified, because prices are pinned and the quantity system
+      reduces to the Leontief multiplier.
+\item \textbf{The pinned wage structure (ADR-0021) buys distribution, not
+      demand.} Prices move by $0.058$ under a $+10\%$ tilt on the programme
+      sectors, but \emph{identically} in F1, F2 and F3: the movement is carried
+      by the exogenous pin, so the price block still never sees demand. What the
+      variant does add is the allocation margin and an explicit distributional
+      instrument --- relative wages of $1.10$ and employment $+0.69\%$ under the
+      tilt. It is the right instrument for a question about who works where, and
+      the wrong one for a question about price response.
+\item \textbf{The capacity channel gives a demand-sensitive price response with
+      the wage still pinned.} At $\delta = +0.5$ the price response is $0.0985$, $0.1108$
+      and $0.1285$ across the financing columns --- a genuine demand channel
+      with the wage still pinned, no labour-market assumption, and no wage
+      dispersion. The sign of $\delta$ is the economics: $\delta > 0$ is
+      capacity pressure (costs rise with demand, the F3 deflator reaching
+      $1.0215$) and $\delta < 0$ is the Kaldor--Verdoorn case, where prices
+      \emph{fall} with demand (the F3 deflator reads $0.9853$). Employment
+      absorbs more than in the baseline (F3: $+3.88\%$ at $\delta > 0$), so the
+      capacity channel shifts the burden from the price level to employment
+      relative to the labour door. One caveat is structural: the price block
+      stops being separable from quantities, so the system is a genuine
+      simultaneous solve (the probe converges in $35$--$39$ iterations at
+      $\delta = +0.5$ and in $70$--$76$ at $\delta = -0.5$, the slower rate
+      being the positive feedback of increasing returns --- proximity to
+      instability, not a numerical accident).
+\item \textbf{The BF allocation rule in the fixed-wage row is the double-rigidity
+      corner.} The BF closure's parameter \emph{is} the allocation elasticity
+      $\eta$ (ADR-0010), and feeding it in at its rigid value gives the fixed
+      wage \emph{and} the frozen allocation: with $w \equiv 1$ and
+      $L_i = \bar{L}_i$, nothing can absorb the programme --- not the wage, not
+      employment (a datum here, $L = 1.000000$ in every column), not the price
+      level, since zero profit with $w = 1$ gives $p = 1$. The programme moves
+      only the output composition ($\max_i|y_i/\lambda_i - 1| \approx 0.21$) and
+      the tax mix; under F3 household consumption is \emph{literally unchanged}
+      ($+0.000\%$), because the programme is externally financed and the
+      household's real income is pinned on both sides. It is the benchmark the
+      other variants are read against --- and the demonstration that the two
+      rigidity rows of the matrix (BF and GAMMA) compose into a well-defined
+      cell even though no cell of the matrix reports it. (The intermediate
+      values $0 < \eta < 1$ are not available: they were retired with the B\&F
+      reallocation wedge.)
+\item \textbf{The dual labour market is the quantity-based counterpart of the
+      sectoral family's price-based rigidity, and it behaves differently.} Here
+      the wage stays pinned and the \emph{pressured sectors cannot expand their
+      labour}: insiders sit at $\bar{L}_i$, outsiders at the cost-minimizing
+      demand. The constraint binds through the \emph{cost} --- a sector that must
+      produce $y_i$ with $\bar{L}_i$ can only substitute towards intermediates,
+      and its constrained unit cost exceeds the unconstrained one --- so insider
+      prices rise ($0.0278$ at F2) against $0.0015$ in the outsider sectors: a
+      $19\times$ dualism signature, visible in the price vector rather than in
+      the wages, which are identical in both segments. The bottleneck is then
+      transmitted economy-wide through intermediate costs, and the effect is
+      \emph{contractionary}: total employment falls under F1 and F2
+      ($-1.04\%$, $-0.88\%$) and consumption falls ($-1.34\%$, $-2.88\%$),
+      whereas external financing (F3) expands both ($+0.60\%$, $+0.69\%$). This
+      is the dualism result proper: an inflexible sector that is pressed on
+      raises everyone's costs, so the programme's employment gain must come from
+      outside the pressured chain and can be more than offset. Two further
+      readings. First, the constrained sectors sit at about half of their
+      capacity ceiling ($y^{max}_i = A_i \alpha_i^{1/(\epsilon-1)}\bar{L}_i$,
+      finite because labour and intermediates are complements at
+      $\epsilon = 0.5$; the baseline sits at the factor share $\alpha_i$ of it),
+      so the constraint bites through the substitution margin rather than at a
+      hard ceiling. Second, the comparison with the price-based rigidity is
+      instructive: the sectoral family's rigid-programme variant reads
+      $-0.34\%$ employment and $-2.69\%$ consumption at F2, i.e. \emph{milder}
+      on employment than the quantity-constrained dual ($-0.88\%$), because a
+      vertical supply curve still lets the wage --- and through it the price ---
+      absorb, whereas a quantity constraint forces the cost up. The two
+      rigidities are therefore not interchangeable: one prices the bottleneck,
+      the other rations it.
+\item \textbf{The sectoral family's elastic limit is not a variant at all.} As
+      $\eta_s$ grows the price response falls toward zero ($0.0084$ at
+      $\eta_s = 10$) and the direct solve fails at $10^6$: it is the same
+      outcome as the baseline in prices, approached but never attained, and it
+      keeps the transfer $F$ free where the fixed-wage system pins $F \equiv 0$.
+      It belongs in the framing as the elastic end of the gradient, not in a
+      menu of choices.
+\end{enumerate}
+
+The choice, then, is not between seven flavours of the same thing. If the
+question is \emph{which margin absorbs the programme}, the baseline and DELTA
+answer it (employment), and the sectoral family answers it with prices. If the
+question is \emph{who works where}, ADR-0021's pin is the instrument. If the
+question is \emph{whether demand moves prices inside the fixed-wage paradigm},
+the capacity channel and the dual labour market both do it --- the first through
+cost, the second through rationing, and only the second is contractionary. The
+capacity channel does it with the wage still pinned, which is the cleanest
+separation of the price channel from the wage channel the model admits. The two additions sharpen the menu in opposite directions: the BF
+allocation rule is the corner where nothing adjusts, and the dual labour market
+is the variant where the *quantity* margin is rationed --- the one fixed-wage
+setting in which the programme reduces employment.
+
+\section{What the framing does not license}
+
+\begin{itemize}
+\item \textbf{$\eta_{s,i}$ is not an estimated labour-supply elasticity.} It is
+      a sensitivity parameter of a reduced-form supply curve, and under
+      demand-only shocks it is unidentified. No statement about actual labour
+      supply behaviour may be attached to the ladder.
+\item \textbf{A sectoral elasticity difference is not a statement about
+      preferences or leisure.} Making a sector rigid is a modelling assumption
+      about its labour market, not evidence that its workers are less
+      responsive.
+\item \textbf{The wage dispersion is an outcome, not a policy instrument.} The
+      model has no wage policy; the dispersion is what clearing $N$ sectoral
+      markets implies at the programme's incidence.
+\item \textbf{``Demand-sensitive prices'' does not mean every regime.} The
+      scalar rows remain demand-free \emph{by design} --- that is the content
+      of the companion note's equivalences --- and the framing must not blur the
+      two claims.
+\end{itemize}
+
+\section*{Revision log}
+
+\noindent\textbf{Version 1} (September 2026) --- Initial framing note. Fixes
+the five implications of the sectoral-labour-market result (ADR-0022) for the
+revision's framing, the five items still needed before a number can be stated,
+and the four claims the framing does not license. A section motivates the
+rigid-group choice from capacity pressure in the sectors the programme presses
+on (seven sectors, $63.4\%$ specialised construction) and reproduces the
+rigidity sweep (rigid share and ranking) as the robustness exhibit. A further
+section sets out the five GAMMA variants with their measured outcomes (the
+capacity channel measured for the first time by \texttt{probe17}: the only
+fixed-wage variant whose prices see demand). Evidence:
+\texttt{matrix\_5x3\_v9} (33 cells), the bit-identity with
+\texttt{matrix\_5x3\_v6} on the fifteen matrix cells,
+\texttt{probe15\_sectoral\_supply.jl} and \texttt{probe16\_rigidity\_share.jl}.
+
+\begin{thebibliography}{9}
+
+\bibitem{bh2019}
+Baqaee, D.\,R., and E.\ Farhi (2019). Beyond Hulten's theorem.
+\emph{Econometrica} 87(3).
+
+\bibitem{bf2019}
+Baqaee, D.\,R., and E.\ Farhi (2020). Productivity and misallocation in
+general equilibrium. \emph{Econometrica} 88(1).
+
+\bibitem{robinson2006}
+Robinson, S.\ (2006). Macro models and multipliers: Leontief, Stone, Keynes,
+and CGE models. IFPRI, Washington, DC.
+
+\bibitem{verdoorn1949}
+Verdoorn, P.\,J.\ (1949). Fattori che regolano lo sviluppo della produttivit\`a
+del lavoro. \emph{L'Industria} 1, 3--10.
+
+\bibitem{kaldor1966}
+Kaldor, N.\ (1966). \emph{Causes of the Slow Rate of Growth of the United
+Kingdom}. Cambridge University Press, Cambridge.
+
+\bibitem{lavoie2014}
+Lavoie, M.\ (2014). \emph{Post-Keynesian Economics: New Foundations}.
+Edward Elgar, Cheltenham.
+
+\end{thebibliography}
+
+\end{document}

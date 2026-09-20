@@ -192,7 +192,9 @@ financing columns.
   in GAMMA), `probe19` (the dual labour market).
 - Decisions: ADR-0019 (external account), ADR-0020 (the `eta = 0` endpoint),
   ADR-0021 (wage structure, proposed), ADR-0022 (sectoral labour markets,
-  accepted). Derivations: `paper/equivalence.tex` v3, `paper/framing_gamma.tex`.
+  accepted), \textcolor{revisionV1}{ADR-0024 (programme total; price basis: 2023
+  prices per Hornykewycz et al. 2025; G0 = 40,300 at 2019 prices)}.
+  Derivations: `paper/equivalence.tex` v3, `paper/framing_gamma.tex`.
   Steps and decision points: `docs/WORKPLAN_SENSITIVE_PRICES.md` v7.
 
 # Revision Log
@@ -206,3 +208,4 @@ financing columns.
   in current prices; G0 = 40.3 bn is the horizon mean at 2019 prices,
   deflator 1.46; 58.89/1.46 = 40.34 bn), per ADR-0024. No numbers change.
 - **Version 1** (September 2026)
+- **Version 2** \textcolor{revisionV1}{(September 2026)} — Open item 3 (programme total) resolved: the impulse table is in 2023 prices (Hornykewycz et al. 2025); 40.3 bn at 2019 prices is the horizon average (deflator 1.46, 58.89 / 1.46 = 40.338 bn = 40.337 bn); G0 = 40,300 kept per ADR-0024 (accepted).

@@ -60,4 +60,4 @@ settled question.
 | ADR-0021 | Wage structure in the fixed-wage closure (GAMMA) | proposed |
 | ADR-0022 | Sectoral labour markets: demand-sensitive prices from the wage block | accepted |
 | ADR-0023 | Supply-shock design schema for the identification arm | accepted |
-| ADR-0024 | Programme total: G0 = 40,300 kept while the size question stays open | proposed |
+| ADR-0024 | Programme total: G0 = 40,300 kept (the 2019-price horizon average) | accepted |

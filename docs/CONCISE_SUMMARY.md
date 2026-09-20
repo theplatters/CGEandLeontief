@@ -7,6 +7,7 @@ tags: [summary, matrix, labour-closure, prices, gamma, handoff]
 last-updated: September 2026
 ---
 
+**Version 2** \textcolor{revisionV1}{(September 2026)}
 **Version 1** (September 2026)
 
 One page of results, no derivation: the executed 5x3 matrix, the sectoral
@@ -160,8 +161,12 @@ financing columns.
    the one remaining batch that converts a band into a number.
 2. **The grouping rule** - now motivated by capacity pressure, still to be
    preregistered with its testable evidence (vacancies, overtime, backlogs).
-3. **The programme total** (40.3 bn in the design against the raw 2024 row's
-   80.76 bn) - shares and signs are unaffected, every level scales with it.
+3. \textcolor{revisionV1}{\textbf{The programme total — resolved (ADR-0024,
+   2026-09-20).} The impulse table is in \textbf{2023 prices} per Hornykewycz
+   et al. (2025) (58 bn per year; first year 81 bn): 40.3 bn at 2019 prices
+   \emph{is} the horizon average (deflator 1.46; 58.89 / 1.46 = 40.338 bn =
+   the paper's exact 40.337 bn). G0 = 40,300 stays; shares and signs are
+   unaffected, every level scales with it.}
 4. **The welfare metric** - dispersion-blind, and the kernel has no leisure term
    or income effect, so employment and wage dispersion are allocation facts, not
    welfare claims.
@@ -179,9 +184,12 @@ financing columns.
   in GAMMA), `probe19` (the dual labour market).
 - Decisions: ADR-0019 (external account), ADR-0020 (the `eta = 0` endpoint),
   ADR-0021 (wage structure, proposed), ADR-0022 (sectoral labour markets,
-  accepted). Derivations: `paper/equivalence.tex` v3, `paper/framing_gamma.tex`.
+  accepted), \textcolor{revisionV1}{ADR-0024 (programme total; price basis: 2023
+  prices per Hornykewycz et al. 2025; G0 = 40,300 at 2019 prices)}.
+  Derivations: `paper/equivalence.tex` v3, `paper/framing_gamma.tex`.
   Steps and decision points: `docs/WORKPLAN_SENSITIVE_PRICES.md` v7.
 
 # Revision Log
 
 - **Version 1** (September 2026)
+- **Version 2** \textcolor{revisionV1}{(September 2026)} — Open item 3 (programme total) resolved: the impulse table is in 2023 prices (Hornykewycz et al. 2025); 40.3 bn at 2019 prices is the horizon average (deflator 1.46, 58.89 / 1.46 = 40.338 bn = 40.337 bn); G0 = 40,300 kept per ADR-0024 (accepted).

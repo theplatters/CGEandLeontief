@@ -496,6 +496,66 @@ function cell_eta_s_vec(cell::Dict{String,Any}, data::Data,
 end
 
 """
+Resolve a cell's supply shock from the design's `[shock]` block (ADR-0023).
+`kind = "none"` (absent, the default) returns the no-shock
+`Shocks(ones(N), ones(N), zeros(N))` bit-for-bit, so existing designs and
+manifests are untouched. For `sectoral` / `uniform` the magnitude comes from
+`[shock] magnitude` (overridable per cell with `shock_magnitude`); for
+`programme` the productivity gain is `A_i = 1 + alpha * psi_i` with
+`[shock] alpha` (overridable with `shock_alpha`). Returns the `Shocks`
+object and the scenario fields to record in the manifest.
+"""
+function resolve_supply_shock(design_d::Dict{String,Any}, cell::Dict{String,Any},
+        data::Data, ψ::Vector{Float64})::Tuple{Shocks,Dict{String,Any}}
+    N = length(data.factor_share)
+    sh = get(design_d, "shock", Dict{String,Any}())
+    kind = lowercase(string(get(sh, "kind", "none")))
+    if kind == "none"
+        return Shocks(ones(N), ones(N), zeros(N)),
+            Dict{String,Any}("shock" => "impulses.csv", "magnitude" => 1.0)
+    end
+    A = ones(N)
+    if kind == "sectoral"
+        mag = Float64(get(cell, "shock_magnitude", get(sh, "magnitude", 1.2)))
+        targets = Vector{Int}(get(sh, "targets", Int[]))
+        isempty(targets) && throw(ArgumentError(
+            "sectoral supply shock: `[shock] targets` must be nonempty"))
+        all(t -> 1 <= t <= N, targets) || throw(ArgumentError(
+            "sectoral supply shock: targets out of range 1..$N"))
+        A[targets] .= mag
+    elseif kind == "programme"
+        alpha = Float64(get(cell, "shock_alpha", get(sh, "alpha", 0.10)))
+        alpha >= 0 || throw(ArgumentError(
+            "programme supply shock: alpha must be nonnegative"))
+        A = A .+ alpha .* ψ
+    elseif kind == "uniform"
+        mag = Float64(get(cell, "shock_magnitude", get(sh, "magnitude", 1.01)))
+        A = fill(mag, N)
+    else
+        throw(ArgumentError(
+            "unknown [shock] kind \"$kind\" (none|sectoral|programme|uniform)"))
+    end
+    all(isfinite, A) && all(>(0), A) || throw(ArgumentError(
+        "supply shock produces non-finite or non-positive productivity vector A"))
+    fields = Dict{String,Any}(
+        "shock" => "$kind:supply",
+        "shock_kind" => kind,
+        "shock_A" => A)
+    if kind == "programme"
+        a = Float64(get(cell, "shock_alpha", get(sh, "alpha", 0.10)))
+        fields["shock_alpha"] = a
+        fields["magnitude"] = a
+    else
+        m = Float64(get(cell, "shock_magnitude",
+            get(sh, "magnitude", kind == "sectoral" ? 1.2 : 1.01)))
+        fields["shock_magnitude"] = m
+        fields["magnitude"] = m
+        kind == "sectoral" && (fields["shock_targets"] = Vector{Int}(get(sh, "targets", Int[])))
+    end
+    return Shocks(A, ones(N), zeros(N)), fields
+end
+
+"""
 Equilibrium model for a design cell (no solve). BF/ALPHA: mobile at η;
 BETA: `:beta` via `mobile_labor_model` (solved with `solve_beta`, or the
 sectoral 3N+1 system when the cell pins an elasticity vector, ADR-0022);
@@ -505,7 +565,7 @@ GAMMA: `:fixed`; DELTA: `delta_model` at `delta_epsilon`. Shocks are always
 function build_cell_model(cell::Dict{String,Any}, design_d::Dict{String,Any},
         data::Data, ψ::Vector{Float64}, g::Vector{Float64})::Model
     N = length(data.factor_share)
-    shocks = Shocks(ones(N), ones(N), zeros(N))
+    shocks, _ = resolve_supply_shock(design_d, cell, data, ψ)
     labor, fin_id = cell["labor"], cell["financing"]
     fin = cell_financing(fin_id, ψ, g, design_d["programme"]["f1_shift"], data)
     if labor == "BF" || labor == "ALPHA"
@@ -540,7 +600,7 @@ function solve_cell(cell::Dict{String,Any}, design_d::Dict{String,Any}, data::Da
         model.options.elasticities.eta_s_vec === nothing ||
             return solve(model; init = init_warm)
         N = length(data.factor_share)
-        shocks = Shocks(ones(N), ones(N), zeros(N))
+        shocks, _ = resolve_supply_shock(design_d, cell, data, ψ)
         return solve_beta(data, shocks, Float64(cell["theta"]), Float64(cell["epsilon"]),
             Float64(cell["sigma"]), Float64(cell["eta"]); eta_s = Float64(cell["eta_s"]),
             financing = cell_financing(cell["financing"], ψ, g, design_d["programme"]["f1_shift"], data),
@@ -778,7 +838,9 @@ end
 function update_scenario_row(run_id::AbstractString, design::AbstractString,
         cell::Dict{String,Any}, status::AbstractString, commit::AbstractString;
         root::AbstractString = default_root(), note_suffix::AbstractString = "",
-        vintage::AbstractString = "unknown")::Nothing
+        vintage::AbstractString = "unknown",
+        shock_desc::AbstractString = "impulses.csv",
+        shock_magnitude::AbstractString = "1.0")::Nothing
     scenpath = joinpath(root, "registry", "scenarios.csv")
     # Normalize every column to String: without `stringtype = String`, CSV
     # infers narrow InlineString widths (e.g. String7) from the current cell
@@ -797,8 +859,8 @@ function update_scenario_row(run_id::AbstractString, design::AbstractString,
     df[r, :theta] = string(cell["theta"])
     df[r, :epsilon] = string(cell["epsilon"])
     df[r, :sigma] = string(cell["sigma"])
-    df[r, :shock] = "impulses.csv"
-    df[r, :magnitude] = "1.0"
+    df[r, :shock] = shock_desc
+    df[r, :magnitude] = shock_magnitude
     df[r, :data_vintage] = vintage
     df[r, :evidence] = "runs/$run_id/manifest.toml; runs/$run_id/log.txt"
     df[r, :commit] = commit
@@ -823,6 +885,7 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
         root::AbstractString = default_root(), runs_dir::AbstractString = default_runs_dir(root),
         actor::AbstractString = default_actor())::String
     cell = design_cell(design_d, run_id)
+    _, scen = resolve_supply_shock(design_d, cell, data, ψ)
     rundir = joinpath(runs_dir, run_id)
     if ispath(rundir)
         println("refusing to overwrite existing run dir runs/$run_id/ — " *
@@ -840,7 +903,7 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
             "eta" => Float64(cell["eta"]), "eta_s" => Float64(get(cell, "eta_s", 0.0)),
             "theta" => Float64(cell["theta"]), "epsilon" => Float64(cell["epsilon"]),
             "sigma" => Float64(cell["sigma"]),
-            "shock" => "impulses.csv", "magnitude" => 1.0),
+            "shock" => scen["shock"], "magnitude" => scen["magnitude"]),
         "solver" => Dict{String,Any}(
             "init" => "warm:reference-final", "reference" => "batch-continuation",
             "algorithm" => "kernel solve / solve_beta (Newton + residual-gated LM polish)"),
@@ -856,6 +919,19 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
         man["scenario"]["eta_s_vec"] = esv
         man["scenario"]["eta_s_rigid_group"] = string(get(cell, "eta_s_rigid_group", "explicit"))
     end
+    # ADR-0023: record the resolved supply shock (kind != "none" only, so a
+    # no-shock design keeps its byte-identical manifest).
+    if haskey(scen, "shock_kind")
+        man["scenario"]["shock_kind"] = scen["shock_kind"]
+        man["scenario"]["shock_A"] = scen["shock_A"]
+        if haskey(scen, "shock_alpha")
+            man["scenario"]["shock_alpha"] = scen["shock_alpha"]
+        else
+            man["scenario"]["shock_magnitude"] = scen["shock_magnitude"]
+            haskey(scen, "shock_targets") &&
+                (man["scenario"]["shock_targets"] = scen["shock_targets"])
+        end
+    end
     open(joinpath(rundir, "manifest.toml"), "w") do io
         TOML.print(io, man)
     end
@@ -863,7 +939,7 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
     run_log(rundir, "reference consumption_ref=$(real_consumption(ref_sol))")
     vintage = string(get(get(design_d, "data", Dict{String,Any}()), "vintage", "unknown"))
     update_scenario_row(run_id, design, cell, "running", prov["git_commit"]; root = root,
-        vintage = vintage)
+        vintage = vintage, shock_desc = scen["shock"], shock_magnitude = string(scen["magnitude"]))
     try
         sol = solve_cell(cell, design_d, data, ψ, g, init_warm)
         ev = evaluate_gates(cell, design_d, sol.model, sol, ref_sol)
@@ -886,6 +962,7 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
         rewrite_index(; runs_dir = runs_dir)
         update_scenario_row(run_id, design, cell, status, prov["git_commit"]; root = root,
             vintage = vintage,
+            shock_desc = scen["shock"], shock_magnitude = string(scen["magnitude"]),
             note_suffix = " | $(status) $(iso_date()) (see runs/$run_id/manifest.toml)")
         return status
     catch e
@@ -905,6 +982,7 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
         rewrite_index(; runs_dir = runs_dir)
         update_scenario_row(run_id, design, cell, "failed", prov["git_commit"]; root = root,
             vintage = vintage,
+            shock_desc = scen["shock"], shock_magnitude = string(scen["magnitude"]),
             note_suffix = " | failed $(iso_date()) (see runs/$run_id/manifest.toml)")
         return "failed"
     end

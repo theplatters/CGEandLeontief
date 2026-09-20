@@ -559,7 +559,8 @@ gate_frag(name::AbstractString, value::Real, tol::Real, pass::Bool) =
 Evaluate a solved cell: residual / budget / labour-or-wage gates, headline
 metrics (against the reference solution), and the ADR-0019 external-account
 identity gap (`S + T + M − (I+X) − (F + B_gov)`) plus `external_balance` /
-`public_budget` diagnostics (never gates).
+`public_budget` diagnostics (never gates). Also hard-asserts the ADR-0019 /
+ADR-0022 companion identity `gdp_wedge = -canary.diff` at 1e-9.
 """
 function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
         model::Model, sol::Solution, ref_sol::Solution)::NamedTuple
@@ -631,6 +632,15 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
     assert_external_account(model, sol)
     canary = external_balance_canary(model, X)
     comp = gdp_components(model, sol)
+    # ADR-0019/ADR-0022 companion identity: the gdp wedge IS the negated
+    # canary gap (`gdp_wedge = -canary.diff` exactly, on and off equilibrium).
+    # The C1 defect (a scalar-wage collapse in `gdp_components` on ADR-0022
+    # cells) violated it at ~1e-3 while every correct path closes it at
+    # float-reassociation level (measured <= 1e-11 on full-71).
+    wedge_gap = abs(comp.wedge + canary.diff)
+    wedge_gap < 1e-9 || error(
+        "gdp wedge identity failure: |gdp_wedge + canary_diff| = $wedge_gap >= 1e-9 " *
+        "(ADR-0019: gdp_wedge = -canary_diff; a wage-vector collapse in gdp_components breaks it)")
     # `wage` must be a SCALAR metric: the η = 0 endpoint and the ADR-0022
     # sectoral closure carry SECTORAL wages, so the reported aggregate is the
     # wage-bill-weighted average wage; at η = 1 with one common wage it is that

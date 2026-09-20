@@ -1,0 +1,255 @@
+% paper/construction_capacity.tex -- the rigid-group rule's evidence base:
+% 2024 capacity signals for the sectors the programme presses on.
+%
+% Companion documents: paper/framing_gamma.tex (Section sec:capacity argues
+% the capacity hypothesis; this note supplies the external evidence that
+% turns that argument into a testable rule), docs/decisions/ADR-0022
+% (the sectoral-labour-market closure), docs/grouping_rule_evidence.md (the
+% full evidence table with the 2026-09-20 source verification),
+% docs/decisions/ADR-0024 (the programme total G0 = 40,300 context).
+%
+% Evidence vintage: 2024, matching the programme vintage of the executed
+% generation (impulses.csv 2024 row, G0 = 40,300 EUR m at 2019 prices).
+%
+% Version 1 (September 2026). No LaTeX in the analysis container: compile
+% on the Mac (pdflatex; no .bib dependency).
+
+\documentclass[11pt]{article}
+
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2.2cm,bottom=2.2cm,left=3cm,right=3cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\providecolor{revisionV1}{HTML}{800080}
+\providecolor{revisionV2}{HTML}{CC5500}
+\providecolor{revisionV3}{HTML}{006400}
+\providecolor{revisionV4}{HTML}{0000CD}
+\providecolor{revisionV5}{HTML}{808080}
+\providecolor{revisionV6}{HTML}{8B0000}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+
+\setlength\parindent{0pt}
+\setlength{\parskip}{0.45em}
+
+\newcommand{\Lbar}{\bar{L}}
+
+\title{Construction capacity and the rigid-group rule\\\\[0.4em]
+\large The 2024 evidence base for which sectors are rigid in the
+sectoral-labour-market closure}
+\author{Hermes Agent (Lt.\ Cmdr.\ Data), for Prof.\ Dr.\ J.\ Kapeller}
+\date{September 20, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{center}\small
+\textbf{Version 1} (September 2026)
+\end{center}
+
+\begin{abstract}
+The executed sectoral family carries one discretionary modelling choice:
+\textit{which} sectors' labour supplies are treated as rigid
+($\eta_{s,i} = 0$). The choice flips the sign of the programme's employment
+effect --- rigid programme sectors: $-0.34\,\%$; rigid largest half:
+$+0.02\,\%$; uniform: $+0.13\,\%$ at F2 --- so it must be a rule fixed before
+the runs, not a partition read off the results. The companion framing note
+motivates the rule by capacity pressure in the sectors the programme presses
+on; this note supplies the external, pre-run evidence for that motivation:
+four 2024 indicators --- the vacancy survey, the skilled-worker-shortage
+barometer, order-backlog data and the establishment panel --- triangulate
+\textit{how hard it is to get workers quickly} in the programme's sectors,
+and the rule they imply selects, from data alone, the seven programme
+sectors. The limits are stated as carefully as the numbers: the indicators
+select the rigid \textit{set}, they do not estimate the elasticity; their
+sector coverage is coarser than the model's; and 2024 was a downturn, so the
+claim rests on elasticity signals, not on utilisation.
+\end{abstract}
+
+\section{The choice at stake}\label{sec:stake}
+
+The sectoral closure (ADR-0022) replaces one aggregate real-wage equation by
+$N$ sectoral markets,
+\begin{equation}
+L^{cm}_i(p, y_i, w_i) \;=\; \bar{L}_i\,
+\Big[ \frac{w_i / \Pi(p)}{\bar{w}_i / \bar{\Pi}} \Big]^{\eta_{s,i}},
+\end{equation}
+and the executed equipment ladder in the flow table shows what the family
+delivers: at $\eta_{s,i} = 0$ for every $i$ the system is the $\eta = 0$
+endpoint (Proposition 3 of \texttt{paper/equivalence.tex}), the rigid corner
+of the family. The level of the elasticity is unidentified under
+demand-only shocks --- the ladder is a sensitivity band --- but the
+\textit{membership} of the rigid set is identified up to the rule that
+selects it, and the selection is consequential: making the seven programme
+sectors rigid ($\eta_{s,i} = 0$ there) reverses the employment effect
+relative to a uniform elasticity and to rigidity on the largest half by
+baseline employment (framing note, Table~1 of the rigidity sweep).
+
+ADR-0022 therefore demands ``a rule \ldots{} preferred to a hand-picked
+list, to forestall the tuning objection''. The companion note's answer is
+the capacity-pressure hypothesis: the programme is a demand push aimed at
+the economy's project-capacity chain, and the short-run margin in the
+sectors it presses on is capacity --- skilled trades cannot be trained and
+project capacity cannot be built within the horizon of the impulse. That
+hypothesis is \emph{testable} against external sectoral evidence
+(vacancies, overtime, backlogs in the construction trades), which is what
+this note provides. The rule has two conditions, both computable before any
+model run:
+
+\begin{quote}\small
+\textbf{The rule.} A sector's labour supply is rigid ($\eta_{s,i} = 0$)
+iff (i) its programme incidence share is at least 1\,\% of the programme
+total \emph{and} (ii) its skilled-worker-shortage signal reaches the
+goods-producing average or above.
+\end{quote}
+
+\section{The programme's incidence (condition i)}\label{sec:incidence}
+
+From the 2024 row of the impulse table (\texttt{cbase2/data_raw/impulses.csv},
+G0 = 40{,}300 EUR m): the programme lives in seven of the seventy-one
+sectors --- 63.4\,\% of it in specialised construction works and the rest in
+its material suppliers.
+
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Sector (VGR) & 2024 impulse share \\
+\midrule
+Specialised construction works & 63.4\,\% \\
+Rubber and plastics products & 9.4\,\% \\
+Ceramic products, processed stone and clay & 8.0\,\% \\
+Chemicals and chemical products & 7.6\,\% \\
+Glass and glassware & 6.1\,\% \\
+Machinery & 4.3\,\% \\
+Electrical equipment & 1.3\,\% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Condition~(i) selects exactly these seven sectors; the next sector in the
+ranking has zero incidence. The composition is stable over the 2024--2050
+horizon (max $\lvert \Delta \psi \rvert = 0.092$ against the 2024 vector,
+worst year 2050, when machinery's share rises to 13.5\,\%).
+
+\section{The capacity signals (condition ii), 2024}\label{sec:signals}
+
+Four indicators, three national series and one pair of regional panels.
+None of them measures a labour-supply elasticity; together they triangulate
+how hard it is to get workers quickly in the programme's sectors --- the
+short-run margin the rigidity assumption is about.
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Indicator & Value (2024) & Series & Coverage \\
+\midrule
+Skilled-worker-shortage share, & 28.9\,\% (Q4, & KfW-ifo-Fachkr\"afte- & WZ 41.2, 42.x, \\
+building main trades & survey Oct.) & barometer (Dec. 2024) & 43.1, 43.9 \\
+Skilled-worker-shortage share, & 20.6\,\% (Q4) & same & manufacturing \\
+manufacturing (aggregate) & & & broad \\
+Skilled-worker-shortage share, & 33.1\,\% (Q4) & same & rubber/plastics \\
+rubber and plastics & & & (WZ 22) \\
+Open positions, construction & 108{,}000 (Q4) & IAB-Stellenerhebung, & construction \\
+& & IAB-Monitor 4/2024 & sector \\
+Vakanzrate (national) & 3.2\,\% (Q4) & IAB-Stellenerhebung & all sectors \\
+Order backlog, building main & 3.7 months (Jun.) & ifo Konjunktur- & Bauhauptgewerbe \\
+trades & & umfragen (2024) & branches \\
+Working-time accounts, & 20\,\% $\to$ 62\,\% & IAB-Betriebspanel & Hesse; West \\
+construction (2023 $\to$ 2024) & & Report Hessen 2024 & 37 $\to$ 58\,\% \\
+Hiring persistence, construction & 54\,\% of firms; 72\,\% & IAB-Betriebspanel & Brandenburg \\
+(H1 2024) & of those unfilled & 2024 & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Vacancy survey.} The IAB's quarterly establishment survey counts
+all positions firms are trying to fill, including those outside the
+employment agency's register. Q4/2024: 1.40 million open positions
+nationally, of which the construction sector holds 108{,}000 --- a top-five
+sector stock. The national \emph{Vakanzrate} (immediately open positions per
+100 workers demanded) stood at 3.2\,\%. The reading is a supply symptom:
+even after a year in which vacancies fell 19\,\% (the 2024 downturn),
+construction firms keep posting jobs and keep failing to fill them.
+
+\textbf{Skilled-worker-shortage barometer.} The KfW-ifo barometer asks about
+9{,}000 firms per quarter one question --- is your business currently
+restricted by a lack of skilled workers? --- and the reported figure is the
+share of firms answering yes. Q4/2024: 28.9\,\% in the building main trades
+against 20.6\,\% in manufacturing broadly and 33.1\,\% in rubber and
+plastics (one of the six material sectors, and the most affected
+manufacturing branch in the report). Construction runs at roughly 1.4 times
+the manufacturing rate at a moment when manufacturing itself is slack. The
+measure is self-reported current restriction and is cyclical (it fell from a
+37.0\,\% peak in Q4/2022).
+
+\textbf{Order backlogs.} The ifo survey reports how many months of work
+order books cover at current capacity; 3.7 months (June 2024, Tiefbau 4.1)
+means that if new orders stopped, firms still have close to four months of
+scheduled work. This indicator is included as the \emph{counter-signal}: it
+fell from 4.8 months in early 2022, so the 2024 story is not one of bursting
+order books --- the rigidity claim rests on the labour-elasticity signals,
+not on utilisation.
+
+\textbf{Establishment panel.} Two regional 2024 reports (Hesse, Brandenburg)
+serve as directional evidence, not national estimates. (i) Working-time
+accounts in construction jumped from 20\,\% to 62\,\% of firms over
+2023--2024 (37\,\% $\to$ 58\,\% in the West): when order books are volatile,
+firms keep headcount and buffer through \emph{hours} --- hours are the
+flexible margin, employment the rigid one, which is exactly the vertical
+supply curve the closure assumes. (ii) In Brandenburg 54\,\% of construction
+firms had a hiring need in H1/2024 (third-highest of all sectors) and 72\,\%
+of those left positions unfilled: recruitment failure persists even in a
+weak year.
+
+\section{The rule, and its discipline}\label{sec:discipline}
+
+The rigidity in the model is a property of the \emph{slope} of a sector's
+labour supply --- an elasticity that none of these series measures. The
+rule therefore uses the indicators only to \emph{select the set}; the value
+of $\eta_s$ itself comes from the supply arm (ADR-0023), which identifies it
+under a technology shock. Four qualifications, stated for the record:
+
+\begin{itemize}
+\item \textbf{Data gaps.} The 2024 sub-branch shortage shares for
+  machinery and electrical equipment are not published in the barometer we
+  retrieved; under the rule, the defensible pre-run default is the
+  five-sector core \{specialised construction, plastics, ceramics,
+  chemicals, glass\} (94.5\,\% of programme incidence), with a weaker
+  threshold variant (the full seven) as the sensitivity cell.
+\item \textbf{Mapping.} The model's sectors are VGR (Destatis 2019
+  input-output classification); the reports use WZ/NACE groupings.
+  ``Specialised construction works'' maps to WZ 43, while the
+  Bauhauptgewerbe indicator covers WZ 41.2, 42.x, 43.1, 43.9 --- a superset.
+\item \textbf{Vintage and cycle.} All signals are 2024, the programme
+  vintage; the downturn caveat is the backlog row, and the rule's thresholds
+  are set on elasticity-type signals, not utilisation.
+\item \textbf{Scope.} As in ADR-0022, a welfare difference across rules is
+  not a statement about wage policy; the rule only answers which sectors'
+  supply curves are treated as inelastic.
+\end{itemize}
+
+\section{What this delivers}\label{sec:delivers}
+
+For the preregistration, the rule and its thresholds are fixed from public
+2024 statistics \emph{before} any model outcome is computed; the map from
+data to the rigid set is a calculation, not a choice. The same evidence
+ranges are the natural probability measure for the sectoral Sobol
+decomposition of the family's response (IDEA-0003), so the evidence base
+serves both the rule and the attribution step. The full table with sources
+and verification dates lives in \texttt{docs/grouping\_rule\_evidence.md}
+(v1, 2026-09-20).
+
+\section*{Sources}
+
+\begin{itemize}
+\item KfW Research / ifo Institut, \emph{KfW-ifo-Fachkr\"aftebarometer}
+  December 2024 (survey October 2024).
+\item IAB, \emph{IAB-Stellenerhebung} (quarterly); IAB-Monitor
+  Arbeitskr\"aftebedarf 4/2024 (IAB-Forum, 2025).
+\item ifo Institut, \emph{Konjunkturumfragen Bauhauptgewerbe},
+  Auftragsbestand in Monaten, 2024.
+\item IAB-Betriebspanel 2024: Report Hessen 2024 (HNA/iwak); Betriebspanel
+  Brandenburg 2024.
+\end{itemize}
+
+\end{document}

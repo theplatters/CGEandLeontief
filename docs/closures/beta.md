@@ -43,7 +43,7 @@ scalar closure. The single aggregate equation is replaced by N sectoral ones,
 
     L^cm_i(p, y, w_i) = Lbar_i · (w_i / P)^{η_s,i},   i = 1..N,   P = CPI,
 
-solved as a `3N+1` system `[p; y; w(1:N); F]`. The closure is selected by
+solved as a `3N+1` system `[p; y; w(1:N); F]`. The deflator is the model CPI `P = Pi(p)` — the consumption price index — never the sector price `p_i`: the anchors enter only as ratios, so a uniform rescale is a change of units (ADR-0022), and deflating by the sector price would be a different closure. (The registry formulation was corrected to this reading on 2026-09-20; the earlier `(w_i/Pi)` rendering was ambiguous.) The closure is selected by
 `MobileLaborCESElasticities.eta_s_vec` (`nothing` = the scalar 2N+2 form), so
 the registry id stays `BETA`: the sectoral form is BETA's N-market
 generalisation, not a new closure.

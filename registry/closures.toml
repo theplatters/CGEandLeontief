@@ -59,7 +59,7 @@ notes = "Nested in BF at eta = 1 by construction; the coincidence is definitiona
 [labor.BETA]
 id = "BETA"
 name = "Elastic total labour supply"
-formulation = "sum_i L_i = Lbar * ((w/P)/(w0/P0))^eta_s; the sectoral form (ADR-0022) replaces the single aggregate equation by N sectoral ones, L^cm_i = Lbar_i * (w_i/Pi)^{eta_s,i}, solved as a 3N+1 system (eta_s,i = 0 is the ADR-0020 option C endpoint); executed evidence: matrix_5x3_v9 cells matrix_5x3-v9-BETA-{F1,F2,F3}[-etas025|-etas05|-etas1|-etas2|-rigidprog|-rigidhalf]"
+formulation = "sum_i L_i = Lbar * ((w/P)/(w0/P0))^eta_s (P = CPI); the sectoral form (ADR-0022) replaces the single aggregate equation by N sectoral ones, L^cm_i = Lbar_i * (w_i/Pi(p))^{eta_s,i}, where Pi(p) is the CPI (the consumption price index at the price vector p), NOT the sector price p_i, solved as a 3N+1 system (eta_s,i = 0 is the ADR-0020 option C endpoint); executed evidence: matrix_5x3_v9 cells matrix_5x3-v9-BETA-{F1,F2,F3}[-etas025|-etas05|-etas1|-etas2|-rigidprog|-rigidhalf]"
 interpretation = "Intended as a labour-leisure / voluntary supply response; the income effect is not implemented."
 status = "tested"
 symbols = ["ElasticLaborClosure", "SectoralElasticLaborClosure"]

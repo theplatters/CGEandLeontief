@@ -65,11 +65,45 @@ moves them (up to 27.9 % at `matrix_5x3-v10-BF-F2`).
 `matrix_5x3-v10-GAMMA-F3` / `matrix_5x3-v10-DELTA-F3` raise employment
 (1.78 %).
 
-## 3. Companion panel (pending)
+## 3. Manuscript panel figures (per labour closure)
 
-A `panel_ls`-style two-panel figure is being recreated for the 5x3 matrix
-(sectoral price/quantity response, shocked vs unshocked sectors). Its
-composition and output path are being settled with the operator.
+The `panel_ls`-style two-panel figure (`revised_manuscript/pictures/panel_ls.png`,
+referenced by `revised_manuscript/chapters/ch06_labor_slack.tex` and left untouched),
+recreated for the 5x3 matrix as one file per labour closure —
+`revised_manuscript/pictures/panel_5x3_{BF,ALPHA,BETA,GAMMA,DELTA}.png`
+(`plot_matrix_panel` / `save_matrix_panels` in `ext/matrix_plots.jl`):
+
+- left: grouped bars over the programme sectors (sectors with positive programme
+  demand, sorted by programme share descending) for that closure's **F2** cell —
+  programme demand in % of baseline gross output (`100*g_i/y0_i`, no error bar),
+  change in output (`100*(q_i-1)`), change in consumption (`100*(c_i-1)`), and the
+  price deviation from the numeraire (`100*(p_i-1)`); error bars on the last three
+  series span the closure's **F1/F2/F3** financing range (min/max; no error bar when
+  only one financing is present);
+- right: scatter of change in quantities (`100*(q_i-1)`, x) vs change in prices
+  (`100*(p_i-1)`, y) over all sectors of the F2 cell — programme sectors highlighted
+  with larger markers, other sectors plain; programme sectors plus the 3 largest
+  absolute movers labelled; 0/0 dashed cross; legend "Programme sectors" / "Other sectors".
+
+Conventions: bars are F2 values, error bars the F1-F3 financing range (the F2/F3
+real-neutrality in the mobile rows is visible as collapsed error bars there); axis
+limits are shared across the five files (left: one y-range over all bar series and
+error-bar ends; right: one x- and one y-range over all sectors of all closures), so
+the five files compare directly. Titles read
+"5x3 matrix panel — \<closure\> (F2; bars), financing range F1-F3 (error bars)", and
+each figure footnotes the design reference (no-programme) baseline and the
+programme-demand normalisation.
+
+BETA is numerically identical to ALPHA and DELTA reproduces GAMMA to solver precision,
+so three of the five files document the same economy; see Table 2 of
+`paper/tables/matrix_5x3_v10_flows.md` for that statement. Regeneration:
+
+```bash
+julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 --no-figures --panel-dir revised_manuscript/pictures
+```
+
+(needs GLMakie; `--no-figures` suppresses only the six exploratory figures while the
+panels are still written).
 
 ## How to regenerate / where the data lives
 

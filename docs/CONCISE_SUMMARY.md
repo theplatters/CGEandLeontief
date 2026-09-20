@@ -204,8 +204,8 @@ financing columns.
   principal programme; ADR-0024 accepted. The composition remains the open
   piece. No numbers change.
 - **Version 2** \textcolor{revisionV1}{(September 2026)} --- Open item 3
-  updated: the programme total's price basis is resolved (the raw impulse is
-  in current prices; G0 = 40.3 bn is the horizon mean at 2019 prices,
-  deflator 1.46; 58.89/1.46 = 40.34 bn), per ADR-0024. No numbers change.
+  updated: the programme total's price basis is resolved (the impulse table is
+  in current (2023) prices per Hornykewycz et al. 2025; G0 = 40.3 bn is its
+  horizon mean at 2019 prices, deflator 1.46; 58.89 / 1.46 = 40.338 bn =
+  40.337 bn), per ADR-0024 (accepted). No numbers change.
 - **Version 1** (September 2026)
-- **Version 2** \textcolor{revisionV1}{(September 2026)} — Open item 3 (programme total) resolved: the impulse table is in 2023 prices (Hornykewycz et al. 2025); 40.3 bn at 2019 prices is the horizon average (deflator 1.46, 58.89 / 1.46 = 40.338 bn = 40.337 bn); G0 = 40,300 kept per ADR-0024 (accepted).

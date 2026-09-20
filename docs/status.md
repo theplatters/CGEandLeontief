@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-19 by `scripts/status.jl` · branch `reorg` · HEAD `048c8fa` (dirty)
+Generated 2026-09-20 by `scripts/status.jl` · branch `reorg` · HEAD `a1958c3` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -380,6 +380,8 @@ Scenarios: **195** rows — executed: 151, provisional: 3, failed: 41. Designs: 
 - [ADR-0020 — The eta = 0 endpoint's external account: closure options](decisions/ADR-0020-eta0-external-account-closure.md)
 - [ADR-0021 --- Wage structure in the fixed-wage closure (GAMMA)](decisions/ADR-0021-wage-structure-fixed-wage-closure.md)
 - [ADR-0022 -- Sectoral labour markets: demand-sensitive prices from the wage block](decisions/ADR-0022-sectoral-labour-markets.md)
+- [ADR-0023 — Supply-shock design schema for the identification arm](decisions/ADR-0023-supply-shock-design-schema.md)
+- [ADR-0024 — Programme total: G0 = 40,300 kept while the size question stays open](decisions/ADR-0024-programme-total-settled.md)
 
 ## Warnings
 

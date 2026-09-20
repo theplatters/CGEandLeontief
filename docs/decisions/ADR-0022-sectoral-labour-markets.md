@@ -354,8 +354,8 @@ sectoral cells; deflator corrections are small but real (F2-etas025 1.004096
 → 1.004088; F2-rigidhalf 1.006294 → 1.006281). The fifteen matrix cells
 reproduce v9 to solver precision, not bit-for-bit: v6 and v9 are bit-identical
 to each other (both executed in another working copy), while v10 ran in this
-working copy, so cross-copy floating-point noise appears at ≤ 9.3e-9 (the
-stiff BF-F1 `wage_max` diagnostic), ≤ 1.6e-11 in the ALPHA/BETA/GAMMA/DELTA
+working copy, so cross-copy floating-point noise appears at ≤ 9.4e-9 (the
+stiff BF-F1 `wage_max` diagnostic), ≤ 1.7e-11 in the ALPHA/BETA/GAMMA/DELTA
 rows, and ≤ 4.6e-15 where the equilibrium is the exact baseline — against the
 v10 design file's "expected bit-for-bit" comment, which was written from the
 same-environment v6→v9 identity and is not met across environments.

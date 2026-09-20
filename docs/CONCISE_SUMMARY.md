@@ -68,7 +68,7 @@ Three readings.
 **rigid corner is exactly the `eta = 0` endpoint** - the same equations, not a
 limit (Proposition 3 of `paper/equivalence.tex`; measured `max|Delta| = 0.00e+00`
 warm-started, `< 1e-10` cold, and bit-exact under a supply shock too). Executed
-in `matrix_5x3_v9`:
+in `matrix_5x3_v9` (deflators corrected from `matrix_5x3_v10`):
 
 | Sectoral cell | `max abs(p-1)` F1 / F2 / F3 | Employment (F2) | Consumption (F2) | Deflator (F2) | Wage max/min |
 | --- | --- | ---: | ---: | ---: | ---: |
@@ -202,7 +202,9 @@ financing columns.
 - **Version 3** \textcolor{revisionV2}{(September 2026)} --- Open item 3
   updated: the operator keeps the deflated horizon mean (G0 = 40.3 bn) as the
   principal programme; ADR-0024 accepted. The composition remains the open
-  piece. No numbers change.
+  piece. The six sectoral `Deflator (F2)` values are corrected from the
+  `matrix_5x3_v10` manifests (the v9 values carried the C1 defect); no other
+  numbers change.
 - **Version 2** \textcolor{revisionV1}{(September 2026)} --- Open item 3
   updated: the programme total's price basis is resolved (the impulse table is
   in current (2023) prices per Hornykewycz et al. 2025; G0 = 40.3 bn is its

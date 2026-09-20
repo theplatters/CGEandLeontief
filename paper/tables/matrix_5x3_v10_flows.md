@@ -28,9 +28,9 @@ v9 cells to solver precision (Table 2). The baseline block is therefore not dupl
 The `Delta` column is `max |v10 - v9|` over that cell's `[metrics]` and `[diagnostics]`
 fields. v9's Table 2 records a zero v9-vs-v6 delta in every cell, so v6 and v9 are
 bit-identical to each other; v10 ran in this working copy, so the fifteen cells reproduce
-v9 to solver precision — max 9.3e-09 (at `BF-F1`, the stiff corner's `diagnostics.wage_max` diagnostic),
-1.6e-11 in the worst ALPHA/BETA/GAMMA/DELTA row (`GAMMA-F3`, `metrics.consumption`),
-4.6e-15 where the equilibrium is the exact baseline — and no printed figure is affected
+v9 to solver precision — max 9.34e-09 (at `BF-F1`, the stiff corner's `diagnostics.wage_max` diagnostic),
+1.63e-11 in the worst ALPHA/BETA/GAMMA/DELTA row (`GAMMA-F3`, `metrics.consumption`),
+4.55e-15 where the equilibrium is the exact baseline — and no printed figure is affected
 at the table's precision (15/15 rows identical to v9 to all printed decimals).
 
 | Cell | Real GDP rel. | Consumption rel. | L | deflator | `max abs(p-1)` | Delta |
@@ -143,7 +143,7 @@ metrics/diagnostics fields agree with v9 to cross-copy float noise (max 7.856e-0
 
 - **The account closes in every sectoral cell.** `Gap` is at the solver-residual
   level (|Gap| <= 7.1e-12 across all 33 cells — worst at `GAMMA-F3` — and <= 5.41e-13 in the
-  mobile matrix cells), so `Net ext. pos.` is a closed-account quantity in the
+  non-fixed-wage matrix cells), so `Net ext. pos.` is a closed-account quantity in the
   sectoral rows too: `F` is a solved equilibrium object there, not a pin.
 - **Prices move with the demand composition.** In every sectoral cell
   `max abs(p-1)` differs between F1 and F2/F3 (6/6 variants), and the deflator differs from

@@ -82,7 +82,7 @@ behaves bit-identically.
    `ln L / ln (w/P)` recovers the input `eta_s` to `1e-6`. Each design
    additionally carries the **sectoral uniform-vector** cells (3N+1,
    `eta_s_vec = fill(eta_s, N)`) as the robustness arm: there the
-   identification is a *vector* (`eta_s,i = ln(L_i/Lbar_i)/ln(w_i/Pi)` per
+   identification is a *vector* (`eta_s,i = ln(L_i/Lbar_i)/ln(w_i/Pi(p))` with `Pi(p)` the CPI, per
    sector) and no scalar signature applies — reported as per-sector
    recovery, not as one number. The two rows are different systems and are
    never merged into one table.

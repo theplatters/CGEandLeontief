@@ -7,6 +7,7 @@ tags: [summary, matrix, labour-closure, prices, gamma, handoff]
 last-updated: September 2026
 ---
 
+**Version 2** \textcolor{revisionV1}{(September 2026)}
 **Version 1** (September 2026)
 
 One page of results, no derivation: the executed 5x3 matrix, the sectoral
@@ -160,8 +161,12 @@ financing columns.
    the one remaining batch that converts a band into a number.
 2. **The grouping rule** - now motivated by capacity pressure, still to be
    preregistered with its testable evidence (vacancies, overtime, backlogs).
-3. **The programme total** (40.3 bn in the design against the raw 2024 row's
-   80.76 bn) - shares and signs are unaffected, every level scales with it.
+3. \textcolor{revisionV1}{**The programme total** - price basis resolved
+   (2026-09-20): the raw impulse is in current (2023) prices (horizon mean
+   58.89 bn) and the design's G0 = 40.3 bn is that mean at 2019 prices
+   (deflator 1.46, construction-cost based; 58.89/1.46 = 40.34 bn). The
+   remaining question is the composition (the raw 2024 current-price vector)
+   and the manuscript wording; ADR-0024 records the evidence.}
 4. **The welfare metric** - dispersion-blind, and the kernel has no leisure term
    or income effect, so employment and wage dispersion are allocation facts, not
    welfare claims.
@@ -184,4 +189,8 @@ financing columns.
 
 # Revision Log
 
+- **Version 2** \textcolor{revisionV1}{(September 2026)} --- Open item 3
+  updated: the programme total's price basis is resolved (the raw impulse is
+  in current prices; G0 = 40.3 bn is the horizon mean at 2019 prices,
+  deflator 1.46; 58.89/1.46 = 40.34 bn), per ADR-0024. No numbers change.
 - **Version 1** (September 2026)

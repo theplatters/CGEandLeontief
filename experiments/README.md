@@ -60,6 +60,17 @@ renormalized 2024 impulse share over kept sectors
 | F2 | `TaxFinanced(g)` |
 | F3 | `ExternalDebt(g)` |
 
+**Price basis.** `total_eur_m` is a 2019-price figure — the paper's 40.3 bn
+(`paper/main.tex` footnote: deflator 1.46, construction-cost indices,
+Hornykewycz 2025; ~58 bn in 2023 prices). The raw impulse table is in
+current (2023) prices: its horizon mean is 58,893 EUR m, and
+58,893 / 1.46 = 40,338 EUR m ≈ `total_eur_m`. The legacy deflation
+apparatus is still in the kernel — `const inflator = 1.46`
+(`src/BeyondHulten.jl`) and `impulse_shock` (`src/core/diagnostics.jl`,
+exercised by `tests/test_model.jl`) — but the harness does not call it: the
+deflation is implicit in `total_eur_m`, and the incidence `ψ` is the raw
+current-price 2024 composition (undeflated). See ADR-0024.
+
 DELTA cells pin `theta = epsilon = sigma = delta_epsilon = 1e-4` (the
 actually solved values). `matrix_5x3-DELTA-F1` is expected to fail the
 scale-indeterminacy guard: F1 has no additive anchor and the fixed-wage

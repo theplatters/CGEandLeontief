@@ -7,6 +7,7 @@ tags: [beyondhulten, workplan, closures, eta_s, supply-shock, identification]
 last-updated: September 2026
 ---
 
+**Version 5** \textcolor{revisionV4}{(September 2026)}
 **Version 4** \textcolor{revisionV3}{(September 2026)}
 **Version 3** \textcolor{revisionV2}{(September 2026)}
 **Version 2** \textcolor{revisionV1}{(September 2026)}
@@ -144,6 +145,21 @@ gain $A_i = 1 + \alpha \psi_i$ on the programme's own sectors, $\alpha \in
 schema and batch pattern. The DOCS\_ASSESSMENT section 4.2 write-up is
 recorded for the manuscript pass (the assessment document's revision palette
 has no colour beyond \texttt{revisionV6} yet).}
+
+\textcolor{revisionV4}{\textbf{\texttt{supply\_etas\_prog} and \texttt{supply\_etas\_unif}
+are executed as well: 63+63 cells, all gates pass} (commit \texttt{e93a741};
+flow tables \texttt{paper/tables/supply\_etas\_prog\_flows.md} and
+\texttt{supply\_etas\_unif\_flows.md}). \texttt{prog}
+($A_i = 1 + \alpha \psi_i$ on the programme's own sectors, $\alpha \in
+\{0.05, 0.10, 0.20\}$): $w$ = 1.0046 at $\alpha$ = 0.10,
+$\max|p - 1|$ = 0.0625, implied $\eta_s$ exact. \texttt{unif}
+($A_i \in \{1.01, 1.02, 1.03\}$) is the real-wage experiment: $w$ = 1.0408
+at $A$ = 1.02 and real GDP up to +27\,\% at $\eta_s$ = 5 (productivity is
+real output). Every preregistered signature holds for both (recovery
+$< 10^{-3}$, magnitude-invariance $< 10^{-3}$, ALPHA control, F2 = F3
+neutrality under the supply shock, canary asserted at $A \neq 1$). The
+armed set is complete; the DOCS\_ASSESSMENT section 4.2 write-up is done as
+version 8 of that document (revisionV7, the brighter palette cycle).}
 
 # Design of the arm
 
@@ -425,3 +441,11 @@ the workplan.}
   \texttt{supply\_etas\_prog} and \texttt{supply\_etas\_unif}; the
   DOCS\_ASSESSMENT section 4.2 write-up is recorded for the manuscript
   pass.
+- **Version 5** \textcolor{revisionV4}{(September 2026)} --- The armed set
+  is complete: \texttt{supply\_etas\_prog} and
+  \texttt{supply\_etas\_unif} executed (63+63 cells, all gates pass; commit
+  e93a741). \texttt{prog}: $w$ = 1.0046 at $\alpha$ = 0.10, defined price
+  response ($\max|p - 1|$ = 0.0625); \texttt{unif}: the real-wage
+  experiment ($w$ = 1.0408 at $A$ = 1.02, real GDP up to +27\,\% at
+  $\eta_s$ = 5). Signatures hold throughout. DOCS\_ASSESSMENT is version 8
+  (revisionV7, the brighter palette cycle).

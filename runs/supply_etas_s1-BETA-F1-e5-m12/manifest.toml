@@ -1,0 +1,95 @@
+design = "supply_etas_s1"
+date = "2026-09-20"
+status = "executed"
+run_id = "supply_etas_s1-BETA-F1-e5-m12"
+actor = "hermes-agent"
+schema_version = 2
+cell = "supply_etas_s1-BETA-F1-e5-m12"
+
+[metrics]
+consumption_rel = 0.06546321544472411
+gdp_rel = 0.027724637517930528
+gdp_deflator = 1.002000694501983
+external_position = 0.02218743792919103
+max_abs_price_dev = 0.19620813386319802
+gdp_expenditure_rel = 0.027724637517931416
+programme_financing = 0.0
+wage = 1.004902974534586
+nominal_gdp = 1.0297808005497657
+external_transfer = 0.02218743792919103
+employment = 1.0247564457918952
+gdp = 1.0277246375179305
+consumption = 1.065463215444724
+gdp_wedge = 4.440892098500626e-16
+gdp_expenditure = 1.0277246375179314
+
+[gates]
+overall = "pass"
+
+    [gates.budget]
+    value = 2.220446049250313e-16
+    pass = true
+    tolerance = 1.0e-9
+
+    [gates.labour]
+    value = 2.3314683517128287e-14
+    pass = true
+    tolerance = 1.0e-6
+
+    [gates.residual]
+    value = 2.3314683517128287e-14
+    pass = true
+    tolerance = 1.0e-6
+
+[provenance]
+git_commit = "1cc4ab821ddc144ad1e4be4a2f50bae030da60b6"
+julia_version = "1.12.7"
+design_sha256 = "0b6dd5f5e50b67429fe895a04873879b8de4db4f191ad3183ecb8590f13ec37f"
+git_dirty = true
+seed = 1234
+manifest_sha256 = "435f907d20c8accb1a53ded7a2dcb49a41e50f84bdfaab06ca5d04629050f833"
+
+    [provenance.data_sha256]
+    "data/I-O_DE2019_formatiert.csv" = "e9c3299731940f7ce683f0e508495c62ad255f0a5536cf1da63c02478058914d"
+    "cbase2/data_raw/impulses.csv" = "5545c748d848ec121fa5aff21d0c46a55c8d00462518718d3d54374c7f0b8c5f"
+    "experiments/designs/supply_etas_s1.toml" = "0b6dd5f5e50b67429fe895a04873879b8de4db4f191ad3183ecb8590f13ec37f"
+
+[scenario]
+sigma = 0.9
+theta = 0.5
+shock_kind = "sectoral"
+labour = "BETA"
+magnitude = 1.2
+shock_magnitude = 1.2
+eta = 1.0
+eta_s = 5.0
+financing = "F1"
+shock_targets = [1]
+epsilon = 0.5
+shock_A = [1.2, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+shock = "sectoral:supply"
+
+[solver]
+init = "warm:reference-final"
+algorithm = "kernel solve / solve_beta (Newton + residual-gated LM polish)"
+reference = "batch-continuation"
+
+[diagnostics]
+external_balance = 0.0
+gdp_m_final = -0.25394404865798637
+wage_max = 1.004902974534586
+gdp_g = 0.2149492538459089
+gdp_c = 0.7366667138094329
+wage_min = 1.004902974534586
+canary_ixm = 0.10450729414594634
+gdp_x = 0.4226848408861827
+gdp_m_int = -0.22724412251699194
+canary_diff = -2.740863092043355e-16
+public_budget = 0.21410137597438153
+gdp_t_int = -0.026342461251522033
+gdp_i = 0.16301062443474174
+canary_s = 0.10035227082361506
+
+[artifacts]
+log = "log.txt"
+solution = "solution.csv"

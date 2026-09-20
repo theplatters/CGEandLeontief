@@ -1,0 +1,761 @@
+# experiments/designs/supply_etas_prog.toml — the supply arm, shock prog (ADR-0023)
+#
+# productivity gain A_i = 1 + alpha*psi_i on the programme's own sectors, alpha in {0.05,0.10,0.20}; identification-vehicle split per ADR-0023 (same as supply_etas_s1).
+
+schema_version = 1
+design = "supply_etas_prog"
+description = "Supply arm prog: productivity gain A_i = 1 + alpha*psi_i on the programme's own sectors, alpha in {0.05,0.10,0.20}; full-71 A-bill; ALPHA control + scalar BETA (eta_s 0.5/1/2/5) + sectoral uniform BETA (eta_s 0.5/2), x F1/F2/F3 x 3 magnitudes. ADR-0023 [shock] schema."
+smoke = false
+
+[data]
+vintage = "full-71-abill"
+drops = []
+calibration_root = "src"
+source_table = "data/I-O_DE2019_formatiert.csv"
+calibration_artifacts = []
+
+[calibration]
+saving_rate = 0.1199
+intermediate_imports = 0.2214
+intermediate_taxes = 0.0257449423974625
+baseline_root_tol = 1e-12
+
+[programme]
+source = "cbase2/data_raw/impulses.csv"
+year = 2024
+column_slice = [3, 73]
+total_eur_m = 40300.0
+f1_shift = "tilt_g0_over_c0"
+
+[reference]
+labor = "ALPHA"
+eta = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+exo_scale_steps = 6
+thetas = [2.0, 1.5, 1.2, 1.0, 0.8, 0.65, 0.5]
+
+[gates]
+residual_tol = 1e-6
+budget_tol = 1e-9
+labour_tol = 1e-6
+wage_tol = 1e-8
+
+[shock]
+kind = "programme"
+alpha = 0.10
+note = "per-cell shock_alpha overrides the ladder"
+
+# ── cells ──
+[cells.supply_etas_prog-ALPHA-F1-a05]
+labor = "ALPHA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "ALPHA control, productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-ALPHA-F2-a05]
+labor = "ALPHA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "ALPHA control, productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-ALPHA-F3-a05]
+labor = "ALPHA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "ALPHA control, productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e05-a05]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e05-a05]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e05-a05]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e1-a05]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e1-a05]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e1-a05]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e2-a05]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e2-a05]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e2-a05]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e5-a05]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 5.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e5-a05]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 5.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e5-a05]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 5.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-sec-e05-a05]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-sec-e05-a05]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-sec-e05-a05]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-sec-e2-a05]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-sec-e2-a05]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-sec-e2-a05]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.05
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-ALPHA-F1-a10]
+labor = "ALPHA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "ALPHA control, productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-ALPHA-F2-a10]
+labor = "ALPHA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "ALPHA control, productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-ALPHA-F3-a10]
+labor = "ALPHA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "ALPHA control, productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e05-a10]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e05-a10]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e05-a10]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e1-a10]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e1-a10]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e1-a10]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e2-a10]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e2-a10]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e2-a10]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e5-a10]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 5.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e5-a10]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 5.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e5-a10]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 5.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-sec-e05-a10]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-sec-e05-a10]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-sec-e05-a10]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-sec-e2-a10]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-sec-e2-a10]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-sec-e2-a10]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.1
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-ALPHA-F1-a20]
+labor = "ALPHA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "ALPHA control, productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-ALPHA-F2-a20]
+labor = "ALPHA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "ALPHA control, productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-ALPHA-F3-a20]
+labor = "ALPHA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "ALPHA control, productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e05-a20]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e05-a20]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e05-a20]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e1-a20]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e1-a20]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e1-a20]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e2-a20]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e2-a20]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e2-a20]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-e5-a20]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 5.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-e5-a20]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 5.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-e5-a20]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 5.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+note = "scalar single-wage BETA (2N+2), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-sec-e05-a20]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-sec-e05-a20]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-sec-e05-a20]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.5
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+
+[cells.supply_etas_prog-BETA-F1-sec-e2-a20]
+labor = "BETA"
+financing = "F1"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F1"
+
+[cells.supply_etas_prog-BETA-F2-sec-e2-a20]
+labor = "BETA"
+financing = "F2"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F2"
+
+[cells.supply_etas_prog-BETA-F3-sec-e2-a20]
+labor = "BETA"
+financing = "F3"
+eta = 1.0
+eta_s = 2.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+shock_alpha = 0.2
+eta_s_rigid_group = "none"
+note = "sectoral uniform BETA (3N+1), productivity gain A_i = 1 + alpha*psi_i on the programme's o, F3"
+

@@ -59,3 +59,4 @@ settled question.
 | ADR-0020 | The eta = 0 endpoint's external account: closure options | accepted (option C) |
 | ADR-0021 | Wage structure in the fixed-wage closure (GAMMA) | proposed |
 | ADR-0022 | Sectoral labour markets: demand-sensitive prices from the wage block | accepted |
+| ADR-0023 | Supply-shock design schema for the identification arm | accepted |

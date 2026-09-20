@@ -69,7 +69,9 @@ apparatus is still in the kernel — `const inflator = 1.46`
 (`src/BeyondHulten.jl`) and `impulse_shock` (`src/core/diagnostics.jl`,
 exercised by `tests/test_model.jl`) — but the harness does not call it: the
 deflation is implicit in `total_eur_m`, and the incidence `ψ` is the raw
-current-price 2024 composition (undeflated). See ADR-0024.
+current-price 2024 composition (undeflated). See ADR-0024 (accepted
+2026-09-20: G0 = the deflated horizon mean, 40.3 bn, is the principal
+programme).
 
 DELTA cells pin `theta = epsilon = sigma = delta_epsilon = 1e-4` (the
 actually solved values). `matrix_5x3-DELTA-F1` is expected to fail the

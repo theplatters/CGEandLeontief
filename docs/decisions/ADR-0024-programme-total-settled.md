@@ -1,7 +1,8 @@
-# ADR-0024 — Programme total: G0 = 40,300 kept while the size question stays open
+# ADR-0024 — Programme total: the deflated horizon mean (G0 = 40,300 EUR m) as the principal programme
 
-- **Status:** proposed (records the interim course; the price basis is now
-  resolved — see Context; the underlying size question stays open)
+- **Status:** accepted (user decision, 2026-09-20): keep the deflated horizon
+  mean — G0 = 40,300 EUR m (40.34 bn to 0.1 %) — as the principal programme;
+  the composition item remains tracked (Open items)
 - **Date:** 2026-09-20
 - **Supersedes:** —
 - **Related:** ADR-0003 (registry single source of truth), ADR-0004 (runs),
@@ -63,20 +64,19 @@ superseded. (iii) The option-B comparison below mixes price bases: at 2019
 prices the mean is 40.34 bn (≈ 1.33 % of GDP), i.e. the current G0 —
 re-anchoring to the raw current-price mean would double-count the deflation.
 
-## Decision (interim, open issue)
+## Decision (accepted)
 
-**Keep G0 = 40,300 EUR m for the executed generations and the current
-manuscript pass. The programme-size question is acknowledged open and is
-tracked by this ADR.** No re-anchor, no re-run, no re-mint while the
-question is open. The system is homogeneous in the programme level —
+**Keep G0 = 40,300 EUR m — the deflated horizon mean (40.34 bn; the 0.09 %
+difference is rounding to the paper's 40.3) — as the principal programme
+for the executed generations and the manuscript. Accepted by the operator
+on 2026-09-20; no re-anchor, no re-run, no re-mint.** The level is
+unchanged from the executed `matrix_5x3_v9`/`v10` designs, so their
+provenance is untouched. The system is homogeneous in the programme level —
 shares, signs and rankings are unaffected by G0 and every relative metric
 scales with it to first order (the sectoral and capacity variants are
-nonlinear, so the scaling is approximate; option B' would measure it) — so
-the interim course leaves the science untouched and only defers a
-manuscript-level number. The **price-basis item is closed** (Context, same
-date): the raw impulse is in current (2023) prices, the design's G0 is that
-horizon mean at 2019 prices, and the interim course stands with its price
-base identified rather than assumed.
+nonlinear, so the scaling is approximate; option B' would measure it). The
+**price-basis item is closed** (Context): the raw impulse is in current
+(2023) prices and the design's G0 is that horizon mean at 2019 prices.
 
 Options recorded for settling the question, with their costs:
 
@@ -87,13 +87,18 @@ Options recorded for settling the question, with their costs:
 | B'. Level-robustness batch | Optional: a handful of headline cells at G0 = 40.34 bn (the deflated mean, +0.1 % on G0) to demonstrate level invariance numerically | ~8 cells |
 | C. Re-read the source | **Answered in-repo (2026-09-20)**: price basis = current (2023) prices; scalar deflator 1.46; the paper's 40.3 bn is the deflated horizon mean; the halving conjecture is superseded. What remains is the **composition** (ψ is the raw current-price 2024 composition; a constant-2019-price incidence vector needs sectoral deflators) and the unread funding-split question | document-level; the composition is a modelling choice |
 
+Resolution (2026-09-20): **option A's form with the current G0** — the
+manuscript states the average annual impulse at 2019 prices (40.34 bn) as
+the principal programme, which is the model's G0; option B is not adopted
+(a no-op at the correct price base); B' is optional and not required; C is
+answered in Context.
+
 ## Open items
 
-- **Price basis: resolved 2026-09-20.** Current (2023) prices; the paper's
-  40.3 bn is the horizon mean deflated at 1.46; G0 = 40,300 is that figure.
-  Evidence: the paper footnote (`paper/main.tex`), the legacy
-  `inflator`/`impulse_shock` (`src/BeyondHulten.jl`, `src/core/diagnostics.jl`;
-  main `src/util.jl`), and 58,893.43 / 1.46 = 40,337.97 ≈ 40.3 bn.
+- **Principal programme: settled 2026-09-20.** The deflated horizon mean —
+  G0 = 40,300 EUR m (40.34 bn to 0.1 %) — is the programme used by every
+  generation and by the manuscript. Price basis: current (2023) prices,
+  deflator 1.46; evidence in Context.
 - **The halving/funding-split conjecture is superseded** by the deflator
   explanation (80.76 / 2 = 40.38 is a numerical coincidence). The
   funding-split question is still unread against the source, but it no longer
@@ -110,13 +115,18 @@ Options recorded for settling the question, with their costs:
 - If a level change is ever chosen, which average (horizon mean, 2025-2050
   mean, mean vector with its 2050 composition drift) must be fixed in the
   design.
-- Manuscript wording for the programme's scale while this ADR is open.
+- **Manuscript wording.** State the principal programme as the average annual
+  impulse at 2019 prices (40.34 bn ≈ 1.33 % of GDP); the source's
+  current-price mean (58.89 bn) may be quoted as the price-base statement.
+  (Part of the manuscript pass, open item 5 of `docs/CONCISE_SUMMARY.md`.)
 
 ## Consequences
 
-- No `src/`, registry, design or preregistration change. The open item
-  stays visible in `docs/CONCISE_SUMMARY.md` (open item 3, v2) and in this
-  ADR; no DE record (the question is not abandoned).
+- No `src/`, registry, design or preregistration change: the accepted level
+  equals the one already executed, so the `matrix_5x3_v9`/`v10` generations
+  keep their provenance. The composition item stays visible in
+  `docs/CONCISE_SUMMARY.md` (open item 3, v3) and in this ADR; no DE record
+  (the question is not abandoned).
 - The price base is recorded in this ADR and in `experiments/README.md`
   (§Cell construction); the design files are not edited (their SHA-256 is
   pinned by `registry/preregistration.toml`), so the deflation is
@@ -127,9 +137,11 @@ Options recorded for settling the question, with their costs:
 
 ## Enforcement
 
-- While this ADR is open, no design file's `[programme]` block is edited.
+- No design file's `[programme]` block is edited: the accepted level is the
+  executed one (G0 = 40,300 EUR m); any future level change is a new design,
+  preregistration (ADR-0006) and generation (ADR-0004).
 - The price base lives in this ADR and in `experiments/README.md`; a future
-  generation that wants the deflation explicit in the harness requires a new
-  design and preregistration (ADR-0006) and a new generation (ADR-0004).
-- When the question is settled, this ADR is accepted with the resolution
-  (if G0 stays) or superseded by the re-anchoring ADR (if it moves).
+  generation that wants the deflation explicit in the harness requires the
+  same route.
+- The resolution is recorded here and in `docs/CONCISE_SUMMARY.md`; this ADR
+  is superseded only if the level or the price basis moves.

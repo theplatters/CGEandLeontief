@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-09-20 by `scripts/status.jl` · branch `reorg` · HEAD `28a2cad` (dirty)
+Generated 2026-09-20 by `scripts/status.jl` · branch `reorg` · HEAD `ecdf814` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -420,6 +420,7 @@ Scenarios: **228** rows — executed: 184, provisional: 3, failed: 41. Designs: 
 - [ADR-0022 -- Sectoral labour markets: demand-sensitive prices from the wage block](decisions/ADR-0022-sectoral-labour-markets.md)
 - [ADR-0023 — Supply-shock design schema for the identification arm](decisions/ADR-0023-supply-shock-design-schema.md)
 - [ADR-0024 — Programme total: G0 = 40,300 kept (the 2019-price horizon average)](decisions/ADR-0024-programme-total-settled.md)
+- [ADR-0025 — Matrix visualisation: validated re-solve, headless data layer, figures are not runs](decisions/ADR-0025-matrix-visualisation-validated-resolve.md)
 
 ## Warnings
 

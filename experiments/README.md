@@ -162,6 +162,50 @@ like `gdp_rel=...; cons_rel=...; L=...; w=...`.
 Only `runs/index.csv` and `runs/*/manifest.toml` are tracked (see
 `.gitignore`); verify with `git check-ignore`.
 
+## Plotting the matrix
+
+`experiments/plot_matrix.jl` generates the comparative figures for an
+executed matrix generation. It re-solves each selected cell with the
+harness and hard-validates it against the recorded run artifacts; figures
+(and the tidy CSVs) cover only the cells that validate. No run dirs are
+created and no registry/run files are modified.
+
+```bash
+julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id1,id2] [--outdir DIR] [--data-dir DIR] [--no-figures] [--quiet]
+```
+
+- `--design` (required) must be preregistered with a matching SHA-256;
+  otherwise the driver aborts before solving. `--cells` selects a subset
+  (comma-separated run ids, each validated against the design); the default
+  is the design's matrix cells via
+  `matrix_cell_ids(cell_order(design), design)` (the fifteen labour ×
+  financing cells, not the sectoral variants).
+- Validation contract: per cell, `solve_cell` + `evaluate_gates` are
+  re-run from the batch reference continuation (programme `ψ, g` exactly as
+  `run_design` computes them); the cell is valid only if the recorded
+  manifest status is `executed`, the re-solved gates pass, and
+  `validate_cell` (manifest metrics plus the stored `solution.csv`
+  prices/quantities) passes. A solve/gate/read failure is recorded as an
+  invalid cell and never aborts the batch. The driver prints a
+  one-line-per-cell validation report
+  (`run_id | status | max|Δp| | max|Δq| | max|Δmetric| | ok/FAIL`) and a
+  final `N/M cells validated` line; the exit code is 0 only when every
+  selected cell validated (and figures were written or `--no-figures` was
+  passed). `--quiet` suppresses the per-cell progress chatter but not the
+  validation report.
+- Figures need GLMakie: install it with
+  `import Pkg; Pkg.add("GLMakie")`, then `using GLMakie` alongside
+  `using BeyondHulten` (headless rendering works). `--no-figures` runs the
+  validation + data export only and never loads GLMakie (headless mode);
+  without GLMakie on the figure path the driver prints the install
+  instruction and exits 1.
+- Outputs: `<data-dir>/<design>_summary.csv` (one row per validated cell,
+  via `matrix_summary_frame`) and `<data-dir>/<design>_sectoral.csv`
+  (tidy long frame, via `matrix_sectoral_frame`); defaults are
+  `--data-dir <root>/output` and `--outdir <root>/plots` (both gitignored
+  areas). With figures, `save_matrix_figures(ds; outdir, prefix = design)`
+  writes the panels and the driver prints each path.
+
 ## Preregistration (`registry/preregistration.toml`)
 
 `schema_version = 1`; `[designs.<design>]`: `design_sha256`,

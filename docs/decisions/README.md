@@ -61,3 +61,4 @@ settled question.
 | ADR-0022 | Sectoral labour markets: demand-sensitive prices from the wage block | accepted |
 | ADR-0023 | Supply-shock design schema for the identification arm | accepted |
 | ADR-0024 | Programme total: G0 = 40,300 kept (the 2019-price horizon average) | accepted |
+| ADR-0025 | Matrix visualisation: validated re-solve, headless data layer, figures are not runs | accepted |

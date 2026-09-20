@@ -7,6 +7,7 @@ tags: [beyondhulten, workplan, closures, eta_s, supply-shock, identification]
 last-updated: September 2026
 ---
 
+**Version 4** \textcolor{revisionV3}{(September 2026)}
 **Version 3** \textcolor{revisionV2}{(September 2026)}
 **Version 2** \textcolor{revisionV1}{(September 2026)}
 **Version 1** (September 2026)
@@ -110,6 +111,39 @@ report per-sector recovery, never one number. Both forms are live in the
 kernel and in the executed v9 design (matrix cells = scalar, ladder cells =
 sectoral), so no promotion is needed. The ADR-0023 schema records this and
 keeps the two rows separate in every table.}
+
+# The executed arm \textcolor{revisionV3}{\normalsize [v4, 2026-09-20]}
+
+\textcolor{revisionV3}{\textbf{\texttt{supply\_etas\_s1} is executed: 63/63 cells, all gates
+pass} (design commit \texttt{202837a}; ADR-0023 schema; flow table
+\texttt{paper/tables/supply\_etas\_flows.md}, generated from the manifests).
+The ratified matrix: ALPHA control + scalar single-wage BETA ($\eta_s \in
+\{0.5, 1, 2, 5\}$, the identification row) + sectoral uniform BETA ($\eta_s
+\in \{0.5, 2\}$, the robustness row), times F1/F2/F3 times $A_1 \in \{1.1,
+1.2, 1.3\}$.}
+
+\textcolor{revisionV3}{\textbf{The preregistered signatures all hold.} (i)
+\textbf{Identification exact and magnitude-invariant}: the implied elasticity
+$\ln L / \ln w$ recovers the input $\eta_s$ to four decimals (0.5000 /
+1.0000 / 2.0000 / 5.0000 at $A_1 = 1.2$, F2) and its spread across the
+magnitude ladder is below $10^{-6}$. (ii) \textbf{ALPHA is the control}:
+$L = 1$ exactly, $w = 1.0049 > 1$. (iii) Real GDP is monotone in $\eta_s$
+within each financing column. (iv) \textbf{Financing neutrality extends to
+supply shocks}: F2 = F3 in every metric; F1 distinct (the programme tilt).
+(v) \textbf{The canary under $A \neq 1$}: the ADR-0019 external-account
+identity is asserted on all 63 cells (all pass; \texttt{canary\_diff} at
+solver noise) --- the ETAs gate that had only ever been tested at $p = 1$ is
+now recorded under a technology shock. Prices move through technology
+($\max|p - 1| = 0.196$ at $A_1 = 1.2$ for the scalar rows; the sectoral 3N+1
+rows carry their own wage dispersion, $w = 1.007$, $\max|p - 1| = 0.228$ at
+$\eta_s = 0.5$).}
+
+\textcolor{revisionV3}{Remaining: \texttt{supply\_etas\_prog} (productivity
+gain $A_i = 1 + \alpha \psi_i$ on the programme's own sectors, $\alpha \in
+\{0.05, 0.10, 0.20\}$) and \texttt{supply\_etas\_unif} (uniform $A_i$), same
+schema and batch pattern. The DOCS\_ASSESSMENT section 4.2 write-up is
+recorded for the manuscript pass (the assessment document's revision palette
+has no colour beyond \texttt{revisionV6} yet).}
 
 # Design of the arm
 
@@ -380,3 +414,14 @@ the workplan.}
   single-wage BETA carries the scalar signature, the sectoral uniform
   vector the per-sector robustness row); workplan step 1 and the canary
   gate updated.
+- **Version 4** \textcolor{revisionV3}{(September 2026)} --- The arm is
+  executed: \texttt{supply\_etas\_s1} 63/63 cells, all gates pass (design
+  commit 202837a; ADR-0023 schema ratified). The preregistered signatures
+  hold: identification exact and magnitude-invariant (implied $\eta_s$ =
+  input to 1e-6); ALPHA control ($L = 1$, $w = 1.0049$); real GDP monotone
+  in $\eta_s$; F2 = F3 financing neutrality extends to supply shocks; the
+  external-account canary is asserted at $A \neq 1$ on every cell. Flow
+  table \texttt{paper/tables/supply\_etas\_flows.md}; remaining designs
+  \texttt{supply\_etas\_prog} and \texttt{supply\_etas\_unif}; the
+  DOCS\_ASSESSMENT section 4.2 write-up is recorded for the manuscript
+  pass.

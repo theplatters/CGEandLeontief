@@ -200,14 +200,20 @@ measurement section therefore stands unchanged and the equivalences of
 
 | Executed cell | `max abs(p-1)` F1 / F2 / F3 | employment (F2) | consumption (F2) | deflator (F2) | wage max/min |
 | --- | --- | ---: | ---: | ---: | ---: |
-| uniform $\eta_s = 0.25$ | 0.133610 / 0.152897 / 0.152897 | 1.000864 | -0.016888 | 1.004096 | 1.38 |
-| uniform $\eta_s = 0.5$ | 0.095839 / 0.105666 / 0.105666 | 1.001255 | -0.015712 | 1.002872 | 1.26 |
-| uniform $\eta_s = 1$ | 0.061283 / 0.065422 / 0.065422 | 1.001627 | -0.014669 | 1.001802 | 1.16 |
+| uniform $\eta_s = 0.25$ | 0.133610 / 0.152897 / 0.152897 | 1.000864 | -0.016888 | 1.004088 | 1.38 |
+| uniform $\eta_s = 0.5$ | 0.095839 / 0.105666 / 0.105666 | 1.001255 | -0.015712 | 1.002868 | 1.26 |
+| uniform $\eta_s = 1$ | 0.061283 / 0.065422 / 0.065422 | 1.001627 | -0.014669 | 1.001800 | 1.16 |
 | uniform $\eta_s = 2$ | 0.035629 / 0.037171 / 0.037171 | 1.001914 | -0.013912 | 1.001033 | 1.09 |
-| rigid programme sectors, $\eta_s = 0.5$ | 0.215061 / 0.272033 / 0.272033 | 0.996621 | -0.026914 | 1.006206 | 1.70 |
-| rigid largest half, $\eta_s = 0.5$ | 0.109583 / 0.123362 / 0.123362 | 1.000196 | -0.019053 | 1.006294 | 1.28 |
+| rigid programme sectors, $\eta_s = 0.5$ | 0.215061 / 0.272033 / 0.272033 | 0.996621 | -0.026914 | 1.006190 | 1.70 |
+| rigid largest half, $\eta_s = 0.5$ | 0.109583 / 0.123362 / 0.123362 | 1.000196 | -0.019053 | 1.006281 | 1.28 |
 | BF ($\eta = 0$ endpoint) | 0.221442 / 0.279009 / 0.279009 | 1.000000 | -0.019800 | 1.007181 | 1.72 |
 | GAMMA (fixed wage) | 0.000000 / 0.000000 / 0.000000 | 1.001260 | -0.015333 | 1.000000 | 1.00 |
+
+\textcolor{revisionV6}{Correction (2026-09-20): the six deflators above are
+corrected from the \texttt{matrix\_5x3\_v10} manifests. The previous values
+were measured with the C1 defect (\texttt{gdp\_components} collapsed the
+sectoral wage vector to a scalar; the solve is unaffected, so prices,
+employment and consumption are unchanged). See the ADR-0022 amendment.}
 
 \textcolor{revisionV5}{Four readings. (i) The goal is met in the executed
 matrix: prices move with the demand \emph{composition} in every sectoral cell

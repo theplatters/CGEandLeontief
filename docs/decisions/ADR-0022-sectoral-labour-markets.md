@@ -318,3 +318,51 @@ because the *real-wage anchor binds* (`w/P = 1`), making the supply curve return
 *elasticity vanishes* rather than the price being pinned. Two degenerations of
 one supply family onto one fixed quantity -- both exact, both visible in the
 kernel as a branch that never executes.
+
+## Amendment 2026-09-20 — the C1 measurement defect and the matrix_5x3_v10 re-mint
+
+**Root cause.** `gdp_components` (`src/core/diagnostics.jl`) selected the
+sectoral wage vector only at `η == 0`
+(`w = elasticities.η == 0.0 ? sol.wages_raw : sol.wages_raw[1]`), but every
+sectoral cell of this ADR runs at `η = 1` with `eta_s_vec !== nothing` — so
+all eighteen `matrix_5x3-v9-BETA-*` sectoral manifests measured GDP at the
+scalar wage `w_1` with `L_i` recomputed at that wage. Wrong in those
+manifests: `gdp`, `gdp_rel`, `gdp_expenditure(_rel)`, `gdp_deflator`,
+`gdp_wedge` and the `gdp_c` / `gdp_m_final` diagnostics. The solve was
+unaffected (prices, quantities, employment, consumption identical).
+
+**Disproved claim.** The Implementation section above states that
+"`external_balance_canary`, `market_clearing_residuals` and `gdp_components`
+already accepted the 3N+1 vector (ADR-0020) and are unchanged" — true of the
+first two, false of the third: accepting the vector is not using it.
+
+**Fix (commit `8774595`).** The wage selection now mirrors `sect`
+(`η == 0 || eta_s_vec !== nothing`); `experiments/run.jl` `evaluate_gates`
+hard-asserts the companion identity `gdp_wedge = -canary_diff` at 1e-9
+(measured max 4.4e-16 over the new generation); tests gain a data-free
+open-fixture regression, the real-table identity on the solved sectoral cell,
+and a sectoral smoke cell through the harness.
+
+**Re-mint (`matrix_5x3_v10`).** Design committed at `979a58e` (preregistered,
+sha256 `ab5974a3…`); all 33 cells executed at `c2c5b7d` (actor `calculato`),
+every gate passes. Measured corrections (v10 vs v9 manifests): `gdp_rel`
+flips sign in 15 of the 18 sectoral cells — `BETA-F1-etas05` −0.4414 % →
++0.1217 %, `BETA-F2-rigidprog` −1.4525 % → −0.3414 %,
+`BETA-F1-rigidhalf` −0.7748 % → +0.0144 %; `gdp_wedge` drops from up to
+3.8e-3 to ≤ 1.5e-12, i.e. the ADR-0019 companion identity now closes in the
+sectoral cells; deflator corrections are small but real (F2-etas025 1.004096
+→ 1.004088; F2-rigidhalf 1.006294 → 1.006281). The fifteen matrix cells
+reproduce v9 to solver precision, not bit-for-bit: v6 and v9 are bit-identical
+to each other (both executed in another working copy), while v10 ran in this
+working copy, so cross-copy floating-point noise appears at ≤ 9.3e-9 (the
+stiff BF-F1 `wage_max` diagnostic), ≤ 1.6e-11 in the ALPHA/BETA/GAMMA/DELTA
+rows, and ≤ 4.6e-15 where the equilibrium is the exact baseline — against the
+v10 design file's "expected bit-for-bit" comment, which was written from the
+same-environment v6→v9 identity and is not met across environments.
+Solutions are unchanged: v10 reproduces this working copy's own pre-batch
+solves bit-for-bit, and all non-gdp metrics differ only at the noise level.
+
+**Citation rule.** `matrix_5x3_v9` stays citable for everything except the
+eighteen sectoral cells' gdp-family metrics; for those cite `matrix_5x3_v10`
+(flow table `paper/tables/matrix_5x3_v10_flows.md`, created in parallel; the
+v9 flow table carries a supersession banner).

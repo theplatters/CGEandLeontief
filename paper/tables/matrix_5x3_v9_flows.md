@@ -1,5 +1,14 @@
 # Flow tables — the 5x3 matrix and the sectoral family (ADR-0022 generation)
 
+> **Superseded for the eighteen sectoral cells' GDP columns (C1, 2026-09-20).**
+> `gdp_components` collapsed the sectoral wage vector on the ADR-0022 cells
+> (η = 1 with `eta_s_vec`), so in Table 3 the `Real GDP rel.` and `deflator`
+> columns and in Table 4 the `M` and `I + X` columns are wrong for those cells;
+> the manifests stay as issued (ADR-0004). The corrected generation is
+> `matrix_5x3_v10` — `paper/tables/matrix_5x3_v10_flows.md`.
+> The fifteen matrix cells (Table 2) and every other column are unaffected:
+> v10 reproduces the v9 solutions to solver precision.
+
 Generated from `runs/matrix_5x3-v9-*/manifest.toml` (schema v2, commit `048c8fa`),
 no re-solve and no hand-typed numbers: every figure below is a manifest field or a
 sum of manifest fields, with the mapping stated in the table notes. All flows are in

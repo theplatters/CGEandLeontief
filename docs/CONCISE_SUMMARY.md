@@ -7,6 +7,7 @@ tags: [summary, matrix, labour-closure, prices, gamma, handoff]
 last-updated: September 2026
 ---
 
+**Version 3** \textcolor{revisionV2}{(September 2026)}
 **Version 2** \textcolor{revisionV1}{(September 2026)}
 **Version 1** (September 2026)
 
@@ -71,14 +72,21 @@ in `matrix_5x3_v9`:
 
 | Sectoral cell | `max abs(p-1)` F1 / F2 / F3 | Employment (F2) | Consumption (F2) | Deflator (F2) | Wage max/min |
 | --- | --- | ---: | ---: | ---: | ---: |
-| uniform `eta_s = 0.25` | 0.133610 / 0.152897 / 0.152897 | 1.000864 | -1.689% | 1.004096 | 1.38 |
-| uniform `eta_s = 0.5` | 0.095839 / 0.105666 / 0.105666 | 1.001255 | -1.571% | 1.002872 | 1.26 |
-| uniform `eta_s = 1` | 0.061283 / 0.065422 / 0.065422 | 1.001627 | -1.467% | 1.001802 | 1.16 |
+| uniform `eta_s = 0.25` | 0.133610 / 0.152897 / 0.152897 | 1.000864 | -1.689% | 1.004088 | 1.38 |
+| uniform `eta_s = 0.5` | 0.095839 / 0.105666 / 0.105666 | 1.001255 | -1.571% | 1.002868 | 1.26 |
+| uniform `eta_s = 1` | 0.061283 / 0.065422 / 0.065422 | 1.001627 | -1.467% | 1.001800 | 1.16 |
 | uniform `eta_s = 2` | 0.035629 / 0.037171 / 0.037171 | 1.001914 | -1.391% | 1.001033 | 1.09 |
-| rigid programme sectors, `eta_s = 0.5` | 0.215061 / 0.272033 / 0.272033 | 0.996621 | -2.691% | 1.006206 | 1.70 |
-| rigid largest half, `eta_s = 0.5` | 0.109583 / 0.123362 / 0.123362 | 1.000196 | -1.905% | 1.006294 | 1.28 |
+| rigid programme sectors, `eta_s = 0.5` | 0.215061 / 0.272033 / 0.272033 | 0.996621 | -2.691% | 1.006190 | 1.70 |
+| rigid largest half, `eta_s = 0.5` | 0.109583 / 0.123362 / 0.123362 | 1.000196 | -1.905% | 1.006281 | 1.28 |
 | BF (`eta = 0` endpoint) | 0.221442 / 0.279009 / 0.279009 | 1.000000 | -1.980% | 1.007181 | 1.72 |
 | GAMMA (fixed wage, contrast) | 0.000000 / 0.000000 / 0.000000 | 1.001260 | -1.533% | 1.000000 | 1.00 |
+
+Note (2026-09-20): the deflators above are corrected from the
+`matrix_5x3_v10` manifests — the previous values were measured with the C1
+defect (`gdp_components` collapsed the sectoral wage vector; ADR-0022
+amendment; `paper/tables/matrix_5x3_v10_flows.md`). All other columns
+(prices, employment, consumption, wage dispersion) are solutions and are
+unchanged between v9 and v10.
 
 - **Demand sensitivity, defined strictly.** In every sectoral cell `max abs(p-1)`
   differs between F1 and F2/F3 (F2 = F3 throughout), while all twelve `eta = 1`
@@ -161,12 +169,12 @@ financing columns.
    the one remaining batch that converts a band into a number.
 2. **The grouping rule** - now motivated by capacity pressure, still to be
    preregistered with its testable evidence (vacancies, overtime, backlogs).
-3. \textcolor{revisionV1}{**The programme total** - price basis resolved
-   (2026-09-20): the raw impulse is in current (2023) prices (horizon mean
-   58.89 bn) and the design's G0 = 40.3 bn is that mean at 2019 prices
-   (deflator 1.46, construction-cost based; 58.89/1.46 = 40.34 bn). The
-   remaining question is the composition (the raw 2024 current-price vector)
-   and the manuscript wording; ADR-0024 records the evidence.}
+3. \textcolor{revisionV2}{**The programme total** - settled (2026-09-20):
+   the principal shock is the deflated horizon mean, G0 = 40.3 bn (40.34 bn
+   to 0.1 %; the raw impulse is in current (2023) prices, deflator 1.46);
+   ADR-0024 is accepted. The remaining question is the composition (the raw
+   2024 current-price vector; a constant-2019-price incidence vector needs
+   sectoral deflators) and the manuscript wording.}
 4. **The welfare metric** - dispersion-blind, and the kernel has no leisure term
    or income effect, so employment and wage dispersion are allocation facts, not
    welfare claims.
@@ -189,6 +197,10 @@ financing columns.
 
 # Revision Log
 
+- **Version 3** \textcolor{revisionV2}{(September 2026)} --- Open item 3
+  updated: the operator keeps the deflated horizon mean (G0 = 40.3 bn) as the
+  principal programme; ADR-0024 accepted. The composition remains the open
+  piece. No numbers change.
 - **Version 2** \textcolor{revisionV1}{(September 2026)} --- Open item 3
   updated: the programme total's price basis is resolved (the raw impulse is
   in current prices; G0 = 40.3 bn is the horizon mean at 2019 prices,

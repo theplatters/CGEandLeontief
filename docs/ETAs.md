@@ -7,6 +7,7 @@ tags: [beyondhulten, workplan, closures, eta_s, supply-shock, identification]
 last-updated: September 2026
 ---
 
+**Version 3** \textcolor{revisionV2}{(September 2026)}
 **Version 2** \textcolor{revisionV1}{(September 2026)}
 **Version 1** (September 2026)
 
@@ -72,6 +73,43 @@ Three things follow, and they are the substance of the answer:
    specification test of the implementation.
 3. **Prices move at last** ($\max|p - 1| = 0.196$), which is the precondition
    for the other candidates (markups, capacity) to have anything to bite on.
+
+# Status of the arm \textcolor{revisionV2}{\normalsize [v3, 2026-09-20]}
+
+\textcolor{revisionV2}{Version 3 records three things: the schema ADR is
+drafted (ADR-0023, proposed); the bridge step is done --- the pilot is
+re-measured on the sectoral kernel by \texttt{probe15} (2026-09-19), whose
+numbers supersede the table above as the current evidence; and an
+identification-vehicle decision is fixed. The arm still changes the
+experiment, not \texttt{src/}: no closure, no kernel, no generation.}
+
+\textcolor{revisionV2}{\textbf{The bridge measurements (probe15, full-71,
+$A_1 = 1.2$; recorded in \texttt{docs/log/2026-09.md}).} The $\eta_s$ rungs
+separate: employment 1.000000 / 1.002187 / 1.008218 at $\eta_s$ = 0 / 0.5 / 2
+(sectoral uniform vector, F2), against a 0.02\,\% employment movement over
+the same ladder under the demand-only programme; the real-wage spread reads
+1.215 / 1.105 / 1.043. The rigid-corner nesting (Proposition 3) is
+\emph{shock-independent}: the canary is bit-exact with and without the
+shock. Two cautionary measurements: the shock alone moves prices
+($\max|p-1| = 0.226$ with no programme), so under a supply shock
+$\max|p-1|$ is not a demand-sensitivity measure --- the demand signature
+remains the F1 vs F2 = F3 difference; and the welfare effect flips sign
+across the rows (supply-only +1.20\,\%, supply + programme -0.40\,\%,
+demand-only -1.57\,\%), i.e. the two channels do not add linearly.}
+
+\textcolor{revisionV2}{\textbf{Identification vehicles (the v3 decision).}
+The primary identification claim runs on the \textbf{scalar single-wage
+BETA} cells (2N+2, the executed matrix form), because the preregistered
+signature is scalar: $\ln L / \ln (w/P)$ recovers the input $\eta_s$ to
+$10^{-6}$ in every cell and is invariant to the shock magnitude within a
+shock id. Each design additionally carries the \textbf{sectoral uniform
+vector} cells (3N+1, $\eta_{s,i} = \eta_s$ for every $i$) as the robustness
+row: there the identification is a vector ($\eta_{s,i} =
+\ln(L_i/\bar L_i)/\ln(w_i/\Pi)$ per sector) and no scalar signature applies;
+report per-sector recovery, never one number. Both forms are live in the
+kernel and in the executed v9 design (matrix cells = scalar, ladder cells =
+sectoral), so no promotion is needed. The ADR-0023 schema records this and
+keeps the two rows separate in every table.}
 
 # Design of the arm
 
@@ -143,6 +181,10 @@ Recorded with the design (ADR-0006), deviations are findings (ADR-0004):
   $p = 1$. Zero profit still holds, so the derivation should carry, but the
   terms are now valued at moving prices: assert it on the first supply cells
   as a diagnostic and record the result (an ADR if it fails).
+  \textcolor{revisionV2}{Status (v3): partly measured, not assumed ---
+  probe15 row set 3 asserts the rigid-corner nesting (Proposition 3)
+  bit-exact with and without $A_1 = 1.2$, and the external-account identity
+  is asserted on the first arm cells as planned.}
 - **Scale determinacy.** The round-gain criterion
   $\max(A_{\text{bill}}/\lambda + (1-m)(1-s)\,fs) < 1$ uses the baseline
   intermediate coefficients; a productivity shock changes the optimal
@@ -161,6 +203,11 @@ Recorded with the design (ADR-0006), deviations are findings (ADR-0004):
    from the design file. The ADR fixes the schema, the scenario-id convention
    for $\eta_s$ variants, and the rule that the baseline reference stays the
    no-shock one (real GDP remains "against the baseline").
+   \textcolor{revisionV2}{Status (v3): the schema ADR is drafted as
+   \texttt{ADR-0023} (proposed, 2026-09-20) --- per-design \texttt{[shock]}
+   block, default \texttt{kind = "none"} (existing designs bit-identical),
+   the ADR-0002 id convention with the shock id in the variant slot, and the
+   no-shock reference unchanged.}
 2. **Bridge, before the ADR lands.** Extend the pilot to the full grid as
    `experiments/probes/probe5_supply_arm.jl` (read-only, no `src/` change), so
    the numbers exist and the signatures can be preregistered against
@@ -325,3 +372,11 @@ the workplan.}
   utilization/Verdoorn externality with no income-closure problem); the
   nominal-wage-rule family ruled out ex ante (Corollary 3 of
   \texttt{paper/equivalence.tex}); sequencing updated.
+- **Version 3** \textcolor{revisionV2}{(September 2026)} --- The schema ADR
+  is drafted as ADR-0023 (proposed); the bridge step is done: probe15
+  re-measures the pilot on the sectoral kernel (rung separation, the
+  shock-independent nesting, the price-response and welfare-sign
+  findings); the identification-vehicle decision is fixed (scalar
+  single-wage BETA carries the scalar signature, the sectoral uniform
+  vector the per-sector robustness row); workplan step 1 and the canary
+  gate updated.

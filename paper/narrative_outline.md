@@ -2,10 +2,13 @@
 title: "Revision narrative and commented outline"
 project: "BFRep/(3)BeyondHulten"
 date: 2026-09-20
-version: 1
+version: 2
 status: "working note - not a decision, no registry entry"
 tags: [revision, narrative, outline, motivation-mindmap, beyondhulten]
 ---
+
+**Version 2** \textcolor{revisionV1}{(September 2026)}
+**Version 1** (September 2026)
 
 # Source and status
 
@@ -95,6 +98,8 @@ monotone rigidity claim.
 
 # Commented table of contents
 
+## The section plan
+
 | Sect. | Working title | What the argument does | Mindmap |
 |---|---|---|---|
 | 1 | Introduction | Transformation hook; the hidden closure choice; contributions (rigidity map, closure taxonomy, 5x3 on a published impulse, equivalences listed but not headlined); reading-guide box | N01, N08-N10 |
@@ -116,6 +121,27 @@ heavy lifting --- the shaded 5x3 grid (candidates catalogued in
 `paper/possible_plots.md`, ADR-0025); all proofs in Appendix A; all result
 tables cite `run_id`s from the `matrix_5x3_v10` and `supply_etas_*`
 generations.
+
+## Key related references \textcolor{revisionV1}{\normalsize [added v2]}
+
+\textcolor{revisionV1}{The table below repeats the first two columns of the
+section plan and adds a third column naming, for every section of the
+proposed paper, the key related references, embedded as links and verified by
+web search (publisher or DOI pages preferred; the first occurrence carries
+the link, later rows point back to it to keep the table readable). Several
+entries also live in the repository bibliography; the list is agent-suggested
+and remains to be pruned by the author.}
+
+| Sect. | Working title | Key related references |
+|---|---|---|
+| 1 | Introduction | [Kuhn (1962)](https://press.uchicago.edu/ucp/books/book/chicago/S/bo13179781.html): inter-paradigm cleavages. [Kapeller (2013)](https://doi.org/10.1017/s1744137413000052): Model-Platonism and axiomatic variation. [Akerlof (1970)](https://www.jstor.org/stable/1879431): the narrative-legitimation analogy carried over from the old draft. |
+| 2 | From transformation research to IO models | [Hornykewycz et al. (2025)](https://doi.org/10.1038/s44168-025-00229-2): the green-investment impulse. [Creutzig et al. (2018)](https://www.nature.com/articles/s41558-018-0121-1): demand-side transformation research. [Miller and Blair](https://www.cambridge.org/core/books/inputoutput-analysis/431D85A5E459AB078479852169EA77D7): input-output analysis. [Leontief (1936)](https://doi.org/10.2307/1927837) and [Leontief (1986)](https://ideas.repec.org/b/oxp/obooks/9780195035278.html): the IO core. |
+| 3 | Two primitive questions | [Taylor (1990)](https://eclass.uoa.gr/modules/document/file.php/ECON249/4.%20%CE%A0%CE%9A%CE%9B%20%CE%BA%CE%B1%CE%B9%20%CE%A5%CF%80%CE%BF%CE%B4.%20%CE%93%CE%B5%CE%BD.%20%CE%99%CF%83%CE%BF%CF%81%CF%81%CE%BF%CF%80%CE%B9%CE%B1%CF%82/taylor%20STructuralist%20CGEs.pdf): structuralist closures. [Lavoie (2014)](https://www.e-elgar.com/shop/gbp/post-keynesian-economics-9781847204837.html) and [Blecker (2019)](https://www.e-elgar.com/shop/usd/heterodox-macroeconomics-9781784718893.html): post-Keynesian and heterodox macroeconomics. [Kim (2017)](https://arxiv.org/abs/1608.01365) and [Klump (2012)](https://doi.org/10.1111/j.1467-6419.2012.00730.x): the CES middle ground. [Weber (2023)](https://doi.org/10.4337/roke.2023.02.05), [Weber (2024)](https://doi.org/10.1093/icc/dtad080) and [Nikiforos (2024)](https://doi.org/10.1093/icc/dtae003): the Leontief price-model strand. [BF (2019)](https://doi.org/10.3982/ecta15202): the CES-GE pole. [Robinson (2006)](https://doi.org/10.1007/0-387-29748-0_11): multipliers and macro models across traditions. [Rocchi et al. (FIDELIO 3 manual)](https://publications.jrc.ec.europa.eu/repository/handle/JRC115308) and the [JRC FIDELIO model page](https://joint-research-centre.ec.europa.eu/projects-and-activities/trade-and-industrial-policy-analysis/industrial-policy/fidelio-model_en): the FIDELIO alternative. |
+| 4 | One kernel, five closures, three financings | [BF (2019)](https://doi.org/10.3982/ecta15202), [Baqaee and Farhi (2021)](https://doi.org/10.1257/pandp.20211107) and [BF (2022)](https://www.nber.org/papers/w27152): the closure lineage and the slack argument. [Destatis input-output accounts](https://www.destatis.de/DE/Themen/Wirtschaft/Volkswirtschaftliche-Gesamtrechnungen-Inlandsprodukt/Tabellen/_tabellen-innen-in-output.html): the A-bill calibration data (rows 73-75). |
+| 5 | Application: the programme through the matrix | Hornykewycz et al. (2025; see the row for Section 2): impulse provenance and price bases. The sectoral-labour evidence base: [IAB-Stellenerhebung Q4/2024](https://iab.de/presseinfo/iab-stellenerhebung-fuer-das-vierte-quartal-2024-zahl-der-offenen-stellen-steigt-saisonbedingt-auf-14-millionen/), [KfW-ifo skills barometer, December 2024](https://www.kfw.de/PDF/Download-Center/Konzernthemen/Research/PDF-Dokumente-KfW-ifo-Fachkr%C3%A4ftebarometer/KfW-ifo-Fachkraeftebarometer_2024-12.pdf) and the [ifo order-book range report](https://allgemeinebauzeitung.de/abz/auftragsreichweite-im-bauhauptgewerbe-auftragsbestaende-ruecklaeufig-57948); details in `construction_capacity.tex`. |
+| 6 | Beyond demand-only shocks | [Samuelson (1951)](https://cowles.yale.edu/research/cfm-13-activity-analysis-production-and-allocation): the nonsubstitution theorem behind Lemma 2. [Kaldor (1961)](https://doi.org/10.1007/978-1-349-08452-4_10) and [Sylos-Labini (1995)](https://doi.org/10.1016/0954-349x%2895%2900025-i): the demand-led productivity and production-function doors. BF (2019; see the row for Section 3): the frictionless reallocation pole. |
+| 7 | Discussion | BF (2019, 2021, 2022; see the row for Section 4): production networks and the COVID-19 benchmark; plus [Acemoglu, Akdoglu and Kerr (2015)](https://www.nber.org/papers/w21344) on networks and the macroeconomy. Taylor (1990), Rocchi et al. and Weber (2023, 2024) / Nikiforos (2024) as linked under Section 3. |
+| 8 | Conclusion | Kapeller (2013) and Kuhn (1962), linked under Section 1: the methodological frame. |
 
 # The 5x3 presentation rule
 
@@ -189,3 +215,12 @@ the reviewer criticism:
 - Section 6's ladder presentation should be checked against the ratification
   status of the grouping rule (`docs/grouping_rule_evidence.md`), which
   determines the rigid-group cells to be cited.
+
+# Revision Log
+
+- **Version 1** (September 2026)
+- **Version 2** \textcolor{revisionV1}{(September 2026)} --- Section 5
+  restructured: the section plan is now 5.1, and a new 5.2 reproduces its
+  first two columns and adds a third column with the key related references
+  per section, web-verified and embedded as links (same-round addition,
+  folded into v2).

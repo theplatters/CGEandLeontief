@@ -52,10 +52,10 @@ actor = "hermes-agent"
     programme_year = 2024
 
 [designs.supply_etas_prog]
-git_commit = "15d06c88fdea1ffe0c8bf1c908c03b023949681d"
+git_commit = "3b2ac52f9ff8416dc1831aef51521b9793011b9f"
 note = "Supply arm prog: productivity gain A_i = 1 + alpha*psi_i on the programme's own sectors, alpha in {0.05,0.10,0.20}; full-71 A-bill; ALPHA control + scalar BETA (eta_s 0.5/1/2/5) + sectoral uniform BETA (eta_s 0.5/2), x F1/F2/F3 x 3 magnitudes. ADR-0023 [shock] schema."
-registered_at = "2026-09-20T12:34:31"
-design_sha256 = "286e6fe0d77003df5dd8d89ef59ae8cdf27ee279033d45dd3577d39cffda5f0e"
+registered_at = "2026-09-20T12:37:18"
+design_sha256 = "857231abd30672377dd36c5765332e4bf1c5186d3abf25ed7955b77335e6e9bf"
 actor = "hermes-agent"
 
     [designs.supply_etas_prog.pinned]
@@ -205,10 +205,10 @@ actor = "hermes-agent"
     programme_year = 0
 
 [designs.supply_etas_unif]
-git_commit = "15d06c88fdea1ffe0c8bf1c908c03b023949681d"
+git_commit = "3b2ac52f9ff8416dc1831aef51521b9793011b9f"
 note = "Supply arm unif: uniform productivity A_i in {1.01,1.02,1.03}; full-71 A-bill; ALPHA control + scalar BETA (eta_s 0.5/1/2/5) + sectoral uniform BETA (eta_s 0.5/2), x F1/F2/F3 x 3 magnitudes. ADR-0023 [shock] schema."
-registered_at = "2026-09-20T12:34:37"
-design_sha256 = "2832c78657302e8e8afba4f5ed5540c8db665391976826e6f510e2421d840e10"
+registered_at = "2026-09-20T12:37:24"
+design_sha256 = "f4f9ef11b6f565f8f0c69573498144ee04caf7d89cf53730edf611ca4f58e9ee"
 actor = "hermes-agent"
 
     [designs.supply_etas_unif.pinned]

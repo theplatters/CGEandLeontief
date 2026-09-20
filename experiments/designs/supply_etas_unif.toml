@@ -43,7 +43,7 @@ labour_tol = 1e-6
 wage_tol = 1e-8
 
 [shock]
-kind = "unif"
+kind = "uniform"
 magnitude = 1.01
 note = "per-cell shock_magnitude overrides the ladder"
 

@@ -43,7 +43,7 @@ labour_tol = 1e-6
 wage_tol = 1e-8
 
 [shock]
-kind = "prog"
+kind = "programme"
 alpha = 0.10
 note = "per-cell shock_alpha overrides the ladder"
 

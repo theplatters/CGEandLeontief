@@ -171,7 +171,7 @@ harness and hard-validates it against the recorded run artifacts; figures
 created and no registry/run files are modified.
 
 ```bash
-julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id1,id2] [--outdir DIR] [--data-dir DIR] [--no-figures] [--quiet]
+julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id1,id2] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--no-figures] [--quiet]
 ```
 
 - `--design` (required) must be preregistered with a matching SHA-256;
@@ -205,6 +205,23 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   `--data-dir <root>/output` and `--outdir <root>/plots` (both gitignored
   areas). With figures, `save_matrix_figures(ds; outdir, prefix = design)`
   writes the panels and the driver prints each path.
+- `--panel-dir DIR` writes the manuscript panel figures: one
+  `panel_5x3_<labour>_<financing>.png` per matrix cell (fifteen files:
+  `BF/ALPHA/BETA/GAMMA/DELTA` x `F1/F2/F3`)
+  via `save_matrix_panels(ds; outdir = DIR, prefix = "panel_5x3", programme = g, variants = variants)`.
+  Each file pairs grouped bars over the programme sectors for that cell
+  (programme demand in % of baseline gross output, change in output, change
+  in consumption, price deviation from the numeraire) with a
+  quantity/price scatter over all its sectors; each file is standalone with
+  per-cell axis limits. Error bars on the last three bar series span the
+  consumption-elasticity range: the min/max over the central cell and its
+  two σ variants (σ ∈ {0.6, 0.99}, the cell's θ, ε, η, financing and shock
+  fixed; a variant solve/gate failure is reported and omitted, so the bars
+  span the remaining variants). Degenerate scatter ranges (prices sit at
+  the baseline in the single-wage closures) get a minimum span with an
+  annotation instead of repeated "0.00%" ticks.
+  `--panel-dir` loads GLMakie on its own and combines with `--no-figures`
+  (which suppresses only the six standard exploratory figures).
 
 ## Preregistration (`registry/preregistration.toml`)
 

@@ -4,7 +4,7 @@
 # Usage (from the repo root, with `julia --project=.`):
 #
 #   julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c]
-#       [--outdir DIR] [--data-dir DIR] [--no-figures] [--quiet]
+#       [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--no-figures] [--quiet]
 #
 # Validation contract: every selected cell is RE-SOLVED with the harness
 # (`solve_cell` + `evaluate_gates` from `run.jl`) and HARD-VALIDATED against
@@ -37,13 +37,13 @@ isdefined(Main, :run_design) || include(joinpath(@__DIR__, "run.jl"))
 """Print usage to stderr and return exit code 1."""
 function plot_usage()::Int
     println(stderr, """usage:
-  julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c] [--outdir DIR] [--data-dir DIR] [--no-figures] [--quiet]""")
+  julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--no-figures] [--quiet]""")
     return 1
 end
 
 """
 Parse the driver CLI args into a NamedTuple (`design`, `cells`, `outdir`,
-`data_dir`, `no_figures`, `quiet`). `--design` is required (checked by
+`data_dir`, `panel_dir`, `no_figures`, `quiet`). `--design` is required (checked by
 `plot_main`); `--cells` is a comma-separated run-id list. Throws an
 `ArgumentError` on a missing value or an unknown option.
 """
@@ -52,12 +52,13 @@ function parse_plot_args(args::Vector{String})::NamedTuple
     cells::Union{Vector{String},Nothing} = nothing
     outdir::Union{String,Nothing} = nothing
     data_dir::Union{String,Nothing} = nothing
+    panel_dir::Union{String,Nothing} = nothing
     no_figures = false
     quiet = false
     i = 1
     while i <= length(args)
         a = args[i]
-        if a == "--design" || a == "--cells" || a == "--outdir" || a == "--data-dir"
+        if a == "--design" || a == "--cells" || a == "--outdir" || a == "--data-dir" || a == "--panel-dir"
             i + 1 > length(args) && throw(ArgumentError("missing value for $a"))
             key = a[3:end]
             val = args[i+1]
@@ -67,6 +68,8 @@ function parse_plot_args(args::Vector{String})::NamedTuple
                 cells = unique(String.(strip.(split(val, ","))))
             elseif key == "outdir"
                 outdir = val
+            elseif key == "panel-dir"
+                panel_dir = val
             else
                 data_dir = val
             end
@@ -82,7 +85,8 @@ function parse_plot_args(args::Vector{String})::NamedTuple
         end
     end
     return (; design = design, cells = cells, outdir = outdir,
-        data_dir = data_dir, no_figures = no_figures, quiet = quiet)
+        data_dir = data_dir, panel_dir = panel_dir,
+        no_figures = no_figures, quiet = quiet)
 end
 
 """
@@ -142,9 +146,58 @@ function plot_max_metric_delta(deltas::AbstractDict)::Float64
 end
 
 """
+σ-sensitivity variants for one validated matrix cell (panel error bars, D2).
+
+Re-solve the cell with the consumption elasticity σ at its legacy extreme
+values (0.6 and 0.99), holding the cell's θ, ε, η, financing, `eta_s` /
+`eta_s_vec` and shock fixed, warm-started from the central solution's
+canonical vector (`[p; q]` for fixed-wage cells, `[p; q; w; F]` for mobile
+cells, the sectoral `[p; q; w(1:N); F]` form when the variant model is
+sectoral — the `sect` rule of `experiments/run.jl`). Returns `(low, high)`
+of `MatrixCellData` (`nothing` for a side whose solve/gate failed). A
+variant failure never fails the cell: it is reported (always, even under
+`--quiet`) and omitted, so the error bars span the remaining variants.
+"""
+function plot_sigma_variants(id::AbstractString, cell::Dict{String,Any}, sol,
+        design_d::Dict{String,Any}, data, ψ::Vector{Float64}, g::Vector{Float64},
+        ref_sol, labels::Vector{String}; quiet::Bool = false)
+    labour = string(cell["labor"])
+    financing = string(cell["financing"])
+    eta = Float64(cell["eta"])
+    eta_s = Float64(get(cell, "eta_s", 0.0))
+    out = Dict{String,Any}()
+    for (tag, sig) in (("low", 0.6), ("high", 0.99))
+        suffix = tag == "low" ? "-sigmalow" : "-sigmahigh"
+        try
+            vcell = Dict{String,Any}(cell)
+            vcell["sigma"] = sig
+            vmodel = build_cell_model(vcell, design_d, data, ψ, g)
+            fixed = labor_closure(vmodel.options) isa FixedWageClosure
+            sect = vmodel.options.elasticities.η == 0.0 ||
+                vmodel.options.elasticities.eta_s_vec !== nothing
+            init_v = fixed ? [sol.prices_raw; sol.quantities] :
+                sect ? [sol.prices_raw; sol.quantities; sol.wages_raw; sol.external_transfer] :
+                [sol.prices_raw; sol.quantities; sol.wages_raw[1]; sol.external_transfer]
+            vsol = solve_cell(vcell, design_d, data, ψ, g, init_v)
+            vev = evaluate_gates(vcell, design_d, vsol.model, vsol, ref_sol)
+            vev.gates["overall"] == "pass" ||
+                throw(ErrorException("σ=$sig variant gates report \"$(vev.gates["overall"])\""))
+            out[tag] = matrix_cell_data(id * suffix, labour, financing,
+                eta, eta_s, "derived", data, vsol, ref_sol; labels = labels)
+            quiet || println("σ variant $(id * suffix) (σ=$sig) ok")
+        catch e
+            println("σ variant $(id * suffix) (σ=$sig) failed: " *
+                "$(sprint(showerror, e)) (omitted from the panel error bars)")
+        end
+    end
+    return (low = get(out, "low", nothing), high = get(out, "high", nothing))
+end
+
+"""
 Driver entry point: preregistration gate, reference continuation, per-cell
 re-solve + hard validation against the recorded artifacts, validation
-report, tidy CSV export, and (unless `--no-figures`) the GLMakie figures.
+report, tidy CSV export, and (unless `--no-figures`) the GLMakie figures
+plus (with `--panel-dir`) the manuscript panel figures.
 Returns the process exit code (0 only when every selected cell validated
 and figures were written or `--no-figures` was passed).
 """
@@ -217,6 +270,7 @@ function plot_main(args::Vector{String} = ARGS;
     # aborts the batch.
     cells = MatrixCellData[]
     validation = Dict{String,String}()
+    variants = Dict{String,Any}()
     man_commits = Dict{String,Any}()
     report = Tuple{String,String,Dict{String,Float64},String,String,Int}[]
     for id in order
@@ -253,6 +307,15 @@ function plot_main(args::Vector{String} = ARGS;
                     Float64(get(cell, "eta_s", 0.0)), status,
                     ref.data, sol, ref.sol; metrics = ev.metrics,
                     diagnostics = ev.diagnostics, labels = labels))
+                # σ variants for the panel error bars (D2; panels only):
+                # re-solve at σ ∈ {0.6, 0.99} when panels will be drawn.
+                # A variant failure is recorded inside and never fails the cell.
+                if opts.panel_dir !== nothing
+                    vv = plot_sigma_variants(id, cell, sol, design_d, ref.data,
+                        ψ, g, ref.sol, labels; quiet = quiet)
+                    (vv.low === nothing && vv.high === nothing) ||
+                        (variants[id] = vv)
+                end
                 verdict = "ok"
             else
                 reason = join(vc.failures, "; ")
@@ -303,7 +366,8 @@ function plot_main(args::Vector{String} = ARGS;
     println("wrote $sec_path")
 
     # 10. Figures (skipped headless-safe with --no-figures, which never
-    # loads GLMakie).
+    # loads GLMakie). --no-figures suppresses only the six standard
+    # exploratory figures; --panel-dir below loads GLMakie on its own.
     if !opts.no_figures
         if !glmakie_available()
             println(stderr, "`BeyondHulten.save_matrix_figures` requires " *
@@ -330,6 +394,46 @@ function plot_main(args::Vector{String} = ARGS;
         catch e
             println(stderr,
                 "save_matrix_figures failed: $(sprint(showerror, e))")
+            return 1
+        end
+        paths = written isa AbstractVector ? written :
+            (written === nothing ? String[] : [written])
+        for p in paths
+            println("wrote $p")
+        end
+    end
+
+    # 10b. Manuscript panel figures (one per matrix cell, each standalone).
+    # Independent of --no-figures, which suppresses only the six standard
+    # figures above; without --panel-dir GLMakie is never loaded (and no σ
+    # variants are solved).
+    if opts.panel_dir !== nothing
+        if !glmakie_available()
+            println(stderr, "`BeyondHulten.save_matrix_panels` requires " *
+                "the GLMakie extension, which is not loaded. " *
+                "Run `using GLMakie` together with `using BeyondHulten` " *
+                "(install it first with `import Pkg; Pkg.add(\"GLMakie\")` " *
+                "if necessary).")
+            return 1
+        end
+        try
+            @eval using GLMakie
+        catch e
+            println(stderr, "could not load GLMakie: $(sprint(showerror, e))")
+            return 1
+        end
+        # `invokelatest`, as above: the extension method is born at
+        # `using GLMakie` time. Qualified access avoids relying on the
+        # extension's exports; `programme = g` is the per-sector additive
+        # programme demand in model units from step 3, `variants` the
+        # σ-variant cells from step 5-6 for the error bars.
+        written = try
+            Base.invokelatest(BeyondHulten.save_matrix_panels, ds;
+                outdir = opts.panel_dir, prefix = "panel_5x3", programme = g,
+                variants = variants)
+        catch e
+            println(stderr,
+                "save_matrix_panels failed: $(sprint(showerror, e))")
             return 1
         end
         paths = written isa AbstractVector ? written :

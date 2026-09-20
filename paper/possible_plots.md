@@ -65,37 +65,43 @@ moves them (up to 27.9 % at `matrix_5x3-v10-BF-F2`).
 `matrix_5x3-v10-GAMMA-F3` / `matrix_5x3-v10-DELTA-F3` raise employment
 (1.78 %).
 
-## 3. Manuscript panel figures (per labour closure)
+## 3. Manuscript panel figures (one per matrix cell)
 
 The `panel_ls`-style two-panel figure (`revised_manuscript/pictures/panel_ls.png`,
 referenced by `revised_manuscript/chapters/ch06_labor_slack.tex` and left untouched),
-recreated for the 5x3 matrix as one file per labour closure —
-`revised_manuscript/pictures/panel_5x3_{BF,ALPHA,BETA,GAMMA,DELTA}.png`
+recreated for the 5x3 matrix as one file per matrix cell —
+`revised_manuscript/pictures/panel_5x3_<labour>_<financing>.png` (fifteen files:
+`BF/ALPHA/BETA/GAMMA/DELTA` x `F1/F2/F3`)
 (`plot_matrix_panel` / `save_matrix_panels` in `ext/matrix_plots.jl`):
 
 - left: grouped bars over the programme sectors (sectors with positive programme
-  demand, sorted by programme share descending) for that closure's **F2** cell —
+  demand, sorted by programme share descending) for that cell —
   programme demand in % of baseline gross output (`100*g_i/y0_i`, no error bar),
   change in output (`100*(q_i-1)`), change in consumption (`100*(c_i-1)`), and the
   price deviation from the numeraire (`100*(p_i-1)`); error bars on the last three
-  series span the closure's **F1/F2/F3** financing range (min/max; no error bar when
-  only one financing is present);
+  series span the **consumption-elasticity range**: min/max over the central cell
+  and its two σ variants (σ ∈ {0.6, 0.99}, the cell's θ, ε, η, financing and
+  shock fixed; no error bar when no variant converged);
 - right: scatter of change in quantities (`100*(q_i-1)`, x) vs change in prices
-  (`100*(p_i-1)`, y) over all sectors of the F2 cell — programme sectors highlighted
-  with larger markers, other sectors plain; programme sectors plus the 3 largest
-  absolute movers labelled; 0/0 dashed cross; legend "Programme sectors" / "Other sectors".
+  (`100*(p_i-1)`, y) over all sectors of the cell — programme sectors highlighted
+  with larger markers, other sectors plain; the three largest programme-sector
+  points plus the three largest non-programme movers labelled; 0/0 dashed cross;
+  legend "Programme sectors" / "Other sectors".
 
-Conventions: bars are F2 values, error bars the F1-F3 financing range (the F2/F3
-real-neutrality in the mobile rows is visible as collapsed error bars there); axis
-limits are shared across the five files (left: one y-range over all bar series and
-error-bar ends; right: one x- and one y-range over all sectors of all closures), so
-the five files compare directly. Titles read
-"5x3 matrix panel — \<closure\> (F2; bars), financing range F1-F3 (error bars)", and
-each figure footnotes the design reference (no-programme) baseline and the
-programme-demand normalisation.
+Conventions: bars show the cell, error bars the σ sensitivity (the legacy
+`panel_ls` meaning — not the financing range); each file is standalone with
+per-cell axis limits. Degenerate scatter ranges get a minimum span (0.05 %
+total) with an annotation — prices sit at the baseline in every single-wage
+closure (no sectoral-wage channel), so without it the y-axis would repeat
+"0.00%" ticks. Titles read
+"5x3 matrix panel — \<labour\>-\<financing\> (bars = cell; error bars: σ ∈ {0.6, 0.99})", and
+each figure footnotes the design reference (no-programme) baseline, the
+programme-demand normalisation, and the elasticity error-bar meaning.
 
 BETA is numerically identical to ALPHA and DELTA reproduces GAMMA to solver precision,
-so three of the five files document the same economy; see Table 2 of
+so several of the fifteen files document the same economy (DELTA additionally ignores σ
+by construction — its variants re-solve the same model, so its error bars collapse);
+see Table 2 of
 `paper/tables/matrix_5x3_v10_flows.md` for that statement. Regeneration:
 
 ```bash

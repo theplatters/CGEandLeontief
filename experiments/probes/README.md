@@ -1,7 +1,10 @@
-# Read-only diagnostics (`experiments/probes/`)
+# Diagnostics (`experiments/probes/`)
 
 These scripts are read-only diagnostics: no run dir, no `runs/index.csv` row,
-no `src/` change. They rebuild the calibration exactly as `experiments/run.jl`
+no `src/` change — with one documented exception,
+`probe6_reconstruct_run_journals.jl` below, which writes only missing
+`runs/<id>/log.txt` journals (never manifests, index rows or solutions).
+They rebuild the calibration exactly as `experiments/run.jl`
 does and solve cells directly for measurement purposes only.
 
 Run from the repo root with `julia --project=. experiments/probes/<script>.jl`.
@@ -128,3 +131,10 @@ closed-form gates still cite the four scripts above.
   `-0.34 %`, consumption `-2.69 %` at F2) is *milder* on employment — a vertical
   supply curve still lets the wage absorb, a quantity constraint forces the cost
   up.
+
+- `probe6_reconstruct_run_journals.jl` — the one probe that writes into
+  `runs/`: rebuilds missing `runs/<id>/log.txt` journals from the committed
+  manifests (`--verify` checks the journals that exist, `--write` writes the
+  missing ones; journals only, never manifests/index rows/solutions). Used to
+  reconstruct the v4-v9 journals after generations executed on another working
+  copy (journals are gitignored working artefacts by design, ADR-0004).

@@ -2,11 +2,12 @@
 title: "Revision narrative and commented outline"
 project: "BFRep/(3)BeyondHulten"
 date: 2026-09-20
-version: 2
+version: 3
 status: "working note - not a decision, no registry entry"
 tags: [revision, narrative, outline, motivation-mindmap, beyondhulten]
 ---
 
+**Version 3** \textcolor{revisionV2}{(September 2026)}
 **Version 2** \textcolor{revisionV1}{(September 2026)}
 **Version 1** (September 2026)
 
@@ -216,6 +217,188 @@ the reviewer criticism:
   status of the grouping rule (`docs/grouping_rule_evidence.md`), which
   determines the rigid-group cells to be cited.
 
+# External review \textcolor{revisionV2}{\normalsize [added v3]}
+
+\textcolor{revisionV2}{This chapter records the agent's read-only currency
+check of the outline against repository HEAD \texttt{e78ae88} (2026-09-20,
+working tree clean), carried out on 2026-09-30 immediately before the
+drafting pass was to begin. It is a report, not a decision: the body of this
+note above is unchanged from v2, and none of the findings below has been
+applied. The author decides which to take up.}
+
+## \textcolor{revisionV2}{Verdict}
+
+\textcolor{revisionV2}{The outline is current as a vantage point but not yet
+draft-ready. Nothing in the repository has moved since it was written --- the
+outline itself was last touched in \texttt{6026806} (improved narrative) and
+no later commit touches it --- and every source it cites exists at the stated
+version. What does not survive contact with the repository is (i) three of
+the outline's own factual claims, one of which is a substantive equivalence
+error, and (ii) two older manuscript artefacts it silently collides with: the
+front matter of \texttt{revised\_manuscript/} and the Stage 3 plan in
+\texttt{docs/DOCS\_ASSESSMENT.md}, now at Version 8.}
+
+## \textcolor{revisionV2}{What checks out}
+
+\textcolor{revisionV2}{The table below is new in v3; it is left uncoloured
+under the no-coloured-markdown-table rule.}
+
+| Claim in the outline | State at HEAD |
+|---|---|
+| `equivalence.tex` v4, evidence layer `matrix_5x3_v10` (C1-corrected, 33/33) | Confirmed in the file header (commit `ecdf814`); v10 is the citable generation for the matrix and the eighteen sectoral cells, v9 for everything else |
+| Supply arm executed, ETAs v5 | `ETAs.md` is v5 (revisionV4); **189** cells, not 126: `supply_etas_s1` (63, the identification vehicle), `supply_etas_prog` (63) and `supply_etas_unif` (63) |
+| Sectoral family ADR-0022 on `matrix_5x3_v9/v10` | Confirmed; v9 superseded only for the eighteen sectoral gdp-family metrics (defect C1), and the v9 runs stand as issued (ADR-0004) |
+| Reviewer maps R1.1-R1.9, R2.1-R2.14 | Present in `docs/DOCS_ASSESSMENT.md`, which is at **Version 8** |
+| Ladder monotone in rigidity; F2 max abs(p-1) 0.153 to 0.037 | Confirmed on v10: `BETA-F2-etas{025,05,1,2}` = 0.152897 / 0.105666 / 0.065422 / 0.037171 |
+| Grouping rule not yet ratified | Confirmed: `docs/grouping_rule_evidence.md` v1 still states the rule is for ratification |
+
+## \textcolor{revisionV2}{Corrections required}
+
+### \textcolor{revisionV2}{The F2 equivalent-of-F3 shading in the fixed-wage row}
+
+\textcolor{revisionV2}{The presentation rule crosses the three labour classes
+with (F1, F2 $\equiv$ F3). That is wrong in the GAMMA/DELTA row: financing
+neutrality holds only where the external transfer $F$ is the endogenous
+instrument --- the BF row at $\eta = 0$, ALPHA/BETA, and all six sectoral
+variants, where F2 and F3 agree to all printed decimals --- and fails exactly
+in the fixed-wage rows, whose system pins $F \equiv 0$. Measured on the v10
+manifests:}
+
+| Cell | Consumption rel. | Employment | External position |
+|---|---:|---:|---:|
+| `GAMMA-F2` | -1.533 % | 1.00126 | 0.0 |
+| `GAMMA-F3` | **+2.264 %** | **1.01780** | +0.01331 |
+
+\textcolor{revisionV2}{\texttt{DELTA-F2} and \texttt{DELTA-F3} show the same
+split, and \texttt{paper/equivalence.tex} already says so (the F-instrument
+paragraph and the "who pays" paragraph: F3 expands employment by 1.78 \%
+and consumption by 2.26 \%, the Keynesian case, against a tax-financed
+welfare loss under F2). This is not only a shading fix: the fixed-wage row is
+where the financing choice actually bites, so it belongs in Section 5's
+robust-versus-sensitive table. Consequence for the abstract claim: the
+fifteen cells collapse to seven distinct economies --- BF two, ALPHA
+$\equiv$ BETA two, GAMMA $\equiv$ DELTA three --- not to three; three is a
+count of labour classes.}
+
+### \textcolor{revisionV2}{The GDP share of the programme}
+
+\textcolor{revisionV2}{The narrative arc states that G0 = 40.3 bn in 2019
+prices equals the horizon mean, 1.945 percent of GDP. That sentence mixes
+price bases: 1.945 \% is the raw 2023-price mean over the 2019-basis
+denominator (\texttt{GDP\_P} = 3,027,818 EUR m; 58.893 / 3027.818). The
+model's programme share is 1.331 \% (40.3 / 3027.8, equal to the booked
+\texttt{B\_gov} = 0.01330991), and ADR-0024 attaches the about-1.9 \%-of-GDP
+figure to the 2024 first-year peak (81 bn, 2023 prices), not to the mean.}
+
+### \textcolor{revisionV2}{The G0 open item}
+
+\textcolor{revisionV2}{The open item names the ADR-0023 fork on G0 and asks
+for it to be settled before Section 5's tables. The fork is ADR-0024, and it
+is accepted (2026-09-20): keep G0 = 40,300, narrative-only, no re-anchor, no
+re-run, no re-mint. ADR-0023 is the supply-shock design schema (accepted,
+implemented, executed). What remains open is the composition of psi --- the
+raw 2024 current-price incidence vector; a constant-2019-price vector needs
+sectoral deflators and would move the incidence and rigid-group results ---
+and the time-aggregation note.}
+
+### \textcolor{revisionV2}{Pointer and coverage defects}
+
+- \textcolor{revisionV2}{The source list undercounts the supply arm: 189
+  cells across three designs, not 126 (the table above).}
+- \textcolor{revisionV2}{Appendix C should name the tally it holds: fifteen
+  matrix cells plus twelve ladder cells plus six two-group cells = 33.}
+- \textcolor{revisionV2}{\texttt{paper/framing\_gamma.tex}, the
+  manuscript-facing GAMMA note, is referenced nowhere in this outline; and
+  the ADR-0021 wage-structure axis (still proposed) is a candidate
+  representation-robustness row the presentation rule does not mention.}
+
+## \textcolor{revisionV2}{Factors to consider when setting out}
+
+- \textcolor{revisionV2}{Where the draft lives --- decide first.
+  \texttt{revised\_manuscript/} already exists: \texttt{main.tex} (29 July)
+  plus eight chapter files, all marked as old text to be revised under a
+  salvage plan, with the new per-cell panels in \texttt{pictures/}. Its front
+  matter carries the retired thesis: the labour-supply elasticity as the key
+  parameter, and the claim that the factor-market closure explains roughly an
+  order of magnitude more variation than all production technology parameters
+  combined. The second sentence is on the Stage 3 must-not-appear list. Either
+  the new draft replaces that front matter in place, keeping ch01 and ch02 as
+  the salvage, or it lives in a fresh file; Sections 3 to 6 of the outline
+  have no chapter homes yet.}
+- \textcolor{revisionV2}{Two competing tables of contents. The Stage 3 plan
+  in \texttt{docs/DOCS\_ASSESSMENT.md} (v3-era, revisionV2 colour) proposes a
+  nine-section manuscript built on the two wedges, with sections Aggregate
+  results, Sectoral results and The financing wedge, and it holds the reviewer
+  point maps --- the one place where every referee item has a named location,
+  from which the response letter is built. This outline re-homes the narrative
+  but leaves those maps unanchored. Recommend a reviewer-coverage column in
+  the section plan, and importing the Stage 3 must-not-appear list (all
+  eta-dominance claims, the 88.4 \% and 100 \% figures, GO certification
+  language, price-invariance claims, and the claim that the IO multiplier
+  requires eta to infinity) into the retirement section.}
+- \textcolor{revisionV2}{Build path. The draft cannot be compiled in the
+  container: \texttt{latexmk -lualatex} stops at a missing
+  \texttt{authblk.sty}, and the Nix texlive environment, 542 packages, has no
+  biblatex, biber, pgfplots or makecell either. The manuscript is a Mac
+  compile artefact today; decide before building a write-compile-verify loop
+  on it --- keep Mac compilation, or extend the container toolchain, which is
+  a large download and needs the author's call.}
+- \textcolor{revisionV2}{The repository contract is stale.
+  \texttt{AGENTS.md}, last commit \texttt{ac49c5d} of 19 September, still
+  names \texttt{matrix\_5x3\_v5} as the generation to cite, reports
+  \texttt{DOCS\_ASSESSMENT.md} as Version 5, and knows nothing of ADR-0020 to
+  ADR-0025, the sectoral family or the supply arm. Refresh it before drafting
+  so the invariants list matches the generations being cited; it is a
+  protected file, so the write needs an interactive approval.}
+- \textcolor{revisionV2}{Unratified dependence. Section 6's rigid-group cells
+  rest on the grouping rule, which is not ratified; today only the two
+  executed rules are citable (programme sectors, 0.272033; largest half,
+  0.123362). Either ratify first or write Section 6 to the executed rules.}
+- \textcolor{revisionV2}{Open Stage 0 items that bite the draft rather than
+  the model: the audit-trail disclosure level, and the scope locks (skill
+  classes, Armington, the B\&F replication off the critical path).}
+- \textcolor{revisionV2}{Measurement semantics: real GDP is the income-side
+  index, flat by construction under demand-only shocks (ADR-0018), while the
+  consumption index is welfare. The old abstract's claim that the GDP effect
+  ranges from virtually zero to about 1.5 \% conflates the two, and that
+  sentence belongs to the retired framing.}
+- \textcolor{revisionV2}{Evidence discipline worth advertising: every table
+  cites run ids, the v9/v10 citation split matters, and the preregistration
+  trail with 41 failed and 3 provisional runs left visible is a credibility
+  asset for this submission. The table of contents has no home for it; a
+  short reproducibility subsection in Appendix B would carry it.}
+
+## \textcolor{revisionV2}{Suggested edits}
+
+1. \textcolor{revisionV2}{Rewrite the presentation rule: columns F1, F2, F3;
+   shade F2 $\equiv$ F3 in the BF and ALPHA/BETA rows only; state the
+   neutrality condition, that $F$ is endogenous; flag the fixed-wage row as
+   the financing-sensitive case; restate the collapse as fifteen cells to
+   seven.}
+2. \textcolor{revisionV2}{Fix the Section 1 numbers: 40.3 bn per year at 2019
+   prices, about 1.331 \% of GDP; 58.9 bn per year at 2023 prices; 2024 peak
+   81 bn, about 1.9 \% of GDP.}
+3. \textcolor{revisionV2}{Close the G0 open item (ADR-0024 accepted, option
+   A) and replace it with the composition and time-aggregation items; correct
+   the ADR reference.}
+4. \textcolor{revisionV2}{Restate the supply arm as 189 cells, naming the
+   three designs.}
+5. \textcolor{revisionV2}{Add the 33-cell tally and the ADR-0021
+   wage-structure axis to Appendix C, and reference
+   \texttt{paper/framing\_gamma.tex} in Sections 4 and 6.}
+6. \textcolor{revisionV2}{Add the reviewer-coverage map and the
+   must-not-appear list.}
+7. \textcolor{revisionV2}{Add the reproducibility item to Appendix B, and
+   the draft-location and build-path decisions as named open items.}
+
+## \textcolor{revisionV2}{Decisions still owed}
+
+- \textcolor{revisionV2}{Is the new draft written into
+  \texttt{revised\_manuscript/chapters/}, reusing ch01 and ch02 and retiring
+  the rest, or as a fresh main file?}
+- \textcolor{revisionV2}{Is \texttt{AGENTS.md} refreshed in the same pass? It
+  is protected, so it needs an interactive approval.}
+
 # Revision Log
 
 - **Version 1** (September 2026)
@@ -224,3 +407,11 @@ the reviewer criticism:
   first two columns and adds a third column with the key related references
   per section, web-verified and embedded as links (same-round addition,
   folded into v2).
+- **Version 3** \textcolor{revisionV2}{(September 2026)} --- new final
+  chapter "External review" (placed before this log so the log stays last):
+  the agent's read-only currency check of the outline against repository HEAD
+  `e78ae88` (2026-09-20), with the pointer claims that check out, the
+  corrections required (the F2 $\equiv$ F3 shading in the fixed-wage row, the
+  GDP-share attribution, the settled G0 item), the factors to weigh before
+  drafting, the suggested edits and the two decisions still owed. The body
+  above is unchanged from v2 and no suggested edit has been applied.

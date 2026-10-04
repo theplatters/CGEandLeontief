@@ -1,0 +1,42 @@
+% =====================================================================
+% Table 1 --- first, simplified map of the two closure axes.
+% Input from section (1)introduction.tex. The assessment comments below
+% were written when the table was first crafted and are kept with it.
+% =====================================================================
+% --- Table sketch, crafted in LaTeX (was a markdown sketch) -----------
+% Assessment: the 3x2 structure is sound -- rows = financing closure,
+% columns = labour-market closure -- and the F3 row matches the measured
+% matrix (ALPHA/BETA-F3 = crowding out + external debt; GAMMA/DELTA-F3 =
+% the Keynesian case, +2.26 % consumption / +1.78 % employment).
+% Two cautions:
+%  * The column labels were "fixed | flexible", which collides with the
+%    paper's own vocabulary: GAMMA is the FIXED-WAGE row and ALPHA the
+%    flexible-wage row, i.e. the opposite sense. The headers below name
+%    the mechanism instead.
+%  * The two "??" cells are filled here with the scarcity-side analogue of
+%    the measured results (ALPHA-F1 ~ 0; ALPHA-F2 = full crowding out).
+%    Confirm before they go in.
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{@{}l p{4.3cm} p{4.3cm}@{}}
+\toprule
+ & \multicolumn{2}{c}{\textbf{Labour-market closure}} \\
+\cmidrule(lr){2-3}
+ & \textbf{Factor supply fixed} (scarcity) & \textbf{Real wage fixed} (output adjusts) \\
+\midrule
+\textbf{Repurposing consumption} (F1)
+  & pure reallocation
+  & the change follows the input--output structure \\[2pt]
+\textbf{Refinancing via taxes} (F2)
+  & traditional crowding out
+  & balanced-budget (Haavelmo) multiplier, dampened by leakage \\[2pt]
+\textbf{External finance} (F3)
+  & welfare loss and external debt
+  & endogenous money, external debt and output expansion \\
+\bottomrule
+\end{tabular}
+\caption{A first, simplified map of the two closure axes. The full
+$5\times3$ matrix follows in Section~\ref{sec:application}.}
+\label{tab:overview}
+\end{table}

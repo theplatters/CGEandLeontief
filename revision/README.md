@@ -20,7 +20,7 @@ referee reports in `docs/reviews/` and the point maps in
 | `refresponse.tex` | Response root (mirrors the manuscript setup); inputs the three referee files. |
 | `sections/(N)name.tex` | One file per section, numbered input order; `(A)`-`(E)` are the appendices. |
 | `references.bib` | Bibliography (currently mirrors `paper/BandF.bib`; trim to the revision's citations). |
-| `tables/` | The four publication-ready flow tables (`matrix_5x3_v10_flows.md` + the three supply-arm designs), moved from `paper/tables/`; linked from Sections 5, 6 and App. C. |
+| `tables/` | All tables: the four flow tables (`matrix_5x3_v10_flows.md` + the three supply-arm designs, from `paper/tables/`; linked from Sections 5, 6, App. C) and `table1_closure-overview.tex` (Table 1, `\input` by the introduction, with its crafting comments). |
 | `figures/` | Figure files; wired via `\graphicspath`. |
 | `response/{editor,reviewer1,reviewer2}.tex` | One file per referee, prepopulated point by point. |
 

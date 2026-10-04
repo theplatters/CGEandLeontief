@@ -4,7 +4,7 @@
 - **Recorded:** 2026-09-17
 - **Origin:** early model versions; mobile-labour system, 2026-09
 - **Related:** ADR-0004, `ROADMAP.md` §3 and §4.2
-- **Evidence:** `roadmaps/vertdict.md` item 6 ("the mobile model calculates a
+- **Evidence:** `docs/archive/vertdict.md` item 6 ("the mobile model calculates a
   fixed-base sum instead of using the shared Törnqvist index"),
   `ROADMAP.md` §3 (replacement recorded as done for the baseline)
 

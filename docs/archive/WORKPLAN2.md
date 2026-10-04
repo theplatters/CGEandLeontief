@@ -15,7 +15,7 @@ The revision is based on the finding that the existing code base (`(3)BeyondHult
 
 **Update (2026-07-29):** The four critical coding tasks from the Priority Matrix are **complete and verified** on Julia 1.12.6. The Go/No-Go decision is **GO**. The critical path has shifted from model implementation to manuscript writing and integration. Remaining timeline is estimated at 4--6 weeks.
 
-> **Superseded (per `roadmaps/vertdict.md`).** The "complete and verified" status, the **GO** decision, the reported **price-invariance finding**, and the **88.4%** variance share from this round are **not supportable** and must not be treated as evidentially admissible. An independent two-sector diagnostic shows the supplied `mobile_labor.jl` / `variance_decomposition.jl` are not an equilibrium (household expenditure ≈ 25.5% exceeds income; a zero-profit equation was dropped instead of a redundant market equation; nominal rather than real wages were used; the high-η limit was misinterpreted as unlimited labor; and the 88.4% figure was a renormalized main-effect share, not a first-order sensitivity index). All mobile-labor sweep results and the GO decision derived from them are invalid until regenerated against the corrected equilibrium core in `ROADMAP.md`.
+> **Superseded (per `docs/archive/vertdict.md`).** The "complete and verified" status, the **GO** decision, the reported **price-invariance finding**, and the **88.4%** variance share from this round are **not supportable** and must not be treated as evidentially admissible. An independent two-sector diagnostic shows the supplied `mobile_labor.jl` / `variance_decomposition.jl` are not an equilibrium (household expenditure ≈ 25.5% exceeds income; a zero-profit equation was dropped instead of a redundant market equation; nominal rather than real wages were used; the high-η limit was misinterpreted as unlimited labor; and the 88.4% figure was a renormalized main-effect share, not a first-order sensitivity index). All mobile-labor sweep results and the GO decision derived from them are invalid until regenerated against the corrected equilibrium core in `ROADMAP.md`.
 
 > **Historical note (2026-09-03).** The `tests/minimal_test/` harness and
 > diagnostic scripts (`run_test.jl`, `test_full_pilot.jl`, `diag_*.jl`) referenced
@@ -28,7 +28,7 @@ The revision is based on the finding that the existing code base (`(3)BeyondHult
 
 ## Completed Milestones (This Round)
 
-### ✅ Mobile Labor + Economy-Wide Wage — ⚠️ REJECTED (see `roadmaps/vertdict.md`)
+### ✅ Mobile Labor + Economy-Wide Wage — ⚠️ REJECTED (see `docs/archive/vertdict.md`)
 
 Replaced sector-specific (immobile) wages with a single economy-wide wage `w`. Sectoral labor allocation is now endogenous via the marginal product condition. Unknown vector grew from 2N to 2N+1, with a numeraire constraint (CPI = 1) replacing one price equation to break the price-level indeterminacy inherent in CRTS models.
 
@@ -42,7 +42,7 @@ Implemented `L = L̄ · w^η` as the labor supply function. **Correction require
 - **η → ∞**: converges to the **fixed-real-wage closure** `w/P = ω̄` (not "unlimited labor"); with `w/P < 1`, `L = L̄(w/P)ᵝ → 0`, so the high-η limit must be implemented as an explicit complementarity/fixed-real-wage closure, not as `η = 10⁶`.
 - **0 < η < ∞**: intermediate continuum
 
-### ✅ Variance Decomposition — ⚠️ REJECTED (see `roadmaps/vertdict.md`)
+### ✅ Variance Decomposition — ⚠️ REJECTED (see `docs/archive/vertdict.md`)
 
 Full factorial design over η × ε × θ × σ (5×3×3×3 = 135 evaluations) with ANOVA-style partial R²:
 
@@ -167,7 +167,7 @@ The new abstract replaces the "paradigmatic cleavage" framing with a "labor supp
 
 ---
 
-> **Cross-cutting caveat.** All "✅ DONE / GO / 88.4% / results ready" markers elsewhere in this document (Stream B "Completed this round", Priority Matrix, Execution Order, Risk Register, Reviewer Response Strategy) refer to the **rejected** round audited in `roadmaps/vertdict.md`. They are retained as a historical record of what was claimed, **not** as evidentially admissible results. No mobile-labor figure, GO decision, or sensitivity share from this round may be reported or written into the manuscript until regenerated against the corrected equilibrium core in `ROADMAP.md`.
+> **Cross-cutting caveat.** All "✅ DONE / GO / 88.4% / results ready" markers elsewhere in this document (Stream B "Completed this round", Priority Matrix, Execution Order, Risk Register, Reviewer Response Strategy) refer to the **rejected** round audited in `docs/archive/vertdict.md`. They are retained as a historical record of what was claimed, **not** as evidentially admissible results. No mobile-labor figure, GO decision, or sensitivity share from this round may be reported or written into the manuscript until regenerated against the corrected equilibrium core in `ROADMAP.md`.
 
 ## Cross-References
 

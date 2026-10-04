@@ -21,9 +21,9 @@ interpretation = "Static intersectoral allocation selector; eta is NOT a labour-
 status = "tested"
 symbols = ["MobileLaborCES"]
 files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
-references = ["docs/labor_closures.md", "docs/DOCS_ASSESSMENT.md", "roadmaps/vertdict.md", "ROADMAP.md"]
+references = ["docs/archive/labor_closures.md", "docs/DOCS_ASSESSMENT.md", "docs/archive/vertdict.md", "ROADMAP.md"]
 tests = ["tests/test_mobile_labor.jl", "tests/test_kernel_regression.jl", "tests/test_external_closure.jl"]
-evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v6-BF-F1/manifest.toml", "runs/matrix_5x3-v6-BF-F2/manifest.toml", "runs/matrix_5x3-v6-BF-F3/manifest.toml", "runs/matrix_5x3-v5-BF-F1/manifest.toml", "runs/matrix_5x3-v5-BF-F2/manifest.toml", "runs/matrix_5x3-v5-BF-F3/manifest.toml"]
+evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v6-BF-F1/manifest.toml", "runs/matrix_5x3-v6-BF-F2/manifest.toml", "runs/matrix_5x3-v6-BF-F3/manifest.toml", "runs/matrix_5x3-v5-BF-F1/manifest.toml", "runs/matrix_5x3-v5-BF-F2/manifest.toml", "runs/matrix_5x3-v5-BF-F3/manifest.toml", "runs/matrix_5x3-v10-BF-F1/manifest.toml", "runs/matrix_5x3-v10-BF-F2/manifest.toml", "runs/matrix_5x3-v10-BF-F3/manifest.toml"]
 dead_ends = ["DE-0001", "DE-0002", "DE-0004"]
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017", "ADR-0019", "ADR-0020"]
 open_gates = [
@@ -46,7 +46,7 @@ symbols = ["MobileLaborCES", "FlexibleWageClosure"]
 files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
 references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_mobile_labor.jl", "tests/test_external_closure.jl"]
-evidence = ["runs/matrix_5x3-v6-ALPHA-F1/manifest.toml", "runs/matrix_5x3-v6-ALPHA-F2/manifest.toml", "runs/matrix_5x3-v6-ALPHA-F3/manifest.toml", "runs/matrix_5x3-v5-ALPHA-F1/manifest.toml", "runs/matrix_5x3-v5-ALPHA-F2/manifest.toml", "runs/matrix_5x3-v5-ALPHA-F3/manifest.toml"]
+evidence = ["runs/matrix_5x3-v6-ALPHA-F1/manifest.toml", "runs/matrix_5x3-v6-ALPHA-F2/manifest.toml", "runs/matrix_5x3-v6-ALPHA-F3/manifest.toml", "runs/matrix_5x3-v5-ALPHA-F1/manifest.toml", "runs/matrix_5x3-v5-ALPHA-F2/manifest.toml", "runs/matrix_5x3-v5-ALPHA-F3/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F1/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F2/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F3/manifest.toml"]
 dead_ends = ["DE-0002"]
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0019", "ADR-0020"]
 open_gates = [
@@ -66,7 +66,7 @@ symbols = ["ElasticLaborClosure", "SectoralElasticLaborClosure"]
 files = ["src/closures/labor/types.jl", "src/closures/labor/labor.jl", "src/core/equilibrium.jl"]
 references = ["docs/closures/beta.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md", "ROADMAP.md"]
 tests = ["tests/test_promoted_closures.jl", "tests/test_sectoral_labour.jl"]
-evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v5-BETA-F1/manifest.toml", "runs/matrix_5x3-v5-BETA-F2/manifest.toml", "runs/matrix_5x3-v5-BETA-F3/manifest.toml", "experiments/probes/supply_identification.jl", "experiments/probes/numeraire_invariance.jl", "runs/matrix_5x3-v10-BETA-F1-etas05/manifest.toml", "runs/matrix_5x3-v10-BETA-F2-rigidprog/manifest.toml", "runs/matrix_5x3-v10-BETA-F3-rigidhalf/manifest.toml"]
+evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v5-BETA-F1/manifest.toml", "runs/matrix_5x3-v5-BETA-F2/manifest.toml", "runs/matrix_5x3-v5-BETA-F3/manifest.toml", "experiments/probes/supply_identification.jl", "experiments/probes/numeraire_invariance.jl", "runs/matrix_5x3-v10-BETA-F1-etas05/manifest.toml", "runs/matrix_5x3-v10-BETA-F2-rigidprog/manifest.toml", "runs/matrix_5x3-v10-BETA-F3-rigidhalf/manifest.toml", "runs/matrix_5x3-v10-BETA-F1/manifest.toml", "runs/matrix_5x3-v10-BETA-F2/manifest.toml", "runs/matrix_5x3-v10-BETA-F3/manifest.toml"]
 dead_ends = ["DE-0004", "DE-0011"]
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0019", "ADR-0022"]
 open_gates = [
@@ -91,7 +91,7 @@ symbols = ["FixedWageClosure"]
 files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
 references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_fixed_closure.jl"]
-evidence = ["runs/matrix_5x3-v6-GAMMA-F1/manifest.toml", "runs/matrix_5x3-v6-GAMMA-F2/manifest.toml", "runs/matrix_5x3-v6-GAMMA-F3/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F1/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F2/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F3/manifest.toml"]
+evidence = ["runs/matrix_5x3-v6-GAMMA-F1/manifest.toml", "runs/matrix_5x3-v6-GAMMA-F2/manifest.toml", "runs/matrix_5x3-v6-GAMMA-F3/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F1/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F2/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F3/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F1/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F2/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F3/manifest.toml"]
 dead_ends = ["DE-0003"]
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017", "ADR-0021"]
 open_gates = [
@@ -112,7 +112,7 @@ symbols = ["delta_elasticities", "delta_model", "leontief_multiplier"]
 files = ["src/closures/labor/labor.jl", "src/core/equilibrium.jl"]
 references = ["docs/closures/delta.md", "ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
 tests = ["tests/test_promoted_closures.jl"]
-evidence = ["cbase2/scripts/verify_v3.jl", "runs/matrix_5x3-v5-DELTA-F1/manifest.toml", "runs/matrix_5x3-v5-DELTA-F2/manifest.toml", "runs/matrix_5x3-v5-DELTA-F3/manifest.toml", "experiments/probes/analytic_headlines.jl"]
+evidence = ["cbase2/scripts/verify_v3.jl", "runs/matrix_5x3-v5-DELTA-F1/manifest.toml", "runs/matrix_5x3-v5-DELTA-F2/manifest.toml", "runs/matrix_5x3-v5-DELTA-F3/manifest.toml", "runs/matrix_5x3-v10-DELTA-F1/manifest.toml", "runs/matrix_5x3-v10-DELTA-F2/manifest.toml", "runs/matrix_5x3-v10-DELTA-F3/manifest.toml", "experiments/probes/analytic_headlines.jl"]
 dead_ends = []
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017"]
 open_gates = [
@@ -131,7 +131,7 @@ interpretation = "Demand-constrained employment when initially unused labour exi
 status = "idea"
 symbols = []
 files = []
-references = ["ROADMAP.md", "roadmaps/vertdict.md"]
+references = ["ROADMAP.md", "docs/archive/vertdict.md"]
 tests = []
 evidence = []
 dead_ends = ["DE-0007"]
@@ -143,7 +143,7 @@ open_gates = [
     "tests",
     "MPEC/smoothing formulation required because plain square solvers cannot express it (cbase2/review.md §4)",
 ]
-notes = "The 2022 Baqaee-Farhi complementarity machinery may be adapted but not copied: do not import its N-sector sticky-labour structure (roadmaps/vertdict.md; docs/DOCS_ASSESSMENT.md)."
+notes = "The 2022 Baqaee-Farhi complementarity machinery may be adapted but not copied: do not import its N-sector sticky-labour structure (docs/archive/vertdict.md; docs/DOCS_ASSESSMENT.md)."
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Financing closures (Foundation II of docs/DOCS_ASSESSMENT.md)
@@ -159,7 +159,7 @@ symbols = ["PreferenceReallocation"]
 files = ["src/closures/financing/financing.jl"]
 references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
 tests = ["tests/test_promoted_closures.jl", "tests/test_f1_tilt.jl"]
-evidence = ["cbase2/process_comments.md", "cbase2/scripts/verify_v3.jl", "experiments/probes/analytic_headlines.jl"]
+evidence = ["cbase2/process_comments.md", "cbase2/scripts/verify_v3.jl", "experiments/probes/analytic_headlines.jl", "runs/matrix_5x3-v10-BF-F1/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F1/manifest.toml", "runs/matrix_5x3-v10-BETA-F1/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F1/manifest.toml", "runs/matrix_5x3-v10-DELTA-F1/manifest.toml"]
 dead_ends = ["DE-0001"]
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017"]
 open_gates = [
@@ -180,7 +180,7 @@ symbols = ["TaxFinanced"]
 files = ["src/closures/financing/financing.jl"]
 references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
 tests = ["tests/test_promoted_closures.jl"]
-evidence = ["cbase2/process_comments.md", "experiments/probes/numeraire_invariance.jl", "experiments/probes/analytic_headlines.jl"]
+evidence = ["cbase2/process_comments.md", "experiments/probes/numeraire_invariance.jl", "experiments/probes/analytic_headlines.jl", "runs/matrix_5x3-v10-BF-F2/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F2/manifest.toml", "runs/matrix_5x3-v10-BETA-F2/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F2/manifest.toml", "runs/matrix_5x3-v10-DELTA-F2/manifest.toml"]
 dead_ends = []
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0018"]
 open_gates = [
@@ -201,7 +201,7 @@ symbols = ["ExternalDebt"]
 files = ["src/closures/financing/financing.jl"]
 references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
 tests = ["tests/test_promoted_closures.jl", "tests/test_external_closure.jl"]
-evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v6-ALPHA-F3/manifest.toml", "runs/matrix_5x3-v6-BETA-F3/manifest.toml", "runs/matrix_5x3-v6-BF-F3/manifest.toml", "runs/matrix_5x3-v6-GAMMA-F3/manifest.toml", "runs/matrix_5x3-v6-DELTA-F3/manifest.toml", "runs/matrix_5x3-v5-BF-F3/manifest.toml"]
+evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v6-ALPHA-F3/manifest.toml", "runs/matrix_5x3-v6-BETA-F3/manifest.toml", "runs/matrix_5x3-v6-BF-F3/manifest.toml", "runs/matrix_5x3-v6-GAMMA-F3/manifest.toml", "runs/matrix_5x3-v6-DELTA-F3/manifest.toml", "runs/matrix_5x3-v5-BF-F3/manifest.toml", "runs/matrix_5x3-v10-BF-F3/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F3/manifest.toml", "runs/matrix_5x3-v10-BETA-F3/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F3/manifest.toml", "runs/matrix_5x3-v10-DELTA-F3/manifest.toml"]
 dead_ends = []
 adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0019", "ADR-0020"]
 open_gates = [
@@ -211,4 +211,4 @@ open_gates = [
     "v3 saving/import accounting: implemented household demand is (1-s)E with import margins; the ADR-0002 identities hold exactly at s = 0, m = 0 (docs/closures/financing.md)",
     "at the BF eta = 0 row the booked entry is the programme booking, not a position: B_gov = +1.331 percent of GDP, identical in BF-F3, GAMMA-F3 and DELTA-F3; GAMMA/DELTA-F3 close their account to ~1e-12 (employment rises to 1.017796, the resources arrive from abroad) while BF-F3 is open by -0.7936 percent of GDP (resource side +0.5374 percent) -- see the labor.BF gates and ADR-0020. ADR-0020 accepted option C closes the eta = 0 account in the next generation (BF-F3 booked -0.00852841 with B_gov +0.01484628 at the eta = 0 prices, financing neutrality restored at eta = 0; probe7)",
 ]
-notes = "Not a full current-account closure (cbase2/review.md §1). external_balance returns only the programme's import content (cbase2/review.md §2.8), and the recorded F = 0.00147 figure is ambiguous: about half of dot(p, m .* g) at baseline. ADR-0010 adds the asserted external-account canary: at mobile eta = 1 solutions the omitted N-th market residual equals S - (I+X-M) via external_balance_canary, asserted by tests and experiments. ADR-0019 supersedes the omitted-market reading: all N clearings are enforced, the programme financing is booked as B_gov = Σ p·g (B_gov = 0 otherwise), the net position is F + B_gov, and F2/F3 are real-neutral in the mobile regime (v5: B_gov = +1.331% of GDP, F_F3 = -1.432%, F_F2 = -0.101%, identical external position to ~2.6e-17). tests/test_external_closure.jl asserts the neutrality contract. At the BF eta = 0 row the booked B_gov is not a position: the pin fixes F = 0 and the account is open by the pin's labour residual (audit in experiments/probes/probe5*_bf_f3*.jl, 2026-09-18; ADR-0020 proposed)."
+notes = "Not a full current-account closure (cbase2/review.md §1). external_balance returns only the programme's import content (cbase2/review.md §2.8), and the recorded F = 0.00147 figure is ambiguous: about half of dot(p, m .* g) at baseline. ADR-0010 adds the asserted external-account canary: at mobile eta = 1 solutions the omitted N-th market residual equals S - (I+X-M) via external_balance_canary, asserted by tests and experiments. ADR-0019 supersedes the omitted-market reading: all N clearings are enforced, the programme financing is booked as B_gov = Σ p·g (B_gov = 0 otherwise), the net position is F + B_gov, and F2/F3 are real-neutral in the mobile regime (v5: B_gov = +1.331% of GDP, F_F3 = -1.432%, F_F2 = -0.101%, identical external position to ~2.6e-17). tests/test_external_closure.jl asserts the neutrality contract. At the BF eta = 0 row the booked B_gov is not a position: the pin fixes F = 0 and the account is open by the pin's labour residual (audit in experiments/probes/probe5*_bf_f3*.jl, 2026-09-18; ADR-0020 accepted option C supersedes the pin)."

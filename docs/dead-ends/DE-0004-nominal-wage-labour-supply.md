@@ -4,7 +4,7 @@
 - **Recorded:** 2026-09-17
 - **Origin:** rejected mobile-labour system, 2026-09
 - **Related:** ADR-0002, closures `BF` and `BETA`; `ROADMAP.md` §4.2
-- **Evidence:** `roadmaps/vertdict.md` item 4 ("the model uses nominal `w`
+- **Evidence:** `docs/archive/vertdict.md` item 4 ("the model uses nominal `w`
   rather than `w/P` in labor supply"), `ROADMAP.md` §3 and §4.2
 
 ## What was tried

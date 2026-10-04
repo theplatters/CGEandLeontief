@@ -34,7 +34,7 @@ External anchors:
 
 - `ROADMAP.md` (2026-08-18/20): the governing plan, validation gates, and
   definition of done. Not superseded by anything in `docs/`.
-- `roadmaps/vertdict.md` (2026-08-18): the independent audit verdict that
+- `docs/archive/vertdict.md` (2026-08-18): the independent audit verdict that
   rejected the first mobile-labor round. It is the arbiter WORKPLAN2 defers to.
 - `docs/reviews/metro-rev1.docx` and `metro-rev2.docx`: the referee reports
   (R1 = constructive major revision; R2 = devastating reject). Extracted text
@@ -100,7 +100,7 @@ false "complete and verified" certification, which `vertdict.md` rejected.
 The post-pilot workplan. Its headline claims -- "complete and verified", GO
 decision, price invariance, eta = 88.4% -- were **formally superseded** by
 the supersession note at the top of the document itself, which cites
-`roadmaps/vertdict.md`. The document is internally annotated: it now reads as
+`docs/archive/vertdict.md`. The document is internally annotated: it now reads as
 a historical record of the rejected round.
 
 **Still relevant:**

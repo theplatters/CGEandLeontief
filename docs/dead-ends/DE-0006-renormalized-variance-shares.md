@@ -3,10 +3,10 @@
 - **Status:** dead end — the "88.4%" and "85.9%" claims are not variance shares
 - **Recorded:** 2026-09-17
 - **Origin:** `src/variance_decomposition.jl` (pre-fix), 2026-09
-- **Related:** ADR-0003, ADR-0004, `ROADMAP.md` §5, `roadmaps/vertdict.md`
+- **Related:** ADR-0003, ADR-0004, `ROADMAP.md` §5, `docs/archive/vertdict.md`
 - **Evidence:** `src/variance_decomposition.jl:261` (incomplete design silently
   converted), `src/variance_decomposition.jl:308` (share renormalized over
-  main effects), `roadmaps/vertdict.md` ("0.859 would mean 85.9% of total
+  main effects), `docs/archive/vertdict.md` ("0.859 would mean 85.9% of total
   variance … whereas 88.4% is merely η's share of the sum of reported main
   effects")
 

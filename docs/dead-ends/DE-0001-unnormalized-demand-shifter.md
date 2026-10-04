@@ -4,7 +4,7 @@
 - **Recorded:** 2026-09-17
 - **Origin:** rejected mobile-labour system (`src/mobile_labor.jl` pre-fix), 2026-09
 - **Related:** ADR-0002, DE-0002, closures `BF` and financing `F1`
-- **Evidence:** `src/mobile_labor.jl:148` (pre-fix line), `roadmaps/vertdict.md`,
+- **Evidence:** `src/mobile_labor.jl:148` (pre-fix line), `docs/archive/vertdict.md`,
   `ROADMAP.md` §3; diagnostic `Σ_i β_i d_i p_i^{1−σ} ≈ 1.25485`
 
 ## What was tried

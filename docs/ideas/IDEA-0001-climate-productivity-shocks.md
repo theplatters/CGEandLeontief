@@ -101,7 +101,7 @@ calibration discipline for its incidence.
 
 ADR-0021's option C is the wage-side complement, kept for the case where the
 price response has to be generated from demand-side variation alone; the
-workplan in `docs/WORKPLAN_SENSITIVE_PRICES.md` pursues that route instead.
+wage-structure door in `docs/VariationinGamma.md` pursues that route instead.
 
 # Revision Log
 

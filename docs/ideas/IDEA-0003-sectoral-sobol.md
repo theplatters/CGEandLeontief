@@ -103,7 +103,7 @@ Cost is set by the stiff `eta = 0` cells (Jacobian condition number ~9.4e7 again
 
 # Open questions the design would settle
 
-- Does the reallocation friction matter for sectoral allocation even where it is aggregate-second-order? (`DOCS_ASSESSMENT.md` Stage 2 item 2; `definitive_guide.md` Phase 7.)
+- Does the reallocation friction matter for sectoral allocation even where it is aggregate-second-order? (`DOCS_ASSESSMENT.md` Stage 2 item 2; `docs/archive/definitive_guide.md` Phase 7 — archived by ADR-0026.)
 - The recombination of the two labour margins --- allocation x supply elasticity --- is recorded in the assessment as a deliberate omission. The sectoral family *is* that recombination, so a total-effect index over the rigid-group factor gives the omission a measurable end condition.
 - Which sector blocks' wage-responsiveness drives the price headline? This is block B and it is the version-1 headline question, now well posed.
 - Does the rigid-group **rule** dominate the rigid-group **share**? The executed ladder flips the employment sign across the two rules (programme sectors versus largest half by employment), so this is a sign question, not a magnitude question.
@@ -114,13 +114,14 @@ ADR (the factor space and the design weights) + per-block factor design + prereg
 
 # Anchored in
 
-- `docs/DOCS_ASSESSMENT.md` Stage 2 item 2; `docs/definitive_guide.md` §7.6 and Phase 7; `ROADMAP.md` (the `SobolResult` extension item).
+- `docs/DOCS_ASSESSMENT.md` Stage 2 item 2; `docs/archive/definitive_guide.md` §7.6 and Phase 7 (archived by ADR-0026); `ROADMAP.md` (the `SobolResult` extension item).
 - `docs/dead-ends/DE-0006` (renormalised shares --- do not repeat); `docs/dead-ends/DE-0010` (the retired cbase2 solver ladder).
 - `docs/decisions/ADR-0022-sectoral-labour-markets.md` (the sectoral family, the exact nesting, the `eta_s -> inf` limit); `docs/decisions/ADR-0021-wage-structure-fixed-wage-closure.md` (the pinned vector, the numeraire invariance).
 - `paper/equivalence.tex` Lemma 1 and the sectoral section (why single-wage closures are demand-free in prices).
-- `docs/grouping_rule_evidence.md` (the input measure); `docs/WORKPLAN_SENSITIVE_PRICES.md` v7 decision points (the grouping rule and its sign flip).
+- `docs/grouping_rule_evidence.md` (the input measure); `docs/grouping_rule_evidence.md` (the grouping rule) and ADR-0022 (the grouping rule and its sign flip).
 
 # Revision Log
 
 - **Version 1** (September 2026) --- the idea, the three scope constraints, the two routes.
 - **Version 2** (September 2026) --- rewritten as a vantage point after the 2026-09-20 review: the aggregate Sobol recorded as built; the four structural reasons the version-1 factor set cannot be re-pointed at the five closures; the three-block segmented design with counts; the output-choice caveat; the GAMMA sub-variation with its numeraire zero-response control; the artifact gap (`solution.csv` carries no wage or employment vector); status raised from `unexplored` to `scoped`. Version 1's constraints and routes are retained, not superseded.
+

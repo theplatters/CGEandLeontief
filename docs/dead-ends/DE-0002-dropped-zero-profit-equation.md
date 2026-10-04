@@ -4,7 +4,7 @@
 - **Recorded:** 2026-09-17
 - **Origin:** rejected mobile-labour system (`src/mobile_labor.jl` pre-fix), 2026-09
 - **Related:** ADR-0002, DE-0001, closure `BF`, `ROADMAP.md` §4.2
-- **Evidence:** `src/mobile_labor.jl:158` (pre-fix), `roadmaps/vertdict.md`;
+- **Evidence:** `src/mobile_labor.jl:158` (pre-fix), `docs/archive/vertdict.md`;
   sector-1 profit residual ≈ 0.39 at the "solution"
 
 ## What was tried
@@ -26,7 +26,7 @@ large profit residual in the "dropped" sector, while reporting convergence
 
 ## What replaced it
 
-The square system documented in `roadmaps/vertdict.md` and `ROADMAP.md`:
+The square system documented in `docs/archive/vertdict.md` and `ROADMAP.md`:
 `N` zero-profit equations, `N−1` goods-market equations, one labour-closure
 equation, one numeraire equation — plus the post-solve requirement to compute
 **all** `N` goods-market residuals and assert them, repeat the solve while

@@ -4,8 +4,8 @@
   mechanism remains valid for `ZETA`
 - **Recorded:** 2026-09-17
 - **Origin:** closure-design assessment, 2026-09
-- **Related:** closure `ZETA`; `roadmaps/vertdict.md`
-- **Evidence:** `roadmaps/vertdict.md` ("Do not replace the model wholesale
+- **Related:** closure `ZETA`; `docs/archive/vertdict.md`
+- **Evidence:** `docs/archive/vertdict.md` ("Do not replace the model wholesale
   with Baqaee–Farhi (2022)"; the 2022 model has sector-specific sticky
   labour, capital, heterogeneous households, nominal rigidities and a
   monetary closure), `bf_replication2/src/network.jl:45` (N sticky labour
@@ -35,7 +35,7 @@ would obscure the IO endpoint.
 
 The 2019-style competitive CES production-network core as the common base,
 with the 2022 complementarity machinery adapted only for the unemployment
-closure `ZETA` (`ROADMAP.md` §5 Closure C; `roadmaps/vertdict.md`
+closure `ZETA` (`ROADMAP.md` §5 Closure C; `docs/archive/vertdict.md`
 recommendation).
 
 ## Revival conditions

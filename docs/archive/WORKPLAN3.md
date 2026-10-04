@@ -20,7 +20,7 @@ date: "2026-08-18"
 # Scope and Verdict
 
 This workplan repairs the core issues documented in `PRELIMINARY-ASSESSMENT.md`
-and corroborated by `roadmaps/vertdict.md`. It targets the revision-support code
+and corroborated by `docs/archive/vertdict.md`. It targets the revision-support code
 (`src/`, `tests/test_mobile_labor.jl` and the other `tests/test_*.jl` files) only.
 The two `bf_replication/` directories are excluded by agreement.
 

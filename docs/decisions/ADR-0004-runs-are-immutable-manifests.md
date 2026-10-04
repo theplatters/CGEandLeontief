@@ -10,7 +10,7 @@ Results currently live in notebooks, CSVs, plots, and prose, and solver
 failures have been discarded silently (for example, the former variance
 decomposition converted an incomplete design into a nonorthogonal one and
 renormalized shares over main effects, producing the invalid "88.4%"
-headline — `roadmaps/vertdict.md`, `docs/dead-ends/DE-0006`). The `cbase2`
+headline — `docs/archive/vertdict.md`, `docs/dead-ends/DE-0006`). The `cbase2`
 pipeline already introduced preregistration and SHA-256 input provenance,
 but only inside that folder.
 

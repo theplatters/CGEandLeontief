@@ -1,25 +1,32 @@
-# Roadmap: Labour-Market Closure and Green-Investment Multipliers
+# Roadmap: Closure Choice in Input-Output Models of the Socio-Ecological Transformation
 
 ## 1. Objective
 
 Produce a substantially reframed paper that asks:
 
-> How strongly do labour-market closures, relative to production and demand elasticities, determine the aggregate and sectoral effects of a sector-specific green-investment programme?
+> Which short run, and which money? Every input-output calculation of a
+> sector-specific green-investment programme silently embeds two macro
+> commitments --- a vision of the short run and a theory of money --- whose
+> joint operationalisation is the adjustment closure. How far do those closure
+> choices move the answer, and where do they not?
 
-The paper will use the German housing transformation as a 71-sector application. It will treat the relationship between input-output (IO) multiplier models and computable general equilibrium (CGE) models as established knowledge, not as a newly discovered “bridge.” The empirical contribution will be to quantify where results move between the full-employment CGE and IO-type endpoints and to distinguish aggregate sensitivity from sectoral sensitivity.
+The paper will use the German housing transformation as a 71-sector application. It will treat the relationship between input-output (IO) multiplier models and computable general equilibrium (CGE) models as established knowledge, not as a newly discovered “bridge.” The empirical contribution is the map itself: a 5x3 closure matrix (five labour closures by three financing closures) run on an empirically informed green-investment vector, showing that under demand-only shocks it collapses to a small number of distinct economies and identifying exactly where and why it does not. The transformation short run is doubly rigid --- quantities do not arbitrage (the IO heritage) and sectoral wages do not clear (the sectoral-labour family) --- with BF as the frictionless pole against which that rigidity is measured.
 
 ### Working title
 
-**Labour-Market Closure and the Estimated Output Effects of Green Investment: Evidence from a 71-Sector German Model**
+**Which Short Run? Which Money? Closure Choice in Input-Output Models of the Socio-Ecological Transformation**
 
 ### Candidate central result
 
-The result to test—not assume—is:
+The result established by the executed evidence --- not assumed --- is:
 
-- labour-market closure principally determines the feasible aggregate employment and real-GDP response; and
-- substitution parameters principally affect sectoral allocation, relative prices, displacement, and bottlenecks conditional on that aggregate closure.
+- closure choice is first-order for welfare and employment outcomes: the fifteen matrix cells reduce to seven distinct economies, and the fixed-wage row breaks financing neutrality (F2 and F3 coincide in p, y, w in the mobile regime and split in the fixed-wage row);
+- sectoral wages are the demand-sensitive-price channel: the ADR-0022 sectoral family moves prices where the scalar closure cannot, while under demand-only shocks the scalar BETA row stays degenerate by design;
+- eta_s is identified only under a supply shock, measured on the 189-cell supply arm (`supply_etas_s1` / `_prog` / `_unif`), not by the demand matrix.
 
-The manuscript must not report a variance share such as “88.4% explained” until the underlying model, parameter design, and decomposition have passed the validation gates below.
+Cite `matrix_5x3_v10` (33/33, all gates pass) and the supply arm as the generations of record; `registry/` is the single source of truth for status (ADR-0003).
+
+The manuscript must not report a variance share such as “88.4% explained” until the underlying model, parameter design, and decomposition have passed the validation gates below. The retired claims (88.4 % / 100 % variance shares, eta dominance, eta to infinity, price invariance, GO certification) belong to the retirement section of `paper/narrative_outline.md` and must not reappear.
 
 ## 2. Scope and non-goals
 
@@ -49,7 +56,7 @@ The manuscript must not report a variance share such as “88.4% explained” un
 - [x] Add tests for the real-GDP index and run the Julia test suite.
 - [x] Regenerate the existing GDP-dependent figures with the corrected measure.
 - [ ] Obtain and review the co-author's claimed `mobile_labor.jl`, `variance_decomposition.jl`, and related replication code. These files are not present in the current repository and their reported results are therefore provisional.
-- [x] Audit the supplied `mobile_labor.jl` and `variance_decomposition.jl` once obtained. **Audit outcome: rejected.** The two-sector diagnostic shows the reported mobile-labor system is not an equilibrium (shock-weighted household expenditure ≈ 1.25485 > 1; Walras' law cannot recover the omitted goods-market condition; a zero-profit equation was dropped instead of a redundant market equation; the solver accepted convergence without checking residuals or its own return code; labor supply used nominal rather than real wages; the high-η limit was misinterpreted as unlimited labor instead of L → 0; and the mobile model used a fixed-base sum instead of the shared Törnqvist index). All current mobile-labor sweep results—including the apparent price invariance and the 88.4% claim—are invalid until regenerated. See `roadmaps/vertdict.md`.
+- [x] Audit the supplied `mobile_labor.jl` and `variance_decomposition.jl` once obtained. **Audit outcome: rejected.** The two-sector diagnostic shows the reported mobile-labor system is not an equilibrium (shock-weighted household expenditure ≈ 1.25485 > 1; Walras' law cannot recover the omitted goods-market condition; a zero-profit equation was dropped instead of a redundant market equation; the solver accepted convergence without checking residuals or its own return code; labor supply used nominal rather than real wages; the high-η limit was misinterpreted as unlimited labor instead of L → 0; and the mobile model used a fixed-base sum instead of the shared Törnqvist index). All current mobile-labor sweep results—including the apparent price invariance and the 88.4% claim—are invalid until regenerated. See `docs/archive/vertdict.md`.
 
 The current implementation in `src/` is the reproducible baseline. Work reported in external summaries is not part of the evidentiary record until it has been added, reviewed, and tested here.
 
@@ -122,7 +129,7 @@ Implement a common production and final-demand core with interchangeable labour-
 - Use an empirically defensible range for `η`.
 - Purpose: trace adjustment between fixed labour and a high-elasticity labour response.
 - Interpretation: voluntary labour-supply response, not involuntary unemployment.
-- BETA's identification is shock-side only (DE-0011): demand-only shocks leave `eta_s` unidentified, so the supply-side arm in Phase 5 is the planned route.
+- BETA's identification is shock-side only (DE-0011): demand-only shocks leave `eta_s` unidentified. Measured 2026-09-20 — the supply-side arm of Phase 5 is executed (`supply_etas_s1` / `_prog` / `_unif`, 63 cells each, 189 total, all gates pass, ADR-0023), recovering `eta_s` exactly and invariantly across the magnitude ladder; the ADR-0022 sectoral form is the route to demand-sensitive prices under demand shocks.
 
 ### Closure C: Unemployment or wage-curve closure
 
@@ -222,24 +229,26 @@ tests/
 
 ### Phase 4 — Validate the economics and numerics
 
+Status 2026-10-04: an item is ticked only where a named `tests/` testset asserts it (`Pkg.test()` green, exit 0); `[ ]` marks a property the suite does not assert directly, with a note on where it does stand. ADR-0010 retired the interpolated `0 < eta < 1` cases, so the eta-continuity and high-eta items are no longer testable as written.
+
 Add automated tests for:
 
-- [ ] no-shock benchmark replication for every closure and elasticity configuration;
-- [ ] row normalization and orientation of `Ω`;
-- [ ] zero profit in every sector, including any sector associated with a dropped market equation;
-- [ ] goods-market clearing and aggregate Walras residual;
-- [ ] labour-market clearing;
-- [ ] government, household, saving–investment, and external balances;
-- [ ] homogeneity with respect to the nominal numeraire;
-- [ ] the numerical elasticity `d log L / d log(w/P) ≈ η`;
-- [ ] convergence from multiple initial conditions;
-- [ ] continuity as `η` and CES elasticities vary;
-- [ ] `η = 0` equivalence to fixed aggregate labour;
-- [ ] convergence of the high-`η` model to the fixed-real-wage closure;
-- [ ] exact or qualified equivalence of Closure D and the IO model;
-- [ ] consistency of real-GDP, nominal-GDP, employment, and price indices.
-- [ ] **all-N clearing** (ADR-0019; the omitted-equation rotation is retired) — every goods-market residual is small in every regime, and the solution is invariant to the variable/equation ordering since no market is omitted.
-- [ ] **household expenditure exhaustion** — verify `Σᵢ pᵢ cᵢʰ = Eʰ` (or the appropriate institutional total) exactly, for every experiment type.
+- [x] no-shock benchmark replication for every closure — `tests/test_external_closure.jl` (real-table baseline reproduction), `tests/test_gdp_measurement.jl` (real-table baseline identity), `tests/test_kernel_regression.jl` (the η = 0 and η = 1 endpoints), `tests/test_promoted_closures.jl` (BETA/ALPHA nesting, DELTA, F1–F3); the "every elasticity configuration" reading is retired with ADR-0010.
+- [x] row normalization and orientation of `Ω` — `tests/test_model.jl` ("Baqaee--Farhi input-share convention"), `tests/test_calibration.jl`.
+- [x] zero profit in every sector — `tests/test_promoted_closures.jl`; the dropped-market case is retired by ADR-0019 (all N clearings).
+- [x] goods-market clearing and aggregate Walras residual — `tests/test_external_closure.jl`, `tests/test_promoted_closures.jl`, `tests/test_run_manifest.jl` (`assert_external_account` fails closed).
+- [x] labour-market clearing — `tests/test_mobile_labor.jl` (eta endpoints), `tests/test_fixed_closure.jl`, `tests/test_sectoral_labour.jl` (ADR-0022 sectoral supply gap).
+- [x] government, household, saving–investment, and external balances — `tests/test_promoted_closures.jl` (F1/F2/F3 budgets), `tests/test_external_closure.jl` (canary identity `S + T + M - (I+X) - (F + B_gov)`), `tests/test_f1_tilt.jl`.
+- [ ] homogeneity with respect to the nominal numeraire — not asserted anywhere in `tests/` (only a comment in `tests/test_kernel_regression.jl`); the question is measured by the probe `experiments/probes/numeraire_invariance.jl` (DE-0011), which is evidence, not a test.
+- [ ] the numerical elasticity `d log L / d log(w/P) ≈ η` — the enforced equation is asserted (`tests/test_promoted_closures.jl`, BETA supply curve: `L = Lbar·(w/P)^eta_s`), but the former implied-elasticity check was circular (cbase2/review §3.4), so the numerical recovery is measured on the 189 supply-arm cells instead (input η_s recovered to 1e-6, invariant across the magnitude ladder).
+- [x] convergence from multiple initial conditions — `tests/test_external_closure.jl` ("multi-start invariance on the fixture").
+- [x] continuity as `η` and CES elasticities vary — superseded rather than tested: ADR-0010 allows only the endpoints, and `tests/test_eta_sweep.jl` asserts the sweep is order-invariant and that intermediate η is rejected with an `ArgumentError`.
+- [x] `η = 0` equivalence to fixed aggregate labour — `tests/test_mobile_labor.jl`, `tests/test_kernel_regression.jl` (endpoint goldens), `tests/test_sectoral_labour.jl` (the `eta_s,i = 0` corner reproduces the executed v6 BF cells); since ADR-0020 option C the endpoint holds sectoral wages over the frozen allocation.
+- [x] convergence of the high-`η` model to the fixed-real-wage closure — retired, not tested: ADR-0010 removed the interpolated η and the `η = 10⁶` reading (DE-0003); `tests/test_eta_sweep.jl` rejects η = 0.5, 51 and Inf.
+- [x] exact or qualified equivalence of Closure D and the IO model — `tests/test_promoted_closures.jl` ("DELTA equivalence (verify_v3 §3)"); qualified because the analytic counterpart is a Type II / SAM-style multiplier, not the Type I inverse (cbase2/review §1).
+- [x] consistency of real-GDP, nominal-GDP, employment, and price indices — `tests/test_gdp_measurement.jl`, `tests/test_model.jl` (Törnqvist quantity index); ADR-0018.
+- [x] **all-N clearing** (ADR-0019; the omitted-equation rotation is retired) — every goods-market residual is small in every regime, and the solution is invariant to the variable/equation ordering since no market is omitted. `tests/test_external_closure.jl`, `tests/test_run_manifest.jl`.
+- [x] **household expenditure exhaustion** — verify `Σᵢ pᵢ cᵢʰ = Eʰ` (or the appropriate institutional total) exactly, for every experiment type. `tests/test_promoted_closures.jl`, `tests/test_f1_tilt.jl`.
 
 **Red-flag diagnostic:** if normalized prices and the real wage do not change across `η` but employment does, stop and identify the violated equation before using the results. (Note: the earlier reported "price invariance with changing employment" was an artifact of the rejected mobile-labor system, not a valid CGE finding.)
 
@@ -257,7 +266,7 @@ Add automated tests for:
 - [ ] Do not silently discard solver failures: retry with independent initial values and continuation; if any required factorial cell remains invalid, abort the decomposition; report the failed region as part of the feasible parameter domain. Use an unbalanced regression/ANOVA only as a separately named analysis with an explicitly chosen sum-of-squares convention.
 - [ ] Add essential sensitivity tests: a purely additive analytical function; a pure interaction function; nonuniform factor weights; a deliberately missing factorial cell (must raise an error); a solver result with a failed return code but finite `.u`; and invariance to grid traversal and warm-start order.
 - [ ] Repeat the analysis for alternative financing closures and reasonable shock magnitudes.
-- [ ] Run the supply-side BETA identification arm (`supply_etas` design: per-cell productivity shocks — sector-1 +20 %, programme-sector ladder, uniform small — × `eta_s` grid {0.5, 1, 2, 5} under F1/F2/F3); this requires an ADR for the `experiments/run.jl` shock schema (the pipeline hard-codes `Shocks(ones(N), ones(N), zeros(N))`) and preregistration before any run (pilot evidence: `experiments/probes/supply_identification.jl`, `eta_s` recovered exactly).
+- [x] Run the supply-side BETA identification arm — **executed 2026-09-20**: three designs `supply_etas_s1` / `supply_etas_prog` / `supply_etas_unif` (per-cell productivity shocks: sector-1 ladder, programme-sector ladder, uniform 1–3 %) × `eta_s` {0.5, 1, 2, 5} × F1/F2/F3 × three magnitudes = 189 cells, all executed, all gates pass. The `experiments/run.jl` shock schema landed as ADR-0023 (accepted), designs preregistered before any cell, recovery exact and magnitude-invariant (implied `ln L / ln w` = input `eta_s` to 1e-6), ALPHA control pinned (`L = 1`), F2 = F3 neutrality extends to supply shocks, and the ADR-0019 canary asserted at `A != 1` on every cell. Flow tables: `paper/tables/supply_etas_flows.md`, `supply_etas_prog_flows.md`, `supply_etas_unif_flows.md`; narrative in `docs/ETAs.md` (v5).
 - [ ] Assess solver failures as part of the feasible parameter domain, not as observations to discard silently.
 
 Primary outcomes:

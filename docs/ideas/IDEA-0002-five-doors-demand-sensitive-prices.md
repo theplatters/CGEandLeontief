@@ -38,7 +38,7 @@ its own price sign, its own parameter and its own accounting cost.
   ($\eta_{s,i} = 0$ for every sector, so $L^{cm}_i = \bar L_i$) is exactly the
   `eta = 0` row of the current matrix, which makes the existing BF cells a free
   endpoint for the family. `docs/ETAs.md` ranks it candidate 1 for the published
-  matrix, and `docs/WORKPLAN_SENSITIVE_PRICES.md` is the implementation route.
+  matrix, and `docs/VariationinGamma.md` (the wage-structure door) plus `docs/ETAs.md` are the implementation routes.
 - **Markup: a demand-sensitive margin.** $\mu_i = 1 + \kappa (y_i / y_{i0} - 1)$,
   nested at $\kappa = 0$. A few lines of code, but markup income is profit, so it
   needs a profit-income-and-spending closure or the accounting identity behind

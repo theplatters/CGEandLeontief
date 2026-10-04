@@ -2,12 +2,16 @@
 #
 # Reconstruct runs/<id>/log.txt from the committed manifest.
 #
-# Why: the v4-v9 generations have no log.txt in some working copies (only
+# Why: the v4-v10 generations have no log.txt in some working copies (only
 # v1-v3 do; log.txt and solution.csv are gitignored working artefacts, ADR-0004
 # tracks only runs/index.csv and runs/*/manifest.toml). The repository gate
 # requires the journal to exist for every run dir, so the journals are rebuilt
 # from the manifests with the exact grammar of experiments/run.jl at the run
-# commit bc83d5a (written by `execute_cell` via `run_log`, which prepends
+# commits bc83d5a (v4-v9) and 979a58e (v10): the `run_log` call sites, the
+# `gate_summary` construction and the `gate_frag` format string are identical
+# in both commits and in HEAD (`git diff bc83d5a HEAD -- experiments/run.jl`
+# touches none of those lines). The journal is written by `execute_cell` via
+# `run_log`, which prepends
 # `iso_timestamp() * " "` — a 19-char UTC stamp plus one space — on every
 # call, so only the first physical line of a multi-line failure entry carries
 # a timestamp):
@@ -20,9 +24,10 @@
 #       including the v7 MethodError's `Closest candidates` lines)
 #
 # The reference metric is named `real_gdp_ref` in the v1-v3 code and
-# `consumption_ref` from ADR-0018 on (the v4-v9 code); each generation is
+# `consumption_ref` from ADR-0018 on (the v4-v10 code); each generation is
 # rebuilt with its own name. The third gate is `labour` (mobile), `wage`
-# (fixed) or `sectoral` (the eta = 0 ADR-0020 endpoint). The value is computed
+# (fixed) or `sectoral` (the eta = 0 ADR-0020 endpoint, and the ADR-0022
+# eta_s_vec cells). The value is computed
 # from the design's reference continuation here, never typed. The gate summary
 # is rebuilt from the manifest's [gates] table with the same `gate_frag`
 # format string. A failed cell carries no per-gate table (only
@@ -45,9 +50,9 @@ include(joinpath(@__DIR__, "..", "run.jl"))
 
 using Printf, Dates, TOML
 
-const REF_NAME = "consumption_ref"   # v4-v9 code path (ADR-0018 rename)
+const REF_NAME = "consumption_ref"   # v4-v10 code path (ADR-0018 rename)
 const GENERATIONS = ["matrix_5x3-v4", "matrix_5x3-v5", "matrix_5x3-v6",
-    "matrix_5x3-v7", "matrix_5x3-v8", "matrix_5x3-v9"]
+    "matrix_5x3-v7", "matrix_5x3-v8", "matrix_5x3-v9", "matrix_5x3-v10"]
 
 "Rebuild the journal lines for one manifest (three entries; a failed entry's
 third line is multi-line when the recorded error message contains newlines)."
@@ -102,8 +107,11 @@ function reconstruct_main(args)
     runs_dir = default_runs_dir(root)
 
     # The reference value: computed from the design's reference continuation.
-    # The v5-v9 designs share the reference parameters (v9 adds only
-    # eta_s_rigid_group), so one continuation covers all of them (line 2 is
+    # The v5-v10 designs share the reference parameters: the `[reference]`
+    # table is byte-identical in v5, v9 and v10, so one continuation covers
+    # all of them (v9 adds only eta_s_rigid_group to the cells, v10 only cell
+    # entries and prose) — and the v5 and v10 designs each give
+    # consumption_ref = 0.99999999999999867, bit-identical. (line 2 is
     # verified modulo the value: a fresh continuation differs by 1-3 ulp
     # across generations, so only the `reference ` prefix is asserted).
     design_d = load_design("matrix_5x3_v5"; root = root)

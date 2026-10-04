@@ -13,7 +13,7 @@ the current record:
 
 - `selective_status_overview.md`, an old status snapshot whose mobile-labour
   "GO" and "88.4%" variance share are rejected by `ROADMAP.md` §3,
-  `roadmaps/vertdict.md`, and `docs/dead-ends/DE-0001`, `DE-0002`, `DE-0003`
+  `docs/archive/vertdict.md`, and `docs/dead-ends/DE-0001`, `DE-0002`, `DE-0003`
   and `DE-0006`. Phase 0 marked it superseded with a banner but left it in the
   root, where it still read like a current status document.
 - `varianten` (now `varianten.xlsx`), a January 2025 Excel workbook sketching

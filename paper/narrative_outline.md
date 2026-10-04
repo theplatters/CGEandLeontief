@@ -7,6 +7,7 @@ status: "working note - not a decision, no registry entry"
 tags: [revision, narrative, outline, motivation-mindmap, beyondhulten]
 ---
 
+**Version 4** \textcolor{revisionV3}{(October 2026)}
 **Version 3** \textcolor{revisionV2}{(September 2026)}
 **Version 2** \textcolor{revisionV1}{(September 2026)}
 **Version 1** (September 2026)
@@ -18,9 +19,9 @@ revised paper. It is derived from:
 
 - `docs/motivation_mindmap.md` (v3) - the author-confirmed semantics of the
   MOTIVATION board;
-- `paper/equivalence.tex` (v4, evidence layer `matrix_5x3_v10`, the
+- \textcolor{revisionV3}{\texttt{paper/to\_evaluate/equivalence.tex}} (v4, evidence layer `matrix_5x3_v10`, the
   C1-corrected 33/33 generation) - the ex-ante equivalences and their scope;
-- the executed supply-side arm (`supply_etas_prog|unif`, 126 cells; ETAs v5)
+- the executed supply-side arm (\textcolor{revisionV2}{\texttt{supply\_etas\_s1|prog|unif}, 189 cells; the earlier count of 126 covered only \texttt{prog} and \texttt{unif}}, ETAs v5)
   and the sectoral-labour family (ADR-0022, `matrix_5x3_v9/v10`);
 - the reviewer maps in `docs/DOCS_ASSESSMENT.md` (R1.1-R1.9, R2.1-R2.14);
 - four framing decisions put to and taken by the author on 2026-09-20
@@ -166,6 +167,34 @@ Concretely:
   ladder and the rigid-group cells, not the scalar-elasticity variant that
   collapses onto ALPHA.
 
+# Canonical figure inventory \textcolor{revisionV2}{\normalsize [added v3]}
+
+The candidate figure for Section 6 is catalogued in `paper/to_evaluate/possible_plots.md`
+(the recommended `trade` panel; ADR-0025); the heavy-lifting shaded 5x3 grid and
+its fifteen per-cell variants live in `revised_manuscript/pictures/panel_5x3_*.png`
+(commit `740b9cf` / `e78ae88`), with the pre-September originals archived under
+`revised_manuscript/pictures/archive/`. The older \textcolor{revisionV3}{\texttt{paper/pictures/}}\textcolor{revisionV2}{ analysis figures}
+are section-anchored below so that no figure is orphaned.
+
+\textcolor{revisionV3}{\textbf{Paths updated in v4.} \texttt{revised\_manuscript/} has been dissolved: the per-cell panels now live in \texttt{paper/pictures/} and the pre-September originals in \texttt{paper/pictures/archive/}. The ten figures that duplicated \texttt{paper/submission-metro/pictures/} were removed from \texttt{paper/pictures/} (the submission's own copies are the anchored ones). The four flow tables moved to \texttt{revision/tables/}.}
+
+\textcolor{revisionV2}{\textbf{Price-sensitive sectoral-family figures are Section 6
+material}, not Section 5: they isolate the $\eta_s$ gradient (the rigidity
+ladder), the labor-slack responses, and the sectoral-wage impulse paths. Their
+source cells are \texttt{matrix\_5x3\_v9} / the \texttt{matrix\_5x3\_v10} ladder rows
+(\texttt{BETA-etas025}, \texttt{BETA-etas05}, \texttt{BETA-etas1}, \texttt{BETA-etas2}, \texttt{rigidprog},
+\texttt{rigidhalf}). Under the presentation rule, Section 5's main-text table already
+reports the price-invariant matrix core; the price sensitivity shown in these
+figures is the Section 6 "rigid-and-speaking" contrast to the DELTA
+"rigid-and-silent" endpoint.}
+
+| Figure file(s) in `paper/pictures/` | Section |
+|---|---|
+| `elasticity_gradient_*.png`, `elastictiy_gradient_*.png`, `labor_slack_gradient.png`, `labour_slack_gradient.png`, `labour_slack.png`, `eg_impulse_*.png`, `eg_imp_wages_*.png` | 6 |
+| `diff_prices_imp.png`, `scatter_prices_imp.png`, `diff_consumption_imp.png`, `diff_lambda_imp*.png` | 5 |
+| `impulse.png`, `impulse_ls*.png`, `cge.png`, `production_functions.png`, `prodfun.png`, `subsitution.png` | 2 / 5 |
+| `comparison_between_labor_slacks.png`, `plot_elasticities.png`, `plot7.png` | Appendix C |
+
 # What the revision retires
 
 Stating this explicitly in the manuscript is the honest structural answer to
@@ -181,6 +210,19 @@ the reviewer criticism:
   identified.
 - Surviving from the old draft, largely as-is: Section 1 (Kuhnian cleavages,
   axiomatic variation) and Section 2 (IO-table representation).
+- \textcolor{revisionV2}{No Type-I / Type-II multiplier framing that conflates
+  intersectoral mobility with the wage regime: the Type II / SAM-style
+  analytic counterpart belongs to DELTA's equivalence check, never to a
+  statement about which closure moves output (salvaged from
+  \texttt{docs/archive/definitive\_guide.md} when ADR-0026 retired it).}
+- \textcolor{revisionV2}{The Stage 3 must-not-appear list, imported here as
+  the external review recommended: all eta-dominance claims, the
+  88.4 \% and 100 \% variance shares, the GO certification language,
+  price-invariance claims, and the claim that the IO multiplier requires
+  eta to infinity. None of these may appear anywhere --- not in the
+  manuscript, not in the response letter, not in a figure caption --- and the
+  referee items that used to rely on them are answered from the reviewer maps
+  in \texttt{docs/DOCS\_ASSESSMENT.md} Stage 3 (R1.1--R1.9, R2.1--R2.14).}
 
 # Pitfalls and guards
 
@@ -307,7 +349,7 @@ and the time-aggregation note.}
   cells across three designs, not 126 (the table above).}
 - \textcolor{revisionV2}{Appendix C should name the tally it holds: fifteen
   matrix cells plus twelve ladder cells plus six two-group cells = 33.}
-- \textcolor{revisionV2}{\texttt{paper/framing\_gamma.tex}, the
+- \textcolor{revisionV2}{\textcolor{revisionV3}{\texttt{paper/to\_evaluate/framing\_gamma.tex}}, the
   manuscript-facing GAMMA note, is referenced nowhere in this outline; and
   the ADR-0021 wage-structure axis (still proposed) is a candidate
   representation-robustness row the presentation rule does not mention.}
@@ -385,7 +427,7 @@ and the time-aggregation note.}
    three designs.}
 5. \textcolor{revisionV2}{Add the 33-cell tally and the ADR-0021
    wage-structure axis to Appendix C, and reference
-   \texttt{paper/framing\_gamma.tex} in Sections 4 and 6.}
+   \textcolor{revisionV3}{\texttt{paper/to\_evaluate/framing\_gamma.tex}} in Sections 4 and 6.}
 6. \textcolor{revisionV2}{Add the reviewer-coverage map and the
    must-not-appear list.}
 7. \textcolor{revisionV2}{Add the reproducibility item to Appendix B, and
@@ -398,6 +440,74 @@ and the time-aggregation note.}
   the rest, or as a fresh main file?}
 - \textcolor{revisionV2}{Is \texttt{AGENTS.md} refreshed in the same pass? It
   is protected, so it needs an interactive approval.}
+
+# Porting the remaining source notes \textcolor{revisionV3}{\normalsize [added v4]}
+
+\textcolor{revisionV3}{After Appendix A (from \texttt{equivalence.tex}) and
+Appendix E (from \texttt{closures\_and\_demand\_shocks.md}), three notes remain
+in \texttt{paper/to\_evaluate/}. This section weighs whether each should be
+ported into the manuscript. It is a recommendation, not a decision.}
+
+## \textcolor{revisionV3}{framing\_gamma.tex --- the GAMMA menu \normalsize [added v4]}
+
+\textcolor{revisionV3}{\textbf{Merit.} It is the only manuscript-facing prose
+on the fixed-wage closure: the seven GAMMA variants measured side by side
+(baseline, DELTA, the pinned wage structure, the capacity channel,
+Kaldor--Verdoorn, the BF allocation rule, the dual labour market), the
+demand-sensitivity discriminator, and the ADR-0021 wage-structure axis.
+Section 4 needs it to define the GAMMA/DELTA row, and Section 6 needs the
+wage-structure variant as its representation-robustness row.}
+
+\textcolor{revisionV3}{\textbf{Cost.} At 593 lines it is a standalone note, and
+its variant menu overlaps both Appendix A (the GAMMA $\equiv$ DELTA proof) and
+\texttt{CONCISE\_SUMMARY.md}. Porting it whole would duplicate the equivalence
+argument and inflate Section 6.}
+
+\textcolor{revisionV3}{\textbf{Recommendation.} Port selectively: the
+one-paragraph GAMMA definition and the seven-variant table into Section 6, and
+the wage-structure paragraph into Section 4's presentation rule. Leave the
+derivations in Appendix A.}
+
+## \textcolor{revisionV3}{construction\_capacity.tex --- the rigid-group evidence \normalsize [added v4]}
+
+\textcolor{revisionV3}{\textbf{Merit.} It is the evidence base behind the
+rigid-group cells and the sectoral-labour story: the grouping rule, the
+incidence table, the four capacity indicators (IAB vacancies, the KfW-ifo
+skills barometer, the ifo order-book range, the IAB working-time panel) and
+their sources. Section 5's sectoral results and Section 6's ladder cannot be
+defended without it.}
+
+\textcolor{revisionV3}{\textbf{Cost.} The grouping rule is not yet ratified
+(\texttt{docs/grouping\_rule\_evidence.md} v1 states it is for ratification).
+Porting the evidence ahead of ratification over-commits the manuscript to a
+rule the author has not signed off.}
+
+\textcolor{revisionV3}{\textbf{Recommendation.} Port the descriptive half now
+(the incidence table and the four indicators, as an appendix subsection beside
+Appendix B), and hold the grouping rule itself until it is ratified. This
+mirrors the Appendix E precedent: port the evidence, flag the open decision.}
+
+## \textcolor{revisionV3}{possible\_plots.md --- the figure shortlist \normalsize [added v4]}
+
+\textcolor{revisionV3}{\textbf{Merit.} It is the shortlist for the one
+heavy-lifting figure (ADR-0025), with the recommended \texttt{trade} panel; it
+is short and directly actionable.}
+
+\textcolor{revisionV3}{\textbf{Cost.} It is a decision aid, not manuscript
+text: it catalogues candidates rather than stating a result, so "porting" it
+would mean resolving it into a single figure and caption.}
+
+\textcolor{revisionV3}{\textbf{Recommendation.} Use it to choose the figure,
+then retire it: the chosen figure goes into \texttt{revision/figures/} and the
+shortlist is recorded in Appendix C, not reproduced.}
+
+## \textcolor{revisionV3}{Sequence \normalsize [added v4]}
+
+\textcolor{revisionV3}{Recommended order: \texttt{possible\_plots.md} first (it
+settles the figure), then \texttt{framing\_gamma.tex} (it completes the
+closure definitions Section 4 needs before any results are written), then
+\texttt{construction\_capacity.tex} once the grouping rule is ratified. None of
+the three should be ported whole; each is a source, not a chapter.}
 
 # Revision Log
 
@@ -415,3 +525,11 @@ and the time-aggregation note.}
   GDP-share attribution, the settled G0 item), the factors to weigh before
   drafting, the suggested edits and the two decisions still owed. The body
   above is unchanged from v2 and no suggested edit has been applied.
+- **Version 4** \textcolor{revisionV3}{(October 2026)} --- same-round LaTeX fix: the v3 "Canonical figure inventory" paragraph carried markdown backticks and **bold** inside \textcolor (pandoc passes it through as raw LaTeX), which broke the PDF build on the unescaped underscores in matrix_5x3_v9; rewritten with \texttt and \textbf. No wording changed.
+- **Version 4** \textcolor{revisionV3}{(October 2026)} --- new final section "Porting the remaining source notes" (framing_gamma.tex, construction_capacity.tex, possible_plots.md): merit, cost and a recommendation for each, plus a suggested order. Path corrections folded in: equivalence.tex and framing_gamma.tex now live in paper/to_evaluate/; the per-cell panels moved to paper/pictures/ (paper/to_evaluate/ is the review queue; revision/tables/ holds the four flow tables).
+- **Version 3 (same round)** \textcolor{revisionV2}{(September 2026)} --- new
+  "Canonical figure inventory" section between the presentation rule and the
+  retirement list: anchors every figure file in `paper/pictures/` to its
+  section, and records the Section 6 / Section 5 split for the price-sensitive
+  sectoral-family figures (they are Section 6 material, not Section 5). Same
+  round, so the version number does not bump.

@@ -4,7 +4,7 @@
 - **Recorded:** 2026-09-17
 - **Origin:** high-elasticity runs of the mobile-labour model, 2026-09
 - **Related:** ADR-0002, closures `BETA` and `GAMMA`; `ROADMAP.md` §5 Closure C
-- **Evidence:** `roadmaps/vertdict.md` ("the high-η limit was misinterpreted as
+- **Evidence:** `docs/archive/vertdict.md` ("the high-η limit was misinterpreted as
   unlimited labor instead of L → 0"; employment collapses as η grows),
   `ROADMAP.md` §3
 

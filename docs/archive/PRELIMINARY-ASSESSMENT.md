@@ -172,7 +172,7 @@ regenerate every number above and may be removed once the model is fixed.
 # Addendum: Independent Verification of the Second Review (2026-08-18)
 
 A second, independent review of the same codebase was received and saved at
-`roadmaps/vertdict.md` (the filename is a typo for "verdict"). It diagnoses the
+`docs/archive/vertdict.md` (the filename is a typo for "verdict"). It diagnoses the
 mobile-labor model as not an equilibrium and proposes a redesign. This addendum
 records that I verified its code-line claims against the actual source and
 reproduced its central diagnosis with an independent 71-sector computation.
@@ -257,7 +257,7 @@ Two clarifications to the discussion above and in chat:
 
 ## Redesign and ROADMAP recommendations from the review
 
-Condensed from `roadmaps/vertdict.md`:
+Condensed from `docs/archive/vertdict.md`:
 
 - **Separate household demand from policy investment.** Budget-neutral
   preference reallocation uses renormalized CES weights

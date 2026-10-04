@@ -1,0 +1,120 @@
+---
+title: "Labor closures"
+author: "Hermes Agent (Lt. Cmdr Data), for Prof. Dr. J. Kapeller"
+date: "2026-09-02"
+project: "BFRep (3)BeyondHulten / Metroeconomica revision"
+tags: [beyondhulten, closures, labour, registry]
+last-updated: October 2026
+---
+
+**Version 1** (October 2026)
+
+The package exposes three dimensions that should not be conflated:
+
+* **Legacy `CES` and `CobbDouglas`** store an exogenous `labor_slack` callback
+  (or their compatibility `Symbol`). `labor_closure` reports this as an
+  `ExogenousLaborClosure`; it is not a wage-regime selector.
+* **Mobile η** selects between the two kept BF endpoints (ADR-0010):
+  `η = 0` keeps the baseline allocation `L_fixed`, `η = 1` uses the
+  cost-minimizing demand `L_costmin`. Intermediate values are rejected.
+* **The wage regime** is flexible or fixed.  `:mobile` (or
+  `FlexibleWageClosure()`) clears the labor market with a common wage; `:fixed`
+  (or `FixedWageClosure()`) fixes wages at one.  In the fixed regime the
+  employment gap (`labor_bar - sum(L_i)`) can be computed after solving but is
+  not stored in `Solution` and is not an equilibrium constraint. Employment
+  can therefore exceed `labor_bar`; `:fixed` is not a capped unemployment model.
+
+Use `labor_closure(model)` (or `labor_closure(model.options)`) to inspect the
+canonical taxonomy and
+`equilibrium_residuals(solution)` for closure-appropriate diagnostics.
+
+The legacy callback, η, and the wage regime are independent concepts: η=0 is
+the baseline (immobile) allocation and η=1 is full cost-minimizing
+allocation. Only these two endpoints are kept (ADR-0010); η is not a
+labor-supply elasticity or `L̄*w^η`.
+
+# Standard partial-mobility formulation
+
+The conventional static treatment of limited intersectoral labor mobility is
+to give each sector its own wage and make sectoral labor supply respond to
+relative wages. For example,
+
+```math
+L_i^s = \bar L
+\frac{s_i^0 (w_i/\bar w_i)^\nu}
+     {\sum_j s_j^0 (w_j/\bar w_j)^\nu},
+```
+
+where `s_i^0` is the baseline employment share, `\bar w_i` is the baseline
+sectoral wage, and `\nu >= 0` is an intersectoral mobility elasticity. This
+allocation always satisfies `\sum_i L_i^s = \bar L`. At `\nu = 0`, employment
+shares are fixed. As `\nu` becomes large, employment becomes highly responsive
+to wage differences and adjusted sectoral wages approach equality in an
+interior equilibrium.
+
+Each sector then minimizes production cost at its own wage. Labor demand follows
+from Shephard's lemma,
+
+```math
+L_i^d = y_i \frac{\partial c_i(\mathbf p,w_i,A_i)}{\partial w_i},
+```
+
+and the model imposes `L_i^d = L_i^s` for every sector. With prices, quantities,
+and sectoral wages as unknowns, the equilibrium has `N` zero-profit equations,
+`N-1` goods-market equations, `N` sectoral labor-market equations, and one
+numeraire equation: `3N` equations for `3N` unknowns.
+
+The standard endpoints are:
+
+| Closure | Labor allocation | Wages |
+| --- | --- | --- |
+| Immobile | `L_i = \bar L_i` | Sector-specific shadow wages |
+| Partially mobile | Wage-responsive sectoral supply | Sector-specific wages |
+| Fully mobile | `\sum_i L_i = \bar L` | Common wage |
+
+The current `MobileLaborCES` keeps only the two endpoints (ADR-0010) with a
+common wage: η=0 reports the baseline allocation, η=1 the cost-minimizing
+demand. The former geometric interpolation and its exponential-quadratic
+efficiency factor are retired; that factor was a project-specific reduced-form
+assumption, not a labor wedge derived from the CES first-order conditions
+(its curvature `factor_share_i * (1-factor_share_i) * abs(1-ϵ)/ϵ` was never
+established as the exact CES allocative-loss coefficient).
+
+For a structural partial-mobility interpretation, prefer sectoral wages and the
+labor-supply system above; the output loss then follows from constrained
+reallocation without an additional productivity factor. If the mechanism is a
+tax or another explicit distortion instead, put a wedge in the labor condition,
+for example `p_i MPL_i = (1+τ_i)w`, and account for the resulting revenue or
+rents. For adjustment over time, use dynamic worker mobility or convex
+employment-adjustment costs rather than a static productivity penalty.
+
+Related references include Hsieh and Klenow (2009),
+[doi:10.1162/qjec.2009.124.4.1403](https://doi.org/10.1162/qjec.2009.124.4.1403),
+on factor wedges and misallocation; Baqaee and Farhi (2020),
+[doi:10.1093/qje/qjz030](https://doi.org/10.1093/qje/qjz030), on productivity
+and misallocation in general equilibrium; and Artuç, Chaudhuri, and McLaren
+(2010), [doi:10.1257/aer.100.3.1008](https://doi.org/10.1257/aer.100.3.1008),
+on dynamic labor mobility costs.
+
+```julia
+legacy = CES(elasticities; labor_slack=full_labor_slack)
+mobile = mobile_labor_model(data, shocks, .5, .5, .9, 1.0;
+                            closure=:mobile)
+fixed = MobileLaborCES(mobile.options.elasticities,
+                       sum(data.labor_share), FixedWageClosure())
+```
+
+`VarianceDecompositionResult` remains as a deprecated alias of
+`SobolResult`; new code should use `SobolResult` and
+`eta_sweep_diagnostics`.
+
+# Revision Log
+
+- **Version 1** (October 2026) — The document is stamped for the first time
+  (it had no YAML front matter, no version block and no revision log while
+  being listed as an active reference): front matter added with the creation
+  date of 2026-09-02 and `last-updated` October 2026, the duplicate body
+  title removed in favour of the YAML title, the one subsection promoted to
+  the `#` level. No content change — `registry/closures.toml` remains the
+  single source of truth for formulations (ADR-0003); this file is the
+  prose companion.

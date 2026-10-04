@@ -37,8 +37,8 @@ dropped --- point it at its dead end.
 | Id | Idea | Status | Anchored in |
 | --- | --- | --- | --- |
 | IDEA-0001 | Productivity shocks framed as climate change | unexplored | Door 2 of `docs/VariationinGamma.md`; the `eta_s` identifiability item in `docs/DOCS_ASSESSMENT.md` |
-| IDEA-0002 | The five doors to demand-sensitive prices (labour, markup, capacity, external, technology), with the Verdoorn arm | unexplored | Section 5 of `docs/ETAs.md`; Lemma 1 and Corollaries 1 and 3 of `paper/equivalence.tex`; `docs/WORKPLAN_SENSITIVE_PRICES.md` |
-| IDEA-0003 | Sobol decomposition of the sectoral labour response (grouped over the elasticity parametrisation) | scoped | `docs/DOCS_ASSESSMENT.md` Stage 2 item 2; `docs/definitive_guide.md` Phase 7; `docs/grouping_rule_evidence.md`; `docs/decisions/ADR-0022-sectoral-labour-markets.md` |
+| IDEA-0002 | The five doors to demand-sensitive prices (labour, markup, capacity, external, technology), with the Verdoorn arm | unexplored | Section 5 of `docs/ETAs.md`; Lemma 1 and Corollaries 1 and 3 of `paper/equivalence.tex`; `docs/ETAs.md` and `docs/VariationinGamma.md` |
+| IDEA-0003 | Sobol decomposition of the sectoral labour response (grouped over the elasticity parametrisation) | scoped | `docs/DOCS_ASSESSMENT.md` Stage 2 item 2; `docs/archive/definitive_guide.md` Phase 7 (archived by ADR-0026); `docs/grouping_rule_evidence.md`; `docs/decisions/ADR-0022-sectoral-labour-markets.md` |
 | IDEA-0004 | Sectoral effects without a Sobol (contribution, incidence, network, similarity, wage-to-price) plus the case for reviving the submission's sectoral figures | scoped | `paper/submission-metro/submission.tex` §5-§6; `docs/decisions/ADR-0022-sectoral-labour-markets.md`; `docs/ideas/IDEA-0003-sectoral-sobol.md` |
 
 # Notes on the process

@@ -10,7 +10,7 @@ last-updated: September 2026
 **Version 1** (September 2026)
 
 Evidence annexe to the grouping-rule decision point of
-`docs/WORKPLAN_SENSITIVE_PRICES.md` (v7) and the ADR-0022 open item ("a rule
+`docs/VariationinGamma.md` (ADR-0021) and the ADR-0022 open item ("a rule
 is preferred to a hand-picked list, to forestall the tuning objection").
 The executed `matrix_5x3_v9` two-group cells carry two *rules* (the seven
 programme sectors; the largest half by baseline employment) whose choice

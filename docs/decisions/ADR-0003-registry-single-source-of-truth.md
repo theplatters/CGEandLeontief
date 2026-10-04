@@ -11,7 +11,7 @@ other. Examples from the freeze-day audit:
 
 - `selective_status_overview.md` reports mobile labour and the variance
   decomposition as complete with a "GO" and an "88.4%" headline;
-- `roadmaps/vertdict.md` and `ROADMAP.md` declare the same mobile-labour
+- `docs/archive/vertdict.md` and `ROADMAP.md` declare the same mobile-labour
   results invalid until regenerated;
 - `cbase2/documentation.md` lists `src/validation.jl`, `scripts/run_*.jl`,
   and notebooks 04–08 as existing or pending, while only notebooks 01–03

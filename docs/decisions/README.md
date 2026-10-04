@@ -62,3 +62,5 @@ settled question.
 | ADR-0023 | Supply-shock design schema for the identification arm | accepted |
 | ADR-0024 | Programme total: G0 = 40,300 kept (the 2019-price horizon average) | accepted |
 | ADR-0025 | Matrix visualisation: validated re-solve, headless data layer, figures are not runs | accepted |
+| ADR-0026 | Retire `docs/definitive_guide.md`: moved to `docs/archive/`, superseded results, salvage review recorded | accepted |
+| ADR-0027 | Consolidate operating docs: merge/archive MERITOF, WORKPLAN, labor_closures; one plan (ROADMAP) | accepted |

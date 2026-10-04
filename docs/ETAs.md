@@ -176,7 +176,7 @@ three, because they answer different questions.
 
 ## Cells and run ids
 
-Design `supply_etas` in `experiments/designs/supply_etas.toml`; ids follow
+\textcolor{revisionV4}{Designs \texttt{supply\_etas\_s1}, \texttt{supply\_etas\_prog} and \texttt{supply\_etas\_unif} in \texttt{experiments/designs/} (one file per shock id)}; ids follow
 `<design>-<labor>-<financing>[-<variant>]` (ADR-0002). One design per shock
 id keeps the manifests readable: `supply_etas_s1`, `supply_etas_prog`,
 `supply_etas_unif`.
@@ -258,10 +258,19 @@ Recorded with the design (ADR-0006), deviations are findings (ADR-0004):
    block, default \texttt{kind = "none"} (existing designs bit-identical),
    the ADR-0002 id convention with the shock id in the variant slot, and the
    no-shock reference unchanged.}
+   \textcolor{revisionV4}{Status (v5): ADR-0023 accepted (user ratification,
+   2026-09-20); the schema landed as written and the arm ran through
+   \texttt{experiments/run.jl}.}
 2. **Bridge, before the ADR lands.** Extend the pilot to the full grid as
    `experiments/probes/probe5_supply_arm.jl` (read-only, no `src/` change), so
    the numbers exist and the signatures can be preregistered against
    measurement rather than expectation.
+   \textcolor{revisionV4}{Status (v5): done another way --- the bridge is
+   \texttt{experiments/probes/probe15\_sectoral\_supply.jl} (2026-09-19,
+   read-only, no \texttt{src/} change) and the full grid is the three
+   \texttt{supply\_etas\_*} designs run by \texttt{experiments/run.jl} (189
+   cells, section ``The executed arm''); \texttt{probe5\_supply\_arm.jl} was
+   never written.}
 3. **Registry.** Append `planned` rows to `registry/scenarios.csv` for every
    cell (45 per shock id), with the parameter cells, the shock id and
    magnitude, and `eta_s`.

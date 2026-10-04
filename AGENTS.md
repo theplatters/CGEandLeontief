@@ -7,7 +7,7 @@ lineage) used to compare labour-market and financing closures. There is exactly
 one canonical kernel: the root `src/` package (ADR-0001). Research plan and
 validation gates live in `ROADMAP.md`; the documentation audit, closure
 catalogue and the executed results are in `docs/DOCS_ASSESSMENT.md` (currently
-Version 5).
+Version 8).
 
 ## Layout (Phase 1 target)
 
@@ -25,7 +25,7 @@ Version 5).
 | `archive/src-orphans/` | Read-only archive of abandoned sources that were never wired into the module. |
 | `.opencode/skills/` | Phase 1: agent workflow skills `tracking`, `closures`, `experiments`. |
 | `data/` | Input data; mostly gitignored, a few small reference files are tracked. |
-| `paper/`, `revised_manuscript/` | Manuscript sources. |
+| `paper/`, `revised_manuscript/` | Manuscript sources. The narrative plan — thesis, section plan, retirement list, pitfalls — is `paper/narrative_outline.md` (v3); it cites the reviewer maps in `docs/DOCS_ASSESSMENT.md`. |
 
 Frozen/read-only — never edit (ADR-0001, ADR-0009; commits and tree hashes in
 `registry/freeze.toml`): `cbase2/`, `bf_replication/`, `bf_replication2/`,
@@ -159,18 +159,25 @@ visible (ADR-0004).
   changes and re-run as a new generation (`-v2`, `-v3`, …) rather than mixing
   generations in one table.
 - Current state: the matrix is executed on the full-71 A-bill calibration in
-  five generations — `matrix_5x3` (v1, two cells blocked by the retired
+  ten generations — `matrix_5x3` (v1, two cells blocked by the retired
   heuristic guard), `matrix_5x3_v2` (ADR-0014), `matrix_5x3_v3` (ADR-0015),
-  `matrix_5x3_v4` (ADR-0018 measurement) and `matrix_5x3_v5` (ADR-0019,
-  external-account closure; 15/15 executed, the generation to cite). Open
-  items, in `registry/closures.toml`, `docs/DOCS_ASSESSMENT.md` §4.2 and the
-  ADRs: the BETA row is unidentified for demand-only shocks (`η_s` needs a
-  supply-side scenario) and the recombination of the two labour margins
-  (allocation × supply elasticity) is recorded as a deliberate omission; the
-  raw table's own production-vs-expenditure residual (5.387 %), the
-  government-side recycling of `T_int`, and the η = 0 endpoint's
-  common-wage/frozen-allocation gap are open modelling items; the `70s`
-  variant is a documented robustness variant and `reduced` is deferred.
+  `matrix_5x3_v4` (ADR-0018 measurement), `matrix_5x3_v5` (ADR-0019,
+  external-account closure), `matrix_5x3_v6` (ADR-0020 option C, the η = 0
+  sectoral-wage endpoint), `matrix_5x3_v7` / `matrix_5x3_v8` (the record of
+  the two ADR-0022 promotion aborts), `matrix_5x3_v9` (first complete
+  sectoral generation) and **`matrix_5x3_v10`** (C1-corrected measurement,
+  33/33 executed, all gates pass — the generation to cite), plus the
+  supply-side identification arm `supply_etas_s1` / `_prog` / `_unif`
+  (63 cells each, 189 total, ADR-0023). Resolved since: the BETA row is
+  identified under a supply shock and by the ADR-0022 sectoral form, and the
+  η = 0 endpoint carries sectoral wages (ADR-0020 option C). Open items, in
+  `registry/closures.toml`, `docs/DOCS_ASSESSMENT.md` §4.2 and the ADRs: the
+  recombination of the two labour margins (allocation × supply elasticity) is
+  recorded as a deliberate omission; the raw table's own
+  production-vs-expenditure residual (5.387 %), the government-side recycling
+  of `T_int`, and the ADR-0021 wage-structure dimension (proposed) are open
+  modelling items; the `70s` variant is a documented robustness variant and
+  `reduced` is deferred.
 
 ### Commits
 

@@ -1,0 +1,228 @@
+% =====================================================================
+% Appendix E --- Closures and the neo-Keynesian mapping
+% ---------------------------------------------------------------------
+% Ported from paper/to_evaluate/closures_and_demand_shocks.md (2026-09-18).
+% This appendix is NEW relative to the outline's A-D plan; it carries the
+% CGE-vs-IO cleavage, the FIDELIO mapping and the closure taxonomy that
+% Section 3 introduces.
+%
+% *** REVIEWER FLAG (Stage-3 must-not-appear list) ***
+% The closing subsection's dominance wording ("the wage regime is the
+% first-order determinant of the aggregate multiplier"; "intersectoral
+% mobility eta produces second-order reallocation effects") sits close to
+% the retired eta-dominance claims. Check it against the must-not-appear
+% list before this text enters the manuscript. The descriptive mapping
+% (Sections 1-4) is uncontroversial; the summary's two claims are not.
+% =====================================================================
+\section{Closures and the neo-Keynesian mapping}\label{app:mapping}
+
+\noindent This appendix maps the CGE/IO cleavage and the neo-Keynesian
+alternative --- the EU JRC FIDELIO model --- onto the closure matrix. It
+supports Section~\ref{sec:two-questions}.
+
+\subsection{The core theoretical cleavage: demand shocks in CGE versus IO models}\label{app:cleavage}
+
+A central question in applied input--output modeling --- especially for
+evaluating green public investment programmes such as the EU Recovery and
+Resilience Facility or large-scale building renovation --- is whether an
+exogenous demand stimulus:
+
+\begin{enumerate}
+\item \textbf{expands real aggregate output} by mobilising unutilised
+  resources (the Keynesian / Leontief perspective), or
+\item \textbf{merely reallocates scarce resources}, causing factor prices to
+  rise and crowding out private activity with virtually zero net change in
+  aggregate real GDP (the canonical neoclassical CGE perspective).
+\end{enumerate}
+
+\paragraph{Why standard CGE models produce minimal aggregate effects from demand shocks.}
+In textbook Walrasian CGE models: (i) \emph{full factor utilisation} ---
+aggregate primary factor endowments $(\bar L, \bar K)$ are exogenously given
+and fully employed; (ii) \emph{instantaneous market clearing} --- prices and
+wages are perfectly flexible and clear all commodity and factor markets
+instantaneously; (iii) \emph{Say's Law operates} --- output is
+supply-determined by the production possibility frontier
+$Y = F(K, L, \mathbf{X})$; (iv) \emph{crowding out} --- an exogenous increase
+in public investment raises demand in targeted sectors, but because total
+labour and capital cannot expand, the extra factor demand bids up wages and
+capital rentals, and the relative price increase squeezes the margins of
+non-shocked sectors, crowding out private consumption, private investment or
+net exports. The aggregate real GDP response is negligible
+($\Delta Y \approx 0$).
+
+\subsection{The macroeconometric alternative: the EU JRC FIDELIO model}\label{app:fidelio}
+
+The \textbf{FIDELIO} model (\emph{Fully Interregional Dynamic Econometric
+Long-term Input--Output}; JRC / DG GROW; Rocchi et al., 2019, 2025) was built
+specifically to overcome this limitation. Rather than adopting a Walrasian
+general-equilibrium core, FIDELIO is a \emph{dynamic macroeconometric,
+multi-sectoral Neo-Keynesian} model grounded in the official Eurostat/JRC
+FIGARO inter-country input--output tables (64 NACE industries, 46
+countries/regions). It generates positive, non-trivial real output and
+employment multipliers from demand shocks through five structural features:
+
+\begin{enumerate}
+\item \textbf{Involuntary unemployment and the wage-setting curve.} Wages do
+  not clear the labour market. The baseline economy features involuntary
+  unemployment ($u > 0$). Nominal wages adjust sluggishly along an
+  econometrically estimated \emph{wage curve} (Blanchflower--Oswald
+  tradition):
+  \[
+  \Delta \ln w_{i,r,t} = f(\text{inflation}_{t-1},\ \text{productivity}_{t},\ u_{r,t-1}).
+  \]
+  Because labour supply is not vertical at baseline, firms can hire idle
+  workers to expand production without hitting an immediate supply wall.
+\item \textbf{Mark-up pricing and sluggish cost pass-through.} Product prices
+  are set via markups over unit costs (derived from flexible Translog cost
+  functions over capital, labour, energy and intermediate inputs) rather than
+  jumping to Walrasian clearing levels. Output in the short-to-medium run is
+  \emph{demand-determined}.
+\item \textbf{Keynesian multiplier loops (the ECM consumption block.)}
+  Household consumption follows a dynamic error-correction model tied to
+  current real disposable income rather than to an intertemporal Euler
+  equation:
+  \[
+  \Delta G \Rightarrow \uparrow Y \Rightarrow \uparrow L
+  \Rightarrow \uparrow (w\cdot L) \Rightarrow \uparrow C^{\text{household}},
+  \]
+  inducing a secondary Keynesian expenditure loop (a Type-II multiplier),
+  yielding aggregate output multipliers between 1.2 and 1.8 in JRC policy
+  simulations.
+\item \textbf{Dynamic capital accumulation (endogenous capacity).} Capital is
+  not a fixed static endowment; investment responds dynamically through an
+  accelerator / user-cost formulation, so sustained demand increases capacity
+  utilisation and expected returns, prompting firms to invest and expand
+  capital stocks over time.
+\item \textbf{Medium-to-long-run re-equilibration.} As unemployment drops and
+  capacity tightens, the wage curve drives up wages and unit costs; the
+  resulting rise in output prices erodes export competitiveness, generating
+  gradual crowding out toward a medium-run NAIRU --- unless the stimulus was
+  in public capital or R\&D, in which case it permanently shifts potential
+  output outward.
+\end{enumerate}
+
+\subsection{Mapping into the \texttt{BeyondHulten} $5\times3$ closure matrix}\label{app:matrix-map}
+
+The platform organises macroeconomic closures across two dimensions (five
+labour closures $\times$ three financing closures).
+
+\paragraph{The five labour closures.}
+\begin{enumerate}
+\item \textbf{ALPHA} (full-employment mobile CGE benchmark):
+  $\sum_i L_i = \bar L$, single flexible wage $w$, cost-minimising
+  intersectoral allocation ($\eta = 1$).
+\item \textbf{BF} (immobile-labour endpoint selector): $\eta = 0$ freezes
+  sectoral labour quantities to baseline shares $L_i = \bar L_i$; with the
+  sectoral-wage endpoint (ADR-0020) the wage vector is free and the frozen
+  allocation carries a price channel.
+\item \textbf{BETA} (elastic labour supply on the real wage):
+  $\sum_i L_i = \bar L\,[(w/P)/(w_0/P_0)]^{\eta_s}$, deflated by the CPI.
+\item \textbf{GAMMA} (fixed real wage, uncapped extensive margin):
+  $w/P = \bar w = 1$, employment $L = \sum_i L_i$ completely
+  demand-determined.
+\item \textbf{DELTA} (Leontief IO corner): GAMMA ($w/P = 1$) combined with
+  the zero-substitution limit of the CES production core
+  ($\theta, \epsilon, \sigma \to 0^+$), reproducing the fixed-price Leontief
+  multiplier.
+\end{enumerate}
+(Complementarity extension \textbf{ZETA}: $0 \le \bar L - L \perp w/P -
+\bar\omega \ge 0$, regime-switching between GAMMA slack and ALPHA full
+employment; recorded as an idea, not a closure.)
+
+\paragraph{The three financing closures.}
+\begin{enumerate}
+\item \textbf{F1} (preference reallocation / demand tilt): budget-neutral
+  composition shift within fixed household expenditure
+  ($\sum_i p_i c_i = E_h$); no net fiscal injection.
+\item \textbf{F2} (tax-financed public investment): balanced government
+  budget ($\sum_i p_i g_i = T(p)$); autonomous public investment financed by
+  an explicit domestic tax counterparty.
+\item \textbf{F3} (external / debt-financed programme): autonomous public
+  spending financed externally or via debt ($\sum_i p_i g_i = F$), with
+  imports and external balances absorbing the deficit.
+\end{enumerate}
+
+\paragraph{Matrix location of models.}
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{l l l l}
+\toprule
+Labour row & F1 (demand tilt) & F2 (tax-financed) & F3 (debt / external) \\
+\midrule
+ALPHA (full $L$)   & sectoral reallocation & full crowding out & crowding out ($w$ bids up) \\
+BF (immobile)      & bottlenecks / wedges  & contractionary wedge & bottleneck limits \\
+BETA (elastic)     & moderate shift        & mild expansion & expansion via $w/P$ \\
+GAMMA (fixed $w$)  & demand-driven shift   & balanced-budget multiplier & Keynesian multiplier \\
+DELTA (IO/Leontief)& IO composition shift  & Leontief balanced multiplier & pure IO multiplier \\
+\bottomrule
+\end{tabular}
+\caption{Where the standard CGE and the FIDELIO model sit in the matrix.}
+\label{tab:matrix-map}
+\end{table}
+
+\begin{itemize}
+\item \textbf{Where standard CGE sits:} ALPHA-F1 or ALPHA-F2 --- fixed
+  aggregate labour $\bar L$ and flexible wages force crowding out; real output
+  effects are close to zero.
+\item \textbf{Where FIDELIO sits:} in its static / basic IO mode (modules
+  1--2) at DELTA-F3 (a pure Leontief input--output multiplier driven by
+  external funding); in its short-run dynamic mode at GAMMA-F3 (fixed real
+  wage, unconstrained extensive margin, autonomous injection), activating the
+  full Keynesian respending multiplier; and, in the medium-to-long run, moving
+  dynamically from GAMMA-F3 toward BETA-F3 as the wage curve drives real wage
+  growth.
+\end{itemize}
+
+\subsection{How neo-Keynesian assumptions map into our closures}\label{app:neokeynesian}
+
+In this platform, neo-Keynesian assumptions are not auxiliary parameters ---
+they define the mathematical structure of the closure.
+
+\paragraph{A. Wage rigidity (extensive margin versus wage inflation).}
+In accordance with ADR-0014 and DE-0004, wage rigidity here is defined on the
+\emph{real wage} ($w/P = \bar w$), deflated by the CPI numeraire ($P = 1$).
+In GAMMA, fixing $w/P = 1$ removes the wage as an equilibrating price: the
+labour-market equation changes from clearing $L = \bar L$ to an unconstrained
+demand equation $L = \sum_i L_i(y_i, \mathbf{p})$, and the extensive margin of
+employment absorbs the demand shock. Asymmetric rigidity (ZETA) follows the
+spirit of Baqaee--Farhi (2022): downward wage rigidity creates a regime
+switch --- demand deficits cause unemployment (GAMMA regime), while demand
+surges that exhaust slack trigger wage inflation (ALPHA regime).
+
+\paragraph{B. Price rigidity and fixed markups.} In standard New-Keynesian
+models, Calvo or Rotemberg pricing prevents prices from adjusting
+instantaneously to demand shocks. Here, under GAMMA, wages are pegged
+($w = 1$) and the shock is demand-driven, so marginal costs remain roughly
+constant and product prices exhibit high inertia ($\mathbf{p} \approx 1$). In
+DELTA, the zero-substitution limit ($\theta, \epsilon, \sigma \to 0^+$)
+prevents firms from adjusting technical factor proportions, so cost
+pass-through becomes purely linear and additive, reproducing the classic
+fixed-price Leontief/Robinson (2006) multiplier.
+
+\paragraph{C. Non-Ricardian demand and disposable-income loops.} Standard CGE
+models enforce intertemporal optimisation in which households anticipate
+future tax liabilities, neutralising debt-financed spending. Here the
+consumption block routes household income $E_h = (1-\tau) w \sum_i L_i +
+\text{capital income}$; under F3 the absence of an immediate tax hike allows
+the newly generated wage income $w\cdot\Delta L$ to fuel private consumption
+directly, generating an endogenous Keynesian multiplier.
+
+\subsection{Summary and methodological takeaway}\label{app:summary}
+% *** Flagged above: verify against the must-not-appear list. ***
+
+\begin{enumerate}
+\item \textbf{The binary wage regime dominates.} The literature often debates
+  the elasticity of factor substitution or intersectoral mobility ($\eta$).
+  As shown in \texttt{definitive\_guide.md} and our runs, intersectoral
+  mobility produces second-order reallocation effects, whereas the wage regime
+  (flexible ALPHA versus sticky GAMMA) is the first-order determinant of the
+  aggregate multiplier.
+\item \textbf{Reconciling applied discrepancies.} When policy studies using
+  macroeconometric models (FIDELIO, E3ME) report output multipliers around
+  $1.5$ for green investments while standard CGE models report zero or
+  negative multipliers, the divergence is not an empirical dispute over green
+  technology. It is a direct mathematical consequence of evaluating the shock
+  at GAMMA/DELTA-F3 (slack resources, wage stickiness, debt financing) versus
+  ALPHA-F2 (full employment, market clearing, domestic tax financing).
+\end{enumerate}

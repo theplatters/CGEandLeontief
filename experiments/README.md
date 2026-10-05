@@ -212,14 +212,20 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   Each file pairs grouped bars over the programme sectors for that cell
   (programme demand in % of baseline gross output, change in output, change
   in consumption, price deviation from the numeraire) with a
-  quantity/price scatter over all its sectors; each file is standalone with
+  quantity bar chart over all sectors sorted descending for ALPHA/BETA/GAMMA/DELTA
+  (prices pinned at baseline, price dimension omitted), or the unchanged
+  quantity/price scatter for BF. `right = :auto` selects this split;
+  `right = :bars` / `:scatter` force either path in the plotting API.
+  Each file is standalone with
   per-cell axis limits. Error bars on the last three bar series span the
   consumption-elasticity range: the min/max over the central cell and its
   two σ variants (σ ∈ {0.6, 0.99}, the cell's θ, ε, η, financing and shock
   fixed; a variant solve/gate failure is reported and omitted, so the bars
-  span the remaining variants). Degenerate scatter ranges (prices sit at
-  the baseline in the single-wage closures) get a minimum span with an
-  annotation instead of repeated "0.00%" ticks.
+  span the remaining variants). Quantity bars label the three largest
+  programme and three largest other movers by absolute quantity change;
+  both right-panel paths retain the orange/blue sector grouping and legend.
+  Forced degenerate scatter ranges retain a minimum span with an annotation
+  instead of repeated "0.00%" ticks.
   `--panel-dir` loads GLMakie on its own and combines with `--no-figures`
   (which suppresses only the six standard exploratory figures).
 

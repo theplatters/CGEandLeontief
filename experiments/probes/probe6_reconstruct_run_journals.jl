@@ -120,6 +120,11 @@ function reconstruct_main(args)
     @printf("reference %s = %.17g  (v1-v3 journals record 0.9999999999999997)\n", REF_NAME, ref_value)
 
     if mode == "--verify"
+        missing = sort(filter(d -> isdir(d) && gen_of(basename(d)) !== nothing &&
+            !isfile(joinpath(d, "log.txt")), readdir(runs_dir; join = true)))
+        for d in missing
+            println("missing/skipped: $(basename(d))/log.txt")
+        end
         # Validate the reconstruction against the journals that DO exist in the
         # covered GENERATIONS: line 1 byte-for-byte, line 2 modulo the metric
         # value, line 3 byte-for-byte for executed cells and the whole
@@ -169,6 +174,7 @@ function reconstruct_main(args)
                 ok1 && ok2 && ok3 ? tag : "CHECK")
         end
         println("\nverify: $nok ok, $nbad mismatch (timestamp ignored; line 2 modulo value)")
+        println("missing/skipped (covered generations): $(length(missing))")
         for g in GENERATIONS
             ok, bad = get(per_gen, g, (0, 0))
             println("  $g: $ok ok, $bad mismatch")

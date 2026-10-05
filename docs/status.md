@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-10-04 by `scripts/status.jl` · branch `reorg` · HEAD `d1d18c2` (dirty)
+Generated 2026-10-05 by `scripts/status.jl` · branch `reorg` · HEAD `cc786f0` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).

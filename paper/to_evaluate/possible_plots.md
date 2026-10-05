@@ -82,18 +82,25 @@ recreated for the 5x3 matrix as one file per matrix cell —
   series span the **consumption-elasticity range**: min/max over the central cell
   and its two σ variants (σ ∈ {0.6, 0.99}, the cell's θ, ε, η, financing and
   shock fixed; no error bar when no variant converged);
-- right: scatter of change in quantities (`100*(q_i-1)`, x) vs change in prices
-  (`100*(p_i-1)`, y) over all sectors of the cell — programme sectors highlighted
-  with larger markers, other sectors plain; the three largest programme-sector
-  points plus the three largest non-programme movers labelled; 0/0 dashed cross;
-  legend "Programme sectors" / "Other sectors".
+- right: for ALPHA/BETA/GAMMA/DELTA, bars for all 71 sectors sorted by quantity
+  change descending, height `100*(q_i-1)`; prices are pinned at baseline (no
+  sectoral-wage channel), so the price dimension is omitted and a gray note
+  names this omission. The three largest programme and three largest other
+  movers by absolute quantity change have vertical sector-name labels at the
+  tips, staggered inward with short connectors; no sector-name x ticks.
+  BF retains the quantity/price scatter (`100*(q_i-1)`, x; `100*(p_i-1)`, y),
+  larger programme markers, the three largest movers in each group labelled
+  by `max(|Δq|, |Δp|)`, and the 0/0 dashed cross.
+  Both paths retain orange programme sectors and blue other sectors (Makie's
+  `wong_colors()`), legend "Programme sectors" / "Other sectors".
 
 Conventions: bars show the cell, error bars the σ sensitivity (the legacy
 `panel_ls` meaning — not the financing range); each file is standalone with
-per-cell axis limits. Degenerate scatter ranges get a minimum span (0.05 %
-total) with an annotation — prices sit at the baseline in every single-wage
-closure (no sectoral-wage channel), so without it the y-axis would repeat
-"0.00%" ticks. Titles read
+per-cell axis limits. `plot_matrix_panel` and `save_matrix_panels` accept
+`right = :auto | :bars | :scatter`: the default selects quantity bars for
+the four single-wage closures and scatter for BF; the other values force
+either working path. Forced degenerate scatter ranges retain their minimum
+span (0.05 % total) and baseline annotation. Titles read
 "5x3 matrix panel — \<labour\>-\<financing\> (bars = cell; error bars: σ ∈ {0.6, 0.99})", and
 each figure footnotes the design reference (no-programme) baseline, the
 programme-demand normalisation, and the elasticity error-bar meaning.
@@ -106,6 +113,12 @@ see Table 2 of
 
 ```bash
 julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 --no-figures --panel-dir revised_manuscript/pictures
+```
+
+Regenerate only the twelve bar-panel files, preserving the three BF files:
+
+```bash
+julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 --no-figures --panel-dir revised_manuscript/pictures --cells matrix_5x3-v10-ALPHA-F1,matrix_5x3-v10-ALPHA-F2,matrix_5x3-v10-ALPHA-F3,matrix_5x3-v10-BETA-F1,matrix_5x3-v10-BETA-F2,matrix_5x3-v10-BETA-F3,matrix_5x3-v10-GAMMA-F1,matrix_5x3-v10-GAMMA-F2,matrix_5x3-v10-GAMMA-F3,matrix_5x3-v10-DELTA-F1,matrix_5x3-v10-DELTA-F2,matrix_5x3-v10-DELTA-F3
 ```
 
 (needs GLMakie; `--no-figures` suppresses only the six exploratory figures while the

@@ -18,7 +18,7 @@ no separate rigid sectoral cell is reported: the corner is read from the `BF` ce
 
 ## Table 1 — Baseline accounts
 
-Unchanged from `paper/tables/matrix_5x3_v6_flows.md`, Table 1: the calibration
+Unchanged from `paper/superseded/matrix_5x3_v6_flows.md`, Table 1: the calibration
 (full-71 A-bill, ADR-0012/ADR-0013) and the reference continuation are identical in
 the two generations, and the fifteen matrix cells of this generation reproduce the
 v9 cells to solver precision (Table 2). The baseline block is therefore not duplicated here.

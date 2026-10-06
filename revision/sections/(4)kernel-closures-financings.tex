@@ -14,13 +14,214 @@
 % horizon explicitly; one production core (theory of production E) held fixed
 % by design.
 
+We examine how different closures have different effects.
+For this we choose five different labor closures and three financing closures that reflect different assumptions about the economy.
+The labor closures determine wages and available labor and are as follows: 
+%TODO list labor closures
+
+The financing closures determine how the demand shock is absorbed and who finances the change in consumption
+%TODO list financing closures
+
 \subsection{The five labour closures}\label{subsec:labour-closures}
-% TODO: BF, ALPHA, BETA, GAMMA, DELTA row definitions; the sectoral family
-% (ADR-0022) and its nesting (rigid corner = the eta = 0 endpoint).
+% Formulations: registry/closures.toml; ADR-0020 and ADR-0022.
+% Appendix A resets the equation counter; keep these PDF anchors distinct.
+\begingroup
+\renewcommand*{\theHequation}{labour.\arabic{equation}}
+Let $L_i$ denote employment in sector $i$, $\bar{L}_i$ its baseline value,
+and $\Lbar = \sum_{i=1}^N \bar{L}_i$ total baseline employment. Sectoral
+wages are $w_i$; with mobile labour they equal one common wage $w$.
+The real wage is deflated by the consumption price index
+\begin{equation}
+\Pi(p) = \left(\sum_{i=1}^N \omega_i p_i^{1-\sigma}\right)^{1/(1-\sigma)},
+\qquad \sum_{i=1}^N \omega_i = 1,
+\label{eq:labour-cpi}
+\end{equation}
+with calibrated weights $\omega_i$ and the Cobb--Douglas limit at
+$\sigma = 1$. Subscript $0$ denotes the baseline. All closures use the
+same cost-minimizing labour demand,
+\begin{equation}
+L_i^{\mathrm{cm}}(p,y_i,w_i)
+ = \alpha_i A_i^{\epsilon-1} y_i
+   \left(\frac{p_i}{w_i}\right)^{\epsilon}.
+\label{eq:closure-labour-demand}
+\end{equation}
+Here $y_i$ is gross output, $A_i$ productivity and $\alpha_i$ the calibrated
+labour share. The elasticity $\epsilon$ governs substitution between labour
+and the intermediate composite. The closures differ in the wage and
+labour-supply restrictions imposed on this demand.
+
+\paragraph{BF: immobile labour.}
+The BF row fixes employment in every sector and solves a sector-specific
+wage to clear each labour market:
+\begin{equation}
+L_i = L_i^{\mathrm{cm}}(p,y_i,w_i) = \bar{L}_i,
+\qquad i=1,\ldots,N, \qquad \eta = 0.
+\label{eq:closure-bf}
+\end{equation}
+Thus $\sum_i L_i = \Lbar$, but wages may differ across sectors.
+The allocation parameter $\eta$ selects only the endpoints $\{0,1\}$;
+its mobile endpoint $\eta = 1$ is ALPHA below, not an additional closure.
+
+\paragraph{ALPHA: mobile labour at full employment.}
+Labour reallocates across sectors at one flexible wage, while total
+employment remains fixed:
+\begin{equation}
+L_i = L_i^{\mathrm{cm}}(p,y_i,w),
+\qquad \sum_{i=1}^N L_i = \Lbar,
+\qquad \eta = 1.
+\label{eq:closure-alpha}
+\end{equation}
+
+\paragraph{BETA: elastic sectoral labour supply.}
+We use the uniform-elasticity sectoral form: each sector has its own wage
+and supply curve, with one common labour-supply elasticity $\eta_s$:
+\begin{equation}
+L_i = L_i^{\mathrm{cm}}(p,y_i,w_i)
+ = \bar{L}_i \left[\frac{w_i/\Pi(p)}{w_{i0}/\Pi_0}\right]^{\eta_s},
+\qquad \eta_s \geq 0, \qquad i=1,\ldots,N.
+\label{eq:closure-beta}
+\end{equation}
+Equal supply elasticities do not impose equal wages: $N$ separate labour
+markets determine $w_i$. Here $\eta_s$ is a labour-supply elasticity, not
+the allocation parameter $\eta$; setting $\eta_s = 0$ gives exactly the
+immobile BF row. The calibrated real-wage anchors are $w_{i0}/\Pi_0 = 1$.
+The deflator remains the common consumption price index, not the sector's
+own goods price $p_i$. The supply curves are reduced forms without a
+labour--leisure income effect. The headline panels use $\eta_s = 0.5$;
+the elasticity ladder and heterogeneous sectoral variants are reported in
+Appendix~\ref{app:variants}. The single-wage BETA is retained there only
+as a distinct benchmark; its zero-elasticity limit is ALPHA, not BF.
+
+\paragraph{GAMMA: fixed real wage.}
+The real wage is pegged at its baseline value, while employment is
+endogenous and uncapped:
+\begin{equation}
+\frac{w}{\Pi(p)} = \bar{w} = 1,
+\qquad L_i = L_i^{\mathrm{cm}}(p,y_i,w),
+\qquad \eta = 1.
+\label{eq:closure-gamma}
+\end{equation}
+Unlike ALPHA, this closure does not impose $\sum_i L_i = \Lbar$.
+It is a two-sided wage peg, not a one-sided wage floor with unemployment
+rationing. On the demand-only baseline branch, $\Pi(p)=1$ and the
+implemented wage pin is $w=1$.
+
+\paragraph{DELTA: the Leontief corner.}
+DELTA retains GAMMA's wage and employment rule while taking the
+substitution elasticities to their Leontief limits:
+\begin{equation}
+\frac{w}{\Pi(p)} = \bar{w} = 1,
+\qquad \eta = 1,
+\qquad (\theta,\epsilon,\sigma) \longrightarrow (0^+,0^+,0^+).
+\label{eq:closure-delta}
+\end{equation}
+Here $\theta$ governs substitution between intermediate inputs and
+$\sigma$ substitution in consumption. DELTA is therefore a corner of
+GAMMA with fixed-coefficient technology, rather than an independent
+labour-market mechanism.
+\endgroup
 
 \subsection{The three financing closures}\label{subsec:financing-closures}
-% TODO: F1, F2, F3 cell definitions (R2.4, R2.5); external-debt closure as
-% the open-economy answer.
+% Formulations: registry/closures.toml; ADR-0002, ADR-0019 and ADR-0020.
+% Programme-scale F1 tilt: experiments/run.jl, f1_tilt_weights.
+\begingroup
+\renewcommand*{\theHequation}{financing.\arabic{equation}}
+Each labour closure is crossed with three ways of accommodating the same
+programme scale and sectoral incidence. Let $g_i = kG_0\psi_i$ denote the
+reference programme bundle, where $G_0$ is its baseline-price value,
+$k \geq 0$ scales the programme, and $\psi_i \geq 0$ with
+$\sum_i\psi_i = 1$ describes its sectoral incidence. F2 and F3 add this
+bundle to final demand; F1 instead uses its scale and incidence to redirect
+household spending.
+
+Baseline government purchases $g_i^G$ remain tax-financed in all three
+cases. Define the wage bill and their current-price tax cost as
+\begin{equation}
+W = \sum_{i=1}^N w_i L_i,
+\qquad T_G(p) = \sum_{i=1}^N p_i g_i^G.
+\label{eq:financing-baseline-budget}
+\end{equation}
+With a common wage, $W = w\sum_i L_i$. Let $E$ denote after-tax household
+resources, including the net external transfer $F$, and let $s$ be the
+calibrated saving rate. Household consumption expenditure is
+$E^h = (1-s)E$. Gross household purchases $c_i^h$ exhaust this budget:
+\begin{equation}
+\sum_{i=1}^N p_i c_i^h = E^h,
+\qquad c_i^{\mathrm{dom}} = (1-m_i)c_i^h,
+\label{eq:financing-household-budget}
+\end{equation}
+where $m_i$ is the sectoral import margin. Only the domestic content enters
+domestic goods-market clearing; likewise, the programme contributes
+$(1-m_i)g_i$ under F2 and F3.
+
+\paragraph{F1: budget-neutral preference reallocation.}
+F1 changes the household's CES weights without adding a public-demand
+bundle. For positive preference shifters $d_i$, the weights and gross
+household demand become
+\begin{align}
+\widetilde{\omega}_i
+ &= \frac{\omega_i d_i}{\sum_j\omega_j d_j},
+\qquad \sum_i\widetilde{\omega}_i = 1,
+\label{eq:closure-f1-weights}\\
+c_i^h
+ &= E^h\frac{\widetilde{\omega}_i p_i^{-\sigma}}
+ {\sum_j\widetilde{\omega}_j p_j^{1-\sigma}},
+\qquad E = W-T_G(p)+F.
+\label{eq:closure-f1}
+\end{align}
+The programme-scale tilt is $d_i = 1+kG_0\psi_i^+/c_{i0}^h$ in sectors
+with positive baseline household purchases, and $d_i=1$ otherwise;
+$\psi^+$ is the programme incidence restricted to those sectors and
+renormalized to sum to one. The CES normalizer preserves
+\eqref{eq:financing-household-budget} at every price vector. Thus increased
+spending shares in programme sectors are paid for by reduced shares
+elsewhere, conditional on the household budget; equilibrium income need
+not remain unchanged. F1 is a demand-composition experiment, not an
+autonomous investment injection or multiplier.
+
+\paragraph{F2: tax-financed public investment.}
+F2 adds the real programme bundle $g$ and levies an additional household
+tax equal to its value at equilibrium prices:
+\begin{equation}
+T(p) = \sum_{i=1}^N p_i g_i,
+\qquad E = W-T_G(p)-T(p)+F,
+\qquad B_{\mathrm{gov}}=0.
+\label{eq:closure-f2}
+\end{equation}
+Total domestic tax revenue $T_G(p)+T(p)$ therefore balances the purchases
+$g^G+g$, priced at current rather than baseline prices. The tax is
+implemented as the endogenous wage-income rate
+$\tau=[T_G(p)+T(p)]/W$; with one representative household its burden is
+effectively lump-sum. The programme has an explicit domestic budget
+counterparty and reduces household resources directly by $T(p)$.
+
+\paragraph{F3: externally financed public investment.}
+F3 adds the same real bundle but imposes no additional domestic programme
+tax. Its current-price cost is booked as external programme financing:
+\begin{equation}
+B_{\mathrm{gov}} = \sum_{i=1}^N p_i g_i,
+\qquad E = W-T_G(p)+F.
+\label{eq:closure-f3}
+\end{equation}
+The booking $B_{\mathrm{gov}}$ is distinct from the net external transfer
+$F$ entering household resources after tax. The latter is solved
+endogenously in BF, ALPHA and both BETA forms, but is fixed at zero in
+GAMMA and DELTA. With no unfinanced demand injection, all closures clear
+all $N$ goods markets and satisfy the external-account identity
+\begin{equation}
+S + T_{\mathrm{int}} + M - (I+X) = F+B_{\mathrm{gov}},
+\qquad S=sE,
+\label{eq:financing-external-account}
+\end{equation}
+where $I$ is non-programme investment, $X$ exports, $M$ total imports
+(including intermediate and programme imports), and $T_{\mathrm{int}}$
+the separately booked product-tax leak on intermediate use; all are
+current-price values. Here $B_{\mathrm{gov}}=0$ under F1 and F2, so the net
+external position is $F+B_{\mathrm{gov}}$, not the programme cost alone.
+F3 is an accounting open-economy closure, not a monetary mechanism: the
+static model cannot distinguish external borrowing from a transfer and
+does not model interest payments, repayment or exchange-rate adjustment.
+\endgroup
 
 \subsection{Why only three economies}\label{subsec:why-three}
 % TODO: the equivalence box --- Propositions 1-3 in one paragraph
@@ -52,4 +253,3 @@
 % a major practical difference in applying these models also emerges from the underlying paradigmatic perspectives:
 % loosely spoken, the Leontief model follows a 'demand-side view', where production structures are assumed constant and final demands change exogenously. In contrast, general equilibrium approaches will start from a 'supply-side view', where economic changes arise from changes in the exogenous parameters -- like production functions, technology or endowments -- and demand will respond.
 % NOTE: the closing 'demand-side vs supply-side view' sentence was rejected by Reviewer 2 (R2.7) as nonsensical in GE; keep only if reworked.
-

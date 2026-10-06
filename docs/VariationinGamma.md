@@ -220,7 +220,7 @@ Provenance of the claims in this document, per claim:
 | Claim | Source |
 | --- | --- |
 | F2 and F3 are real-neutral in GAMMA | Financing neutrality, `runs/matrix_5x3-v6-GAMMA-F*` |
-| DELTA reproduces GAMMA to six digits | The v6 flow table, `paper/tables/matrix_5x3_v6_flows.md` |
+| DELTA reproduces GAMMA to six digits | The v6 flow table, `paper/superseded/matrix_5x3_v6_flows.md` |
 | The baseline pin reproduces the kernel cell | `probe11`, residual 8.9e-16, employment 1.00125981 |
 | Level invariance | Homogeneity argument plus the uniform-rescale rows of `probe11` |
 | The structure moves outcomes | The tilted-vector rows of `probe11` |

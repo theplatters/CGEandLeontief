@@ -31,7 +31,7 @@ and moved to \texttt{docs/archive/} (ADR-0026) --- its +19.3 pp sweep, its
 variance shares and its nine-section restructure are superseded, so it drops
 out of the active references. The claim-by-claim salvage review (what was
 carried into which live document, what was already covered, what went with it)
-is recorded in the ADR. \texttt{labor\_closures.md} is also retired to \texttt{docs/archive/} (ADR-0027): its closure prose is now redundant with \texttt{registry/closures.toml} (ADR-0005), which is the single source of truth.
+is recorded in the ADR. \texttt{labor\_closures.md} is also retired to \texttt{docs/archive/} (ADR-0027): its closure prose is now redundant with \texttt{registry/closures.toml} (ADR-0005), which is the single source of truth.}
 
 \textcolor{revisionV4}{Version 5 reports the executed 5 x 3 matrix on the re-anchored A-bill calibration, the accounting correction that closed the external-identity canary, and the two closure fixes (real-wage supply, verified scale determinacy) that made the fixed-wage rows executable. Section 4.2 is new; where the earlier intermediate-results section disagrees with it, section 4.2 governs.}
 
@@ -159,7 +159,7 @@ and the unemployment complementarity (optional, policy-evaluation only).}
 | **Standard partial-mobility formulation (3N system)** | *Structural alternative: sectoral wages with wage-responsive sectoral supply* |
 |---|---|
 | **Formulation** | $L_i^s = \bar L\, s_i^0 (w_i/\bar w_i)^{\nu} \,/\, \sum_j s_j^0 (w_j/\bar w_j)^{\nu}$; sectoral labour demand from Shephard's lemma; $N$ zero-profit + $(N{-}1)$ market-clearing + $N$ sectoral labour-market + one numeraire = $3N$ equations |
-| **Status** | Implemented; formulation in `registry/closures.toml` (ADR-0005) |
+| **Status** | \textcolor{revisionV8}{Implemented; formulation in \texttt{registry/closures.toml} (ADR-0005)} |
 | **Referee point addressed** | None directly; referee-adjacent (R1.6, R2.5) |
 | **Cost** | Largest: a new equilibrium system |
 | **Recommended role** | Fallback if the one-wage supply formulation of Closure B is judged too reduced-form |
@@ -243,7 +243,7 @@ lists do not cover:}
 | Zero lower bound / monetary policy | **Not covered.** Nominal closure; absent from the local replication (which keeps only nominal GDP accounting) and outside our static real model; relevant only if the paper's question shifts, per the verdict's 2019-vs-2022 criterion |
 | Multiple primary factors (capital alongside labour; flexible capital vs.\ sticky labour in BF 2022) | **Not covered by a foundation table.** Our model and the 2019 replication are one-factor (value added as composite); ROADMAP section 5 carries it as the "optional extension" (mandatory only for policy-evaluation claims) |
 | Firm capacity constraints (social distancing) | **Not covered.** BF 2022 models a supply shock as a labour-supply shift **or** a firm capacity constraint ("firms could be forced to operate at lower capacity ... due to social distancing") -- a rationing element outside our price-based static system |
-| Reallocation frictions (adjustment costs, kappa) | **Not covered by a foundation table.** BF 2019 Online Appendix 2 ("Stuck Intermediates and Adjustment Costs", the kappa variants); ours is a static model -- `docs/archive/labor_closures.md` (retired by ADR-0027) names convex employment-adjustment costs for a dynamic extension |
+| Reallocation frictions (adjustment costs, kappa) | **Not covered by a foundation table.** BF 2019 Online Appendix 2 ("Stuck Intermediates and Adjustment Costs", the kappa variants); ours is a static model -- \textcolor{revisionV8}{\texttt{docs/archive/labor\_closures.md} (retired by ADR-0027)} names convex employment-adjustment costs for a dynamic extension |
 
 \textcolor{revisionV1}{None of these gaps blocks the current plan: the
 first is exactly the "stripped-down 2022 closure" the verdict prescribes,
@@ -1099,12 +1099,12 @@ evaluation matrix, and the workplan only.}
   Programme size settled at the deflated horizon mean (ADR-0024, 40.3 bn at
   2019 prices = 1.331 \% of GDP). The revision palette restarts with the
   brighter cycle: this version is \texttt{revisionV7} = #CC66CC.
-- **Version 9** \textcolor{revisionV8}{(October 2026)} --- Document-retirement
+- **Version 9** \textcolor{revisionV8}{(October 2026)} --- \textcolor{revisionV8}{Document-retirement
   pass before the manuscript draft: \texttt{docs/definitive\_guide.md} moves to
   \texttt{docs/archive/} (ADR-0026) after a claim-by-claim salvage review --- one
   item carried forward into \texttt{paper/narrative\_outline.md}'s "What the
   revision retires" section, the rest found already covered (ROADMAP §3,
   vertdict.md, the open-item list) or retired with it (the +19.3 pp sweep, the
   pre-registry variance shares) --- and it drops out of the active-references
-  line above. \texttt{revisionV8} = #FF9933.
+  line above. \texttt{revisionV8} = #FF9933.}
 

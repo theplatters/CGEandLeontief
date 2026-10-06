@@ -39,7 +39,7 @@ Actions taken under this ADR:
    the wage-structure door, now lives in `docs/VariationinGamma.md`, ADR-0021).
    Its eight inbound citations are repointed to the executed evidence
    (`docs/VariationinGamma.md`, `docs/ETAs.md`, `docs/grouping_rule_evidence.md`,
-   `paper/tables/matrix_5x3_v10_flows.md`).
+   `revision/tables/matrix_5x3_v10_flows.md`).
 3. `labor_closures.md` moved to `docs/archive/` (redundant with
    `registry/closures.toml`, ADR-0005); its one live status reference in
    `docs/DOCS_ASSESSMENT.md` is updated to "implemented".

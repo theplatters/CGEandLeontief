@@ -84,7 +84,7 @@ in `matrix_5x3_v9` (deflators corrected from `matrix_5x3_v10`):
 Note (2026-09-20): the deflators above are corrected from the
 `matrix_5x3_v10` manifests — the previous values were measured with the C1
 defect (`gdp_components` collapsed the sectoral wage vector; ADR-0022
-amendment; `paper/tables/matrix_5x3_v10_flows.md`). All other columns
+amendment; `revision/tables/matrix_5x3_v10_flows.md`). All other columns
 (prices, employment, consumption, wage dispersion) are solutions and are
 unchanged between v9 and v10.
 
@@ -184,8 +184,8 @@ financing columns.
 # Where the numbers come from
 
 - Runs: `runs/matrix_5x3-v9-*` (33 cells; the matrix rows are bit-identical to
-  `matrix_5x3-v6-*`). Flow tables: `paper/tables/matrix_5x3_v9_flows.md` and
-  `matrix_5x3_v6_flows.md`.
+  `matrix_5x3-v6-*`). Flow tables: `paper/superseded/matrix_5x3_v9_flows.md` and
+  `paper/superseded/matrix_5x3_v6_flows.md`.
 - Probes: `probe13` / `probe14` (the sectoral closure and the S1-S5 slots),
   `probe15` (the supply arm), `probe16` (the rigidity band), `probe17` (the
   capacity channel in the fixed-wage closure), `probe18` (the BF allocation rule
@@ -335,7 +335,7 @@ Concrete, ready-draftable paragraphs (decide which earn their place):
 
 # Where the numbers live
 
-Flow tables `paper/tables/supply_etas_{s1,prog,unif}_flows.md` (generated
+Flow tables `revision/tables/supply_etas_{s1,prog,unif}_flows.md` (generated
 from the manifests, no hand-typed numbers); runs `runs/supply_etas_s1-*`,
 `runs/supply_etas_prog-*`, `runs/supply_etas_unif-*`; the workplan and
 signatures in `docs/ETAs.md` v5; the assessment note in

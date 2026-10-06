@@ -7,7 +7,7 @@
   plugins), ADR-0006 (preregistration), ADR-0010 (eta endpoints), ADR-0014
   (real-wage supply), ADR-0015 (polish), ADR-0017 (scale determinacy), ADR-0019
   (external account), ADR-0020 (the vector-wage apparatus at eta = 0), ADR-0021
-  (the pinned wage vector); measured in `docs/VariationinGamma.md` and `paper/tables/matrix_5x3_v10_flows.md`;
+  (the pinned wage vector); measured in `docs/VariationinGamma.md` and `revision/tables/matrix_5x3_v10_flows.md`;
   `paper/equivalence.tex` (Lemma 1, the labour door, the nominal-wage no-go
   corollary); `experiments/probes/probe12_segmented_wages.jl`,
   `experiments/probes/probe13_sectoral_labour.jl`; `registry/closures.toml`
@@ -364,5 +364,5 @@ solves bit-for-bit, and all non-gdp metrics differ only at the noise level.
 
 **Citation rule.** `matrix_5x3_v9` stays citable for everything except the
 eighteen sectoral cells' gdp-family metrics; for those cite `matrix_5x3_v10`
-(flow table `paper/tables/matrix_5x3_v10_flows.md`, created in parallel; the
+(flow table `revision/tables/matrix_5x3_v10_flows.md`, created in parallel; the
 v9 flow table carries a supersession banner).

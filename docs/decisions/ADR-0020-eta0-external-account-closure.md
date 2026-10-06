@@ -13,7 +13,7 @@
   `experiments/probes/probe5b_bf_f3_followups.jl`,
   `experiments/probes/probe5c_bf_pin_equivalence.jl`;
   `registry/closures.toml` entries `labor.BF` and `financing.F3`;
-  `paper/tables/matrix_5x3_v5_flows.md` (the correction of the same date);
+  `paper/superseded/matrix_5x3_v5_flows.md` (the correction of the same date);
   `cbase2/review.md` section 1 (the sector-specific-wage point)
 
 ## Context

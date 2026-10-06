@@ -120,7 +120,7 @@ behaves bit-identically.
 
 - A preregistered design per shock id (ADR-0006), registry rows
   `planned -> executed`, manifests + `runs/index.csv` rows, flow table
-  `paper/tables/supply_etas_flows.md` citing run ids (ADR-0004).
+  `revision/tables/supply_etas_flows.md` citing run ids (ADR-0004).
 - The board (`scripts/status.jl`, 0 warnings) and the repository gate
   (`scripts/check_repo.jl`, 0 violations) after every batch.
 - `docs/ETAs.md` v3 is the executing annexe and is updated, not re-derived.

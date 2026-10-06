@@ -109,7 +109,7 @@ BETA is numerically identical to ALPHA and DELTA reproduces GAMMA to solver prec
 so several of the fifteen files document the same economy (DELTA additionally ignores σ
 by construction — its variants re-solve the same model, so its error bars collapse);
 see Table 2 of
-`paper/tables/matrix_5x3_v10_flows.md` for that statement. Regeneration:
+`revision/tables/matrix_5x3_v10_flows.md` for that statement. Regeneration:
 
 ```bash
 julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 --no-figures --panel-dir revised_manuscript/pictures

@@ -117,7 +117,7 @@ keeps the two rows separate in every table.}
 
 \textcolor{revisionV3}{\textbf{\texttt{supply\_etas\_s1} is executed: 63/63 cells, all gates
 pass} (design commit \texttt{202837a}; ADR-0023 schema; flow table
-\texttt{paper/tables/supply\_etas\_flows.md}, generated from the manifests).
+\texttt{revision/tables/supply\_etas\_flows.md}, generated from the manifests).
 The ratified matrix: ALPHA control + scalar single-wage BETA ($\eta_s \in
 \{0.5, 1, 2, 5\}$, the identification row) + sectoral uniform BETA ($\eta_s
 \in \{0.5, 2\}$, the robustness row), times F1/F2/F3 times $A_1 \in \{1.1,
@@ -148,7 +148,7 @@ has no colour beyond \texttt{revisionV6} yet).}
 
 \textcolor{revisionV4}{\textbf{\texttt{supply\_etas\_prog} and \texttt{supply\_etas\_unif}
 are executed as well: 63+63 cells, all gates pass} (commit \texttt{e93a741};
-flow tables \texttt{paper/tables/supply\_etas\_prog\_flows.md} and
+flow tables \texttt{revision/tables/supply\_etas\_prog\_flows.md} and
 \texttt{supply\_etas\_unif\_flows.md}). \texttt{prog}
 ($A_i = 1 + \alpha \psi_i$ on the programme's own sectors, $\alpha \in
 \{0.05, 0.10, 0.20\}$): $w$ = 1.0046 at $\alpha$ = 0.10,
@@ -418,7 +418,7 @@ the workplan.}
   `registry/scenarios.csv`, index rows in `runs/index.csv`.
 - ADR-0018 (design schema for supply shocks) and, if the canary or the
   round-gain check fails under $A \neq 1$, a follow-up ADR.
-- `paper/tables/supply_etas_flows.md`, generated from the manifests and citing
+- `revision/tables/supply_etas_flows.md`, generated from the manifests and citing
   the run ids (ADR-0004).
 
 # Revision Log
@@ -446,7 +446,7 @@ the workplan.}
   input to 1e-6); ALPHA control ($L = 1$, $w = 1.0049$); real GDP monotone
   in $\eta_s$; F2 = F3 financing neutrality extends to supply shocks; the
   external-account canary is asserted at $A \neq 1$ on every cell. Flow
-  table \texttt{paper/tables/supply\_etas\_flows.md}; remaining designs
+  table \texttt{revision/tables/supply\_etas\_flows.md}; remaining designs
   \texttt{supply\_etas\_prog} and \texttt{supply\_etas\_unif}; the
   DOCS\_ASSESSMENT section 4.2 write-up is recorded for the manuscript
   pass.

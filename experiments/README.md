@@ -177,9 +177,12 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
 - `--design` (required) must be preregistered with a matching SHA-256;
   otherwise the driver aborts before solving. `--cells` selects a subset
   (comma-separated run ids, each validated against the design); the default
-  is the design's matrix cells via
-  `matrix_cell_ids(cell_order(design), design)` (the fifteen labour ×
-  financing cells, not the sectoral variants).
+  is the fifteen headline labour × financing cells, with the three BETA
+  benchmarks replaced by the uniform-sectoral `-etas05` cells
+  (`eta_s = 0.5`, separate sectoral wages). The driver verifies these
+  settings in the pinned design rather than trusting the suffix alone.
+  Historical designs lacking these cells require explicit `--cells` ids;
+  scalar BETA and other sectoral variants remain available that way.
 - Validation contract: per cell, `solve_cell` + `evaluate_gates` are
   re-run from the batch reference continuation (programme `ψ, g` exactly as
   `run_design` computes them); the cell is valid only if the recorded
@@ -212,12 +215,15 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   Each file pairs grouped bars over the programme sectors for that cell
   (programme demand in % of baseline gross output, change in output, change
   in consumption, price deviation from the numeraire) with a
-  quantity bar chart over all sectors sorted descending for ALPHA/BETA/GAMMA/DELTA
-  (prices pinned at baseline, price dimension omitted), or the unchanged
-  quantity/price scatter for BF. `right = :auto` selects this split;
+  quantity bar chart over all sectors sorted descending only when every
+  price is at baseline (within `1e-8`), or the quantity/price scatter
+  otherwise. Thus BF and the headline sectoral BETA retain their price
+  response; single-wage demand-only cells use quantity bars.
+  `right = :auto` checks actual prices, not the labour-closure label;
   `right = :bars` / `:scatter` force either path in the plotting API.
   Each file is standalone with
-  per-cell axis limits. Error bars on the last three bar series span the
+  per-cell axis limits and a source footnote citing its `run_id`.
+  Error bars on the last three bar series span the
   consumption-elasticity range: the min/max over the central cell and its
   two σ variants (σ ∈ {0.6, 0.99}, the cell's θ, ε, η, financing and shock
   fixed; a variant solve/gate failure is reported and omitted, so the bars

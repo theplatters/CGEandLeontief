@@ -90,6 +90,44 @@ function parse_plot_args(args::Vector{String})::NamedTuple
 end
 
 """
+Headline matrix cells in canonical order, replacing the single-wage BETA
+benchmarks by the pinned uniform-sectoral `-etas05` cells (ADR-0022 and the
+presentation rule). Check the design settings as well as the ids: a suffix
+alone must not silently select a scalar or heterogeneous wage system.
+Historical designs without these cells require an explicit `--cells` list.
+"""
+function plot_default_cell_ids(design_d::Dict{String,Any},
+        ids::AbstractVector{<:AbstractString}, design::AbstractString)::Vector{String}
+    have = Set(String.(ids))
+    out = String[]
+    for id in matrix_cell_ids(ids, design)
+        cell = design_cell(design_d, id)
+        if string(cell["labor"]) == "BETA"
+            financing = string(cell["financing"])
+            id *= "-etas05"
+            id in have || throw(ArgumentError(
+                "no headline uniform-sectoral BETA cell \"$id\"; " *
+                "pass --cells explicitly to plot historical benchmarks"))
+            cell = design_cell(design_d, id)
+            uniform = if haskey(cell, "eta_s_vec")
+                esv = cell["eta_s_vec"]
+                !isempty(esv) && all(x -> Float64(x) == 0.5, esv)
+            else
+                string(get(cell, "eta_s_rigid_group", "scalar")) == "none"
+            end
+            (string(cell["labor"]) == "BETA" &&
+                string(cell["financing"]) == financing &&
+                uniform && Float64(cell["eta"]) == 1.0 &&
+                Float64(get(cell, "eta_s", NaN)) == 0.5) || throw(ArgumentError(
+                "headline BETA cell \"$id\" must use sectoral wages " *
+                "with uniform eta_s = 0.5"))
+        end
+        push!(out, id)
+    end
+    return out
+end
+
+"""
 `true` when the GLMakie package is installed (findable), without loading it.
 The figure path `@eval using GLMakie` only after this check passes.
 """
@@ -225,11 +263,16 @@ function plot_main(args::Vector{String} = ARGS;
     end
 
     # 2. Design, file order, and the wanted subset (every --cells id must be
-    # a cell of this design; the default is the design's matrix cells).
+    # a cell of this design; the default substitutes uniform-sectoral BETA).
     design_d = load_design(design; root = root)
     order = cell_order(design; root = root)
     wanted = if opts.cells === nothing
-        matrix_cell_ids(order, design)
+        try
+            plot_default_cell_ids(design_d, order, design)
+        catch e
+            println(stderr, "refusing to plot: $(sprint(showerror, e))")
+            return 1
+        end
     else
         for id in opts.cells
             if !(id in order)
@@ -264,7 +307,7 @@ function plot_main(args::Vector{String} = ARGS;
     labels = plot_sector_labels(design_d, n; root = root)
     baseline = matrix_baseline(ref.data, ref.sol)
 
-    # 5-6. Per cell, in file (canonical) order: re-solve, re-evaluate the
+    # 5-6. Per cell, in file order: re-solve, re-evaluate the
     # gates, and hard-validate against the recorded artifacts. A
     # solve/gate/read failure is recorded as an invalid cell and never
     # aborts the batch.

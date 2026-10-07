@@ -16,15 +16,31 @@
 
 We examine how different closures have different effects.
 For this we choose five different labor closures and three financing closures that reflect different assumptions about the economy.
-The labor closures determine wages and available labor and are as follows: 
-%TODO list labor closures
+The labour closures specify how wages and employment adjust.
+\textbf{BF} fixes employment in each sector at its baseline level and lets
+sector-specific wages adjust. \textbf{ALPHA} allows labour to move between
+sectors at one flexible wage while keeping total employment fixed.
+\textbf{BETA} lets sectoral employment respond to each sector's real wage,
+deflated by the consumption price index, with a common supply elasticity
+but separate wages. \textbf{GAMMA} fixes the common real wage and lets
+employment adjust without a cap. \textbf{DELTA} applies GAMMA's wage rule
+in the Leontief limit, with fixed proportions in production and consumption;
+it is a corner rather than a separate labour-market mechanism.
 
-The financing closures determine how the demand shock is absorbed and who finances the change in consumption
-%TODO list financing closures
+The financing closures specify how programme-related demand is accommodated
+and who bears its cost. \textbf{F1} redirects household spending towards
+programme sectors by changing preferences: larger spending shares there are
+paid for by smaller shares elsewhere within the household budget, without
+additional public purchases. \textbf{F2} adds public investment financed by
+a household tax equal to the programme's current-price cost. \textbf{F3}
+adds the same public-investment bundle with external financing and no
+additional domestic programme tax. This external financing is an accounting
+counterpart, not a monetary mechanism.
 
 \subsection{The five labour closures}\label{subsec:labour-closures}
 % Formulations: registry/closures.toml; ADR-0020 and ADR-0022.
 % Appendix A resets the equation counter; keep these PDF anchors distinct.
+
 \begingroup
 \renewcommand*{\theHequation}{labour.\arabic{equation}}
 Let $L_i$ denote employment in sector $i$, $\bar{L}_i$ its baseline value,
@@ -32,9 +48,9 @@ and $\Lbar = \sum_{i=1}^N \bar{L}_i$ total baseline employment. Sectoral
 wages are $w_i$; with mobile labour they equal one common wage $w$.
 The real wage is deflated by the consumption price index
 \begin{equation}
-\Pi(p) = \left(\sum_{i=1}^N \omega_i p_i^{1-\sigma}\right)^{1/(1-\sigma)},
-\qquad \sum_{i=1}^N \omega_i = 1,
-\label{eq:labour-cpi}
+  \Pi(p) = \left(\sum_{i=1}^N \omega_i p_i^{1-\sigma}\right)^{1/(1-\sigma)},
+  \qquad \sum_{i=1}^N \omega_i = 1,
+  \label{eq:labour-cpi}
 \end{equation}
 with calibrated weights $\omega_i$ and the Cobb--Douglas limit at
 $\sigma = 1$. Subscript $0$ denotes the baseline. All closures use the

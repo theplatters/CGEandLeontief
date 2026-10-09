@@ -1,4 +1,29 @@
 % =====================================================================
+% REVIEW COMMENTS on this draft (agent, 2026-10-06)
+% ---------------------------------------------------------------------
+% What works: the split is clean -- labour-market closures carry the vision
+% of the short run, financial closures carry the theory of money -- and para. 3
+% ("IO models ... operating outside of time ... no borrowing against the
+% future") is the sharpest statement of the R2.4 answer in the draft so far.
+%
+% Points to consider:
+%  1. Para. 3's money claim needs a scope clause. It currently says F3 can
+%     "roughly emulate an endogenous concept of money". The outline's position
+%     is that F3 is an ACCOUNTING closure, not a monetary mechanism: say
+%     "an accounting analogue of external finance", not "endogenous money".
+%     (The endogenous-money framing is on the must-not-appear list.)
+%  2. Para. 2's forward reference "(see ROBINSON UND PTHER POSER SOURCES? or
+%     \ref{sec:kernel})" is exactly the place for the Appendix A pointer --
+%     see the NOTE below. Robinson (2006) is NOT yet in references.bib.
+%  3. Para. 4 promises "Table XY"; that is now Table~\ref{tab:constellations}
+%     (rebuilt as a recast of Table 1, not as the questions table).
+%  4. The two "(AUSNAHMEN ZITIEREN??)" gaps are the dynamic-IO exceptions;
+%     candidates listed in the SOURCE SUGGESTIONS below.
+%
+% See PROPOSED FOOTNOTE / NOTES / SOURCE SUGGESTIONS at the foot of this file.
+% =====================================================================
+
+% =====================================================================
 % Section 3 --- Two primitive questions
 % ---------------------------------------------------------------------
 % Job: 3.1 vision of the short run (quantity adjustment vs. rationing vs.
@@ -12,13 +37,17 @@
 % =====================================================================
 \section{Two primitive questions and a simplified matrix}\label{sec:two-questions}
 
+As already indicated, key points of disjuncture in input-output modeling can be mapped onto classic cleavages separating different traditions of economic thought. Such traditions can often be characterized in terms of the basic analytical ideas -- or ``rivers'' in the history of economic thought (SCREPANIT/ZAMGANI with p.) -- they endorse. Where these basic ideas have a different emphasis or contradict outright, a paradigmatic cleavage is in sight (DOBUSCH+KAPELLER12). Two such classic fields of tension in economic thinking also lie at the heart of different approaches to input-output modeling: the nature of the short run and the role of money and credit, as already captured by Table~\ref{tab:overview}.
 As already indicated, key points of disjuncture in input-output modeling can be mapped onto classic cleavages separating different traditions of economic thought. Such traditions can often be characterized in terms of the basic analytical ideas -- or ``rivers'' in the history of economic thought (SCREPANIT/ZAMGANI with p.) -- they endorse. Where this basic ideas have a different emphasis or contradict outright, a paradigmatic cleavage is in sight \citep{Dobusch.2012}. Two such classic fields of tension in economic thinking also lie at the heart of different approaches to input-output modeling: the nature of the short run and the role of money and credit, as already captured by Table~\ref{tab:overview}.
 
 When mapping the rough distinctions from our introductory table more specifically to the realm of input-output models, we find that different labor market closures are the key entry point for different understandings of the short run: if labor is tight or fully utilized increased monetary demand will increase wages and prices as capacity constraints bind. Conversely, if free labor is available additional expenditures might lead to an expansion of employment and, correspondingly, output. Both visions can be unified in one analytical apparatus (see ROSBINSON UND PTHER POSER SOURCES? or \ref{sec:kernel}), just differentiated by different closures, i.e., definitions of what is exogenous or endogenous, in the face of increasing monetary expenditures.
+When mapping the rough distinctions from our introductory table more specifically to the realm of input-output models, we find that different labor market closures are the key entry point for different understandings of the short run: if labor is tight or fully utilized, increased monetary demand will increase wages and prices as capacity constraints bind. Conversely, if free labor is available additional expenditures might lead to an expansion of employment and, correspondingly, output. Both visions can be unified in one analytical apparatus (see ROSBINSON UND PTHER POSER SOURCES? or \ref{sec:kernel}), just differentiated by different closures, i.e., definitions of what is exogenous or endogenous, in the face of increasing monetary expenditures.
 
 Financial closures on the other hand encode prior beliefs about the role of our monetary system and the nature of money. As input-output models are typically conceived as static, operating outside of time (see however AUSNAHMEN ZITIEREN??), there is no borrowing against the future – additionally expenditure cannot be externally financed in the conventional sense, but have to be repaid within the same period (see however AUSNAHMEN ZITIEREN??). Hence, while traditional, simplified application of a Leontief-Inverse would suggest some external stimulus, exactly such an external force is at odds with the internal consistency of the model. In other words, such models implicitly built on an exogenous view on money and restrict the application of ideas on endogenous money creation as it lacks a corresponding model of the intertemporal role of debt.
+Financial closures on the other hand encode prior beliefs about the role of our monetary system and the nature of money. As input-output models are typically conceived as static, operating outside of time (see however AUSNAHMEN ZITIEREN??), there is no borrowing against the future – additional expenditure cannot be externally financed in the conventional sense, but have to be repaid within the same period (see however AUSNAHMEN ZITIEREN??). Hence, while a traditional, simplified application of a Leontief inverse would suggest some external stimulus, exactly such an external force is at odds with the internal consistency of the model. In other words, such models implicitly build on an exogenous view on money and restricts the application of ideas on endogenous money creation as it lacks a corresponding model of the intertemporal role of debt.
 
 Refinancing can then occur in three ways: by households -- the repurposing of consumption --, via the state -- due to increased taxation --, or by someone willing to take foreign debt to provide an external stimulus. The latter can be thereby used to roughly emulate an endogenous concept of money within an input-output framework without explicitly violating its internal consistency properties. Mapping these two dimensions onto specific modeling approaches allows for recasting table \ref{tab:overview} in terms of specific constellations of closure summarized by Table~\ref{tab:two-questions} below
+Refinancing can then occur in three ways: by households -- the repurposing of consumption --, via the state -- due to increased taxation --, or by someone willing to take foreign debt to provide an external stimulus. The latter can thereby be used to roughly emulate an endogenous concept of money within an input-output framework without explicitly violating its internal consistency properties. Mapping these two dimensions onto specific modeling approaches allows for recasting table \ref{tab:overview} in terms of specific constellations of closure summarized by Table~\ref{tab:closure-conditions} below.
 
 
 
@@ -37,4 +66,57 @@ Refinancing can then occur in three ways: by households -- the repurposing of co
 
 % TODO (closing): state the adjustment closure A as the operational summary
 % of B (short run) and C (money); flag that A is *measured* from Sec. 4 on.
-\input{tables/table2_two-questions}
+\input{tables/table2_closure-conditions}
+% =====================================================================
+% PROPOSED FOOTNOTE (for para. 1; accept, drop, or move)
+% ---------------------------------------------------------------------
+% \footnote{We focus on these two dimensions because they are the closure
+% choices that move transformation-programme estimates most in our setting,
+% while the production-technology dimension is deliberately held fixed: under
+% demand-only shocks the price block is demand-invariant, so the substitution
+% elasticities do not reach the aggregate result (Appendix~\ref{app:proofs},
+% Lemma~\ref{lem:price}). The remaining divides of Section~\ref{sec:intro}
+% --- policy implementation and technological change --- enter only as
+% parameters of the programme itself.}
+% =====================================================================
+%
+% =====================================================================
+% NOTES on the three related questions
+% ---------------------------------------------------------------------
+% (2) Kaldor-Verdoorn. It is measured but it is NOT a closure: it is one of
+%     the seven fixed-wage (GAMMA) variants (probe17: the capacity channel
+%     delta = +0.5 vs the Kaldor-Verdoorn case delta = -0.5; a 3.6 pp
+%     deflator range from the sign alone). So it belongs in the GAMMA menu
+%     of Section 6 / Appendix C and in the "open doors" of Section 7 -- not
+%     here. Substitution elasticities: agreed, no need to dwell -- they are
+%     inert under demand-only shocks (same Lemma 1 argument as the footnote
+%     above) and matter only for the supply arm and the sectoral detail.
+% (3) Equivalence appendix. Yes -- one light, scoped forward reference. The
+%     sentence "Both visions can be unified in one analytical apparatus" IS
+%     Lemma 1 + Propositions 1-3; add "(Appendix~\ref{app:proofs})" there and
+%     keep the scope word "demand-only" next to it, since the unification
+%     fails for supply shocks (Section~\ref{sec:beyond-demand-only}). Do not
+%     unfold the equivalences here -- Section 6 owns them.
+% =====================================================================
+%
+% =====================================================================
+% SOURCE SUGGESTIONS for the bracketed placeholders
+% (keys without NEW are already in revision/references.bib and compile)
+% ---------------------------------------------------------------------
+% (a) "(SCREPANIT/ZAMGANI with p.)":
+%     \citep{Screpanti2005}   [= Screpanti & Zamagni, An Outline of the
+%     History of Economic Thought; give the page for the "rivers" image]
+% (b) "(DOBUSCH+KAPELLER12)":
+%     \citep{Dobusch.2012}    [check the author list of that entry -- the
+%     bib key is Dobusch.2012]
+% (c) "(see ROBINSON UND PTHER POSER SOURCES? ...)":
+%     NEW Robinson.2006 = Robinson, S. (2006), "Macro models and multipliers:
+%     Leontief, Stone, Keynes, and CGE models", in de Janvry & Kanbur (eds),
+%     Poverty, Inequality and Development, Springer, 205-232. Already
+%     compile-ready alternatives: \citep{Taylor1990, lavoie2014, Blecker2019}.
+% (d) "(AUSNAHMEN ZITIEREN??)"  (x2) -- the dynamic-IO exceptions:
+%     \citep{BlairMiller} for the standard static treatment;
+%     NEW candidates: Rocchi et al. (JRC FIDELIO manual) for the dynamic
+%     macroeconometric IO alternative; Duchin (1998), Structural Economics,
+%     for dynamic IO proper.
+% =====================================================================

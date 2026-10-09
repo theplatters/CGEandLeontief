@@ -9,9 +9,10 @@
 
 % ---- Switches (flip per venue) --------------------------------------
 \newif\ifreviewmode   % true = double spacing + visible todonotes (submission)
-\newif\ifendfloats    % true = floats deferred to end of document
+\newif\ifendfloats    % true = floats deferred to end of document (journal layout)
 \reviewmodetrue
-\endfloatstrue
+\endfloatsfalse   % FALSE while drafting: tables sit next to their text.
+                 % Flip to \endfloatstrue for the submission build.
 
 % ---- Page ------------------------------------------------------------
 \usepackage[a4paper, total={6in, 9in}]{geometry}

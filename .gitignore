@@ -20,6 +20,8 @@ IDEA.md
 docs/reviews/
 Manifest.toml
 
+revision/main.pdf
+
 *_mac.*
 
 # Run artifacts: only the index and manifests are committed (ADR-0004)

@@ -2,6 +2,20 @@
 % Table 1 --- first, simplified map of the two closure axes.
 % Input from section (1)introduction.tex. The assessment comments below
 % were written when the table was first crafted and are kept with it.
+% ---------------------------------------------------------------------
+% LAYOUT RULE (2026-10-11): for a manual break inside a cell use \par,
+% NEVER \newline.
+%   \centering centres a line through the \leftskip/\rightskip fil, and
+%   \newline bypasses it: it tears the line before the break out of the
+%   centring and lands 2-14 pt off centre (measured). \par, \linebreak,
+%   \shortstack[c] and a nested tabular all centre exactly; \par is the
+%   least surprising of the four and is what is used below.
+%   Measured on a controlled test (column centre = 0):
+%     \newline  -> -2.5 pt on the line before the break
+%     \par      ->  0.0 pt on both lines
+%     \linebreak->  0.0 pt on both lines
+%   The three columns are equal p{4.5cm} with \centering so that wrapped
+%   text is centred too (a bare c-column does not wrap).
 % =====================================================================
 % --- Table sketch, crafted in LaTeX (was a markdown sketch) -----------
 % Assessment: the 3x2 structure is sound -- rows = financing closure,
@@ -19,24 +33,31 @@
 \begin{table}[htbp]
 \centering
 \small
-\begin{tabular}{@{}l p{4.3cm} p{4.3cm}@{}}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{@{}>{\centering\arraybackslash}p{4.5cm}
+                  >{\centering\arraybackslash}p{4.5cm}
+                  >{\centering\arraybackslash}p{4.5cm}@{}}
 \toprule
  & \multicolumn{2}{c}{\textbf{Labour-market closure}} \\
 \cmidrule(lr){2-3}
- & \textbf{Factor supply fixed} (scarcity) & \textbf{Real wage fixed} (output adjusts) \\
+ & \textbf{Scarce factor supply}\par
+   Computable General Equilibrium (CGE)
+ & \textbf{Real wage fixed}\par
+   Leontief-Inverse and Output adjustment \\
 \midrule
 \textbf{Repurposing consumption} (F1)
   & pure reallocation
-  & the change follows the input--output structure \\[2pt]
+  & the change follows the input--output structure \\[3pt]
 \textbf{Refinancing via taxes} (F2)
-  & traditional crowding out
-  & balanced-budget (Haavelmo) multiplier, dampened by leakage \\[2pt]
+  & crowding out
+  & balanced-budget multiplier (Haavelmo) \\[3pt]
+  %TODO: vllt das später nochmal aufgreifen. wie stark ist das dampening? (habs mal weggemacht)
+  % importe vermutlich? kann man wahrscheinlich klarer beschreiben
 \textbf{External finance} (F3)
-  & welfare loss and external debt
-  & endogenous money, external debt and output expansion \\
+  & welfare loss\par and external debt
+  & output expansion\par and external debt \\
 \bottomrule
 \end{tabular}
-\caption{A first, simplified map of the two closure axes. The full
-$5\times3$ matrix follows in Section~\ref{sec:application}.}
+\caption{A simplified map of two main closure axes in input-output modeling.}
 \label{tab:overview}
 \end{table}

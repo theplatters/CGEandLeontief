@@ -1,42 +1,65 @@
 % =====================================================================
-% Table 2 --- the closure conditions, in simplified formal form
+% Table 2 --- the simplified matrix: the closure conditions
 % ---------------------------------------------------------------------
-% What Section 3's closing sentence promises: Table 1 recast "in terms of
-% specific constellations of closure". Here the content is the CLOSURE
-% CONDITIONS themselves -- two dimensions, five closures -- with the equation
-% each one pins and the margin that is left to adjust.
-% Alternative shape (if you prefer the 3x2 grid kept): the same conditions in
-% the row/column headers of Table 1, with the qualitative outcomes in the
-% cells. Say the word and I swap it.
+% Axes = the closures themselves: three financing closures (rows, as in
+% Table 1) crossed with the TWO standard short-run closures (columns).
+% Each cell carries the two equations that define that economy -- one from
+% the short-run block, one from the financing block.
+% Column names are the literature terms; the paper's registry ids are
+%   standard CGE      = ALPHA  (one wage clears, labour mobile, full employment)
+%   standard Leontief = DELTA  (fixed real wage + Leontief limit, output absorbs)
+% See the caption note. The registry ids are named in Section~\ref{sec:kernel}.
 % =====================================================================
 \begin{table}[htbp]
 \centering
-\small
-\begin{tabular}{@{}l l l@{}}
+\footnotesize
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.75cm}
+                  >{\raggedright\arraybackslash}p{5.15cm}
+                  >{\raggedright\arraybackslash}p{5.15cm}@{}}
 \toprule
-\textbf{Closure} & \textbf{Condition (simplified)} & \textbf{What adjusts} \\
+ & \textbf{Short run: standard CGE}
+ & \textbf{Short run: standard Leontief} \\
+ & {\scriptsize one flexible wage, labour mobile, full employment}
+ & {\scriptsize fixed real wage, fixed coefficients, output absorbs} \\
 \midrule
-\multicolumn{3}{@{}l}{\textit{Short run --- what the labour market pins}} \\[2pt]
-factor supply fixed
-  & $\sum_i L_i = \bar L$
-  & wages and prices \\[3pt]
-real wage fixed
-  & $w/P = \bar w$
-  & employment $L$ \\[5pt]
-\multicolumn{3}{@{}l}{\textit{Money --- how the programme is financed}} \\[2pt]
-repurposing of consumption (F1)
-  & $\sum_i p_i c_i = E_h$
-  & the composition of $c$ \\[3pt]
-refinancing via taxes (F2)
-  & $\sum_i p_i g_i = T$
-  & the tax bill $T$ \\[3pt]
-foreign debt (F3)
-  & $\sum_i p_i g_i = F$
-  & the external transfer $F$ \\
+\textbf{Financing: F1}\newline repurposing of consumption
+& $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$,\quad $\sum_i L_i = \bar L$
+  \newline
+  $\sum_i p_i c_i^{h} = E^{h}$
+& $w/\Pi(p) = 1$,\quad $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline
+  $\sum_i p_i c_i^{h} = E^{h}$ \\
+\midrule
+\textbf{Financing: F2}\newline refinancing via taxes
+& $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$,\quad $\sum_i L_i = \bar L$
+  \newline
+  $T(p) = \sum_i p_i g_i$
+& $w/\Pi(p) = 1$,\quad $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline
+  $T(p) = \sum_i p_i g_i$ \\
+\midrule
+\textbf{Financing: F3}\newline foreign debt
+& $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$,\quad $\sum_i L_i = \bar L$
+  \newline
+  $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& $w/\Pi(p) = 1$,\quad $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline
+  $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
 \bottomrule
 \end{tabular}
-\caption{Table~\ref{tab:overview} recast as specific constellations of
-closure: the conditions each closure pins, in simplified form. The full
-matrix follows in Section~\ref{sec:application}.}
+\caption{The simplified matrix: the two standard short-run closures crossed
+with the three financing closures. Each cell states the two closure
+conditions that define that economy --- one for the short run (labour
+market), one for the financing of the programme. Notation follows
+Section~\ref{sec:kernel}; $\Pi(p)$ is the consumption price index, $E^{h}$
+household consumption expenditure, $T(p)$ the programme tax and
+$B_{\mathrm{gov}}$ the externally booked programme cost. ``Standard CGE''
+is the paper's ALPHA row --- one wage clears, labour is mobile, employment
+is full; ``standard Leontief'' is the paper's DELTA row --- a fixed real
+wage combined with the Leontief limit of the CES core, so that quantities
+absorb demand. The finer grid of Section~\ref{sec:kernel} fills in the
+labour-market closures between these two poles.}
 \label{tab:closure-conditions}
 \end{table}

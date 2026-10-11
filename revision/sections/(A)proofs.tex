@@ -344,8 +344,10 @@ outcome is $L^{\ast} = \alpha^{\!\top} y^{\ast}$, the consumption block is
 $c^{\ast} = (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)\,
 (L^{\ast} - \sum g^G - \sum g\,\mathbf{1}_{F2})$, where
 $\mathbf{1}_{F2}$ selects the tax-financed column, and the block
-decomposition \eqref{eq:leontiefblocks} holds verbatim. In particular GAMMA (baseline
-elasticities) and DELTA (the Leontief corner) share this solution, and the
+decomposition \eqref{eq:leontiefblocks} holds verbatim. In particular the
+fixed real wage closure (baseline
+elasticities) and the Leontief closure (the Leontief corner) share this
+solution, and the
 analytic system \eqref{eq:affine}--\eqref{eq:bvec} ---
 \texttt{leontief\_multiplier} in \texttt{src/closures/labor/labor.jl} ---
 computes it exactly.
@@ -364,13 +366,15 @@ the guard admits the branch on which the affine fixed
 point is unique and positive, but does not by itself exclude further roots of
 the nonlinear system; the multi-init admissibility checks recorded for the F1
 column (three distinct starting points converging to the same root) are the
-evidence that the reported root is the admitted one. Both the GAMMA and the DELTA solve
-are subject to the same guard, and both converged to this root
+evidence that the reported root is the admitted one. Both fixed-wage solves
+(the fixed real wage closure and the Leontief closure) are subject to the
+same guard, and both converged to this root
 (residuals $4.4\times10^{-16}$ to $2.0\times10^{-13}$
 across the six fixed-wage cells,
 \texttt{runs/matrix\_5x3-v10-\{GAMMA,DELTA\}-*/manifest.toml}). The
 elasticity-independence is exact in the equations, not an $\epsilon$-limit
-artefact: the DELTA solve at $\epsilon_\delta = 10^{-4}$ reproduces the
+artefact: the Leontief-corner solve at $\epsilon_\delta = 10^{-4}$
+reproduces the
 analytic $y^{\ast}$ with relative error $0.0$ (F2/F3 verification, recorded
 in \texttt{docs/DOCS\_ASSESSMENT.md} section 4.2), and the v10 flow metrics
 of the two rows agree to all printed decimals with residual-level wedge
@@ -385,19 +389,19 @@ For the manuscript's framing of the matrix:
 \toprule
 Coincidence & Status & What is unidentified \\
 \midrule
-GAMMA $\equiv$ DELTA & definitional in form, & $(\theta,\epsilon,\sigma)$ \\
+Fixed real wage $\equiv$ Leontief corner & definitional in form, & $(\theta,\epsilon,\sigma)$ \\
  & substantive in mechanism & in the fixed-wage gauge \\
  & (Lemma~\ref{lem:affine}) & \\
-ALPHA $\equiv$ scalar BETA & derivable & $\eta_s$ in the single-wage gauge \\
+Standard CGE $\equiv$ single-wage supply & derivable & $\eta_s$ in the single-wage gauge \\
  & (Cor.~\ref{cor:realwage}) & \\
 F2 $\equiv$ F3 (mobile rows) & derivable & the financing label; \\
  & (Section~\ref{sec:gauge}) & $F_{F3} = F_{F2} - B_{gov}$ \\
-BF vs ALPHA & not a coincidence: & --- (the $\eta=0$ row is an \\
+No reallocation vs standard CGE & not a coincidence: & --- (the $\eta=0$ row is an \\
  & ADR-0020 option C gives the & identified equilibrium: own \\
  & frozen allocation a price & prices, wage vector \\
  & channel, so it is a distinct & $0.97$--$1.67$, own position) \\
  & economy & \\
-sectoral corner $\equiv$ BF & exact, by construction & --- (the corner \emph{is} the \\
+Sectoral corner $\equiv$ no reallocation & exact, by construction & --- (the corner \emph{is} the \\
 ($\eta_{s,i} = 0$; Prop.~\ref{prop:nest}) & (Prop.~\ref{prop:nest}) & endpoint: the same equations) \\
 \bottomrule
 \end{tabular}
@@ -408,10 +412,12 @@ accidents; they hold at machine precision in the executed generation, and
 none is a mis-specification. They are properties of the \emph{experiment}: a
 demand-only programme in a one-factor CRS economy cannot identify any
 elasticity of the kernel (the mechanism is Remark~\ref{rem:samuelson}). The
-fourth entry is different in kind: the BF/ALPHA coincidence held only in the
+fourth entry is different in kind: the no-reallocation / standard-CGE
+coincidence held only in the
 superseded $F = 0$ pin generation (ADR-0019 D2), where the frozen allocation
 had no channel to prices; under ADR-0020 option C the $\eta = 0$ row carries
-sectoral wages and is an identified equilibrium, so no BF quantity is left
+sectoral wages and is an identified equilibrium, so no quantity of the
+no-reallocation row is left
 unidentified and none must be withheld.
 The fifth entry is an equivalence between two
 \emph{closures} rather than between two rows of the executed matrix, and it is
@@ -422,13 +428,14 @@ $\eta = 0$ endpoint, which is why no separate rigid sectoral cell is reported.
 \begin{remark}[Off the demand-only slice]\label{rem:supply}
 The equivalences fail the moment technology moves. At $A \neq \one$,
 Corollary~\ref{cor:realwage} gives $w/\Pi = 1/\Pi(\pi(A)) \neq 1$ in
-general, and BETA's labour equation reduces to
+general, and the elastic-supply labour equation reduces to
 $\alpha^{\!\top}y = \Lbar\,[1/\Pi(\pi(A))]^{\eta_s}$: employment is pinned
 to a \emph{technology-determined constant} that now depends on $\eta_s$.
 The supply-side pilot (+20\% in sector 1) measures exactly this separation
 --- the failure of Proposition~\ref{prop:ab}'s hypothesis $A \equiv \one$:
 $w = 1.004903$, with $L = 1.0024$ at $\eta_s = 0.5$ versus $L = 1.0098$ at
-$\eta_s = 2$ against ALPHA's $L = 1.0000$ (\texttt{docs/ETAs.md}). The
+$\eta_s = 2$ against the standard CGE closure's $L = 1.0000$
+(\texttt{docs/ETAs.md}). The
 identification of $\eta_s$ therefore requires a supply-side scenario ---
 the premise of the supply arm.
 \end{remark}
@@ -455,7 +462,7 @@ the numeraire $\Pi(p) = 1$ and a free transfer $F$, in the unknowns
 $X = (p, y, w(1{:}N), F) \in \mathbb{R}^{3N+1}$ (ADR-0022). The scalar closure
 \eqref{eq:beta} is the member of this family with one common wage and
 $\eta_{s,i} \equiv \eta_s$; it is retained only as a single-wage benchmark.
-The matrix's BETA row is the sectoral member of the family at
+The matrix's elastic-supply row is the sectoral member of the family at
 $\eta_{s,i} \equiv 0.5$. Because the $N$
 wages enter the $N$ zero-profit conditions \eqref{eq:zp} through the price
 index \eqref{eq:ip}, the price block now depends on the $N$ employment levels
@@ -515,9 +522,12 @@ Sweeping $\eta_{s,i}$ moves the adjustment from quantities to prices. At
 $\eta_{s,i} = 0$ the allocation is pinned and the $N$ wages absorb the shock;
 as $\eta_{s,i} \to \infty$ the supply curves become infinitely elastic, the
 real wage returns to its technology-determined anchor and employment becomes
-the absorbing margin --- GAMMA-like prices and GAMMA's absorbing margin. The
-two ends of the family are therefore the matrix's own rigidity rows: BF
-(allocation frozen, wages free) at the rigid corner, GAMMA (real wage pinned,
+the absorbing margin --- fixed-real-wage prices and the fixed real wage
+closure's absorbing margin. The
+two ends of the family are therefore the matrix's own rigidity rows: the
+no-reallocation closure
+(allocation frozen, wages free) at the rigid corner, the fixed real wage
+closure (real wage pinned,
 allocation free) at the elastic one. Two qualifications are exact and matter
 for reading the table below. First, the elastic end is a \emph{limit}, not a
 cell: the supply slope diverges and the direct solve eventually fails
@@ -571,8 +581,8 @@ uniform $\eta_s = 2$    & $0.035629$ & $0.037171$ & $1.001914$ & $-0.013912$ \\
 rigid programme, $\eta_s = 0.5$ & $0.215061$ & $0.272033$ & $0.996621$ & $-0.026914$ \\
 rigid largest half, $\eta_s = 0.5$ & $0.109583$ & $0.123362$ & $1.000196$ & $-0.019053$ \\
 \midrule
-BF ($\eta_{s,i} = 0$) & $0.221442$ & $0.279009$ & $1.000000$ & $-0.019800$ \\
-GAMMA (fixed wage) & $0.000000$ & $0.000000$ & $1.001260$ & $-0.015333$ \\
+No reallocation ($\eta_{s,i} = 0$) & $0.221442$ & $0.279009$ & $1.000000$ & $-0.019800$ \\
+Fixed real wage & $0.000000$ & $0.000000$ & $1.001260$ & $-0.015333$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -582,7 +592,8 @@ $\eta_{s,i} = 0$ from the $\eta = 0$ solution reproduces $(p, y, w, F)$ exactly
 --- $\max|\Delta| = 0.00 \times 10^0$ in all four blocks, and below $10^{-10}$
 from a cold start (\texttt{tests/test\_sectoral\_labour.jl};
 ADR-0022) --- as Proposition~\ref{prop:nest} requires. No separate
-rigid sectoral cell is therefore reported: the corner \emph{is} the BF row of
+rigid sectoral cell is therefore reported: the corner \emph{is} the
+no-reallocation row of
 Table~\ref{tab:matrix}.
 
 \emph{The proof never uses $A = 1$.} Nothing in the four row blocks of the
@@ -612,9 +623,9 @@ regime (the sectoral-wage system):
 \toprule
 Rows & $F$ & Employment & Household round in $G$ \\
 \midrule
-ALPHA, BETA ($\eta = 1$) & free (instrument) & pinned, $L = \Lbar$ & active \\
-GAMMA, DELTA ($\eta = 1$) & $F \equiv 0$ & endogenous, $L = \alpha^{\!\top}y$ & active \\
-BF ($\eta = 0$) & free (solved) & pinned via allocation & active (wage bill) \\
+Standard CGE, elastic supply ($\eta = 1$) & free (instrument) & pinned, $L = \Lbar$ & active \\
+Fixed real wage, Leontief corner ($\eta = 1$) & $F \equiv 0$ & endogenous, $L = \alpha^{\!\top}y$ & active \\
+No reallocation ($\eta = 0$) & free (solved) & pinned via allocation & active (wage bill) \\
 \bottomrule
 \end{tabular}
 }
@@ -654,15 +665,18 @@ $\eta = 0$ row is no longer degenerate: at the sectoral-wage endpoint the
 welfare index reads $+0.096\%$ (F1) and $-1.980\%$ (F2/F3), the deflator
 moves ($1.0063$ / $1.0072$), and the external account closes in every
 column. Two caveats from the ADR-0020 audit now describe the
-\emph{superseded} v5 pin generation: there the recorded BF/ALPHA
+\emph{superseded} v5 pin generation: there the recorded
+no-reallocation / standard-CGE
 differences were carried by the pin, not by the frozen allocation
-(replacing the pin by the labour equation reproduced the ALPHA cells to
+(replacing the pin by the labour equation reproduced the standard CGE cells
+to
 $2.8\times10^{-17}$), and the $\eta = 0$ external position was not
 identified (every pin value $F = c$ an exact root that moved the booked
 position one-for-one). Option C resolves both: the account closes to
-$\le 1.04\times10^{-11}$ at BF, $F$ is a solved equilibrium object,
+$\le 1.04\times10^{-11}$ at the no-reallocation closure, $F$ is a solved
+equilibrium object,
 financing neutrality extends to $\eta = 0$ ($F_{F3} = F_{F2} - B_{gov}$ to
-$3.5\times10^{-14}$), and no BF entry need be withheld.
+$3.5\times10^{-14}$), and no entry of that row need be withheld.
 
 \paragraph{Admissibility.} All fifteen cells execute
 (v6 and, re-minted, v10). In particular the F1 column is
@@ -688,13 +702,15 @@ doors are:
       \alpha_i y_i$ depends on demand, so $w_i$ and through zero profit
       $p_i$ become demand-sensitive. Zero profit is preserved (no rents),
       the new parameters are sectoral supply elasticities of the same
-      family as $\eta_s$, and the variant repairs the BF row's
+      family as $\eta_s$, and the variant repairs the no-reallocation row's
       common-wage defect (the \texttt{labor.BF} open
       gate of \texttt{registry/closures.toml}, resolved by ADR-0020 option C;
       \texttt{cbase2/review.md} section~1). Ranked candidate 1 in
       \texttt{docs/ETAs.md}. ADR-0020 option C is
-      this door, adopted at the $\eta = 0$ endpoint: it is why the v6 BF
-      row is a distinct economy rather than a normalisation of ALPHA.
+      this door, adopted at the $\eta = 0$ endpoint: it is why the v6
+      no-reallocation
+      row is a distinct economy rather than a normalisation of the standard
+      CGE row.
       ADR-0021 (proposed) reuses the vector-wage apparatus in the
       fixed-wage row, but with an \emph{exogenous} pin --- that delivers
       design heterogeneity, not demand-sensitivity, because the pinned
@@ -705,7 +721,7 @@ doors are:
       the option C endpoint proved in Proposition~\ref{prop:nest}. It breaks the
       single-wage homogeneity on which Lemma~\ref{lem:price} rests, requires no
       income closure (no rents are created), and its scalar member is the
-      existing BETA row.
+      existing single-wage elastic-supply benchmark.
 \item \textbf{Markup door --- demand-sensitive markups.} A pricing rule
       $p_i = \mu_i(y_i)\, c_i(p,w)$, e.g.\ $\mu_i = 1 + \kappa\,(y_i/y_{i0}
       - 1)$, breaks Lemma~\ref{lem:price} directly. The real cost is not
@@ -736,7 +752,8 @@ doors are:
       absorption/term-of-trade channel that fits the open-economy framing.
       (New candidate.)
 \item \textbf{Technology door --- supply shocks.} $A \neq 1$ breaks
-      Corollary~\ref{cor:realwage} and separates BETA from ALPHA
+      Corollary~\ref{cor:realwage} and separates the elastic-supply closure
+      from the standard CGE closure
       (Remark~\ref{rem:supply}); this is the supply arm already designed in
       \texttt{docs/ETAs.md}, not a repair of the demand-only matrix.
 \end{enumerate}
@@ -751,8 +768,10 @@ $\Pi(p) = w\,\Pi(\pi)$ at every solution, so the real wage
 $w/\Pi = 1/\Pi(\pi(A))$ is invariant to whatever sets $w$; the rule merely
 re-labels the nominal scale. With the CPI numeraire or the $w = 1$ pin such
 a rule is either vacuous or over-determines the system (in the fixed gauge
-it forces $\alpha^{\!\top}y = \Lbar$, i.e.\ silently reverts GAMMA to
-ALPHA). A rule on the \emph{real} wage, $w/\Pi = \phi(L)$, is BETA's
+it forces $\alpha^{\!\top}y = \Lbar$, i.e.\ silently reverts the fixed real
+wage closure to
+the standard CGE closure). A rule on the \emph{real} wage,
+$w/\Pi = \phi(L)$, is the elastic-supply
 equation \eqref{eq:beta} rearranged and is already in the model --- where
 it is pinned by technology under demand-only shocks. The numeraire lever is
 likewise dead (DE-0011).
@@ -777,8 +796,9 @@ C1-corrected measurement, 2026-09-20). v6 and v9 are bit-identical to each
 other ($\max|\Delta| = 0$ on \texttt{gdp\_rel}, \texttt{consumption\_rel},
 employment, the deflator, $\max|p-1|$, the external transfer, the wage extremes
 and the identity residual); v10 reproduces them to solver precision (max
-$9.34\times10^{-9}$ at the stiff BF-F1 \texttt{wage\_max} diagnostic,
-$1.63\times10^{-11}$ in the worst ALPHA/BETA/GAMMA/DELTA row,
+$9.34\times10^{-9}$ at the stiff no-reallocation F1 \texttt{wage\_max}
+diagnostic,
+$1.63\times10^{-11}$ in the worst of the other four rows,
 $4.55\times10^{-15}$ at the exact-baseline cells; no printed figure is
 affected, \texttt{revision/tables/matrix\_5x3\_v10\_flows.md}, Table~2), so the
 equivalences and the table below are invariant to the extension. The sectoral
@@ -788,25 +808,32 @@ Table~\ref{tab:sectoral}.
 Table~\ref{tab:matrix} extracts the rows of the executed
 \texttt{matrix\_5x3\_v10} generation (the fifteen matrix
 cells reproduce their v6/v9 manifests to all printed decimals) (income-side real GDP and the
-household-consumption welfare index, ADR-0018; employment). The BETA rows are the sectoral
+household-consumption welfare index, ADR-0018; employment). The elastic-supply
+rows are the sectoral
 cells at $\eta_s = 0.5$ (\texttt{matrix\_5x3-v10-BETA-F*-etas05}); they are a
-distinct economy. The single-wage BETA cells, which coincide with ALPHA to
+distinct economy. The single-wage elastic-supply cells, which coincide with
+the standard CGE closure to
 all printed decimals, are kept as a benchmark (Appendix~\ref{app:variants}).
-The paired rows (GAMMA/DELTA) are identical to all printed decimals in every
+The paired rows (the fixed real wage closure and its Leontief corner) are
+identical to all printed decimals in every
 reported metric, including the full flow decomposition (saving, tax,
 investment plus exports, imports, taxes on intermediates; see
 \texttt{paper/superseded/matrix\_5x3\_v6\_flows.md}, whose matrix rows the v9 and v10
 generations reproduce to all printed decimals). The
-three BF rows are included for contrast: the $\eta = 0$ sectoral-wage
-endpoint is a distinct economy, not a normalisation of ALPHA. The GDP
-deflator reads $1.000000$ in the nine $\eta = 1$ ALPHA and
-GAMMA/DELTA cells --- the numerical face of Lemma~\ref{lem:price} --- while the three BF
+three no-reallocation rows are included for contrast: the $\eta = 0$
+sectoral-wage
+endpoint is a distinct economy, not a normalisation of the standard CGE
+closure. The GDP
+deflator reads $1.000000$ in the nine $\eta = 1$ standard CGE and
+fixed-wage cells --- the numerical face of Lemma~\ref{lem:price} --- while
+the three no-reallocation
 $\eta = 0$ cells carry a deflator of $1.006326$ (F1) and $1.007181$
 (F2/F3), the price response the sectoral wages create.
 
 \begin{table}[htbp]
 \centering
-\caption{The matrix rows (BETA = sectoral, $\eta_s=0.5$) in the \texttt{matrix\_5x3\_v10} generation
+\caption{The matrix rows (elastic supply = sectoral, $\eta_s=0.5$) in the
+\texttt{matrix\_5x3\_v10} generation
 (run ids \texttt{matrix\_5x3-v10-*}; deviations from the no-programme
 baseline).}
 \label{tab:matrix}
@@ -814,23 +841,23 @@ baseline).}
 \toprule
 Row & Financing & Real GDP & Consumption (welfare) & Employment $L$ \\
 \midrule
-ALPHA & F1 & $+0.000000$ & $+0.001432$ & $1.000000$ \\
-BETA  & F1 & $+0.001217$ & $+0.004227$ & $1.001191$ \\
-ALPHA & F2 & $+0.000000$ & $-0.018226$ & $1.000000$ \\
-BETA  & F2 & $+0.001287$ & $-0.015712$ & $1.001255$ \\
-ALPHA & F3 & $+0.000000$ & $-0.018226$ & $1.000000$ \\
-BETA  & F3 & $+0.001287$ & $-0.015712$ & $1.001255$ \\
+Standard CGE & F1 & $+0.000000$ & $+0.001432$ & $1.000000$ \\
+Elastic supply  & F1 & $+0.001217$ & $+0.004227$ & $1.001191$ \\
+Standard CGE & F2 & $+0.000000$ & $-0.018226$ & $1.000000$ \\
+Elastic supply  & F2 & $+0.001287$ & $-0.015712$ & $1.001255$ \\
+Standard CGE & F3 & $+0.000000$ & $-0.018226$ & $1.000000$ \\
+Elastic supply  & F3 & $+0.001287$ & $-0.015712$ & $1.001255$ \\
 \midrule
-GAMMA & F1 & $-0.000973$ & $-0.000806$ & $0.999027$ \\
-DELTA & F1 & $-0.000973$ & $-0.000806$ & $0.999027$ \\
-GAMMA & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
-DELTA & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
-GAMMA & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
-DELTA & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
+Fixed real wage & F1 & $-0.000973$ & $-0.000806$ & $0.999027$ \\
+Leontief corner & F1 & $-0.000973$ & $-0.000806$ & $0.999027$ \\
+Fixed real wage & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
+Leontief corner & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
+Fixed real wage & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
+Leontief corner & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
 \midrule
-BF & F1 & $-0.000110$ & $+0.000963$ & $1.000000$ \\
-BF & F2 & $-0.000162$ & $-0.019800$ & $1.000000$ \\
-BF & F3 & $-0.000162$ & $-0.019800$ & $1.000000$ \\
+No reallocation & F1 & $-0.000110$ & $+0.000963$ & $1.000000$ \\
+No reallocation & F2 & $-0.000162$ & $-0.019800$ & $1.000000$ \\
+No reallocation & F3 & $-0.000162$ & $-0.019800$ & $1.000000$ \\
 \bottomrule
 \end{tabular}
 \end{table}

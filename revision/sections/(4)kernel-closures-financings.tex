@@ -17,13 +17,23 @@
 We examine how different closures have different effects.
 For this we choose five different labor closures and three financing closures that reflect different assumptions about the economy.
 The labour closures specify how wages and employment adjust.
-\textbf{BF} fixes employment in each sector at its baseline level and lets
-sector-specific wages adjust. \textbf{ALPHA} allows labour to move between
+% NAMING (2026-10-11): the internal ids (BF/ALPHA/BETA/GAMMA/DELTA) are no
+% longer printed anywhere in the paper; the names below are the ones
+% proposed in the item-E note of section (3) and were swept through the
+% draft, tables included. The ids survive only in run ids, registry keys
+% and \label anchors, which are literal identifiers.
+\textbf{The no-reallocation closure} fixes employment in each sector at its
+baseline level and lets
+sector-specific wages adjust. \textbf{The standard CGE closure} allows
+labour to move between
 sectors at one flexible wage while keeping total employment fixed.
-\textbf{BETA} lets sectoral employment respond to each sector's real wage,
+\textbf{The elastic labour-supply closure} lets sectoral employment respond
+to each sector's real wage,
 deflated by the consumption price index, with a common supply elasticity
-but separate wages. \textbf{GAMMA} fixes the common real wage and lets
-employment adjust without a cap. \textbf{DELTA} applies GAMMA's wage rule
+but separate wages. \textbf{The fixed real wage closure} fixes the common
+real wage and lets
+employment adjust without a cap. \textbf{The Leontief closure} applies the
+fixed-wage rule
 in the Leontief limit, with fixed proportions in production and consumption;
 it is a corner rather than a separate labour-market mechanism.
 
@@ -66,8 +76,8 @@ labour share. The elasticity $\epsilon$ governs substitution between labour
 and the intermediate composite. The closures differ in the wage and
 labour-supply restrictions imposed on this demand.
 
-\paragraph{BF: immobile labour.}
-The BF row fixes employment in every sector and solves a sector-specific
+\paragraph{The no-reallocation closure: immobile labour.}
+The no-reallocation row fixes employment in every sector and solves a sector-specific
 wage to clear each labour market:
 \begin{equation}
 L_i = L_i^{\mathrm{cm}}(p,y_i,w_i) = \bar{L}_i,
@@ -76,9 +86,10 @@ L_i = L_i^{\mathrm{cm}}(p,y_i,w_i) = \bar{L}_i,
 \end{equation}
 Thus $\sum_i L_i = \Lbar$, but wages may differ across sectors.
 The allocation parameter $\eta$ selects only the endpoints $\{0,1\}$;
-its mobile endpoint $\eta = 1$ is ALPHA below, not an additional closure.
+its mobile endpoint $\eta = 1$ is the standard CGE closure below, not an
+additional closure.
 
-\paragraph{ALPHA: mobile labour at full employment.}
+\paragraph{The standard CGE closure: mobile labour at full employment.}
 Labour reallocates across sectors at one flexible wage, while total
 employment remains fixed:
 \begin{equation}
@@ -88,7 +99,7 @@ L_i = L_i^{\mathrm{cm}}(p,y_i,w),
 \label{eq:closure-alpha}
 \end{equation}
 
-\paragraph{BETA: elastic sectoral labour supply.}
+\paragraph{The elastic labour-supply closure: sectoral supply curves.}
 We use the uniform-elasticity sectoral form: each sector has its own wage
 and supply curve, with one common labour-supply elasticity $\eta_s$:
 \begin{equation}
@@ -100,15 +111,16 @@ L_i = L_i^{\mathrm{cm}}(p,y_i,w_i)
 Equal supply elasticities do not impose equal wages: $N$ separate labour
 markets determine $w_i$. Here $\eta_s$ is a labour-supply elasticity, not
 the allocation parameter $\eta$; setting $\eta_s = 0$ gives exactly the
-immobile BF row. The calibrated real-wage anchors are $w_{i0}/\Pi_0 = 1$.
+no-reallocation row. The calibrated real-wage anchors are $w_{i0}/\Pi_0 = 1$.
 The deflator remains the common consumption price index, not the sector's
 own goods price $p_i$. The supply curves are reduced forms without a
 labour--leisure income effect. The headline panels use $\eta_s = 0.5$;
 the elasticity ladder and heterogeneous sectoral variants are reported in
-Appendix~\ref{app:variants}. The single-wage BETA is retained there only
-as a distinct benchmark; its zero-elasticity limit is ALPHA, not BF.
+Appendix~\ref{app:variants}. The single-wage form of this closure is
+retained there only as a distinct benchmark; its zero-elasticity limit is
+the standard CGE closure, not the no-reallocation one.
 
-\paragraph{GAMMA: fixed real wage.}
+\paragraph{The fixed real wage closure.}
 The real wage is pegged at its baseline value, while employment is
 endogenous and uncapped:
 \begin{equation}
@@ -117,13 +129,15 @@ endogenous and uncapped:
 \qquad \eta = 1.
 \label{eq:closure-gamma}
 \end{equation}
-Unlike ALPHA, this closure does not impose $\sum_i L_i = \Lbar$.
+Unlike the standard CGE closure, this closure does not impose
+$\sum_i L_i = \Lbar$.
 It is a two-sided wage peg, not a one-sided wage floor with unemployment
 rationing. On the demand-only baseline branch, $\Pi(p)=1$ and the
 implemented wage pin is $w=1$.
 
-\paragraph{DELTA: the Leontief corner.}
-DELTA retains GAMMA's wage and employment rule while taking the
+\paragraph{The Leontief closure: the fixed-coefficient corner.}
+The Leontief closure keeps the wage and employment rule of the fixed real
+wage closure while taking the
 substitution elasticities to their Leontief limits:
 \begin{equation}
 \frac{w}{\Pi(p)} = \bar{w} = 1,
@@ -132,8 +146,9 @@ substitution elasticities to their Leontief limits:
 \label{eq:closure-delta}
 \end{equation}
 Here $\theta$ governs substitution between intermediate inputs and
-$\sigma$ substitution in consumption. DELTA is therefore a corner of
-GAMMA with fixed-coefficient technology, rather than an independent
+$\sigma$ substitution in consumption. The Leontief closure is therefore a
+corner of the fixed real wage closure with fixed-coefficient technology,
+rather than an independent
 labour-market mechanism.
 \endgroup
 
@@ -221,8 +236,10 @@ B_{\mathrm{gov}} = \sum_{i=1}^N p_i g_i,
 \end{equation}
 The booking $B_{\mathrm{gov}}$ is distinct from the net external transfer
 $F$ entering household resources after tax. The latter is solved
-endogenously in BF, ALPHA and both BETA forms, but is fixed at zero in
-GAMMA and DELTA. With no unfinanced demand injection, all closures clear
+endogenously in the no-reallocation, the standard CGE and both
+elastic-supply forms, but is fixed at zero in the two fixed-wage closures,
+the fixed real wage closure and its Leontief corner. With no unfinanced
+demand injection, all closures clear
 all $N$ goods markets and satisfy the external-account identity
 \begin{equation}
 S + T_{\mathrm{int}} + M - (I+X) = F+B_{\mathrm{gov}},
@@ -245,8 +262,9 @@ does not model interest payments, repayment or exchange-rate adjustment.
 % reference to Sec. 6 and App. A.
 
 \subsection{Presentation rule}\label{subsec:presentation-rule}
-% TODO: ONE paragraph. Columns F1, F2, F3; shade F2 = F3 in the BF and
-% ALPHA/BETA rows only; state the neutrality condition (F endogenous); flag
+% TODO: ONE paragraph. Columns F1, F2, F3; shade F2 = F3 in the
+% no-reallocation and standard CGE / elastic-supply rows only; state the
+% neutrality condition (F endogenous); flag
 % the fixed-wage row as the financing-sensitive case; restate the collapse as
 % fifteen cells -> seven economies (NOT three; three is a count of labour
 % classes). Reference paper/framing_gamma.tex. Keep this as one paragraph ---

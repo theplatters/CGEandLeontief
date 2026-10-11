@@ -26,30 +26,37 @@ with the ADR-0020 option C endpoint; 33/33 cells, run ids
 \texttt{matrix\_5x3-v10-*}) measures two coincidences:
 
 \begin{itemize}
-\item \textbf{ALPHA $\equiv$ scalar BETA (a benchmark, not the headline
-      BETA).} The \emph{single-wage} elastic-supply cell
-      ($\eta_s = 0.5$; run ids \texttt{matrix\_5x3-v10-BETA-F*}) reports every metric of the full-employment row
+\item \textbf{The standard CGE closure $\equiv$ the single-wage elastic
+      supply closure (a benchmark, not the headline row).} The
+      \emph{single-wage} elastic-supply cell
+      ($\eta_s = 0.5$; run ids \texttt{matrix\_5x3-v10-BETA-F*}) reports
+      every metric of the full-employment row
       identically: real GDP, the welfare index, employment, the external
       account --- to all eight printed decimals, with the identity wedge at
       $\sim 10^{-16}$. A direct comparison of stored solutions measured
       $\max|\Delta y| = 6.2\times 10^{-17}$ (session of 2026-09-17).
-      The v6 generation reproduces the v5 ALPHA/BETA
-      cells to $6.7\times 10^{-16}$, so the coincidence survives the endpoint
+      The v6 generation reproduces the v5 standard-CGE and
+      single-wage-supply cells to $6.7\times 10^{-16}$, so the coincidence
+      survives the endpoint
       change.
-\item \textbf{Headline (sectoral) BETA $\not\equiv$ ALPHA.} The headline
-      BETA row is the sectoral form of Section~\ref{sec:sectoral} at
+\item \textbf{The elastic labour-supply closure (sectoral)
+      $\not\equiv$ the standard CGE closure.} The headline
+      elastic-supply row is the sectoral form of Section~\ref{sec:sectoral}
+      at
       $\eta_s = 0.5$ (run ids \texttt{matrix\_5x3-v10-BETA-F*-etas05}). With
       $N$ sectoral wages the price block is not homogeneous, prices move
       ($\max|p-1| = 0.1057$ in F2/F3), and the row is a distinct economy;
-      only its rigid corner $\eta_{s,i}=0$ coincides with another row (BF).
-\item \textbf{GAMMA $\equiv$ DELTA.} The Leontief-corner row
+      only its rigid corner $\eta_{s,i}=0$ coincides with another row (the
+      no-reallocation closure).
+\item \textbf{The fixed real wage closure $\equiv$ the Leontief closure.}
+      The Leontief-corner row
       ($( \theta_\delta, \epsilon_\delta, \sigma_\delta ) = (10^{-4},
       10^{-4}, 10^{-4})$) reports every metric of the fixed-wage row at the
       baseline CES elasticities $(\theta,\epsilon,\sigma) = (0.5,0.5,0.9)$
       identically, in all three financing columns; the flow-table wedges
       agree at the residual level ($\sim 10^{-12}$). The analytic
-      \texttt{leontief\_multiplier} test reproduces the nonlinear DELTA
-      solution with relative error $0.0$ (recorded in
+      \texttt{leontief\_multiplier} test reproduces the nonlinear
+      Leontief-corner solution with relative error $0.0$ (recorded in
       \texttt{docs/DOCS\_ASSESSMENT.md} section 4.2).
 \end{itemize}
 
@@ -83,7 +90,7 @@ and the labour bar $\Lbar = \sum_i \bar{L}_i = 1$ (baseline income units,
 GDP $=1$). Elasticities: intermediate substitution $\theta$,
 labour--intermediate substitution $\epsilon$, consumption substitution
 $\sigma$, allocation $\eta \in \{0,1\}$ (ADR-0010), supply elasticity
-$\eta_s \geq 0$ (BETA only).
+$\eta_s \geq 0$ (elastic-supply closure only).
 
 \paragraph{Price block.} The CES intermediate price index and unit cost are
 \begin{align}
@@ -154,24 +161,25 @@ $\Pi(p) = 1$, where
 \end{equation}
 and close with the labour equation
 \begin{align}
-\text{ALPHA:}\quad & \textstyle\sum_i L_i(p,y,w) = \Lbar,
+\text{Standard CGE:}\quad & \textstyle\sum_i L_i(p,y,w) = \Lbar,
 \label{eq:alpha}\\
-\text{BETA:}\quad & \textstyle\sum_i L_i(p,y,w)
+\text{Elastic supply:}\quad & \textstyle\sum_i L_i(p,y,w)
    = \Lbar \Big[ \frac{w/\Pi(p)}{w_0/\Pi_0} \Big]^{\eta_s},
 \qquad w_0/\Pi_0 = 1.
 \label{eq:beta}
 \end{align}
 The fixed-wage systems solve for $X = (p, y) \in \mathbb{R}^{2N}$ with the
 wage pinned $w \equiv 1$ and $F \equiv 0$; employment is a post-solve
-outcome. GAMMA runs them at the baseline elasticities, DELTA at the Leontief
+outcome. The fixed real wage closure runs them at the baseline elasticities,
+the Leontief closure at the Leontief
 corner $(\theta_\delta,\epsilon_\delta,\sigma_\delta) = (10^{-4},10^{-4},
-10^{-4})$. BF is the sectoral-wage system at
+10^{-4})$. The no-reallocation closure is the sectoral-wage system at
 $\eta = 0$ (ADR-0020 option C, superseding the ADR-0019 $F = 0$ pin): the
 allocation stays frozen at the baseline, $L_i = \bar{L}_i$, and $N$ sectoral
 wages $w_i$ are solved from each sector's own first-order condition
 $L^{cm}_i(p, y_i, w_i) = \bar{L}_i$ jointly with zero profit, with unknowns
 $[\,p;\; y;\; w(1{:}N);\; F\,]$ and the external transfer $F$ free. All rows
-in the matrix use $\eta = 1$ except BF.
+in the matrix use $\eta = 1$ except the no-reallocation closure.
 
 \subsection{The demand-only reduction}\label{sec:reduction}
 
@@ -262,7 +270,8 @@ No elasticity parameter enters $G$ or $b$. At
 $\eta = 0$ the aggregate is still pinned, $\sum_i L_i = \Lbar$, but the
 unit-price reduction below describes only the \emph{retired} common-wage
 pin: there $E$ did not depend on $y$ and the household round dropped out,
-$G_{BF} = \Omega^{\!\top}\mathrm{diag}(a)$. Under the ADR-0020 sectoral-wage
+$G_{\mathrm{nr}} = \Omega^{\!\top}\mathrm{diag}(a)$ (the no-reallocation
+row). Under the ADR-0020 sectoral-wage
 closure the wages $w_i$ move with the demand composition, the prices leave
 the unit point, and this affine form does not describe the $\eta = 0$ row.
 \end{lemma}

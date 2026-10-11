@@ -108,26 +108,31 @@ labour closures $\times$ three financing closures).
 
 \paragraph{The five labour closures.}
 \begin{enumerate}
-\item \textbf{ALPHA} (full-employment mobile CGE benchmark):
+\item \textbf{The standard CGE closure} (full-employment mobile CGE benchmark):
   $\sum_i L_i = \bar L$, single flexible wage $w$, cost-minimising
   intersectoral allocation ($\eta = 1$).
-\item \textbf{BF} (immobile-labour endpoint selector): $\eta = 0$ freezes
+\item \textbf{The no-reallocation closure} (immobile labour, endpoint
+  selector): $\eta = 0$ freezes
   sectoral labour quantities to baseline shares $L_i = \bar L_i$; with the
   sectoral-wage endpoint (ADR-0020) the wage vector is free and the frozen
   allocation carries a price channel.
-\item \textbf{BETA} (elastic labour supply on the real wage):
+\item \textbf{The elastic labour-supply closure} (elastic supply on the real
+  wage):
   $\sum_i L_i = \bar L\,[(w/P)/(w_0/P_0)]^{\eta_s}$, deflated by the CPI.
-\item \textbf{GAMMA} (fixed real wage, uncapped extensive margin):
+\item \textbf{The fixed real wage closure} (uncapped extensive margin):
   $w/P = \bar w = 1$, employment $L = \sum_i L_i$ completely
   demand-determined.
-\item \textbf{DELTA} (Leontief IO corner): GAMMA ($w/P = 1$) combined with
+\item \textbf{The Leontief closure} (Leontief IO corner): the fixed real
+  wage rule ($w/P = 1$) combined with
   the zero-substitution limit of the CES production core
   ($\theta, \epsilon, \sigma \to 0^+$), reproducing the fixed-price Leontief
   multiplier.
 \end{enumerate}
-(Complementarity extension \textbf{ZETA}: $0 \le \bar L - L \perp w/P -
-\bar\omega \ge 0$, regime-switching between GAMMA slack and ALPHA full
-employment; recorded as an idea, not a closure.)
+(A further \textbf{complementarity closure} with an unemployment corner: $0 \le
+\bar L - L \perp w/P -
+\bar\omega \ge 0$, regime-switching between the slack of the fixed real
+wage closure and the full employment of the standard CGE closure; recorded
+as an idea, not a closure.)
 
 \paragraph{The three financing closures.}
 \begin{enumerate}
@@ -150,11 +155,11 @@ employment; recorded as an idea, not a closure.)
 \toprule
 Labour row & F1 (demand tilt) & F2 (tax-financed) & F3 (debt / external) \\
 \midrule
-ALPHA (full $L$)   & sectoral reallocation & full crowding out & crowding out ($w$ bids up) \\
-BF (immobile)      & bottlenecks / wedges  & contractionary wedge & bottleneck limits \\
-BETA (elastic)     & moderate shift        & mild expansion & expansion via $w/P$ \\
-GAMMA (fixed $w$)  & demand-driven shift   & balanced-budget multiplier & Keynesian multiplier \\
-DELTA (IO/Leontief)& IO composition shift  & Leontief balanced multiplier & pure IO multiplier \\
+Standard CGE (full $L$)   & sectoral reallocation & full crowding out & crowding out ($w$ bids up) \\
+No reallocation (immobile)& bottlenecks / wedges  & contractionary wedge & bottleneck limits \\
+Elastic supply (sectoral) & moderate shift        & mild expansion & expansion via $w/P$ \\
+Fixed real wage (fixed $w$)& demand-driven shift   & balanced-budget multiplier & Keynesian multiplier \\
+Leontief corner (fixed $w$)& IO composition shift  & Leontief balanced multiplier & pure IO multiplier \\
 \bottomrule
 \end{tabular}
 \caption{Where the standard CGE and the FIDELIO model sit in the matrix.}
@@ -162,15 +167,18 @@ DELTA (IO/Leontief)& IO composition shift  & Leontief balanced multiplier & pure
 \end{table}
 
 \begin{itemize}
-\item \textbf{Where standard CGE sits:} ALPHA-F1 or ALPHA-F2 --- fixed
+\item \textbf{Where standard CGE sits:} under F1 or F2 --- fixed
   aggregate labour $\bar L$ and flexible wages force crowding out; real output
   effects are close to zero.
 \item \textbf{Where FIDELIO sits:} in its static / basic IO mode (modules
-  1--2) at DELTA-F3 (a pure Leontief input--output multiplier driven by
-  external funding); in its short-run dynamic mode at GAMMA-F3 (fixed real
+  1--2) under the Leontief closure with F3 (a pure Leontief input--output
+  multiplier driven by
+  external funding); in its short-run dynamic mode at the fixed real wage
+  closure with F3 (fixed real
   wage, unconstrained extensive margin, autonomous injection), activating the
   full Keynesian respending multiplier; and, in the medium-to-long run, moving
-  dynamically from GAMMA-F3 toward BETA-F3 as the wage curve drives real wage
+  dynamically from the fixed real wage closure toward the elastic
+  labour-supply closure (both under F3) as the wage curve drives real wage
   growth.
 \end{itemize}
 
@@ -182,20 +190,25 @@ they define the mathematical structure of the closure.
 \paragraph{A. Wage rigidity (extensive margin versus wage inflation).}
 In accordance with ADR-0014 and DE-0004, wage rigidity here is defined on the
 \emph{real wage} ($w/P = \bar w$), deflated by the CPI numeraire ($P = 1$).
-In GAMMA, fixing $w/P = 1$ removes the wage as an equilibrating price: the
+Under the fixed real wage closure, fixing $w/P = 1$ removes the wage as an
+equilibrating price: the
 labour-market equation changes from clearing $L = \bar L$ to an unconstrained
 demand equation $L = \sum_i L_i(y_i, \mathbf{p})$, and the extensive margin of
-employment absorbs the demand shock. Asymmetric rigidity (ZETA) follows the
+employment absorbs the demand shock. Asymmetric rigidity (the complementarity
+closure above) follows the
 spirit of Baqaee--Farhi (2022): downward wage rigidity creates a regime
-switch --- demand deficits cause unemployment (GAMMA regime), while demand
-surges that exhaust slack trigger wage inflation (ALPHA regime).
+switch --- demand deficits cause unemployment (the fixed-wage regime), while
+demand
+surges that exhaust slack trigger wage inflation (the full-employment regime).
 
 \paragraph{B. Price rigidity and fixed markups.} In standard New-Keynesian
 models, Calvo or Rotemberg pricing prevents prices from adjusting
-instantaneously to demand shocks. Here, under GAMMA, wages are pegged
+instantaneously to demand shocks. Here, under the fixed real wage closure,
+wages are pegged
 ($w = 1$) and the shock is demand-driven, so marginal costs remain roughly
 constant and product prices exhibit high inertia ($\mathbf{p} \approx 1$). In
-DELTA, the zero-substitution limit ($\theta, \epsilon, \sigma \to 0^+$)
+the Leontief closure, the zero-substitution limit
+($\theta, \epsilon, \sigma \to 0^+$)
 prevents firms from adjusting technical factor proportions, so cost
 pass-through becomes purely linear and additive, reproducing the classic
 fixed-price Leontief/Robinson (2006) multiplier.
@@ -216,13 +229,16 @@ directly, generating an endogenous Keynesian multiplier.
   the elasticity of factor substitution or intersectoral mobility ($\eta$).
   As shown in \texttt{definitive\_guide.md} and our runs, intersectoral
   mobility produces second-order reallocation effects, whereas the wage regime
-  (flexible ALPHA versus sticky GAMMA) is the first-order determinant of the
+  (the flexible wage of the standard CGE closure versus the sticky wage of the
+  fixed real wage closure) is the first-order determinant of the
   aggregate multiplier.
 \item \textbf{Reconciling applied discrepancies.} When policy studies using
   macroeconometric models (FIDELIO, E3ME) report output multipliers around
   $1.5$ for green investments while standard CGE models report zero or
   negative multipliers, the divergence is not an empirical dispute over green
   technology. It is a direct mathematical consequence of evaluating the shock
-  at GAMMA/DELTA-F3 (slack resources, wage stickiness, debt financing) versus
-  ALPHA-F2 (full employment, market clearing, domestic tax financing).
+  at the fixed real wage closure and its Leontief corner under F3 (slack
+  resources, wage stickiness, debt financing) versus
+  the standard CGE closure under F2 (full employment, market clearing,
+  domestic tax financing).
 \end{enumerate}

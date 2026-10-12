@@ -908,7 +908,7 @@ version = "0.3.29+0"
 deps = ["CSV", "DataFrames", "LinearAlgebra", "NonlinearSolve", "Printf", "ProgressMeter", "Statistics", "ThreadsX"]
 git-tree-sha1 = "a2fbafe360d28cb6c3f7366fc78e4852e565da9b"
 repo-rev = "v0.1.0"
-repo-url = "/home/franzs/Schreibtisch/Arbeit/opencge"
+repo-url = "https://github.com/theplatters/OpenCGE"
 uuid = "ce182077-ed3b-4f5d-9409-09ef275840d9"
 version = "0.1.0"
 

@@ -16,7 +16,7 @@ documentation audit, closure catalogue and the executed results are in
 
 | Path | What it is |
 | --- | --- |
-| `OpenCGE` (external, `../opencge`) | The model kernel — model, closures, diagnostics. Package/module `OpenCGE`, one kernel only (ADR-0001, summarized in the kernel's `DECISIONS.md`); pinned in `Manifest.toml` at rev `v0.1.0`. Kernel implementation changes happen there and land here only via a Manifest pin bump (ADR-0028). |
+| `OpenCGE` (external, <https://github.com/theplatters/OpenCGE>; local `../opencge`) | The model kernel — model, closures, diagnostics. Package/module `OpenCGE`, one kernel only (ADR-0001, summarized in the kernel's `DECISIONS.md`); pinned in `Manifest.toml` at rev `v0.1.0`. Kernel implementation changes happen there and land here only via a Manifest pin bump (ADR-0028). |
 | `tests/` | The paper/reproduction test suite (entry `tests/runtests.jl`): real-data and tooling contracts. The kernel's own tests live in `OpenCGE` (`OpenCGE@tests/…`). |
 | `baseline/` | The pre-split reproduction baseline: everything the paper pipeline produced before the kernel moved out, reproducible within 1e-8 by `scripts/reproduce.jl --check`. |
 | `Manifest.toml` | The committed pin of the `OpenCGE` dependency (`repo-rev = "v0.1.0"`, `git-tree-sha1`) — the only tracked "generated" artifact, and a generation-level object (ADR-0028). |

@@ -42,7 +42,7 @@ planned | running | executed | provisional | failed | superseded | cancelled
 ## Schema — `closures.toml`
 
 ```toml
-schema_version = 1
+schema_version = 2
 generated_at  = "YYYY-MM-DD"
 generated_by  = "..."
 
@@ -53,15 +53,41 @@ formulation    = "..."     # plain text, Greek letters allowed
 interpretation = "..."
 status         = "implemented"
 symbols        = ["MobileLaborCES"]        # Julia types/functions, grep-able
-files          = ["src/core/equilibrium.jl"]   # repo-relative paths
+files          = ["OpenCGE@src/core/equilibrium.jl"]   # see "Cross-repo references"
 references     = ["docs/DOCS_ASSESSMENT.md"]  # where the economics is argued
-tests          = ["tests/test_mobile_labor.jl"]
+tests          = ["OpenCGE@tests/test_mobile_labor.jl", "tests/test_f1_tilt.jl"]
 evidence       = ["cbase2/process_comments.md"]  # runs/notebooks/scripts
-dead_ends      = ["DE-0001"]   # optional
-adrs           = ["ADR-0002"]  # optional
+dead_ends      = ["OpenCGE@DE-0001"]   # optional
+adrs           = ["ADR-0002"]          # optional
 open_gates     = ["..."]       # what blocks tested/validated
 notes          = ""
 ```
+
+## Cross-repo references (schema v2)
+
+Since the kernel split (2026-10-12) the model kernel is the separate `OpenCGE`
+package (pinned in the committed root `Manifest.toml`) and this repository is
+the paper repo. Registry entries therefore use a repo-qualified convention for
+everything that lives in the kernel:
+
+- `Name@rest` in `files`, `tests`, `references` and `evidence` — `rest` is a
+  path relative to the root of the package `Name`; `OpenCGE@src/core/equilibrium.jl`
+  resolves against the pinned OpenCGE checkout
+  (`Base.find_package("OpenCGE")` → `<root>/src/OpenCGE.jl`, root =
+  `dirname(dirname(...))`), and the existence checks and the symbol grep of
+  `scripts/status.jl` run against that pinned kernel. Unqualified paths
+  resolve in this repo as before.
+- `Name@id` in `dead_ends` and `adrs` — cross-repo document references
+  (`OpenCGE@DE-…`, `OpenCGE@ADR-…` live in the kernel's DECISIONS.md). They
+  skip the local `docs/dead-ends/` / `docs/decisions/` existence check and
+  render on the status board as cross-repo references. Unqualified ids stay
+  local to `docs/`.
+
+Concretely: kernel formulation paths and kernel test files, and the ADRs/DE
+records that moved to the kernel's DECISIONS.md (ADR-0001/0005/0010/0011/
+0014/0015/0016/0017/0019/0020/0021/0022 and the formulation-level DE records),
+are qualified `OpenCGE@…`; paper-side test paths, `evidence` (`runs/…`) and
+`references` (`docs/…`) stay unqualified.
 
 ## Schema — `scenarios.csv`
 
@@ -115,12 +141,15 @@ reported in the board's warnings section.
 ## Repository gate and WIP limit (ADR-0007)
 
 ```bash
-julia --project=. scripts/check_repo.jl         # ten checks, exit 1 on violations
+julia --project=. scripts/check_repo.jl         # eight checks, exit 1 on violations
 julia --project=. scripts/check_repo.jl --quiet # violations only
 ```
 
 Run the gate before and after every batch. It covers the board/warnings check,
-closure bidirectionality, unregistered closure subtypes, zombie kernel files,
+closure bidirectionality against the pinned OpenCGE kernel,
 manifest/index/scenario consistency, failed/provisional visibility, tracked
-artifacts, living kernel copies, preregistration integrity, and the WIP limit:
-at most one `scenarios.csv` row may be `running` at a time.
+artifacts (the root `Manifest.toml` is a required committed artifact and
+exempt), living kernel copies, preregistration integrity, and the WIP limit:
+at most one `scenarios.csv` row may be `running` at a time. The pre-split
+closure-subtype and kernel-reachability checks moved with the kernel sources
+and are owned by the OpenCGE kernel's CI.

@@ -174,6 +174,16 @@ end
     for k in ("git_commit", "git_dirty", "julia_version", "manifest_sha256", "data_sha256")
         @test haskey(prov, k)
     end
+    # Post kernel split: every manifest pins the OpenCGE kernel (package
+    # version, repo-rev and git-tree-sha1 read from the committed Manifest's
+    # OpenCGE entry).
+    pin = prov["opencge"]
+    for k in ("version", "repo_url", "repo_rev", "git_tree_sha1")
+        @test haskey(pin, k)
+    end
+    @test pin["version"] == "0.1.0"
+    @test pin["repo_rev"] == "v0.1.0"
+    @test pin["git_tree_sha1"] != "absent" && length(pin["git_tree_sha1"]) == 40
     scen = man["scenario"]
     @test scen["labour"] == "BF"
     @test scen["financing"] == "F1"

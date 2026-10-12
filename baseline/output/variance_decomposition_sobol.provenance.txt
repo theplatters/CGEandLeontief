@@ -1,0 +1,53 @@
+# variance_decomposition_sobol.csv — provenance record (WP0, 2026-10-12)
+#
+# Artifact:    baseline/output/variance_decomposition_sobol.csv
+#              (byte-copy of output/variance_decomposition_sobol.csv)
+# Captured:    2026-10-12, HEAD 6c975c71ed57c016640b607b5a92f834cde4daed
+#
+# GENERATOR:   rerun_results.jl (repository root — NOT under experiments/probes/).
+#              It writes `output/variance_decomposition_sobol.csv` via
+#              `variance_decomposition(data, shocks; eta_values=[0,0.5,1,2],
+#              epsilon_values=[0.5,2], theta_values=[0.5,0.99],
+#              sigma_values=[0.5,0.99], output=:real_gdp)` +
+#              `summary_table(vd; save_csv=...)` (kernel:
+#              src/core/diagnostics.jl, the old src/variance_decomposition.jl).
+#
+# HOW IT WAS PRODUCED (historical): run 2026-09-03 with
+#   cd <project-root> && julia --project=. rerun_results.jl
+# under the then-current kernel ("NEW S4.1 DATA" pipeline). Evidence:
+# rerun_results.log (gitignored, dated 2026-09-03 12:42, records
+# "Sobol S_f: eta => 0.1571, epsilon => 0.165, theta => 0.3951,
+# sigma => 0.2734; n_failed=0 / 32 grid points"), the file mtime of
+# output/variance_decomposition_sobol.csv (2026-09-03 12:42), and the
+# narrative in docs/archive/WORKPLAN3.md / docs/archive/definitive_guide.md
+# (theta dominant, S_f = 0.395; eta material, S_f = 0.157 — matching the
+# captured CSV). The file is a local, gitignored output that was never
+# committed; rerun_results.jl's own header documents the regeneration
+# command and states that the outputs are NOT committed.
+#
+# WHY IT IS COPIED AS-IS INSTEAD OF REGENERATED: a scratch regeneration was
+# attempted 2026-10-12 (in /tmp/opencode/rerun_scratch with symlinked src/
+# and data/, so the repo was untouched) and FAILS on the current kernel:
+#
+#   ERROR: LoadError: DomainError with 0.5:
+#   eta must be 0 (immobile) or 1 (fully mobile); intermediate reallocation
+#   was retired (ADR-0010)
+#     [1] _checked_eta (src/core/equilibrium.jl:326)
+#     ...
+#     [10] top-level scope (rerun_results.jl:45)
+#
+# rerun_results.jl solves its reference at eta = 0.5, which the current
+# kernel (ADR-0010/ADR-0019 endpoints-only eta) rejects; its eta_sweep and
+# warm-start vectors (2N+1) predate the canonical 2N+2 [p; y; w; F] system.
+# The generator is therefore a legacy script of the pre-ADR-0010 kernel and
+# the 2026-09-03 CSV is a PINNED legacy artifact, cited by docs/archive only
+# (NOT by paper/ or revision/, which do not reference it). Regenerating it
+# under the current kernel is impossible without editing rerun_results.jl
+# (outside the sanctioned WP0 write set) and would silently change the
+# pinned numbers. Post-split comparison of this artifact is therefore a
+# byte comparison of the copy, not a re-solve.
+#
+# Columns: Factor,S_f,ST_f,Interaction (Sobol first/total-order indices and
+# interaction share on the 2^4 = 32-point full factorial over (eta, epsilon,
+# theta, sigma), output = real_gdp, supply +30% to sector 35), plus Sum,
+# 1-Sum_S_f, SS_total, n_failed (0), n_grid (32) footer rows.

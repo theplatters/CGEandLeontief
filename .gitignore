@@ -30,3 +30,7 @@ revision/main.pdf
 !/runs/*/
 /runs/*/*
 !/runs/*/manifest.toml
+
+# WP0: the pre-split reproduction baseline is tracked evidence — exempt it
+# from the *.log / output/ rules above (see baseline/README.md)
+!baseline/**

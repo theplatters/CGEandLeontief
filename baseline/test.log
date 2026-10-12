@@ -1,0 +1,520 @@
+     Testing BeyondHulten
+      Status `/tmp/jl_UHjLcO/Project.toml`
+  [9c57f84b] BeyondHulten v0.1.0 `~/Schreibtisch/Arbeit/BeyondHulten`
+⌃ [336ed68f] CSV v1.0.0
+  [a93c6f00] DataFrames v1.8.2
+  [7073ff75] IJulia v1.34.4
+  [8913a72c] NonlinearSolve v4.32.0
+  [92933f4c] ProgressMeter v1.11.0
+  [10745b16] Statistics v1.11.5
+  [ac1d9e8a] ThreadsX v0.1.12
+  [ade2ca70] Dates v1.11.0
+  [8ba89e20] Distributed v1.11.0
+  [37e2e46d] LinearAlgebra v1.12.0
+  [de0858da] Printf v1.11.0
+  [9a3f8284] Random v1.11.0
+  [ea8e919c] SHA v0.7.0
+  [1a1011a3] SharedArrays v1.11.0
+  [fa267f1f] TOML v1.0.3
+  [8dfed614] Test v1.11.0
+      Status `/tmp/jl_UHjLcO/Manifest.toml`
+  [47edcb42] ADTypes v1.24.0
+  [14f7f29c] AMD v0.5.4
+  [7d9f7c33] Accessors v0.1.45
+⌃ [79e6a3ab] Adapt v4.7.1
+  [dce04be8] ArgCheck v2.5.0
+  [4fba245c] ArrayInterface v7.30.2
+  [198e06fe] BangBang v0.4.9
+  [9718e550] Baselet v0.1.1
+  [9c57f84b] BeyondHulten v0.1.0 `~/Schreibtisch/Arbeit/BeyondHulten`
+⌃ [70df07ce] BracketingNonlinearSolve v1.12.7
+⌃ [336ed68f] CSV v1.0.0
+  [944b1d66] CodecZlib v0.7.9
+  [38540f10] CommonSolve v0.2.14
+  [bbf7d656] CommonSubexpressions v0.3.1
+  [34da2185] Compat v4.18.1
+  [a33af91c] CompositionsBase v0.1.2
+  [2569d6c7] ConcreteStructs v0.2.8
+  [8f4d0f93] Conda v1.10.3
+  [187b0558] ConstructionBase v1.6.0
+  [a8cc5b0e] Crayons v4.2.0
+  [9a962f9c] DataAPI v1.16.0
+  [a93c6f00] DataFrames v1.8.2
+  [48204bd6] DataStrings v1.1.0
+  [864edb3b] DataStructures v0.19.6
+  [e2d170a0] DataValueInterfaces v1.0.0
+  [244e2a9f] DefineSingletons v0.1.2
+  [8bb1440f] DelimitedFiles v1.9.1
+  [163ba53b] DiffResults v1.1.0
+  [b552c78f] DiffRules v1.16.0
+  [a0c0ee7d] DifferentiationInterface v0.7.21
+  [ffbed154] DocStringExtensions v0.9.5
+⌃ [41ac09f5] Durations v1.2.0
+  [4e289a0a] EnumX v1.0.7
+⌃ [f151be2c] EnzymeCore v0.8.21
+  [e2ba6199] ExprTools v0.1.11
+  [9aa1b823] FastClosures v0.3.2
+⌃ [64ca27bc] FindFirstFunctions v3.3.0
+  [6a86dc24] FiniteDiff v2.33.0
+  [f6369f11] ForwardDiff v1.4.6
+  [069b7b12] FunctionWrappers v1.1.3
+  [77dc65aa] FunctionWrappersWrappers v1.13.0
+⌃ [46192b85] GPUArraysCore v0.2.0
+  [7073ff75] IJulia v1.34.4
+  [22cec73e] InitialValues v0.3.1
+⌅ [842dd82b] InlineStrings v1.4.6
+  [3587e190] InverseFunctions v0.1.17
+  [41ab1584] InvertedIndices v1.3.1
+  [92d709cd] IrrationalConstants v0.2.6
+  [82899510] IteratorInterfaceExtensions v1.0.0
+  [692b3bcd] JLLWrappers v1.8.0
+⌃ [682c06a0] JSON v1.8.1
+⌃ [ba0b0d4f] Krylov v0.10.10
+  [2faa5264] LHLFactorization v2.2.2
+  [b964fa9f] LaTeXStrings v1.4.1
+⌃ [87fe0de2] LineSearch v0.1.18
+⌃ [7ed4a6bd] LinearSolve v5.17.6
+⌃ [2ab3a3ac] LogExpFunctions v1.0.1
+  [e6f89c97] LoggingExtras v1.2.0
+  [1914dd2f] MacroTools v0.5.16
+  [bb5d69b7] MaybeInplace v0.1.8
+  [128add7d] MicroCollections v0.2.0
+  [e1d29d7a] Missings v1.2.0
+  [77ba4419] NaNMath v1.1.4
+  [8913a72c] NonlinearSolve v4.32.0
+⌃ [be0214bd] NonlinearSolveBase v2.52.1
+⌃ [5959db7a] NonlinearSolveFirstOrder v2.9.0
+  [9a2c21bd] NonlinearSolveQuasiNewton v1.15.3
+  [26075421] NonlinearSolveSpectralMethods v1.8.3
+⌃ [bac558e1] OrderedCollections v2.0.1
+  [69de0a69] Parsers v3.0.0
+  [2dfb63ee] PooledArrays v1.4.3
+  [d236fae5] PreallocationTools v1.7.1
+  [aea7be01] PrecompileTools v1.3.4
+  [21216c6a] Preferences v1.6.0
+⌃ [08abe8d2] PrettyTables v3.4.8
+  [92933f4c] ProgressMeter v1.11.0
+⌃ [0c0d3e7f] PureKLU v1.5.0
+⌃ [3cdcf5f2] RecipesBase v1.3.4
+⌃ [731186ca] RecursiveArrayTools v4.5.1
+  [189a3867] Reexport v1.2.2
+  [42d2dcc6] Referenceables v0.1.3
+  [9fe22ead] RespecializeParams v1.3.0
+⌃ [7e49a35a] RuntimeGeneratedFunctions v0.5.26
+⌃ [0bca4576] SciMLBase v3.55.0
+  [19f34311] SciMLJacobianOperators v0.1.19
+  [a6db7da4] SciMLLogging v2.1.0
+⌃ [c0aeaf25] SciMLOperators v1.30.1
+  [431bcebd] SciMLPublic v1.3.0
+  [53ae85a6] SciMLStructures v1.10.5
+  [91c51154] SentinelArrays v1.4.10
+  [efcf1570] Setfield v1.1.2
+⌃ [727e6d20] SimpleNonlinearSolve v2.14.5
+  [ed01d8cd] Sobol v1.5.0
+  [a2af1166] SortingAlgorithms v1.2.3
+  [a57abbd0] SparseColumnPivotedQR v2.1.8
+  [276daf66] SpecialFunctions v2.9.0
+  [171d559e] SplittablesBase v0.1.15
+  [1e83bf80] StaticArraysCore v1.4.4
+  [10745b16] Statistics v1.11.5
+⌅ [892a3eda] StringManipulation v0.5.0
+⌃ [ec057cc2] StructUtils v2.9.1
+  [2efcf032] SymbolicIndexingInterface v0.3.55
+  [3783bdb8] TableTraits v1.0.1
+  [bd369af6] Tables v1.14.0
+  [ac1d9e8a] ThreadsX v0.1.12
+  [a759f4b9] TimerOutputs v1.2.2
+  [3bb67fe8] TranscodingStreams v0.11.3
+  [28d57a85] Transducers v0.4.85
+  [81def892] VersionParsing v1.3.0
+  [c2297ded] ZMQ v1.5.1
+  [1d5cc7b8] IntelOpenMP_jll v2025.2.0+0
+  [856f044c] MKL_jll v2025.2.0+0
+  [efe28fd5] OpenSpecFun_jll v0.5.6+0
+  [8f1865be] ZeroMQ_jll v4.3.6+0
+  [a9144af2] libsodium_jll v1.0.21+0
+⌃ [1317d2d5] oneTBB_jll v2022.3.0+0
+  [0dad84c5] ArgTools v1.1.2
+  [56f22d72] Artifacts v1.11.0
+  [2a0f44e3] Base64 v1.11.0
+  [ade2ca70] Dates v1.11.0
+  [8ba89e20] Distributed v1.11.0
+  [f43a241f] Downloads v1.7.0
+  [7b1f6079] FileWatching v1.11.0
+  [9fa8497b] Future v1.11.0
+  [b77e0a4c] InteractiveUtils v1.11.0
+  [ac6e5ff7] JuliaSyntaxHighlighting v1.12.0
+  [4af54fe1] LazyArtifacts v1.11.0
+  [b27032c2] LibCURL v0.6.4
+  [76f85450] LibGit2 v1.11.0
+  [8f399da3] Libdl v1.11.0
+  [37e2e46d] LinearAlgebra v1.12.0
+  [56ddb016] Logging v1.11.0
+  [d6f4376e] Markdown v1.11.0
+  [a63ad114] Mmap v1.11.0
+  [ca575930] NetworkOptions v1.3.0
+  [44cfe95a] Pkg v1.12.1
+  [de0858da] Printf v1.11.0
+  [3fa0cd96] REPL v1.11.0
+  [9a3f8284] Random v1.11.0
+  [ea8e919c] SHA v0.7.0
+  [9e88b42a] Serialization v1.11.0
+  [1a1011a3] SharedArrays v1.11.0
+  [6462fe0b] Sockets v1.11.0
+  [2f01184e] SparseArrays v1.12.0
+  [f489334b] StyledStrings v1.11.0
+  [fa267f1f] TOML v1.0.3
+  [a4e569a6] Tar v1.10.0
+  [8dfed614] Test v1.11.0
+  [cf7118a7] UUIDs v1.11.0
+  [4ec0a83e] Unicode v1.11.0
+  [e66e0078] CompilerSupportLibraries_jll v1.3.1+2
+  [deac9b47] LibCURL_jll v8.15.0+0
+  [e37daf67] LibGit2_jll v1.9.0+0
+  [29816b5a] LibSSH2_jll v1.11.3+1
+  [14a3606d] MozillaCACerts_jll v2025.11.4
+  [4536629a] OpenBLAS_jll v0.3.29+0
+  [05823500] OpenLibm_jll v0.8.7+0
+  [458c3c95] OpenSSL_jll v3.5.6+0
+  [bea87d4a] SuiteSparse_jll v7.8.3+2
+  [83775a58] Zlib_jll v1.3.1+2
+  [8e850b90] libblastrampoline_jll v5.15.0+0
+  [8e850ede] nghttp2_jll v1.64.0+1
+  [3f19e933] p7zip_jll v17.7.0+0
+        Info Packages marked with ⌃ and ⌅ have new versions available. Those with ⌃ may be upgradable, but those with ⌅ are restricted by compatibility constraints from upgrading.
+     Testing Running tests...
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+WARNING: Method definition main() in module Main at /home/franzs/Schreibtisch/Arbeit/BeyondHulten/experiments/run.jl:1074 overwritten at /home/franzs/Schreibtisch/Arbeit/BeyondHulten/scripts/status.jl:373.
+Schwerwiegend: Kein Git-Repository (oder irgendein Elternverzeichnis bis zum Einhängepunkt /)
+Stoppe bei Dateisystemgrenze (GIT_DISCOVERY_ACROSS_FILESYSTEM nicht gesetzt).
+┌ Info: reference rung
+│   theta = 1.0
+│   resid = 0.0
+│   w_star = 1.0
+└   max_p_dev = 0.0
+┌ Info: reference rung
+│   theta = 1.0
+│   resid = 0.0
+│   w_star = 1.0
+└   max_p_dev = 0.0
+┌ Info: reference rung
+│   theta = 1.0
+│   resid = 0.0
+│   w_star = 1.0
+└   max_p_dev = 0.0
+┌ Info: reference rung
+│   theta = 1.0
+│   resid = 0.0
+│   w_star = 1.0
+└   max_p_dev = 0.0
+┌ Info: reference rung
+│   theta = 1.0
+│   resid = 0.0
+│   w_star = 1.0
+└   max_p_dev = 0.0
+┌ Info: reference rung
+│   theta = 1.0
+│   resid = 0.0
+│   w_star = 1.0
+└   max_p_dev = 0.0
+┌ Info: reference rung
+│   theta = 1.0
+│   resid = 0.0
+│   w_star = 1.0
+└   max_p_dev = 0.0
+┌ Warning: Sobol decomposition for incomplete has 1 invalid/missing grid values; estimates are not from a complete balanced design
+└ @ BeyondHulten ~/Schreibtisch/Arbeit/BeyondHulten/src/core/diagnostics.jl:696
+┌ Warning: Sobol decomposition for invalid has 4 invalid/missing grid values; estimates are not from a complete balanced design
+└ @ BeyondHulten ~/Schreibtisch/Arbeit/BeyondHulten/src/core/diagnostics.jl:696
+Test Summary:                        | Pass  Total  Time
+Baqaee--Farhi input-share convention |    3      3  1.1s
+Test Summary:            | Pass  Total  Time
+Impulse sector selection |    3      3  2.1s
+Test Summary:                     | Pass  Total  Time
+shock construction and validation |   14     14  0.2s
+Test Summary:                     | Pass  Total  Time
+Törnqvist real-GDP quantity index |    6      6  1.0s
+Test Summary:                         | Pass  Total   Time
+mobile labor closure and reallocation |   18     18  18.7s
+Test Summary:                                       | Pass  Total  Time
+mobile labor numerical safeguards and eta endpoints |    6      6  0.3s
+Test Summary:                             | Pass  Total  Time
+legacy closure taxonomy and compatibility |   10     10  0.1s
+Test Summary:      | Pass  Total  Time
+fixed wage closure |   11     11  2.6s
+Test Summary:                       | Pass  Total  Time
+fixed eta near one scale validation |    2      2  0.0s
+Test Summary:                   | Pass  Total  Time
+fixed eta one anchor validation |    3      3  0.0s
+Test Summary:                                                  | Pass  Total  Time
+fixed eta one: manna cannot anchor a closed fixture (ADR-0014) |    3      3  0.0s
+Test Summary:                                                 | Pass  Total  Time
+fixed eta one: unit column sum without a unit root (ADR-0017) |    5      5  0.2s
+Test Summary:                                                                       | Pass  Total  Time
+fixed eta one: heterogeneous import margins enter at the spending sector (ADR-0017) |    4      4  0.1s
+Test Summary:                                                                  | Pass  Total  Time
+fixed eta one: a determinate but non-positive candidate is rejected (ADR-0017) |    4      4  0.0s
+Test Summary:                                | Pass  Total  Time
+kernel regression: tiny fixture still solves |    3      3  0.0s
+Test Summary:                                        | Pass  Total  Time
+kernel regression: mobile BF endpoints (η = 0 and 1) |   19     19  2.6s
+Test Summary:                                         | Pass  Total  Time
+kernel regression: mobile with legacy additive shocks |    6      6  0.0s
+Test Summary:                       | Pass  Total  Time
+kernel regression: mobile contracts |    6      6  0.0s
+Test Summary:                                 | Pass  Total  Time
+kernel regression: fixed GAMMA contracts only |    7      7  0.0s
+Test Summary:                                   | Pass  Total  Time
+promoted closures: v3-style fixture consistency |    8      8  1.9s
+Test Summary:                                        | Pass  Total  Time
+promoted closures: BETA validation and ALPHA nesting |   15     15  0.4s
+Test Summary:                                       | Pass  Total  Time
+promoted closures: BETA supply curve (verify_v3 §4) |    4      4  0.3s
+Test Summary:                                       | Pass  Total  Time
+promoted closures: DELTA equivalence (verify_v3 §3) |    9      9  0.5s
+Test Summary:                              | Pass  Total  Time
+promoted closures: F1 compositional budget |    7      7  0.3s
+Test Summary:                             | Pass  Total  Time
+promoted closures: F2 tax-financed budget |    6      6  0.1s
+Test Summary:                         | Pass  Total  Time
+promoted closures: F3 external budget |    6      6  0.1s
+Test Summary:                                           | Pass  Total  Time
+promoted closures: external-account canary (review 2.1) |   32     32  1.5s
+Test Summary:                                                               | Pass  Total  Time
+promoted closures: intermediate-leak valuation is CES-consistent (ADR-0016) |    7      7  0.0s
+Test Summary:                                           | Pass  Total  Time
+promoted closures: fixed-wage financing anchor at η = 1 |    6      6  0.0s
+Test Summary:                                     | Pass  Total  Time
+promoted closures: v3 data compatibility defaults |    6      6  0.1s
+Test Summary:                                        | Pass  Total  Time
+promoted closures: Cobb-Douglas guard (verify_v3 §5) |    3      3  0.0s
+Test Summary:                       | Pass  Total  Time
+promoted closures: closure registry |   25     25  0.1s
+Test Summary:                 | Pass  Total  Time
+calibration: dataset variants |    3      3  0.0s
+Test Summary:                                     | Pass  Total  Time
+calibration: final-demand columns located by name |    3      3  0.9s
+GDP reconciliation: P=30.0  I=30.0  E=28.0  fd_purch=58.0  imp_final=19.0  imptx_final=11.0  residual=6.102%
+GDP reconciliation: P=16.0  I=16.0  E=16.0  fd_purch=34.0  imp_final=11.0  imptx_final=7.0  residual=2.128%
+recalibrate_open (v3, N=2): saving rate s = -0.0836, tau0 = 0.1818, export share = 0.4242, investment share = 0.1394, intermediate imports = 0.1818
+Test Summary:                                       | Pass  Total  Time
+calibration: retained_dataset on synthetic IO table |   20     20  4.5s
+GDP reconciliation: P=30.0  I=30.0  E=28.0  fd_purch=58.0  imp_final=19.0  imptx_final=11.0  residual=6.102%
+Test Summary:                                      | Pass  Total  Time
+calibration: dataset_coverage on synthetic fixture |    7      7  0.2s
+Test Summary:                                     | Pass  Total  Time
+calibration: recalibrate_open argument validation |    2      2  0.0s
+GDP reconciliation: P=3.027818e6  I=3.027818e6  E=2.864724e6  fd_purch=3.776137e6  imp_final=656669.0  imptx_final=254744.0  residual=5.387%
+recalibrate_open (v3, N=71): saving rate s = 0.1199, tau0 = 0.2141, export share = 0.4219, investment share = 0.1624, intermediate imports = 0.2214
+GDP reconciliation: P=2.990949e6  I=2.990949e6  E=2.891315e6  fd_purch=3.732775e6  imp_final=592839.0  imptx_final=248621.0  residual=3.331%
+recalibrate_open (v3, N=70): saving rate s = 0.1285, tau0 = 0.2167, export share = 0.4271, investment share = 0.1644, intermediate imports = 0.2237
+Test Summary:                               | Pass  Total  Time
+calibration: real-data v3 numbers (guarded) |   29     29  7.9s
+GDP reconciliation: P=3.027818e6  I=3.027818e6  E=2.864724e6  fd_purch=3.776137e6  imp_final=656669.0  imptx_final=254744.0  residual=5.387%
+recalibrate_open (v3, N=71): saving rate s = 0.1199, tau0 = 0.2141, export share = 0.4219, investment share = 0.1624, intermediate imports = 0.2214
+Test Summary:                                 | Pass  Total  Time
+gdp measurement: real-table baseline identity |    4      4  1.7s
+GDP reconciliation: P=3.027818e6  I=3.027818e6  E=2.864724e6  fd_purch=3.776137e6  imp_final=656669.0  imptx_final=254744.0  residual=5.387%
+recalibrate_open (v3, N=71): saving rate s = 0.1199, tau0 = 0.2141, export share = 0.4219, investment share = 0.1624, intermediate imports = 0.2214
+Test Summary:                       | Pass  Total  Time
+gdp measurement: known cell anchors |    5      5  0.8s
+Test Summary:                             | Pass  Total  Time
+gdp measurement: smoke fixture robustness |   10     10  0.1s
+GDP reconciliation: P=3.027818e6  I=3.027818e6  E=2.864724e6  fd_purch=3.776137e6  imp_final=656669.0  imptx_final=254744.0  residual=5.387%
+recalibrate_open (v3, N=71): saving rate s = 0.1199, tau0 = 0.2141, export share = 0.4219, investment share = 0.1624, intermediate imports = 0.2214
+Test Summary:                                | Pass  Total  Time
+gdp measurement: supply-shock deflator moves |    4      4  0.2s
+GDP reconciliation: P=3.027818e6  I=3.027818e6  E=2.864724e6  fd_purch=3.776137e6  imp_final=656669.0  imptx_final=254744.0  residual=5.387%
+recalibrate_open (v3, N=71): saving rate s = 0.1199, tau0 = 0.2141, export share = 0.4219, investment share = 0.1624, intermediate imports = 0.2214
+Test Summary:                                      | Pass  Total  Time
+external closure: real-table baseline reproduction |    4      4  0.0s
+GDP reconciliation: P=3.027818e6  I=3.027818e6  E=2.864724e6  fd_purch=3.776137e6  imp_final=656669.0  imptx_final=254744.0  residual=5.387%
+recalibrate_open (v3, N=71): saving rate s = 0.1199, tau0 = 0.2141, export share = 0.4219, investment share = 0.1624, intermediate imports = 0.2214
+Test Summary:                            | Pass  Total  Time
+external closure: real-table ALPHA cells |   26     26  0.5s
+GDP reconciliation: P=3.027818e6  I=3.027818e6  E=2.864724e6  fd_purch=3.776137e6  imp_final=656669.0  imptx_final=254744.0  residual=5.387%
+recalibrate_open (v3, N=71): saving rate s = 0.1199, tau0 = 0.2141, export share = 0.4219, investment share = 0.1624, intermediate imports = 0.2214
+Test Summary:                                                          | Pass  Total  Time
+external closure: real-table BF cells (sectoral wages, closed account) |   32     32  8.3s
+GDP reconciliation: P=3.027818e6  I=3.027818e6  E=2.864724e6  fd_purch=3.776137e6  imp_final=656669.0  imptx_final=254744.0  residual=5.387%
+recalibrate_open (v3, N=71): saving rate s = 0.1199, tau0 = 0.2141, export share = 0.4219, investment share = 0.1624, intermediate imports = 0.2214
+Test Summary:                           | Pass  Total  Time
+external closure: fixed-wage GAMMA cell |    3      3  0.1s
+Test Summary:                                      | Pass  Total  Time
+external closure: closed fixture solves with F = 0 |    2      2  0.0s
+Test Summary:                                             | Pass  Total  Time
+external closure: F is identified (non-degenerate column) |    1      1  0.1s
+Test Summary:                                           | Pass  Total  Time
+external closure: multi-start invariance on the fixture |    3      3  0.0s
+Test Summary:                                           | Pass  Total  Time
+external closure: eta = 0 sectoral wages on the fixture |    7      7  0.0s
+Test Summary:                                      | Pass  Total  Time
+external closure: legacy 2N+1 vectors append F = 0 |    1      1  0.0s
+Test Summary:                                        | Pass  Total  Time
+external closure: exact book identity on the fixture |    5      5  0.0s
+Test Summary:                                                | Pass  Total  Time
+external closure: legacy manna is absorbed by F and reported |    5      5  0.1s
+Test Summary:                                         | Pass  Total  Time
+numeraire invariance: mobile block is gauge-covariant |   14     14  0.3s
+GDP reconciliation: P=3.027818e6  I=3.027818e6  E=2.864724e6  fd_purch=3.776137e6  imp_final=656669.0  imptx_final=254744.0  residual=5.387%
+recalibrate_open (v3, N=71): saving rate s = 0.1199, tau0 = 0.2141, export share = 0.4219, investment share = 0.1624, intermediate imports = 0.2214
+Test Summary:                            | Pass  Total  Time
+supply-arm eta_s recovery (non-circular) |   31     31  2.0s
+Test Summary:                                | Pass  Total  Time
+ADR-0022 sectoral labour markets (structure) |   12     12  0.1s
+GDP reconciliation: P=3.027818e6  I=3.027818e6  E=2.864724e6  fd_purch=3.776137e6  imp_final=656669.0  imptx_final=254744.0  residual=5.387%
+recalibrate_open (v3, N=71): saving rate s = 0.1199, tau0 = 0.2141, export share = 0.4219, investment share = 0.1624, intermediate imports = 0.2214
+Test Summary:                                   | Pass  Total  Time
+ADR-0022 sectoral closure (full-71 calibration) |   14     14  7.4s
+Test Summary:                                                        | Pass  Total  Time
+run manifests: preregistration gate refuses before creating run dirs |    7      7  4.7s
+start smoke-BF-F1 design=smoke actor=test commit=unknown
+reference consumption_ref=1.0
+executed: resid 2.25e-13<=1e-06 ok; budget 0<=1e-09 ok; sectoral 1.24e-13<=1e-06 ok
+Test Summary:                                               | Pass  Total  Time
+run manifests: positive cell writes a schema-valid manifest |   87     87  6.6s
+start smoke-BETA-F2-sec design=smoke actor=test commit=unknown
+reference consumption_ref=1.0
+executed: resid 6.56e-13<=1e-06 ok; budget 6.94e-18<=1e-09 ok; sectoral 4.44e-13<=1e-06 ok
+Test Summary:                                                      | Pass  Total  Time
+run manifests: sectoral smoke cell exercises the 3N+1 harness path |   26     26  0.2s
+Test Summary:                                       | Pass  Total  Time
+run manifests: assert_external_account fails closed |    6      6  0.0s
+start smoke-DELTA-F1 design=smoke actor=test commit=unknown
+reference consumption_ref=1.0
+failed: ArgumentError: ArgumentError: fixed-wage η=1 is scale-indeterminate: the actual clearing matrix (I − G) is singular at the baseline prices (σ_min/σ_max = 3.019408574391879e-16 ≤ 1.0e-10), so (I − G) has a unit root and the equilibrium set contains a continuum. Additive demand — autonomous or investment manna, or a TaxFinanced / ExternalDebt programme bundle — is a constant and cannot remove the unit root; give the calibration a genuine leakage (positive saving or import margin), or use another η
+Test Summary:                                         | Pass  Total  Time
+run manifests: scale-guard failure is manifest-backed |   12     12  0.2s
+start smoke-BF-F1 design=smoke actor=test commit=unknown
+reference consumption_ref=1.0
+executed: resid 2.25e-13<=1e-06 ok; budget 0<=1e-09 ok; sectoral 1.24e-13<=1e-06 ok
+refusing to overwrite existing run dir runs/smoke-BF-F1/ — register a variant run_id (smoke-BF-F1-v2) for a rerun
+Test Summary:                                        | Pass  Total  Time
+run manifests: existing run dirs are not overwritten |    3      3  0.0s
+start supply-smoke-BETA-F2 design=supply_smoke actor=test commit=unknown
+reference consumption_ref=1.0
+executed: resid 2.22e-16<=1e-06 ok; budget 0<=1e-09 ok; labour 0<=1e-06 ok
+start smoke-BF-F1 design=smoke actor=test commit=unknown
+reference consumption_ref=1.0
+executed: resid 2.25e-13<=1e-06 ok; budget 0<=1e-09 ok; sectoral 1.24e-13<=1e-06 ok
+Test Summary:                                                   | Pass  Total  Time
+run manifests: supply shock writes the ADR-0023 scenario fields |   12     12  0.7s
+Test Summary:                               | Pass  Total  Time
+f1 tilt: formula against a hand computation |    3      3  0.2s
+Test Summary:                                                       | Pass  Total  Time
+f1 tilt: ψ restricted to positive-baseline sectors and renormalised |    5      5  0.2s
+Test Summary:                                                   | Pass  Total  Time
+f1 tilt: cell_financing wires the tilt and rejects the stand-in |    6      6  0.0s
+Test Summary:                                       | Pass  Total  Time
+f1 tilt: helper rejects an all-nonpositive baseline |    1      1  0.0s
+Test Summary:                                               | Pass  Total  Time
+f1 tilt: helper validates inputs and floors the denominator |   13     13  0.0s
+Test Summary:                  | Pass  Total   Time
+check_repo: real repo is clean |    1      1  12.1s
+Test Summary:                                       | Pass  Total  Time
+check_repo: unregistered closure subtype is flagged |    3      3  0.1s
+Test Summary:                             | Pass  Total  Time
+check_repo: zombie kernel file is flagged |    3      3  0.0s
+Test Summary:                                            | Pass  Total  Time
+check_repo: run dir without manifest, and index mismatch |    2      2  0.6s
+Test Summary:                                                    | Pass  Total  Time
+check_repo: failed rows stay visible unless pre-manifest history |    2      2  0.0s
+Test Summary:                                     | Pass  Total  Time
+check_repo: stale preregistration hash is flagged |    3      3  0.0s
+Test Summary:         | Pass  Total  Time
+check_repo: WIP limit |    3      3  0.0s
+Test Summary:                                  | Pass  Total  Time
+Sobol result API and balanced additive indices |    7      7  2.3s
+
+═ Sobol Variance Decomposition: invalid ═
+Grid: 4 points, 4 failed (non-finite) = 100.0%
+⚠  Total-order indices are biased by missing grid points — interpret with caution
+──────────────────────────────────────────────────────────────
+Factor              S_f         ST_f     ST_f−S_f
+         (first-order) (total-order) (interaction)
+──────────────────────────────────────────────────────────────
+η                   NaN          NaN          NaN
+ϵ                   NaN          NaN          NaN
+──────────────────────────────────────────────────────────────
+Sum S_f             NaN
+1−Sum S_f           NaN
+SS_total         0.0000
+══════════════════════════════════════════════════════════════
+Interpretation: 1−Sum S_f partly includes missing-data bias.
+Dominant factor: unavailable (all first-order indices are non-finite)
+
+Test Summary:                         | Pass  Total  Time
+Sobol validation and incomplete grids |   17     17  3.6s
+Test Summary:                 | Pass  Total  Time
+public variance decomposition |    3      3  0.3s
+Test Summary:                  | Pass  Total  Time
+eta sweep result and accessors |    9      9  0.8s
+Test Summary:                              | Pass  Total  Time
+eta sweep validation and contextual errors |    5      5  0.0s
+Test Summary:                  | Pass  Total  Time
+matrix plots: canonical orders |    2      2  0.1s
+Test Summary:          | Pass  Total  Time
+matrix plots: cell ids |    4      4  0.2s
+Test Summary:                                   | Pass  Total  Time
+matrix plots: headline BETA uses sectoral wages |   13     13  0.6s
+Test Summary:                                       | Pass  Total  Time
+matrix plots: baseline and cell data on the fixture |   26     26  2.0s
+Test Summary:                                            | Pass  Total  Time
+matrix plots: sectoral real-wage vector is not collapsed |    3      3  1.2s
+Test Summary:                    | Pass  Total  Time
+matrix plots: dataset and frames |   18     18  0.7s
+Test Summary:                            | Pass  Total  Time
+matrix plots: trade flows on the fixture |    8      8  0.0s
+GDP reconciliation: P=3.027818e6  I=3.027818e6  E=2.864724e6  fd_purch=3.776137e6  imp_final=656669.0  imptx_final=254744.0  residual=5.387%
+recalibrate_open (v3, N=71): saving rate s = 0.1199, tau0 = 0.2141, export share = 0.4219, investment share = 0.1624, intermediate imports = 0.2214
+Test Summary:                                                    | Pass  Total  Time
+matrix plots: trade flows match gdp_components on the real table |    4      4  0.0s
+Test Summary:               | Pass  Total  Time
+matrix plots: validate_cell |   19     19  1.3s
+Test Summary:                                | Pass  Total  Time
+matrix plots: headless stubs require GLMakie |   14     14  0.1s
+Test Summary:                                                   | Broken  Total  Time
+matrix panels: retain moving sectoral prices (optional GLMakie) |      1      1  0.0s
+     Testing BeyondHulten tests passed 
+pkg-test-exit=0

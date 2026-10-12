@@ -1,0 +1,48 @@
+# baseline/latex/summary.txt — pre-split LaTeX build record (WP0)
+#
+# Date:        2026-10-12 (build finished 10:43 local / 08:43 UTC)
+# HEAD commit: 6c975c71ed57c016640b607b5a92f834cde4daed
+# Machine:     linux, /home/franzs/Schreibtisch/Arbeit/BeyondHulten, branch split/open-cge
+#
+# DOCUMENTED command (per revision/README.md), run from revision/:
+#
+#   nix shell nixpkgs#biber -c latexmk -pdf -interaction=nonstopmode main.tex
+#   nix shell nixpkgs#biber -c latexmk -pdf -interaction=nonstopmode refresponse.tex
+#
+# OUTCOME: FAILED TO START in this environment — `nix` is not installed
+# ("nix: Kommando nicht gefunden", exit 127) for both documents. Full
+# console record: /tmp/opencode/latex/build_main.out, build_ref.out
+# (transient; the outcome is recorded here).
+#
+# FALLBACK actually used (run from revision/), closest available equivalent
+# — the nix shell only supplied biber, and biber is on PATH here:
+#
+#   latexmk -pdf -interaction=nonstopmode main.tex
+#   latexmk -pdf -interaction=nonstopmode refresponse.tex
+#
+# Toolchain:  Latexmk 4.87 (15 June 2025), pdflatex from TeX Live 2025
+#             (texlive-combined-medium-2025-final per revision/README.md),
+#             biber 2.22 (/usr/bin/vendor_perl/biber)
+# Exit codes: main.tex fallback exit=0, refresponse.tex fallback exit=0
+#             ("Latexmk: All targets ... are up-to-date" after a complete
+#             build); both PDFs were freshly written (mtime 2026-10-12 10:43).
+# TeX errors: 0 lines matching "^! " in main.log and refresponse.log;
+#             no "undefined references" warnings found in either log.
+#
+# PDFs (NOT committed — revision/.gitignore ignores *.pdf; hashes below are
+# the committed record):
+#
+#   main.pdf        40 pages  813311 bytes
+#   sha256          95783d5ea4149a7bfdb3a4e4161721b039bb45ea80fb60b138fcb8b1f9561e88
+#
+#   refresponse.pdf  5 pages  125444 bytes
+#   sha256          806e45aec6da70c79fc50273ab61a988c118691782c4f2b1a2645c68d38a2a72
+#
+# The full latexmk logs are copied next to this file:
+#   baseline/latex/main.log        (copy of revision/main.log)
+#   baseline/latex/refresponse.log (copy of revision/refresponse.log)
+#
+# Note: revision/README.md recorded "main.pdf (26 pp, no errors, 0 undefined
+# references)" at its 2026-10-04 verification; the page count is now 40 —
+# the manuscript grew since (latest commit: "expand section 3"). No TeX
+# source was edited for this baseline.

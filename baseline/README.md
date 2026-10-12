@@ -1,0 +1,100 @@
+# baseline/ — pre-split reproduction baseline (WP0)
+
+Captured **2026-10-12** on branch `split/open-cge`, HEAD
+`6c975c71ed57c016640b607b5a92f834cde4daed` (branched from `reorg` at the
+same commit), Julia 1.12.7, working tree clean before capture. Purpose:
+pin everything the paper pipeline produces BEFORE the kernel code moves to
+a separate repository, so the post-split state can be compared at **1e-8**
+(abs + rel; NaN == NaN) with
+
+```bash
+julia --project=. scripts/reproduce.jl --check
+```
+
+`scripts/reproduce.jl` is the permanent reproduction tool of the paper
+repo. `--write-baseline` re-solves all 33 cells of design
+`matrix_5x3_v10`, hard-validates each against its recorded
+`runs/<id>/manifest.toml` + `solution.csv` (`BeyondHulten.validate_cell`),
+writes `baseline/v10_metrics.csv`, regenerates the output CSVs with the
+documented generator and copies them into `baseline/output/`. `--check`
+repeats the re-solve and the generator and compares against this directory
+within 1e-8, exiting non-zero on any drift or failed cell. Nothing outside
+`baseline/` and the gitignored `output/` scratch area is written.
+
+**Self-consistency verified 2026-10-12 (pre-commit):**
+`julia --project=. scripts/reproduce.jl --check` → exit 0,
+"33/33 cells validated", "check PASSED: baseline consistent within 1.0e-8"
+against the freshly written baseline (metrics rows and both output CSVs).
+
+## Artifacts
+
+| File | Produced by | Result |
+| --- | --- | --- |
+| `v10_metrics.csv` | `julia --project=. scripts/reproduce.jl --write-baseline` | 8217 rows, 33/33 cells PASS with max abs deviation **0** vs the recorded run artifacts (bit-identical re-solves) |
+| `output/matrix_5x3_v10_summary.csv` | `julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 --no-figures --data-dir output` (run by the tool), then copied | 15/15 headline cells validated; full precision (round-trip check max abs deviation 0.0 — `CSV.write` shortest round-trip floats; no extra full-precision copies needed) |
+| `output/matrix_5x3_v10_sectoral.csv` | same generator, then copied | tidy long frame, same precision as above |
+| `output/variance_decomposition_sobol.csv` | copy as-is of `output/variance_decomposition_sobol.csv`; see `output/variance_decomposition_sobol.provenance.txt` | legacy pinned artifact (2026-09-03, generator root `rerun_results.jl`, which no longer runs on the current kernel — ADR-0010 retired interpolated η) |
+| `test.log` | `julia --project=. -e 'using Pkg; Pkg.test()'` | exit 0, "Testing BeyondHulten tests passed"; 865 passing assertions across the testsets, 1 known `@test_broken` (GLMakie-optional panel test) |
+| `status_check.out` | `julia --project=. scripts/status.jl --check` | "docs/status.md is up to date.", exit 0 |
+| `check_repo.out` | `julia --project=. scripts/check_repo.jl` | 0 violations, exit 0 (capture predates the baseline commit; see "Post-commit gate" below) |
+| `pkg_status.txt` | `julia --project=. -e 'using Pkg; Pkg.status()'` | direct deps: CSV 1.0.0, DataFrames 1.8.2, IJulia 1.34.4, NonlinearSolve 4.32.0, ProgressMeter 1.11.0, ThreadsX 0.1.12 + stdlibs |
+| `manifest-pre-split.toml` | `cp Manifest.toml baseline/manifest-pre-split.toml` | dependency-version provenance for the later 1e-8 comparison (Manifest.toml is gitignored, so it is recorded here) |
+| `latex/main.log`, `latex/refresponse.log` | copies of `revision/main.log`, `revision/refresponse.log` | full latexmk logs of the builds below |
+| `latex/summary.txt` | build record | PDF sha256 + page counts; build outcomes |
+
+## v10_metrics.csv schema
+
+Columns `run_id,series,key,idx,label,value`. `series` ∈
+`metric` (re-solved headline metrics — real GDP `gdp`/`gdp_rel`, nominal
+GDP `nominal_gdp`, etc.), `manifest_metric` (the recorded manifest
+`[metrics]` block), `gate` / `manifest_gate` (gate values), `price`,
+`quantity`, `wage` (indexed vectors in sector order; `label` = sector
+name). Scalars carry `idx = 0` and an empty label. Rows are in stable
+order: run_id lexicographically, then the blocks above, keys sorted,
+vectors in sector order. Values are written with 17 significant digits
+(`%.17g`, exact Float64 round-trip). `--check` compares keys exactly and
+values within 1e-8 abs + rel.
+
+## LaTeX builds (per revision/README.md)
+
+Documented command `cd revision && nix shell nixpkgs#biber -c latexmk -pdf
+-interaction=nonstopmode main.tex` (+ `refresponse.tex`) **could not run**:
+`nix` is not installed in this environment (exit 127). Fallback, closest
+equivalent (the nix shell only supplied biber, which is on PATH here as
+biber 2.22): `latexmk -pdf -interaction=nonstopmode main.tex` /
+`refresponse.tex` with system Latexmk 4.87 + TeX Live 2025. Both builds
+succeeded (exit 0, 0 TeX errors): `main.pdf` 40 pages,
+`refresponse.pdf` 5 pages; sha256 in `latex/summary.txt`. No TeX source
+was edited. PDFs are gitignored (`revision/.gitignore`, root
+`.gitignore`); only logs and hashes are committed.
+
+## Sobol CSV provenance
+
+`output/variance_decomposition_sobol.csv` is generated by the legacy root
+script `rerun_results.jl` (2026-09-03 run; evidence in
+`output/variance_decomposition_sobol.provenance.txt`). A scratch
+regeneration (2026-10-12, repo untouched) fails on the current kernel
+(`DomainError: η must be 0 or 1; intermediate reallocation was retired
+(ADR-0010)` at `rerun_results.jl:45`), so the artifact is captured as-is;
+post-split comparison is a byte comparison of the copy. The file is cited
+by `docs/archive/` only, not by `paper/` or `revision/`.
+
+## Provenance notes
+
+- Every capture above was produced on 2026-10-12 at HEAD
+  `6c975c71ed57c016640b607b5a92f834cde4daed`; the run artifacts compared
+  against were recorded 2026-09-20 at commit `979a58ea` (design
+  `matrix_5x3_v10`, SHA-256 `ab5974a3…`).
+- The regenerated `output/*` CSVs are byte-identical to the pre-existing
+  ones generated 2026-09-30 in a separate Julia process — the pipeline is
+  bit-deterministic across processes on this machine.
+- `.gitignore` gained one line (`!baseline/**`) so these artifacts are
+  trackable despite the `*.log` / `output/` ignore rules.
+
+## Post-commit gate
+
+`baseline/test.log`, `baseline/latex/*.log` are `*.log` files: once
+committed, the repo gate's `tracked-artifacts` rule ("*.log files are
+transient; do not commit them") flags them. Per the WP0 plan the gate was
+NOT weakened; the post-commit `scripts/check_repo.jl` outcome is recorded
+in the follow-up commit message / handoff report.

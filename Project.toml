@@ -1,5 +1,5 @@
 # Paper repo environment (not a package): the kernel lives in the separate
-# `OpenCGE` package (https://github.com/theplatters/opencge, pinned below and
+# `OpenCGE` package (https://github.com/theplatters/OpenCGE, pinned below and
 # in the committed Manifest.toml). Run tooling with `julia --project=.`; the
 # test command is `julia --project=. tests/runtests.jl` (Pkg.test() does not
 # apply to a plain environment). GLMakie stays out of [deps] on purpose: add

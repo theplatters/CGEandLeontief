@@ -14,9 +14,10 @@ and the generated board `docs/status.md`; do not restate it elsewhere
 ## Relationship to the OpenCGE kernel
 
 The model itself is **not** in this repository. It is the separate
-[`OpenCGE`](https://github.com/theplatters/opencge) Julia package (local
-checkout `../opencge`; the GitHub repository may not be pushed yet), extracted
-from this repo as tag `v0.1.0` with its git history preserved (ADR-0028). This
+[`OpenCGE`](https://github.com/theplatters/OpenCGE) Julia package, published at
+<https://github.com/theplatters/OpenCGE> (a local checkout `../opencge` exists
+for kernel development), extracted from this repo as tag `v0.1.0` with its git
+history preserved (ADR-0028). This
 repo depends on it via the committed root `Manifest.toml`, which pins the
 kernel exactly (`repo-rev = "v0.1.0"`, `git-tree-sha1`); every run manifest
 records that pin in its `[provenance]` block. Kernel implementation changes

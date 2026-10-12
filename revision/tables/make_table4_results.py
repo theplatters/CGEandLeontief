@@ -3,18 +3,24 @@
 
 No number is hand-typed: every value is a manifest field. Run from anywhere:
     python3 make_table4_results.py
-Source: runs/matrix_5x3-v10-<closure>-<fin>/manifest.toml (schema v2).
-Columns are in table3c order (no-reallocation leftmost).
+Source: runs/matrix_5x3-v10-<closure>-<fin>[-<variant>]/manifest.toml (schema v2).
+Columns are in table3c order (no-reallocation leftmost). The elastic-supply
+column reads the SECTORAL cells (eta_{s,i} = 0.5, variant ``etas05``; ADR-0022),
+not the single-wage BETA-F* benchmark, which coincides with the standard CGE
+column under demand-only shocks (Appendix B, Prop. ab).
 """
 import tomllib, os
 
-REPO = "/workspace/git/BFRep/(3)BeyondHulten"
+REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT  = os.path.join(REPO, "revision/tables/table4_results-5x3.tex")
+
+# run-id variant suffix per column ("" = the plain matrix cell)
+variant = {"BETA": "-etas05"}
 
 # column order matches table3c (no-reallocation leftmost)
 cols = [("BF",    "No-reallocation",      "immobile labour, sectoral wages"),
         ("ALPHA", "Standard CGE",         "one flexible wage, mobile labour"),
-        ("BETA",  "Elastic labour supply","behavioural supply on the real wage"),
+        ("BETA",  "Elastic labour supply","sectoral supply on the real wage ($\\eta_{s,i} = 0.5$)"),
         ("GAMMA", "Fixed real wage",      "real wage pegged, employment uncapped"),
         ("DELTA", "Leontief closure",     "real wage pegged, quantities absorb")]
 fin = [("F1", "repurposing of consumption"),
@@ -23,7 +29,7 @@ fin = [("F1", "repurposing of consumption"),
 
 
 def get(c, f):
-    d = tomllib.load(open(f"{REPO}/runs/matrix_5x3-v10-{c}-{f}/manifest.toml", "rb"))
+    d = tomllib.load(open(f"{REPO}/runs/matrix_5x3-v10-{c}-{f}{variant.get(c, '')}/manifest.toml", "rb"))
     m = d["metrics"]
     return dict(Y=100 * m["gdp_rel"], L=100 * (m["employment"] - 1.0),
                 P=100 * (m["gdp_deflator"] - 1.0),
@@ -52,7 +58,8 @@ def build():
     A(r"% Table 4 --- results across the 5x3 closure matrix (GENERATED)")
     A(r"% ---------------------------------------------------------------------")
     A(r"% Do NOT edit by hand. Regenerate with:  make_table4_results.py")
-    A(r"% Source: runs/matrix_5x3-v10-<closure>-<fin>/manifest.toml (schema v2).")
+    A(r"% Source: runs/matrix_5x3-v10-<closure>-<fin>/manifest.toml (schema v2);")
+    A(r"%   elastic-supply column: the sectoral cells matrix_5x3-v10-BETA-<fin>-etas05.")
     A(r"% Columns in table3c order (no-reallocation leftmost). Five outcomes per cell:")
     A(r"%   \Delta Y real GDP, \Delta L employment, \Delta P price level (GDP deflator),")
     A(r"%   \Delta D net external position (= F + B_gov, 'external debt'),")
@@ -91,10 +98,12 @@ def build():
     A(r"financing received, i.e.\ external debt) and household consumption welfare")
     A(r"($\Delta W$), all in percent against the reference continuation. Generated from the")
     A(r"\texttt{matrix\_5x3-v10-*} run manifests; no number is hand-typed. The")
-    A(r"standard-CGE and elastic-supply rows coincide, as do the fixed-wage and Leontief")
-    A(r"rows (bit-identical), so the fifteen cells describe seven distinct economies: the")
-    A(r"standard-CGE row is exactly output-neutral, and equilibrium prices move away from")
-    A(r"the baseline only in the no-reallocation row.}")
+    A(r"elastic-supply column is the sectoral closure at $\eta_{s,i} = 0.5$")
+    A(r"(\texttt{matrix\_5x3-v10-BETA-F*-etas05}). The fixed-wage and Leontief columns")
+    A(r"coincide (bit-identical), and F2 and F3 coincide in the three flexible-wage")
+    A(r"columns, so the fifteen cells describe nine distinct economies: the standard-CGE")
+    A(r"column is exactly output-neutral, and equilibrium prices move away from the")
+    A(r"baseline only in the two sectoral-wage columns (no reallocation, elastic supply).}")
     A(r"\label{tab:results-matrix}")
     A(r"\end{table}")
     return "\n".join(L) + "\n"

@@ -2,7 +2,8 @@
 % Table 4 --- results across the 5x3 closure matrix (GENERATED)
 % ---------------------------------------------------------------------
 % Do NOT edit by hand. Regenerate with:  make_table4_results.py
-% Source: runs/matrix_5x3-v10-<closure>-<fin>/manifest.toml (schema v2).
+% Source: runs/matrix_5x3-v10-<closure>-<fin>/manifest.toml (schema v2);
+%   elastic-supply column: the sectoral cells matrix_5x3-v10-BETA-<fin>-etas05.
 % Columns in table3c order (no-reallocation leftmost). Five outcomes per cell:
 %   \Delta Y real GDP, \Delta L employment, \Delta P price level (GDP deflator),
 %   \Delta D net external position (= F + B_gov, 'external debt'),
@@ -21,7 +22,7 @@
 \textbf{Financing closure}
 & \textbf{No-reallocation}\newline \scriptsize immobile labour, sectoral wages
 & \textbf{Standard CGE}\newline \scriptsize one flexible wage, mobile labour
-& \textbf{Elastic labour supply}\newline \scriptsize behavioural supply on the real wage
+& \textbf{Elastic labour supply}\newline \scriptsize sectoral supply on the real wage ($\eta_{s,i} = 0.5$)
 & \textbf{Fixed real wage}\newline \scriptsize real wage pegged, employment uncapped
 & \textbf{Leontief closure}\newline \scriptsize real wage pegged, quantities absorb
 \\
@@ -40,11 +41,11 @@ $\Delta P$ & $0.00$ \\
 $\Delta D$ & $+0.08$ \\
 $\Delta W$ & $+0.14$\end{tabular}
 & \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$\Delta Y$ & $0.00$ \\
-$\Delta L$ & $0.00$ \\
-$\Delta P$ & $0.00$ \\
-$\Delta D$ & $+0.08$ \\
-$\Delta W$ & $+0.14$\end{tabular}
+$\Delta Y$ & $+0.12$ \\
+$\Delta L$ & $+0.12$ \\
+$\Delta P$ & $+0.27$ \\
+$\Delta D$ & $-0.09$ \\
+$\Delta W$ & $+0.42$\end{tabular}
 & \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $-0.10$ \\
 $\Delta L$ & $-0.10$ \\
@@ -73,11 +74,11 @@ $\Delta P$ & $0.00$ \\
 $\Delta D$ & $-0.10$ \\
 $\Delta W$ & $-1.82$\end{tabular}
 & \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$\Delta Y$ & $0.00$ \\
-$\Delta L$ & $0.00$ \\
-$\Delta P$ & $0.00$ \\
-$\Delta D$ & $-0.10$ \\
-$\Delta W$ & $-1.82$\end{tabular}
+$\Delta Y$ & $+0.13$ \\
+$\Delta L$ & $+0.13$ \\
+$\Delta P$ & $+0.29$ \\
+$\Delta D$ & $-0.28$ \\
+$\Delta W$ & $-1.57$\end{tabular}
 & \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $+0.13$ \\
 $\Delta L$ & $+0.13$ \\
@@ -106,11 +107,11 @@ $\Delta P$ & $0.00$ \\
 $\Delta D$ & $-0.10$ \\
 $\Delta W$ & $-1.82$\end{tabular}
 & \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$\Delta Y$ & $0.00$ \\
-$\Delta L$ & $0.00$ \\
-$\Delta P$ & $0.00$ \\
-$\Delta D$ & $-0.10$ \\
-$\Delta W$ & $-1.82$\end{tabular}
+$\Delta Y$ & $+0.13$ \\
+$\Delta L$ & $+0.13$ \\
+$\Delta P$ & $+0.29$ \\
+$\Delta D$ & $-0.28$ \\
+$\Delta W$ & $-1.57$\end{tabular}
 & \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $+1.78$ \\
 $\Delta L$ & $+1.78$ \\
@@ -134,9 +135,11 @@ change in real GDP ($\Delta Y$), employment ($\Delta L$), the price level
 financing received, i.e.\ external debt) and household consumption welfare
 ($\Delta W$), all in percent against the reference continuation. Generated from the
 \texttt{matrix\_5x3-v10-*} run manifests; no number is hand-typed. The
-standard-CGE and elastic-supply rows coincide, as do the fixed-wage and Leontief
-rows (bit-identical), so the fifteen cells describe seven distinct economies: the
-standard-CGE row is exactly output-neutral, and equilibrium prices move away from
-the baseline only in the no-reallocation row.}
+elastic-supply column is the sectoral closure at $\eta_{s,i} = 0.5$
+(\texttt{matrix\_5x3-v10-BETA-F*-etas05}). The fixed-wage and Leontief columns
+coincide (bit-identical), and F2 and F3 coincide in the three flexible-wage
+columns, so the fifteen cells describe nine distinct economies: the standard-CGE
+column is exactly output-neutral, and equilibrium prices move away from the
+baseline only in the two sectoral-wage columns (no reallocation, elastic supply).}
 \label{tab:results-matrix}
 \end{table}

@@ -19,7 +19,7 @@
 #      4. the CPI effect and the implied real-consumption (real GDP) effect.
 #    This is a FIRST-ORDER estimate -- it is not a solve and it is not a run.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, TOML, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath

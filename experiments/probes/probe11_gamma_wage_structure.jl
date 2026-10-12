@@ -26,7 +26,7 @@
 include(joinpath(@__DIR__, "..", "run.jl"))
 using Printf, LinearAlgebra
 import NonlinearSolve
-const BH = BeyondHulten
+const BH = OpenCGE
 
 function gamma_w_residual!(out, X, pars)
     model, wbar = pars

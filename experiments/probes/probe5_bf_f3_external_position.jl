@@ -29,7 +29,7 @@ import NonlinearSolve
 const DESIGN = "matrix_5x3_v5"
 
 # ── eta = 0 endpoint with the labour equation instead of the F = 0 pin ──────
-# Identical to BeyondHulten.problem except equation 2N+1: the COST-MINIMIZING
+# Identical to OpenCGE.problem except equation 2N+1: the COST-MINIMIZING
 # aggregate labour demand is required to equal the labour bar
 # (sum L^cm = Lbar) instead of the pin F = 0. By the Walras derivation
 # diff = -w*(sum L^cm - sum L_supplied), so this is exactly the equation that
@@ -39,15 +39,15 @@ const DESIGN = "matrix_5x3_v5"
 function problem_bf_labour(out::Vector, X::Vector, model)
     (; data, options) = model
     N = length(data.factor_share)
-    p = BeyondHulten._positive_floor(X[1:N])
-    y = BeyondHulten._positive_floor(X[N+1:2N])
+    p = OpenCGE._positive_floor(X[1:N])
+    y = OpenCGE._positive_floor(X[N+1:2N])
     w = max(X[2N+1], 1e-10)
     F = X[2N+2]
-    blocks = BeyondHulten._mobile_market_demand(model, p, y, w; external_transfer = F)
+    blocks = OpenCGE._mobile_market_demand(model, p, y, w; external_transfer = F)
     cpi = sum(data.consumption_share .* p .^ (1 - options.elasticities.σ))^(1 / (1 - options.elasticities.σ))
     out[1:N] .= p .- blocks.cost
     out[N+1:2N] .= y .- blocks.intermediary_demand .- blocks.total_final_demand
-    out[2N+1] = sum(BeyondHulten._cost_minimizing_labor(p, y, w, model)) - options.labor_bar
+    out[2N+1] = sum(OpenCGE._cost_minimizing_labor(p, y, w, model)) - options.labor_bar
     out[2N+2] = cpi - 1.0
     nothing
 end
@@ -86,11 +86,11 @@ end
 function account(model, X)
     N = length(model.data.factor_share)
     p, y, w, F = X[1:N], X[N+1:2N], X[2N+1], X[2N+2]
-    can = BeyondHulten.external_balance_canary(model, X)
+    can = OpenCGE.external_balance_canary(model, X)
     # The COST-MINIMIZING labour demand (the zero-profit FOC), not
     # `sectoral_labor_demand`, which at eta = 0 returns the frozen baseline
     # allocation and would therefore report the gap as zero by construction.
-    Lcm = sum(BeyondHulten._cost_minimizing_labor(p, y, w, model))
+    Lcm = sum(OpenCGE._cost_minimizing_labor(p, y, w, model))
     # Labour actually supplied: the frozen baseline bar at eta = 0, the
     # demand-determined allocation in every eta = 1 regime (mobile and
     # fixed-wage, where the FOC sets employment).

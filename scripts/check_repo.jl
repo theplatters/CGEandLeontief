@@ -7,7 +7,7 @@
 #   1. board ......... docs/status.md is up to date and the registry reports 0 warnings
 #   2. closures ...... registry/closures.toml is bidirectional with the kernel registry
 #   3. closure-subtypes  every AbstractLabor/FinancingClosure subtype is a registered symbol
-#   4. kernel-reachability  every src/**/*.jl is reachable from src/BeyondHulten.jl
+#   4. kernel-reachability  every src/**/*.jl is reachable from src/OpenCGE.jl
 #   5. runs .......... every runs/<id>/ has a schema-valid manifest, index, and scenario row
 #   6. runs-visible .. executed/provisional/failed rows are manifest-backed or pre-manifest history
 #   7. tracked-artifacts  no generated artifacts are tracked by git
@@ -23,9 +23,9 @@
 # `check_tracked_artifacts`, `check_kernel_copies`, `check_preregistration`,
 # `check_wip_limit`, `check_main`.
 #
-# Headless-safe: only BeyondHulten plus stdlibs and the kernel's CSV/DataFrames deps.
+# Headless-safe: only OpenCGE plus stdlibs and the kernel's CSV/DataFrames deps.
 
-using BeyondHulten
+using OpenCGE
 using TOML
 using Dates
 using SHA
@@ -225,12 +225,12 @@ end
 
 # ── Check 4: no zombie kernel files ──────────────────────────────────────
 
-"""Every src/**/*.jl must be reachable from src/BeyondHulten.jl via include()."""
+"""Every src/**/*.jl must be reachable from src/OpenCGE.jl via include()."""
 function check_kernel_reachability(root::AbstractString)::Vector{RepoViolation}
     out = RepoViolation[]
-    entry = joinpath(root, "src", "BeyondHulten.jl")
+    entry = joinpath(root, "src", "OpenCGE.jl")
     if !isfile(entry)
-        return [RepoViolation("kernel-reachability", "src/BeyondHulten.jl is missing")]
+        return [RepoViolation("kernel-reachability", "src/OpenCGE.jl is missing")]
     end
     seen = Set{String}()
     stack = String[normpath(entry)]
@@ -250,7 +250,7 @@ function check_kernel_reachability(root::AbstractString)::Vector{RepoViolation}
     end
     for jl in all_jl_files(joinpath(root, "src"))
         normpath(jl) in seen || push!(out, RepoViolation("kernel-reachability",
-            "zombie kernel file $(relpath(jl, root)): not reachable from src/BeyondHulten.jl (promote it, or archive it with a DE record)"))
+            "zombie kernel file $(relpath(jl, root)): not reachable from src/OpenCGE.jl (promote it, or archive it with a DE record)"))
     end
     return out
 end

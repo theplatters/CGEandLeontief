@@ -15,7 +15,7 @@
 #       ADR-0018/ADR-0019, the measured consumption_rel/gdp_rel are reported
 #       and the drift is stated.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, TOML, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath

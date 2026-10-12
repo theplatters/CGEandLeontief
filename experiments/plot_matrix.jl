@@ -9,7 +9,7 @@
 # Validation contract: every selected cell is RE-SOLVED with the harness
 # (`solve_cell` + `evaluate_gates` from `run.jl`) and HARD-VALIDATED against
 # its recorded run artifacts (`runs/<id>/manifest.toml` + `solution.csv`)
-# via `BeyondHulten.validate_cell`. Figures and tidy CSVs cover only the
+# via `OpenCGE.validate_cell`. Figures and tidy CSVs cover only the
 # cells that validate; invalid cells are excluded from the dataset but
 # listed in the report. The driver never creates run dirs and never modifies
 # `runs/`, `registry/`, or any other tracked state — it only reads them
@@ -17,14 +17,14 @@
 # `<outdir>/`, both gitignored areas). The design must be preregistered with
 # a matching SHA-256, tying the figures to the pinned design.
 #
-# Headless-safe with `--no-figures`: only `BeyondHulten`, stdlibs, and the
+# Headless-safe with `--no-figures`: only `OpenCGE`, stdlibs, and the
 # kernel's CSV/DataFrames/TOML deps are loaded; GLMakie is touched only on
 # the figure path.
 #
 # The file can be `include`d without running `plot_main()` (guard at the
 # bottom). Entry point: `plot_main` (not `main`, which `run.jl` defines).
 
-using BeyondHulten
+using OpenCGE
 using TOML
 using CSV
 using DataFrames
@@ -293,7 +293,7 @@ function plot_main(args::Vector{String} = ARGS;
     # 3. Reference continuation and programme incidence, exactly as
     # `run_design` in `run.jl` computes them. Typed conversion (see the note
     # in `build_reference`): broadcasting over an empty `drops = []` yields
-    # `Vector{Any}` once BeyondHulten is loaded, so `Vector{Int}(...)` is
+    # `Vector{Any}` once OpenCGE is loaded, so `Vector{Int}(...)` is
     # inference-independent.
     quiet || println("building reference continuation for $design ...")
     ref = build_reference(design_d; root = root)
@@ -413,9 +413,9 @@ function plot_main(args::Vector{String} = ARGS;
     # exploratory figures; --panel-dir below loads GLMakie on its own.
     if !opts.no_figures
         if !glmakie_available()
-            println(stderr, "`BeyondHulten.save_matrix_figures` requires " *
+            println(stderr, "`OpenCGE.save_matrix_figures` requires " *
                 "the GLMakie extension, which is not loaded. " *
-                "Run `using GLMakie` together with `using BeyondHulten` " *
+                "Run `using GLMakie` together with `using OpenCGE` " *
                 "(install it first with `import Pkg; Pkg.add(\"GLMakie\")` " *
                 "if necessary).")
             return 1
@@ -452,9 +452,9 @@ function plot_main(args::Vector{String} = ARGS;
     # variants are solved).
     if opts.panel_dir !== nothing
         if !glmakie_available()
-            println(stderr, "`BeyondHulten.save_matrix_panels` requires " *
+            println(stderr, "`OpenCGE.save_matrix_panels` requires " *
                 "the GLMakie extension, which is not loaded. " *
-                "Run `using GLMakie` together with `using BeyondHulten` " *
+                "Run `using GLMakie` together with `using OpenCGE` " *
                 "(install it first with `import Pkg; Pkg.add(\"GLMakie\")` " *
                 "if necessary).")
             return 1
@@ -471,7 +471,7 @@ function plot_main(args::Vector{String} = ARGS;
         # programme demand in model units from step 3, `variants` the
         # σ-variant cells from step 5-6 for the error bars.
         written = try
-            Base.invokelatest(BeyondHulten.save_matrix_panels, ds;
+            Base.invokelatest(OpenCGE.save_matrix_panels, ds;
                 outdir = opts.panel_dir, prefix = "panel_5x3", programme = g,
                 variants = variants)
         catch e

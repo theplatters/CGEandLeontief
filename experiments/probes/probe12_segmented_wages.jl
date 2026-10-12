@@ -37,7 +37,7 @@
 include(joinpath(@__DIR__, "..", "run.jl"))
 using Printf, LinearAlgebra
 import NonlinearSolve
-const BH = BeyondHulten
+const BH = OpenCGE
 
 # ── wage vector: sticky sector i gets wbar[i], flexible sector gets wf ───────
 seg_wage_vector(N, sticky::BitVector, wbar::AbstractVector, wf::Real) =

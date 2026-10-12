@@ -18,7 +18,6 @@ __pycache__/
 *.py[cod]
 IDEA.md
 docs/reviews/
-Manifest.toml
 
 revision/main.pdf
 

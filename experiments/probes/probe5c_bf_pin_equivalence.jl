@@ -16,11 +16,11 @@ const DESIGN = "matrix_5x3_v5"
 function problem_bf_pin(out::Vector, X::Vector, model, c::Float64)
     (; data, options) = model
     N = length(data.factor_share)
-    p = BeyondHulten._positive_floor(X[1:N])
-    y = BeyondHulten._positive_floor(X[N+1:2N])
+    p = OpenCGE._positive_floor(X[1:N])
+    y = OpenCGE._positive_floor(X[N+1:2N])
     w = max(X[2N+1], 1e-10)
     F = X[2N+2]
-    blocks = BeyondHulten._mobile_market_demand(model, p, y, w; external_transfer = F)
+    blocks = OpenCGE._mobile_market_demand(model, p, y, w; external_transfer = F)
     cpi = sum(data.consumption_share .* p .^ (1 - options.elasticities.σ))^(1 / (1 - options.elasticities.σ))
     out[1:N] .= p .- blocks.cost
     out[N+1:2N] .= y .- blocks.intermediary_demand .- blocks.total_final_demand
@@ -69,15 +69,15 @@ function main()
         sola = solve(al; init = ref.init_warm)
         XA = [sola.prices_raw; sola.quantities; sola.wages_raw[1]; sola.external_transfer]
         x, rmax = solve_pin(bf, ref.init_warm, XA[2N+2])
-        blkA = BeyondHulten._mobile_market_demand(al, XA[1:N], XA[N+1:2N], XA[2N+1];
+        blkA = OpenCGE._mobile_market_demand(al, XA[1:N], XA[N+1:2N], XA[2N+1];
             external_transfer = XA[2N+2])
-        blkB = BeyondHulten._mobile_market_demand(bf, x[1:N], x[N+1:2N], x[2N+1];
+        blkB = OpenCGE._mobile_market_demand(bf, x[1:N], x[N+1:2N], x[2N+1];
             external_transfer = x[2N+2])
         @printf("%-4s %14.3e %14.3e %14.3e %14.2e\n", fin_id,
             maximum(abs, x .- XA), abs(blkB.E - blkA.E),
             maximum(abs, blkB.c_dom .- blkA.c_dom), rmax)
         @printf("     F_BF(pin) = %+.12f   F_ALPHA = %+.12f   sum L^cm_BF = %.12f\n",
-            x[2N+2], XA[2N+2], sum(BeyondHulten._cost_minimizing_labor(x[1:N], x[N+1:2N], x[2N+1], bf)))
+            x[2N+2], XA[2N+2], sum(OpenCGE._cost_minimizing_labor(x[1:N], x[N+1:2N], x[2N+1], bf)))
     end
     return nothing
 end

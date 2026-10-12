@@ -9,7 +9,7 @@
 # design `matrix_5x3_v10` (33 cells) with the harness (`solve_cell` +
 # `evaluate_gates` from `experiments/run.jl`) and hard-validates each cell
 # against its recorded run artifacts (`runs/<id>/manifest.toml` +
-# `solution.csv`) via `BeyondHulten.validate_cell`, reporting per-cell
+# `solution.csv`) via `OpenCGE.validate_cell`, reporting per-cell
 # PASS/FAIL with the equilibrium residual and the max abs deviation from
 # the stored artifacts.
 #
@@ -37,7 +37,7 @@
 # Reused machinery: `experiments/plot_matrix.jl` (which includes
 # `experiments/run.jl`).
 
-using BeyondHulten
+using OpenCGE
 using TOML
 using CSV
 using DataFrames

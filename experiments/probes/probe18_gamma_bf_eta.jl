@@ -23,7 +23,7 @@
 # external position, and -- to show what does move -- the output-composition
 # spread max_i |y_i/lambda_i - 1|.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath

@@ -20,7 +20,7 @@
 # Canary: delta = 0 must reproduce the executed GAMMA cells (matrix_5x3-v9-
 # GAMMA-*) exactly, since the externality then vanishes identically.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath

@@ -42,7 +42,7 @@ const DESIGN = "matrix_5x3_v5"
 function lcm_vec(p, y, w, model)
     (; data, options, shocks) = model
     ϵ = options.elasticities.ϵ
-    p, y, w, A, α = BeyondHulten._positive_floor.((p, y, w, shocks.supply_shock, data.factor_share))
+    p, y, w, A, α = OpenCGE._positive_floor.((p, y, w, shocks.supply_shock, data.factor_share))
     log_demand = ϵ .* (log.(p) .+ ((ϵ - 1) / ϵ) .* log.(A) .+ (1 / ϵ) .* log.(α) .+
         (1 / ϵ) .* log.(y) .- log.(w))
     exp.(clamp.(log_demand, log(floatmin(Float64)), log(floatmax(Float64))))
@@ -61,9 +61,9 @@ function bf_sw_blocks(model, p::AbstractVector, y::AbstractVector,
     N = length(data.factor_share)
     (; consumption_share, Ω_raw, factor_share, labor_share) = data
     (; θ, ϵ, σ) = options.elasticities
-    ip = BeyondHulten._intermediate_price(Ω_raw, p, θ)
+    ip = OpenCGE._intermediate_price(Ω_raw, p, θ)
     fin = model.financing
-    ds_eff = BeyondHulten.preference_weights(fin, shocks.demand_shock)
+    ds_eff = OpenCGE.preference_weights(fin, shocks.demand_shock)
     L = labor_share
     income = dot(w, L)                                  # sectoral wage bill
     program = fin isa Union{TaxFinanced, ExternalDebt} ? fin.g : zeros(N)
@@ -77,7 +77,7 @@ function bf_sw_blocks(model, p::AbstractVector, y::AbstractVector,
     final = c_dom .+ (1 .- data.import_margin) .* program .+
             (1 .- data.import_margin) .* (data.gov_demand .+ data.exo_demand) .+
             data.exports_demand
-    cost = BeyondHulten._ces_unit_cost(shocks.supply_shock, factor_share, w, ip, ϵ)
+    cost = OpenCGE._ces_unit_cost(shocks.supply_shock, factor_share, w, ip, ϵ)
     Lcm = lcm_vec(p, y, w, model)
     (; inter, final, c_dom, cost, E, income, tau, Lcm, L, program,
         cpi = sum(consumption_share .* p .^ (1 - σ))^(1 / (1 - σ)))
@@ -86,9 +86,9 @@ end
 "Residual of the sectoral-wage eta = 0 system (3N+1 equations)."
 function problem_bf_sw(out::Vector, X::Vector, model)
     N = length(model.data.factor_share)
-    p = BeyondHulten._positive_floor(X[1:N])
-    y = BeyondHulten._positive_floor(X[N+1:2N])
-    w = BeyondHulten._positive_floor(X[2N+1:3N])
+    p = OpenCGE._positive_floor(X[1:N])
+    y = OpenCGE._positive_floor(X[N+1:2N])
+    w = OpenCGE._positive_floor(X[2N+1:3N])
     F = X[3N+1]
     b = bf_sw_blocks(model, p, y, w, F)
     out[1:N] .= p .- b.cost
@@ -110,7 +110,7 @@ function sw_account(model, X)
     M_cons = dot(p .* (m ./ max.(1 .- m, eps(Float64))), b.c_dom)
     M_inj = dot(p .* m, b.program .+ data.gov_demand .+ data.exo_demand)
     k_bill = p .^ ϵ .* shocks.supply_shock .^ (ϵ - 1) .*
-             BeyondHulten._intermediate_price(data.Ω_raw, p, θ) .^ (1 - ϵ)
+             OpenCGE._intermediate_price(data.Ω_raw, p, θ) .^ (1 - ϵ)
     M_intl = dot(k_bill .* (data.M_int ./ data.λ), y)
     T_intl = dot(k_bill .* (data.T_int ./ data.λ), y)
     S = data.saving_rate * b.E

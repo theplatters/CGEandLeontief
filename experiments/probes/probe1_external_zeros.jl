@@ -16,7 +16,7 @@
 #
 # Read-only: no model is solved, no run is created, no src/ file is touched.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, TOML, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath
@@ -81,7 +81,7 @@ end
 # canary with the F3 programme-inflow term M_prog = -dot(p, additive) removed
 function canary_no_mprog(model, X)
     c = external_balance_canary(model, X)
-    blocks = BeyondHulten._mobile_market_demand(model, X[1:N], X[N+1:2N], X[2N+1])
+    blocks = OpenCGE._mobile_market_demand(model, X[1:N], X[N+1:2N], X[2N+1])
     F = dot(X[1:N], blocks.additive)
     return model.financing isa ExternalDebt ? c.diff + F : c.diff
 end

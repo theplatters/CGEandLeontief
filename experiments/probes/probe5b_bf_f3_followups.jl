@@ -23,11 +23,11 @@ const DESIGN = "matrix_5x3_v5"
 function problem_bf_pin(out::Vector, X::Vector, model, c::Float64)
     (; data, options) = model
     N = length(data.factor_share)
-    p = BeyondHulten._positive_floor(X[1:N])
-    y = BeyondHulten._positive_floor(X[N+1:2N])
+    p = OpenCGE._positive_floor(X[1:N])
+    y = OpenCGE._positive_floor(X[N+1:2N])
     w = max(X[2N+1], 1e-10)
     F = X[2N+2]
-    blocks = BeyondHulten._mobile_market_demand(model, p, y, w; external_transfer = F)
+    blocks = OpenCGE._mobile_market_demand(model, p, y, w; external_transfer = F)
     cpi = sum(data.consumption_share .* p .^ (1 - options.elasticities.σ))^(1 / (1 - options.elasticities.σ))
     out[1:N] .= p .- blocks.cost
     out[N+1:2N] .= y .- blocks.intermediary_demand .- blocks.total_final_demand
@@ -40,15 +40,15 @@ end
 function problem_bf_labour(out::Vector, X::Vector, model)
     (; data, options) = model
     N = length(data.factor_share)
-    p = BeyondHulten._positive_floor(X[1:N])
-    y = BeyondHulten._positive_floor(X[N+1:2N])
+    p = OpenCGE._positive_floor(X[1:N])
+    y = OpenCGE._positive_floor(X[N+1:2N])
     w = max(X[2N+1], 1e-10)
     F = X[2N+2]
-    blocks = BeyondHulten._mobile_market_demand(model, p, y, w; external_transfer = F)
+    blocks = OpenCGE._mobile_market_demand(model, p, y, w; external_transfer = F)
     cpi = sum(data.consumption_share .* p .^ (1 - options.elasticities.σ))^(1 / (1 - options.elasticities.σ))
     out[1:N] .= p .- blocks.cost
     out[N+1:2N] .= y .- blocks.intermediary_demand .- blocks.total_final_demand
-    out[2N+1] = sum(BeyondHulten._cost_minimizing_labor(p, y, w, model)) - options.labor_bar
+    out[2N+1] = sum(OpenCGE._cost_minimizing_labor(p, y, w, model)) - options.labor_bar
     out[2N+2] = cpi - 1.0
     nothing
 end
@@ -95,7 +95,7 @@ function main()
     model = build_cell_model(cell, design_d, data, ψ, g)
     for c in (-0.02, -0.01, 0.0, 0.01, 0.02)
         x, rmax = solve_f(problem_bf_pin, model, init0; c = c)
-        can = BeyondHulten.external_balance_canary(model, x)
+        can = OpenCGE.external_balance_canary(model, x)
         res = can.S + can.T + can.M - can.IX
         @printf("%12.4f %12.2e %14.10f %14.10f %14.10f %14.10f\n",
             c, rmax, can.external_transfer, can.programme_financing, res, can.financing)
@@ -106,7 +106,7 @@ function main()
     model2 = build_cell_model(cell2, design_d, data, ψ, g)
     for c in (-0.01, 0.0, 0.01)
         x, rmax = solve_f(problem_bf_pin, model2, init0; c = c)
-        can = BeyondHulten.external_balance_canary(model2, x)
+        can = OpenCGE.external_balance_canary(model2, x)
         res = can.S + can.T + can.M - can.IX
         @printf("%12.4f %12.2e %14.10f %14.10f %14.10f %14.10f\n",
             c, rmax, can.external_transfer, can.programme_financing, res, can.financing)
@@ -119,10 +119,10 @@ function main()
         xa, _ = solve_f(problem_bf_labour, bf, copy(ref.init_warm))
         sola = solve(al; init = ref.init_warm)
         Xa = [sola.prices_raw; sola.quantities; sola.wages_raw[1]; sola.external_transfer]
-        canb = BeyondHulten.external_balance_canary(bf, xa)
-        cana = BeyondHulten.external_balance_canary(al, Xa)
+        canb = OpenCGE.external_balance_canary(bf, xa)
+        cana = OpenCGE.external_balance_canary(al, Xa)
         Lfrozen = bf.data.labor_share
-        Lcm = BeyondHulten._cost_minimizing_labor(xa[1:N], xa[N+1:2N], xa[2N+1], bf)
+        Lcm = OpenCGE._cost_minimizing_labor(xa[1:N], xa[N+1:2N], xa[2N+1], bf)
         @printf("  %s\n", fin_id)
         @printf("    max|p_BF - p_ALPHA| = %.3e   max|y_BF - y_ALPHA| = %.3e\n",
             maximum(abs, xa[1:N] .- Xa[1:N]), maximum(abs, xa[N+1:2N] .- Xa[N+1:2N]))

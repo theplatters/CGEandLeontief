@@ -33,10 +33,10 @@
 # `programme_vectors`, `build_reference`, `build_cell_model`,
 # `evaluate_gates`, `execute_cell`, `run_design`, `main`.
 #
-# Headless-safe: never loads GLMakie (only `BeyondHulten` plus stdlibs and
+# Headless-safe: never loads GLMakie (only `OpenCGE` plus stdlibs and
 # the kernel's CSV/DataFrames deps).
 
-using BeyondHulten
+using OpenCGE
 using TOML
 using SHA
 using Dates
@@ -298,7 +298,7 @@ function build_reference(design_d::Dict{String,Any}; root::AbstractString = defa
 
     dat = design_d["data"]
     # `Vector{Int}(...)`, not `Int.(...)`: inside any process that has loaded
-    # BeyondHulten (the NonlinearSolve/SciML stack), inference returns `Any`
+    # OpenCGE (the NonlinearSolve/SciML stack), inference returns `Any`
     # for `Int(::Any)`, so broadcasting over an EMPTY vector degrades to
     # `Vector{Any}` (`Int.(Any[]) === Any[]`) and `retained_dataset` rejects
     # it. Typed conversion is inference-independent.
@@ -1026,7 +1026,7 @@ function run_design(design::AbstractString; root::AbstractString = default_root(
 
     ref = build_reference(design_d; root = root, data = data)
     # Typed conversion (see the note in `build_reference`): broadcasting over
-    # an empty `drops = []` yields `Vector{Any}` once BeyondHulten is loaded.
+    # an empty `drops = []` yields `Vector{Any}` once OpenCGE is loaded.
     drops = Vector{Int}(design_d["data"]["drops"])
     kept = if data !== nothing
         collect(1:length(ref.data.factor_share))

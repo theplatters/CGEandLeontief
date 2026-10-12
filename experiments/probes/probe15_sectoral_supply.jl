@@ -27,7 +27,7 @@
 #   Row set 3  the canary: sectoral at eta_s,i = 0 vs the eta = 0 endpoint, with
 #              and without the shock, F2.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath

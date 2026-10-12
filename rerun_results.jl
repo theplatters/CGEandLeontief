@@ -7,6 +7,14 @@
 # converges (residuals ≤ 1.9e-7) and η=1 stalls from mult 0.5 (scale-indeterminacy
 # guard); Sobol 32/32 (0 failures) with θ dominant (S_f≈0.395) and η material
 # (S_f≈0.157).
+#
+# FROZEN LEGACY ARTIFACT (2026-10-12 kernel split): do not extend or revive.
+# The η-interpolation this script drives was retired (ADR-0010), so it already
+# fails at runtime on the current kernel (DomainError: η must be 0 or 1) — its
+# pinned output baseline/output/variance_decomposition_sobol.csv is captured
+# as-is (see baseline/README.md). The former direct include() calls of src/
+# files are replaced by `using OpenCGE` now that the kernel is the separate
+# OpenCGE package.
 # Runs WITHOUT the heavy GLMakie/XLSX/Ipopt deps (includes only core model files),
 # so it precompiles fast. Robust: warm-starts from the no-shock reference and
 # catches solver stalls. Note: the :fixed closure at η≈1 with no autonomous/
@@ -24,15 +32,14 @@
 # locally generated, gitignored artifacts — they are NOT committed; regenerate
 # them by running this script.
 
-# NOTE: run this from an activated BeyondHulten environment:
+# NOTE: run this from an activated OpenCGE environment:
 #   terminal:  julia --project=. rerun_results.jl
 #   REPL:      ] activate .   then   include("rerun_results.jl")
 # (This script only needs CSV/DataFrames/LinearAlgebra/Statistics/NonlinearSolve/
 #  ProgressMeter/ThreadsX — NOT IJulia/Plots/GR, so notebook-plotting precompile
 #  errors in the full project are irrelevant here.)
 using CSV, DataFrames, LinearAlgebra, Statistics, NonlinearSolve, ProgressMeter, ThreadsX
-include("src/core/accounting.jl"); include("src/core/technology.jl"); include("src/closures/labor/types.jl")
-include("src/core/equilibrium.jl"); include("src/closures/labor/labor.jl"); include("src/closures/financing/financing.jl"); include("src/closures/registry.jl"); include("src/core/diagnostics.jl")
+using OpenCGE
 
 cd(@__DIR__)
 data = Data("I-O_DE2019_formatiert.csv"); N = 71; SEC = 35

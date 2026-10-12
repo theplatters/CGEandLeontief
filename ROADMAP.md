@@ -58,7 +58,7 @@ The manuscript must not report a variance share such as “88.4% explained” un
 - [ ] Obtain and review the co-author's claimed `mobile_labor.jl`, `variance_decomposition.jl`, and related replication code. These files are not present in the current repository and their reported results are therefore provisional.
 - [x] Audit the supplied `mobile_labor.jl` and `variance_decomposition.jl` once obtained. **Audit outcome: rejected.** The two-sector diagnostic shows the reported mobile-labor system is not an equilibrium (shock-weighted household expenditure ≈ 1.25485 > 1; Walras' law cannot recover the omitted goods-market condition; a zero-profit equation was dropped instead of a redundant market equation; the solver accepted convergence without checking residuals or its own return code; labor supply used nominal rather than real wages; the high-η limit was misinterpreted as unlimited labor instead of L → 0; and the mobile model used a fixed-base sum instead of the shared Törnqvist index). All current mobile-labor sweep results—including the apparent price invariance and the 88.4% claim—are invalid until regenerated. See `docs/archive/vertdict.md`.
 
-The current implementation in `src/` is the reproducible baseline. Work reported in external summaries is not part of the evidentiary record until it has been added, reviewed, and tested here.
+The current implementation in the `OpenCGE` kernel package (pinned in the committed `Manifest.toml`, ADR-0028) is the reproducible baseline. Work reported in external summaries is not part of the evidentiary record until it has been added, reviewed, and tested here.
 
 ## 4. Non-negotiable model requirements
 
@@ -206,7 +206,7 @@ This extension becomes mandatory if the one-factor model is presented as a polic
 - [ ] Use warm starts only as a numerical optimization; results must not depend on path or starting value.
 - [ ] Expose residual diagnostics and solver termination status in analysis scripts.
 
-Suggested source layout:
+Suggested source layout (historical suggestion; since the kernel split, ADR-0028, the model sources live in the `OpenCGE` kernel package — `src/core/`, `src/closures/labor/`, `src/closures/financing/` — the kernel's own tests in its `tests/`, and the paper-side contracts in this repo's `tests/`):
 
 ```text
 src/
@@ -229,7 +229,7 @@ tests/
 
 ### Phase 4 — Validate the economics and numerics
 
-Status 2026-10-04: an item is ticked only where a named `tests/` testset asserts it (`Pkg.test()` green, exit 0); `[ ]` marks a property the suite does not assert directly, with a note on where it does stand. ADR-0010 retired the interpolated `0 < eta < 1` cases, so the eta-continuity and high-eta items are no longer testable as written.
+Status 2026-10-04: an item is ticked only where a named `tests/` testset asserts it (`julia --project=. tests/runtests.jl` green, exit 0; since the kernel split (ADR-0028) the model tests named below live in the `OpenCGE` kernel's `tests/`, referenced as `OpenCGE@tests/…` in `registry/closures.toml`, and the paper-side contracts in this repo's `tests/`); `[ ]` marks a property the suite does not assert directly, with a note on where it does stand. ADR-0010 retired the interpolated `0 < eta < 1` cases, so the eta-continuity and high-eta items are no longer testable as written.
 
 Add automated tests for:
 
@@ -252,7 +252,7 @@ Add automated tests for:
 
 **Red-flag diagnostic:** if normalized prices and the real wage do not change across `η` but employment does, stop and identify the violated equation before using the results. (Note: the earlier reported "price invariance with changing employment" was an artifact of the rejected mobile-labor system, not a valid CGE finding.)
 
-**Exit criterion:** `julia --project=. -e 'using BeyondHulten'` and `julia --project=. -e 'using Pkg; Pkg.test()'` pass from a clean environment, and an independent accounting/residual report passes.
+**Exit criterion:** `julia --project=. -e 'using OpenCGE'` and `julia --project=. tests/runtests.jl` pass from a clean environment, and an independent accounting/residual report passes.
 
 ### Phase 5 — Run sensitivity analysis
 

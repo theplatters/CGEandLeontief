@@ -1,6 +1,6 @@
 ---
 name: closures
-description: Use when adding, changing, promoting, or retiring a labour-market or financing closure in the BeyondHulten repo (BF, ALPHA, BETA, GAMMA, DELTA, future ZETA; F1, F2, F3) — registry entries in registry/closures.toml, status transitions with evidence, implementation in the single root src/ kernel, tests, and the Phase 2 promotion from the frozen cbase2 snapshot. Covers the eta vs eta_s symbol rule and the DELTA corner rule from ADR-0002.
+description: Use when adding, changing, promoting, or retiring a labour-market or financing closure (BF, ALPHA, BETA, GAMMA, DELTA, future ZETA; F1, F2, F3) — registry entries in registry/closures.toml and scenarios in this paper repo, status transitions with evidence, implementation in the separate OpenCGE kernel package (../opencge), tests, and the Phase 2 promotion from the frozen cbase2 snapshot. Covers the eta vs eta_s symbol rule and the DELTA corner rule from ADR-0002.
 ---
 
 # Closures: adding, changing, promoting
@@ -23,9 +23,9 @@ Full taxonomy: `docs/decisions/ADR-0002-closure-taxonomy.md`. Never reuse an id 
 
 Symbol discipline: `η` is always the BF reallocation parameter, `η_s` is always the BETA supply elasticity. They never appear unqualified as "the elasticity".
 
-## One kernel rule (ADR-0001)
+## One kernel rule (ADR-0001, ADR-0028)
 
-- Implement in the root `src/` only. Current homes: `src/core/equilibrium.jl` (BF, ALPHA, GAMMA mechanics), `src/closures/labor/types.jl` (closure descriptions), `src/closures/labor/labor.jl` (BETA, DELTA), `src/closures/financing/financing.jl` (F1–F3), `src/closures/registry.jl` (id → constructor). `docs/log/2026-09.md` named `src/closures/` as the Phase 2 promotion target — done in ADR-0005.
+- Implement in the `OpenCGE` kernel package only (`../opencge`); this paper repo owns the registry and the scenarios. Current homes (kernel paths, referenced as `OpenCGE@…` from `registry/`): `src/core/equilibrium.jl` (BF, ALPHA, GAMMA mechanics), `src/closures/labor/types.jl` (closure descriptions), `src/closures/labor/labor.jl` (BETA, DELTA), `src/closures/financing/financing.jl` (F1–F3), `src/closures/registry.jl` (id → constructor). Kernel changes land here via a Manifest pin bump (`Pkg.add(url=…, rev=…)` + committed `Manifest.toml`), which starts a new run generation.
 - `cbase2/` is a frozen snapshot: read `cbase2/src/closures.jl` and `cbase2/src/financing.jl` freely and copy the economics from them, but never edit `cbase2/` and never build a parallel kernel.
 - Closures are plug-in options registered centrally; do not duplicate the CES core.
 
@@ -34,19 +34,19 @@ Symbol discipline: `η` is always the BF reallocation parameter, `η_s` is alway
 Schema: `registry/README.md` (`[labor.<ID>]` / `[financing.<ID>]`). Required fields:
 
 - `id`, `name`, `formulation` (exact string), `interpretation`, `status`
-- `symbols` (grep-able Julia types/functions), `files`, `references`, `tests`, `evidence` (repo-relative paths)
+- `symbols` (grep-able Julia types/functions), `files`, `references`, `tests`, `evidence` (repo-relative paths; kernel paths and kernel doc ids are `OpenCGE@…`-qualified, see `registry/README.md`)
 - `dead_ends`, `adrs`, `open_gates`, `notes`
 
 Checklist:
 
 1. If the id or formulation is new, add/extend an ADR first; never redefine an existing id.
-2. Implement in root `src/`; add `tests/test_<feature>.jl` and include it from `tests/runtests.jl`. Cover numerical results with `isapprox`, not exact equality.
+2. Implement in the `OpenCGE` kernel (`../opencge`); add `tests/test_<feature>.jl` there (referenced as `OpenCGE@tests/…`) and, where the paper relies on the contract, a paper-side test in this repo's `tests/`, included from its `tests/runtests.jl`. Cover numerical results with `isapprox`, not exact equality.
 3. Fill the registry fields with real paths; keep unresolved issues in `open_gates`, not prose.
-4. Run `julia --project=. -e 'using Pkg; Pkg.test()'`.
+4. Run `julia --project=. tests/runtests.jl` (and the kernel's own test suite in `../opencge` for implementation changes).
 5. Update evidence and status, then `julia --project=. scripts/status.jl` → 0 warnings → `julia --project=. scripts/status.jl --check`.
 6. Commit as `closure(<id>): …` and log the session in `docs/log/YYYY-MM.md`.
 
-`scripts/status.jl` warns on missing `files`/`tests`/`evidence` paths, `symbols` not found in the listed files, unknown scenario ids referring to the closure, and missing `DE-`/`ADR-` records.
+`scripts/status.jl` warns on missing `files`/`tests`/`evidence` paths (`OpenCGE@…` resolves against the pinned kernel checkout), `symbols` not found in the listed files, unknown scenario ids referring to the closure, and missing `DE-`/`ADR-` records (`OpenCGE@…` doc ids are cross-repo and skip the local check).
 
 ## Status transitions (evidence gates)
 
@@ -57,9 +57,9 @@ Checklist:
 
 Evidence per status (ADR-0003, `registry/README.md`): code in a listed file that runs (`implemented`); listed tests cover the contract and the suite passes (`tested`); the Phase 4 gates of `ROADMAP.md` pass and a recorded run manifest is linked (`validated`). Never promote a status without the corresponding evidence.
 
-## Promotion from frozen cbase2 (Phase 2, planned)
+## Promotion from frozen cbase2 (Phase 2, done)
 
-- Sources: `cbase2/src/closures.jl` (BETA, DELTA) and `cbase2/src/financing.jl` (F1–F3). The `open_gates` for each entry list what blocks promotion. Promotion landed in Phase 2 (ADR-0005): economics in `src/closures/labor/labor.jl` and `src/closures/financing/financing.jl`, types in `src/closures/labor/types.jl`, mapping in `src/closures/registry.jl`.
-- Port the economics into the root kernel, add contract tests, then record the promotion by updating the closure entry (`files`, `tests`, `status`, `open_gates`, `notes`) and the lab log.
+- Sources: `cbase2/src/closures.jl` (BETA, DELTA) and `cbase2/src/financing.jl` (F1–F3). The `open_gates` for each entry list what blocks promotion. Promotion landed in Phase 2 (ADR-0005): economics in the kernel's `src/closures/labor/labor.jl` and `src/closures/financing/financing.jl`, types in `src/closures/labor/types.jl`, mapping in `src/closures/registry.jl` (all `OpenCGE@…` paths since the kernel split).
+- Port the economics into the kernel, add contract tests, then record the promotion by updating the closure entry (`files`, `tests`, `status`, `open_gates`, `notes`) and the lab log.
 - Never edit `cbase2/`; its freeze commit, tree hash, kernel diffs, and open items are in `registry/freeze.toml` (`[frozen.cbase2]`).
-- Do not claim `tested`/`validated` for promoted code until the root tests actually cover it and pass.
+- Do not claim `tested`/`validated` for promoted code until the listed tests (kernel-side and paper-side) actually cover it and pass.

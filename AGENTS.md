@@ -2,35 +2,35 @@
 
 ## What this repository is
 
-A production-network model of green public investment (BeyondHulten, Baqaee–Farhi
-lineage) used to compare labour-market and financing closures. There is exactly
-one canonical kernel: the root `src/` package (ADR-0001). Research plan and
-validation gates live in `ROADMAP.md`; the documentation audit, closure
-catalogue and the executed results are in `docs/DOCS_ASSESSMENT.md` (currently
-Version 8).
+The **paper repo** for the production-network model of green public
+investment (BeyondHulten, Baqaee–Farhi lineage) used to compare labour-market
+and financing closures: the manuscript, the run/registry provenance, and the
+reproduction materials. The model kernel is the separate `OpenCGE` package
+(ADR-0028), pinned here via the committed root `Manifest.toml` (tag
+`v0.1.0`); there is exactly one kernel, and it is not in this tree
+(ADR-0001). Research plan and validation gates live in `ROADMAP.md`; the
+documentation audit, closure catalogue and the executed results are in
+`docs/DOCS_ASSESSMENT.md` (currently Version 8).
 
-## Layout (Phase 1 target)
+## Layout
 
 | Path | What it is |
 | --- | --- |
-| `src/` | Canonical Julia package — model, closures, diagnostics. One kernel only: `src/core/{accounting,technology,equilibrium,diagnostics}.jl`, closure plugins in `src/closures/{labor,financing}/` plus `src/closures/registry.jl` (ADR-0005). |
-| `ext/` | Phase 1: package extensions for heavy optional features (GLMakie plotting); they load only when the optional package is loaded. Wired via `[weakdeps]` / `[extensions]` in `Project.toml`. |
-| `tests/` | Test suite (entry `tests/runtests.jl`, shimmed by `test/runtests.jl`). |
-| `scripts/` | Repository tooling — `scripts/status.jl` generates the status board, `scripts/check_repo.jl` is the pre/post-batch gate (ADR-0007). |
-| `registry/` | Machine-readable single source of truth: `closures.toml`, `scenarios.csv`, `freeze.toml`, `preregistration.toml`. Schema: `registry/README.md`. |
+| `OpenCGE` (external, `../opencge`) | The model kernel — model, closures, diagnostics. Package/module `OpenCGE`, one kernel only (ADR-0001, summarized in the kernel's `DECISIONS.md`); pinned in `Manifest.toml` at rev `v0.1.0`. Kernel implementation changes happen there and land here only via a Manifest pin bump (ADR-0028). |
+| `tests/` | The paper/reproduction test suite (entry `tests/runtests.jl`): real-data and tooling contracts. The kernel's own tests live in `OpenCGE` (`OpenCGE@tests/…`). |
+| `baseline/` | The pre-split reproduction baseline: everything the paper pipeline produced before the kernel moved out, reproducible within 1e-8 by `scripts/reproduce.jl --check`. |
+| `Manifest.toml` | The committed pin of the `OpenCGE` dependency (`repo-rev = "v0.1.0"`, `git-tree-sha1`) — the only tracked "generated" artifact, and a generation-level object (ADR-0028). |
+| `scripts/` | Repository tooling — `scripts/status.jl` generates the status board, `scripts/check_repo.jl` is the pre/post-batch gate (ADR-0007), `scripts/reproduce.jl` is the reproduction baseline tool. |
+| `registry/` | Machine-readable single source of truth: `closures.toml`, `scenarios.csv`, `freeze.toml`, `preregistration.toml`. Schema: `registry/README.md`; kernel paths and kernel doc ids are repo-qualified `OpenCGE@…` (schema v2). |
 | `docs/` | `status.md` (generated status board), `decisions/` (ADRs), `dead-ends/` (DE register), `ideas/` (unexplored-idea register, `IDEA-NNNN`; see its README for the status vocabulary), `log/` (lab session log), `archive/` (closed historical docs). |
 | `experiments/` | Single run entry point `run.jl` plus pinned designs in `experiments/designs/` (schemas: `experiments/README.md`; ADR-0006). |
 | `runs/` | One `runs/<run_id>/manifest.toml` + `log.txt` (`solution.csv` on success) per run; committed `runs/index.csv` holds one row per run (ADR-0004). Only the index and manifests are tracked. |
 | `paper/tables/` | Paper-facing accounting and flow tables generated from the run manifests (cite `run_id`s; never hand-typed numbers). |
-| `archive/src-orphans/` | Read-only archive of abandoned sources that were never wired into the module. |
-| `.opencode/skills/` | Phase 1: agent workflow skills `tracking`, `closures`, `experiments`. |
+| `paper/`, `revision/` | Manuscript sources (`revision/main.tex` is the revision build, `latexmk -pdf`). |
 | `data/` | Input data; mostly gitignored, a few small reference files are tracked. |
-| `paper/`, `revised_manuscript/` | Manuscript sources. The narrative plan — thesis, section plan, retirement list, pitfalls — is `paper/narrative_outline.md` (v3); it cites the reviewer maps in `docs/DOCS_ASSESSMENT.md`. |
-
-Frozen/read-only — never edit (ADR-0001, ADR-0009; commits and tree hashes in
-`registry/freeze.toml`): `cbase2/`, `bf_replication/`, `bf_replication2/`,
-`Replication Files/`, `Dokumente/`, `Notebooks/`, the archived legacy
-notebooks (`docs/archive/notebooks/`), and `archive/`.
+| `archive/src-orphans/` | Read-only archive of abandoned sources that were never wired into the module. |
+| `.opencode/skills/` | Agent workflow skills `tracking`, `closures`, `experiments` (byte-identical copies in `.claude/skills/`). |
+| `cbase2/`, `bf_replication/`, `bf_replication2/`, `Replication Files/`, `Dokumente/`, `Notebooks/`, the archived legacy notebooks (`docs/archive/notebooks/`), and `archive/` | Frozen/read-only snapshots and archives (ADR-0001, ADR-0009); never edited in place. |
 
 ## Commands
 
@@ -39,61 +39,71 @@ From the repository root:
 | Purpose | Command |
 | --- | --- |
 | Install dependencies | `julia --project=. -e 'using Pkg; Pkg.instantiate()'` |
-| Load check | `julia --project=. -e 'using BeyondHulten'` |
-| Test suite | `julia --project=. -e 'using Pkg; Pkg.test()'` |
+| Kernel load check | `julia --project=. -e 'using OpenCGE'` |
+| Test suite | `julia --project=. tests/runtests.jl` |
+| Reproduction baseline | `julia --project=. scripts/reproduce.jl --check` (1e-8 gate against `baseline/`) |
 | Regenerate status board | `julia --project=. scripts/status.jl` |
 | CI gate (stale board) | `julia --project=. scripts/status.jl --check` |
 | Repository gate | `julia --project=. scripts/check_repo.jl` (0 violations required, before and after every batch) |
 | List design cells | `julia --project=. experiments/run.jl --list <design>` |
 | Preregister a design | `julia --project=. experiments/run.jl --preregister <design> [--actor NAME]` (commit the record first) |
 | Run a design | `julia --project=. experiments/run.jl --design <design> [--cell <run_id>] [--cells a,b,c] [--runs-dir DIR] [--budget-seconds N] [--actor NAME]` |
-| Optional plotting | `julia --project=. -e 'using Pkg; Pkg.add("GLMakie")'`, then `using GLMakie`; extended functionality loads lazily. |
+| Build the revision | `latexmk -pdf` in `revision/` (entry `revision/main.tex`) |
+| Optional plotting | `julia --project=. -e 'using Pkg; Pkg.add("GLMakie")'`, then `using GLMakie` (the plotting extension lives in `OpenCGE` and loads lazily). |
 
-Julia ≥ 1.9 is required. `Manifest.toml` is gitignored — do not commit it.
+Julia ≥ 1.9 is required. The root `Manifest.toml` **is committed on
+purpose**: it pins `OpenCGE` (rev `v0.1.0`). Change it only as a deliberate
+generation-level event (see the generation rule below).
 
-`Pkg.test()` includes `test_check_repo.jl` ("real repo is clean"), so the board
-and every preregistration record must be current *before* the suite is run:
-regenerate the board (`scripts/status.jl`) and re-preregister
+`tests/runtests.jl` includes `test_check_repo.jl` ("real repo is clean"), so
+the board and every preregistration record must be current *before* the suite
+is run: regenerate the board (`scripts/status.jl`) and re-preregister
 (`run.jl --preregister <design>`) first, or a green-code suite reports a red
-gate. Never edit `src/` while `Pkg.test` is precompiling — the failure is
-unattributable.
+gate.
 
 ## Model invariants pinned by ADR (do not re-derive, do not drift)
 
-- **Mobile labour closure** (ADR-0019, superseding ADR-0010's N−1 decision):
-  every regime enforces **all N goods-market clearings**. The mobile η = 1
-  system carries the endogenous net external transfer `F` (canonical vector
-  `[p; y; w; F]`, `E = (1−τ)·w·ΣL + F`); the η = 0 endpoint pins `F = 0`; the
-  fixed-wage system clears all N with `F ≡ 0`. Employment allocation uses the
-  endpoints η ∈ {0, 1} only; the interpolated η* and the allocation wedge are
-  retired.
-- **A-bill intermediate-bill accounting** (ADR-0012, ADR-0013): intermediate
-  demand is charged with the **domestic** bill `A_bill` (raw-table row 73). The
-  other two components of the purchaser-price bill are explicit leaks booked in
-  `external_balance_canary`: imported intermediates `M_int` (row 74) and product
-  taxes on intermediate use `T_int` (row 75). Row 76 is their sum and
-  `ΣA + ΣM_int + ΣT_int = Σλ − 1` holds to 2e-16. Leaving row 75 unbooked makes
-  the canary short by exactly `ΣT_int` (2.5745e-2 of GDP).
-- **The external-account identity is the acceptance test** (ADR-0019): with
-  zero legacy manna, every η = 1 solution satisfies
+The implementations live in the `OpenCGE` kernel; the paper cites these
+invariants and must not drift from them. Record ids follow the `OpenCGE@`
+convention (`registry/README.md`): `OpenCGE@ADR-…`/`OpenCGE@DE-…` are
+summarized in the kernel's `DECISIONS.md`, unqualified ids are paper-repo
+records in `docs/`.
+
+- **Mobile labour closure** (OpenCGE@ADR-0019, superseding
+  OpenCGE@ADR-0010's N−1 decision): every regime enforces **all N
+  goods-market clearings**. The mobile η = 1 system carries the endogenous
+  net external transfer `F` (canonical vector `[p; y; w; F]`,
+  `E = (1−τ)·w·ΣL + F`); the η = 0 endpoint pins `F = 0`; the fixed-wage
+  system clears all N with `F ≡ 0`. Employment allocation uses the endpoints
+  η ∈ {0, 1} only; the interpolated η* and the allocation wedge are retired.
+- **A-bill intermediate-bill accounting** (ADR-0012, ADR-0013):
+  intermediate demand is charged with the **domestic** bill `A_bill`
+  (raw-table row 73). The other two components of the purchaser-price bill
+  are explicit leaks booked in `external_balance_canary`: imported
+  intermediates `M_int` (row 74) and product taxes on intermediate use
+  `T_int` (row 75). Row 76 is their sum and
+  `ΣA + ΣM_int + ΣT_int = Σλ − 1` holds to 2e-16. Leaving row 75 unbooked
+  makes the canary short by exactly `ΣT_int` (2.5745e-2 of GDP).
+- **The external-account identity is the acceptance test**
+  (OpenCGE@ADR-0019): with zero legacy manna, every η = 1 solution satisfies
   `S + T_int + M − (I+X) = F + B_gov` (`B_gov = Σp·g` under F3, else 0) and
   `market_clearing_residuals ≈ 0`; the fixed-wage and η = 0 endpoints clear
   all N markets too, with the η = 0 canary carrying the documented
   factor-market gap. The legacy-manna path adds `p·(A+G)` to the gap and `F`
   absorbs it. Never threshold-fit it: if it fails, a term is missing from the
   accounting.
-- **Labour supply is on the real wage** (ADR-0014, DE-0004):
+- **Labour supply is on the real wage** (OpenCGE@ADR-0014, OpenCGE@DE-0004):
   `L^s = L̄·[(w/P)/(w₀/P₀)]^{η_s}`, deflated by the CPI.
-- **Scale determinacy is verified** (ADR-0014): the fixed-wage η = 1 system is
-  admitted only when `max(A_bill/λ + (1−m)(1−s)·fs) < 1` (the round-gain
-  criterion). Closed fixtures sit at exactly 1 and are rejected — including
-  when manna is present, since manna is a constant and cannot remove a unit
-  root.
-- **Cell metrics must not depend on the solver's stopping point** (ADR-0015):
-  the polish is monotone and targets ~1e-10; the acceptance gates stay at
-  1e-6 (fixed) / 1e-5 (mobile).
-- **The cbase2 solver ladder is retired** (DE-0010): the standing `solve()` with
-  its residual-gated LM polish covers the pipeline.
+- **Scale determinacy is verified** (OpenCGE@ADR-0014,
+  OpenCGE@ADR-0017): the fixed-wage η = 1 system is admitted only when
+  `max(A_bill/λ + (1−m)(1−s)·fs) < 1` (the round-gain criterion). Closed
+  fixtures sit at exactly 1 and are rejected — including when manna is
+  present, since manna is a constant and cannot remove a unit root.
+- **Cell metrics must not depend on the solver's stopping point**
+  (OpenCGE@ADR-0015): the polish is monotone and targets ~1e-10; the
+  acceptance gates stay at 1e-6 (fixed) / 1e-5 (mobile).
+- **The cbase2 solver ladder is retired** (OpenCGE@DE-0010): the standing
+  `solve()` with its residual-gated LM polish covers the pipeline.
 
 ## Operating contract
 
@@ -102,7 +112,8 @@ unattributable.
 1. Read `docs/status.md` (human entry point) and the relevant entries in
    `registry/` (`closures.toml`, `scenarios.csv`, `freeze.toml`).
 2. Read the ADRs in `docs/decisions/` and the dead ends in `docs/dead-ends/`
-   that touch the area.
+   that touch the area; kernel-side decisions are summarized in the
+   `OpenCGE` kernel's `DECISIONS.md`.
 3. Load the matching skill from `.opencode/skills/` when the task matches:
    - `tracking` — status, decisions, dead ends, log;
    - `closures` — closure formulations, promotion, registry entries;
@@ -110,6 +121,11 @@ unattributable.
 4. Frozen zones are read-only (ADR-0001). Never edit a frozen file in place,
    not even to "fix" it: a change inside one requires a superseding ADR.
    Frozen hashes are recorded in `registry/freeze.toml`.
+5. Kernel implementation changes do **not** happen here: they are made in
+   `../opencge` (the `OpenCGE` repository) and land in this repo only via a
+   Manifest pin bump (`Pkg.add(url=…, rev=…)` + committed `Manifest.toml`).
+   This repo owns `registry/closures.toml`, `registry/scenarios.csv` and the
+   paper-side tests.
 
 ### Status transitions require evidence
 
@@ -130,15 +146,19 @@ visible (ADR-0004).
   `scenarios.csv` rows; `freeze.toml` only via ADR.
 - Regenerate `docs/status.md` (`julia --project=. scripts/status.jl`); never
   hand-edit it, and it must show **0 warnings**.
-- Add an ADR for a decision, a DE record for an abandoned approach, an `IDEA-NNNN` note under `docs/ideas/` for a route worth remembering but not tested (an idea is not a decision: it carries no registry entry and no weight in the paper, and promoting it follows the ADR path), and one entry in `docs/log/YYYY-MM.md` for the session.
-- Revising `docs/DOCS_ASSESSMENT.md`: increment the version, colour every new or
-  changed word with `\textcolor{revisionV<N-1>}{...}` (Version 5 = blue), add the
-  line to the top version block and an entry to the Revision Log — see the
-  `md-style-corrections` scheme. Inside `\textcolor{...}` write plain ASCII math
-  (no `$...$`) and `\texttt{}` with escaped underscores instead of backticks;
-  never wrap a markdown table in `\textcolor`.
-- Never restate status in prose (ADR-0003); other documents link to `registry/`
-  or `docs/status.md`.
+- Add an ADR for a decision, a DE record for an abandoned approach, an
+  `IDEA-NNNN` note under `docs/ideas/` for a route worth remembering but not
+  tested (an idea is not a decision: it carries no registry entry and no
+  weight in the paper, and promoting it follows the ADR path), and one entry
+  in `docs/log/YYYY-MM.md` for the session.
+- Revising `docs/DOCS_ASSESSMENT.md`: increment the version, colour every new
+  or changed word with `\textcolor{revisionV<N-1>}{...}` (Version 5 = blue),
+  add the line to the top version block and an entry to the Revision Log —
+  see the `md-style-corrections` scheme. Inside `\textcolor{...}` write plain
+  ASCII math (no `$...$`) and `\texttt{}` with escaped underscores instead of
+  backticks; never wrap a markdown table in `\textcolor`.
+- Never restate status in prose (ADR-0003); other documents link to
+  `registry/` or `docs/status.md`.
 
 ### Runs
 
@@ -150,14 +170,18 @@ visible (ADR-0004).
   preregistration mismatch before creating any run dir) → `run.jl` updates the
   scenario row and `runs/index.csv` on every status transition.
 - Run `scripts/check_repo.jl` before and after every batch; it must report
-  0 violations. It enforces the board/warnings gate, registry bidirectionality,
-  manifest/index/scenario consistency, preregistration integrity, and the WIP limit.
+  0 violations. It enforces the board/warnings gate, registry bidirectionality
+  (against the pinned `OpenCGE` kernel registry), manifest/index/scenario
+  consistency, preregistration integrity, and the WIP limit.
 - WIP limit: at most one scenario row may be `running` at a time (ADR-0007).
-- Failed and provisional runs stay visible with their caveats; never drop them.
+- Failed and provisional runs stay visible with their caveats; never drop
+  them.
 - Paper tables and figures cite `run_id`s (ADR-0004).
-- A `src/` change invalidates the provenance of existing runs: batch such
-  changes and re-run as a new generation (`-v2`, `-v3`, …) rather than mixing
-  generations in one table.
+- **Generation rule:** an `OpenCGE` rev bump invalidates the provenance of
+  existing runs (as a `src/` change used to): batch such changes and re-run as
+  a new generation (`-v2`, `-v3`, …) rather than mixing generations in one
+  table. Every run manifest records the OpenCGE pin (version, repo-url,
+  repo-rev, git-tree-sha1) in its `[provenance]` block.
 - Current state: the matrix is executed on the full-71 A-bill calibration in
   ten generations — `matrix_5x3` (v1, two cells blocked by the retired
   heuristic guard), `matrix_5x3_v2` (ADR-0014), `matrix_5x3_v3` (ADR-0015),
@@ -191,7 +215,10 @@ visible (ADR-0004).
 
 - Match the style of surrounding code.
 - Tests live in `tests/`; new files are named `test_<feature>.jl` and included
-  from `tests/runtests.jl`.
+  from `tests/runtests.jl`. Kernel tests live in the `OpenCGE` package
+  (`OpenCGE@tests/test_<feature>.jl`, included from its own `tests/runtests.jl`)
+  and are referenced from `registry/closures.toml` via the `OpenCGE@`
+  convention.
 - Use `@testset` and `isapprox` tolerances, not exact floating-point equality.
 - A synthetic fixture cannot test the intermediate-bill identity: its
   calibration is consistent under any split of `(1−fs)·λ` into `A + M + T`.
@@ -201,11 +228,13 @@ visible (ADR-0004).
   fixtures (m = s = 0) have unit round-gain column sums and are rejected at
   η = 1; give a fixture `s > 0` when a test needs a determinate fixed-wage
   solve.
-- Experimental code lives outside `src/` (scratch, notebooks, `experiments/`
-  smoke designs). It enters `src/` only promoted: registry entry + tests +
-  docs, or it is archived with a DE record. No zombie files in `src/` — every
-  file must be reachable from `src/BeyondHulten.jl` (`check_repo.jl` enforces this).
-- Run `Pkg.test()` before finishing work.
+- Experimental code lives outside the kernel and outside the tracked tooling
+  (scratch, notebooks, `experiments/` smoke designs). It enters `OpenCGE`
+  only promoted: registry entry + tests + docs, or it is archived with a DE
+  record. No zombie files here either — every tool in `scripts/` and
+  `experiments/` is referenced from `AGENTS.md`, `experiments/README.md` or
+  the registry; kernel-side reachability is enforced by the kernel's own CI.
+- Run `julia --project=. tests/runtests.jl` before finishing work.
 
 ## House rules
 
@@ -213,7 +242,7 @@ visible (ADR-0004).
   skill/registry workflow.
 - Do not commit proprietary or machine-local data or generated artifacts;
   `data/` and generated figures are largely gitignored.
-- Empty-vector broadcasting is a trap: once `BeyondHulten` is loaded
+- Empty-vector broadcasting is a trap: once `OpenCGE` is loaded
   (NonlinearSolve/SciML), inference returns `Any` for `Int(::Any)`, so
   `Int.(Any[]) === Any[]`. Use `Vector{Int}(x)` for values that can be empty
   (`drops = []`).

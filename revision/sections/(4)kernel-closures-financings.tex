@@ -1,260 +1,158 @@
 % =====================================================================
 % Section 4 --- One kernel, five closures, three financings
 % ---------------------------------------------------------------------
-% Job: the common kernel (E in passing: one production core deliberately
-%      held fixed); row and cell definitions; the "why only three economies"
-%      box (Propositions 1-3 in one paragraph, forward reference to Sec. 6
-%      and App. A); the presentation rule as one paragraph.
+% Job: the formal basis in its most minimal form --- the input--output
+%      table and the producer/household optimization problems (oriented on
+%      paper/submission-metro/submission.tex, Sec. 2 and 2.2), then the
+%      closures in words. All functional forms and closure equations live
+%      in Appendix G (app:model); equation labels moved there unchanged.
+%      Still to come: the "why only three economies" box and the
+%      presentation rule.
 % Mindmap: N02A, N06, N11, N12.
-% Status: STUB --- narrative outline v3 (2026-09-20).
+% Status: DRAFT --- minimal rewrite (2026-10-12).
 % =====================================================================
 \section{One kernel, five closures, three financings}\label{sec:kernel}
 
-% TODO: verbal model overview BEFORE the equations (R1.2); state the static
-% horizon explicitly; one production core (theory of production E) held fixed
-% by design.
+% TODO: verbal model overview BEFORE the equations (R1.2).
 
-We examine how different closures have different effects.
-For this we choose five different labor closures and three financing closures that reflect different assumptions about the economy.
-The labour closures specify how wages and employment adjust.
+All fifteen economies of the matrix share one static kernel: a production
+network calibrated to an input--output table, cost-minimizing producers and
+a utility-maximizing household. The kernel is held fixed by design; the
+closures change only which variables adjust. This section states the kernel
+in its most minimal form; functional forms and the closure equations are in
+Appendix~\ref{app:model}.
+
+\begingroup
+\renewcommand*{\theHequation}{kernel.\arabic{equation}}
+
+\subsection{The input--output table}\label{subsec:io-table}
+
+An input--output table records, for $N$ sectors, the deliveries $x_{ui}$ of
+good $u$ to sector $i$, final use $z_u$ of good $u$ (household consumption,
+government purchases, investment, exports) and the value added $v_i$ of
+each sector. Two accounting identities hold for every sector. Along a row,
+output equals intermediate and final use; down a column, revenue equals
+the cost of intermediate inputs plus value added:
+\begin{align}
+p_u y_u &= \sum_{i=1}^N p_u x_{ui} + p_u z_u,
+\label{eq:io-row}\\
+p_i y_i &= \sum_{u=1}^N p_u x_{ui} + v_i.
+\label{eq:io-column}
+\end{align}
+Dividing a column by sector revenue turns the table into cost shares: the
+labour share $\alpha_i = v_i/(p_i y_i)$ and the input shares
+$\Omega_{iu} = p_u x_{ui}/\sum_{u'} p_{u'}x_{u'i}$ of the intermediate
+bundle, with $\sum_u \Omega_{iu} = 1$. Household consumption shares
+$\omega_i$ follow in the same way from the final-use columns. Imports and
+product taxes on intermediate use are booked as separate leaks
+(Appendix~\ref{app:kernel}).
+
+The table is a snapshot: it fixes shares at one point, but says nothing
+about how they respond when prices or demand change. That is the job of the
+optimization problems below.
+
+\subsection{The optimization problems}\label{subsec:optimization}
+
+Each sector is a single competitive firm with a constant-returns technology
+$\Phi_i$ in labour and intermediate inputs. Given prices $p$, its wage $w_i$
+and output $y_i$, it minimizes cost:
+\begin{equation}
+\min_{L_i,\,x_{1i},\ldots,x_{Ni}} \; w_i L_i + \sum_{u=1}^N p_u x_{ui}
+\qquad \text{s.t.} \qquad \Phi_i(L_i, x_{1i},\ldots,x_{Ni}; A_i) \geq y_i,
+\label{eq:cost-min}
+\end{equation}
+where $A_i$ is productivity. Constant returns make total cost
+$c_i(p,w_i;A_i)\,y_i$, with unit cost $c_i$, and perfect competition
+equates price and unit cost, $p_i = c_i(p,w_i;A_i)$. Input demands follow
+from Shephard's lemma, $L_i = y_i\,\partial c_i/\partial w_i$ and
+$x_{ui} = y_i\,\partial c_i/\partial p_u$. The representative household
+maximizes utility given its consumption expenditure $E^h$:
+\begin{equation}
+\max_{c^h} \; U(c^h)
+\qquad \text{s.t.} \qquad \sum_{i=1}^N p_i c_i^h \leq E^h.
+\label{eq:utility-max}
+\end{equation}
+We take $\Phi_i$ to be a nested CES (elasticity $\epsilon$ between labour and
+the intermediate composite, $\theta$ among intermediates) and $U$ to be CES
+with elasticity $\sigma$. The shares of the table are its weights, so at
+baseline prices the solutions to~\eqref{eq:cost-min}
+and~\eqref{eq:utility-max} reproduce the table exactly. Equilibrium
+requires that output satisfies intermediate and final demand in every
+sector, the row identity~\eqref{eq:io-row} read as a market-clearing
+condition.
+
+These conditions determine prices and quantities only once wages,
+employment and household resources are pinned down. The table and the
+optimization problems are silent on both: a closure supplies them.
+\endgroup
+
+\subsection{Five labour closures and three financings}\label{subsec:closures}
+
+Section~\ref{sec:two-questions} introduced the closures verbally;
+Table~\ref{tab:closure-conditions} states the two poles and
+Table~\ref{tab:closure-matrix-3x5} the full matrix, each cell by one
+labour-market and one financing condition. With the kernel in place, the
+symbols in these conditions can now be read off.
+
+\paragraph{Labour-market conditions.} $L_i$ is employment in sector $i$ and
+$L = \sum_i L_i$ total employment; a bar marks the baseline, so $\bar L_i$ is
+baseline sectoral and $\bar L$ baseline total employment. $w$ is the common
+wage of the mobile closures, $w_i$ the sector-specific wage where labour
+markets are sectoral, and $\bar w$ the pegged real wage. Real wages are
+deflated by the consumption price index $\Pi(p)$, the CES price of the
+household's bundle, and a superscript $0$ marks baseline values.
+$L_i^{\mathrm{cm}}(p, y_i, w)$ is the labour demand that solves the firm's
+cost-minimization problem~\eqref{eq:cost-min} at prices $p$ and output
+$y_i$. The allocation parameter $\eta$ takes only its endpoints: $\eta = 1$
+lets labour move to its cost-minimizing use, $\eta = 0$ freezes the
+baseline allocation. The labour-supply elasticity $\eta_{s,i}$ governs how
+strongly sectoral employment responds to the real wage; the headline
+results set it to a common value $\eta_s$. Finally, $\theta$, $\epsilon$
+and $\sigma$ are the substitution elasticities of
+Section~\ref{subsec:optimization} (among intermediates, between labour and
+intermediates, and in consumption); their limit $0^{+}$ is fixed
+proportions.
+
+\paragraph{Financing conditions.} $c_i^h$ is the household's purchase of
+good $i$ and $E^h$ its consumption expenditure, so $\sum_i p_i c_i^h = E^h$
+is the household budget of~\eqref{eq:utility-max}, held fixed while F1
+tilts its composition. $g_i$ is the programme bundle, the real public
+investment in sector $i$, and $\sum_i p_i g_i$ its cost at current prices.
+Under F2 that cost is raised as the programme tax $T(p)$; under F3 it is
+booked as external programme financing $B_{\mathrm{gov}}$.
+
+In words, the columns of Table~\ref{tab:closure-matrix-3x5} are as follows.
 % NAMING (2026-10-11): the internal ids (BF/ALPHA/BETA/GAMMA/DELTA) are no
 % longer printed anywhere in the paper; the names below are the ones
 % proposed in the item-E note of section (3) and were swept through the
 % draft, tables included. The ids survive only in run ids, registry keys
 % and \label anchors, which are literal identifiers.
 \textbf{The no-reallocation closure} fixes employment in each sector at its
-baseline level and lets
-sector-specific wages adjust. \textbf{The standard CGE closure} allows
-labour to move between
-sectors at one flexible wage while keeping total employment fixed.
-\textbf{The elastic labour-supply closure} lets sectoral employment respond
-to each sector's real wage,
+baseline level and lets sector-specific wages adjust
+(eq.~\ref{eq:closure-bf}). \textbf{The standard CGE closure} allows labour
+to move between sectors at one flexible wage while keeping total employment
+fixed (eq.~\ref{eq:closure-alpha}). \textbf{The elastic labour-supply
+closure} lets sectoral employment respond to each sector's real wage,
 deflated by the consumption price index, with a common supply elasticity
-but separate wages. \textbf{The fixed real wage closure} fixes the common
-real wage and lets
-employment adjust without a cap. \textbf{The Leontief closure} applies the
-fixed-wage rule
-in the Leontief limit, with fixed proportions in production and consumption;
-it is a corner rather than a separate labour-market mechanism.
+but separate wages (eq.~\ref{eq:closure-beta}). \textbf{The fixed real
+wage closure} fixes the common real wage and lets employment adjust without
+a cap (eq.~\ref{eq:closure-gamma}). \textbf{The Leontief closure} applies
+the fixed-wage rule in the Leontief limit, with fixed proportions in
+production and consumption (eq.~\ref{eq:closure-delta}); it is a corner
+rather than a separate labour-market mechanism.
 
-The financing closures specify how programme-related demand is accommodated
-and who bears its cost. \textbf{F1} redirects household spending towards
+The rows of the table, the financing closures, specify how
+programme-related demand is accommodated and who bears its cost. \textbf{F1} redirects household spending towards
 programme sectors by changing preferences: larger spending shares there are
 paid for by smaller shares elsewhere within the household budget, without
-additional public purchases. \textbf{F2} adds public investment financed by
-a household tax equal to the programme's current-price cost. \textbf{F3}
-adds the same public-investment bundle with external financing and no
-additional domestic programme tax. This external financing is an accounting
-counterpart, not a monetary mechanism.
-
-\subsection{The five labour closures}\label{subsec:labour-closures}
-% Formulations: registry/closures.toml; ADR-0020 and ADR-0022.
-% Appendix A resets the equation counter; keep these PDF anchors distinct.
-
-\begingroup
-\renewcommand*{\theHequation}{labour.\arabic{equation}}
-Let $L_i$ denote employment in sector $i$, $\bar{L}_i$ its baseline value,
-and $\Lbar = \sum_{i=1}^N \bar{L}_i$ total baseline employment. Sectoral
-wages are $w_i$; with mobile labour they equal one common wage $w$.
-The real wage is deflated by the consumption price index
-\begin{equation}
-  \Pi(p) = \left(\sum_{i=1}^N \omega_i p_i^{1-\sigma}\right)^{1/(1-\sigma)},
-  \qquad \sum_{i=1}^N \omega_i = 1,
-  \label{eq:labour-cpi}
-\end{equation}
-with calibrated weights $\omega_i$ and the Cobb--Douglas limit at
-$\sigma = 1$. Subscript $0$ denotes the baseline. All closures use the
-same cost-minimizing labour demand,
-\begin{equation}
-L_i^{\mathrm{cm}}(p,y_i,w_i)
- = \alpha_i A_i^{\epsilon-1} y_i
-   \left(\frac{p_i}{w_i}\right)^{\epsilon}.
-\label{eq:closure-labour-demand}
-\end{equation}
-Here $y_i$ is gross output, $A_i$ productivity and $\alpha_i$ the calibrated
-labour share. The elasticity $\epsilon$ governs substitution between labour
-and the intermediate composite. The closures differ in the wage and
-labour-supply restrictions imposed on this demand.
-
-\paragraph{The no-reallocation closure: immobile labour.}
-The no-reallocation row fixes employment in every sector and solves a sector-specific
-wage to clear each labour market:
-\begin{equation}
-L_i = L_i^{\mathrm{cm}}(p,y_i,w_i) = \bar{L}_i,
-\qquad i=1,\ldots,N, \qquad \eta = 0.
-\label{eq:closure-bf}
-\end{equation}
-Thus $\sum_i L_i = \Lbar$, but wages may differ across sectors.
-The allocation parameter $\eta$ selects only the endpoints $\{0,1\}$;
-its mobile endpoint $\eta = 1$ is the standard CGE closure below, not an
-additional closure.
-
-\paragraph{The standard CGE closure: mobile labour at full employment.}
-Labour reallocates across sectors at one flexible wage, while total
-employment remains fixed:
-\begin{equation}
-L_i = L_i^{\mathrm{cm}}(p,y_i,w),
-\qquad \sum_{i=1}^N L_i = \Lbar,
-\qquad \eta = 1.
-\label{eq:closure-alpha}
-\end{equation}
-
-\paragraph{The elastic labour-supply closure: sectoral supply curves.}
-We use the uniform-elasticity sectoral form: each sector has its own wage
-and supply curve, with one common labour-supply elasticity $\eta_s$:
-\begin{equation}
-L_i = L_i^{\mathrm{cm}}(p,y_i,w_i)
- = \bar{L}_i \left[\frac{w_i/\Pi(p)}{w_{i0}/\Pi_0}\right]^{\eta_s},
-\qquad \eta_s \geq 0, \qquad i=1,\ldots,N.
-\label{eq:closure-beta}
-\end{equation}
-Equal supply elasticities do not impose equal wages: $N$ separate labour
-markets determine $w_i$. Here $\eta_s$ is a labour-supply elasticity, not
-the allocation parameter $\eta$; setting $\eta_s = 0$ gives exactly the
-no-reallocation row. The calibrated real-wage anchors are $w_{i0}/\Pi_0 = 1$.
-The deflator remains the common consumption price index, not the sector's
-own goods price $p_i$. The supply curves are reduced forms without a
-labour--leisure income effect. The headline panels use $\eta_s = 0.5$;
-the elasticity ladder and heterogeneous sectoral variants are reported in
-Appendix~\ref{app:variants}. The single-wage form of this closure is
-retained there only as a distinct benchmark; its zero-elasticity limit is
-the standard CGE closure, not the no-reallocation one.
-
-\paragraph{The fixed real wage closure.}
-The real wage is pegged at its baseline value, while employment is
-endogenous and uncapped:
-\begin{equation}
-\frac{w}{\Pi(p)} = \bar{w} = 1,
-\qquad L_i = L_i^{\mathrm{cm}}(p,y_i,w),
-\qquad \eta = 1.
-\label{eq:closure-gamma}
-\end{equation}
-Unlike the standard CGE closure, this closure does not impose
-$\sum_i L_i = \Lbar$.
-It is a two-sided wage peg, not a one-sided wage floor with unemployment
-rationing. On the demand-only baseline branch, $\Pi(p)=1$ and the
-implemented wage pin is $w=1$.
-
-\paragraph{The Leontief closure: the fixed-coefficient corner.}
-The Leontief closure keeps the wage and employment rule of the fixed real
-wage closure while taking the
-substitution elasticities to their Leontief limits:
-\begin{equation}
-\frac{w}{\Pi(p)} = \bar{w} = 1,
-\qquad \eta = 1,
-\qquad (\theta,\epsilon,\sigma) \longrightarrow (0^+,0^+,0^+).
-\label{eq:closure-delta}
-\end{equation}
-Here $\theta$ governs substitution between intermediate inputs and
-$\sigma$ substitution in consumption. The Leontief closure is therefore a
-corner of the fixed real wage closure with fixed-coefficient technology,
-rather than an independent
-labour-market mechanism.
-\endgroup
-
-\subsection{The three financing closures}\label{subsec:financing-closures}
-% Formulations: registry/closures.toml; ADR-0002, ADR-0019 and ADR-0020.
-% Programme-scale F1 tilt: experiments/run.jl, f1_tilt_weights.
-\begingroup
-\renewcommand*{\theHequation}{financing.\arabic{equation}}
-Each labour closure is crossed with three ways of accommodating the same
-programme scale and sectoral incidence. Let $g_i = kG_0\psi_i$ denote the
-reference programme bundle, where $G_0$ is its baseline-price value,
-$k \geq 0$ scales the programme, and $\psi_i \geq 0$ with
-$\sum_i\psi_i = 1$ describes its sectoral incidence. F2 and F3 add this
-bundle to final demand; F1 instead uses its scale and incidence to redirect
-household spending.
-
-Baseline government purchases $g_i^G$ remain tax-financed in all three
-cases. Define the wage bill and their current-price tax cost as
-\begin{equation}
-W = \sum_{i=1}^N w_i L_i,
-\qquad T_G(p) = \sum_{i=1}^N p_i g_i^G.
-\label{eq:financing-baseline-budget}
-\end{equation}
-With a common wage, $W = w\sum_i L_i$. Let $E$ denote after-tax household
-resources, including the net external transfer $F$, and let $s$ be the
-calibrated saving rate. Household consumption expenditure is
-$E^h = (1-s)E$. Gross household purchases $c_i^h$ exhaust this budget:
-\begin{equation}
-\sum_{i=1}^N p_i c_i^h = E^h,
-\qquad c_i^{\mathrm{dom}} = (1-m_i)c_i^h,
-\label{eq:financing-household-budget}
-\end{equation}
-where $m_i$ is the sectoral import margin. Only the domestic content enters
-domestic goods-market clearing; likewise, the programme contributes
-$(1-m_i)g_i$ under F2 and F3.
-
-\paragraph{F1: budget-neutral preference reallocation.}
-F1 changes the household's CES weights without adding a public-demand
-bundle. For positive preference shifters $d_i$, the weights and gross
-household demand become
-\begin{align}
-\widetilde{\omega}_i
- &= \frac{\omega_i d_i}{\sum_j\omega_j d_j},
-\qquad \sum_i\widetilde{\omega}_i = 1,
-\label{eq:closure-f1-weights}\\
-c_i^h
- &= E^h\frac{\widetilde{\omega}_i p_i^{-\sigma}}
- {\sum_j\widetilde{\omega}_j p_j^{1-\sigma}},
-\qquad E = W-T_G(p)+F.
-\label{eq:closure-f1}
-\end{align}
-The programme-scale tilt is $d_i = 1+kG_0\psi_i^+/c_{i0}^h$ in sectors
-with positive baseline household purchases, and $d_i=1$ otherwise;
-$\psi^+$ is the programme incidence restricted to those sectors and
-renormalized to sum to one. The CES normalizer preserves
-\eqref{eq:financing-household-budget} at every price vector. Thus increased
-spending shares in programme sectors are paid for by reduced shares
-elsewhere, conditional on the household budget; equilibrium income need
-not remain unchanged. F1 is a demand-composition experiment, not an
-autonomous investment injection or multiplier.
-
-\paragraph{F2: tax-financed public investment.}
-F2 adds the real programme bundle $g$ and levies an additional household
-tax equal to its value at equilibrium prices:
-\begin{equation}
-T(p) = \sum_{i=1}^N p_i g_i,
-\qquad E = W-T_G(p)-T(p)+F,
-\qquad B_{\mathrm{gov}}=0.
-\label{eq:closure-f2}
-\end{equation}
-Total domestic tax revenue $T_G(p)+T(p)$ therefore balances the purchases
-$g^G+g$, priced at current rather than baseline prices. The tax is
-implemented as the endogenous wage-income rate
-$\tau=[T_G(p)+T(p)]/W$; with one representative household its burden is
-effectively lump-sum. The programme has an explicit domestic budget
-counterparty and reduces household resources directly by $T(p)$.
-
-\paragraph{F3: externally financed public investment.}
-F3 adds the same real bundle but imposes no additional domestic programme
-tax. Its current-price cost is booked as external programme financing:
-\begin{equation}
-B_{\mathrm{gov}} = \sum_{i=1}^N p_i g_i,
-\qquad E = W-T_G(p)+F.
-\label{eq:closure-f3}
-\end{equation}
-The booking $B_{\mathrm{gov}}$ is distinct from the net external transfer
-$F$ entering household resources after tax. The latter is solved
-endogenously in the no-reallocation, the standard CGE and both
-elastic-supply forms, but is fixed at zero in the two fixed-wage closures,
-the fixed real wage closure and its Leontief corner. With no unfinanced
-demand injection, all closures clear
-all $N$ goods markets and satisfy the external-account identity
-\begin{equation}
-S + T_{\mathrm{int}} + M - (I+X) = F+B_{\mathrm{gov}},
-\qquad S=sE,
-\label{eq:financing-external-account}
-\end{equation}
-where $I$ is non-programme investment, $X$ exports, $M$ total imports
-(including intermediate and programme imports), and $T_{\mathrm{int}}$
-the separately booked product-tax leak on intermediate use; all are
-current-price values. Here $B_{\mathrm{gov}}=0$ under F1 and F2, so the net
-external position is $F+B_{\mathrm{gov}}$, not the programme cost alone.
-F3 is an accounting open-economy closure, not a monetary mechanism: the
-static model cannot distinguish external borrowing from a transfer and
-does not model interest payments, repayment or exchange-rate adjustment.
-\endgroup
+additional public purchases (eq.~\ref{eq:closure-f1}). \textbf{F2} adds
+public investment financed by a household tax equal to the programme's
+current-price cost (eq.~\ref{eq:closure-f2}). \textbf{F3} adds the same
+public-investment bundle with external financing and no additional domestic
+programme tax (eq.~\ref{eq:closure-f3}). This external financing is an
+accounting counterpart, not a monetary mechanism. Under every combination
+all $N$ goods markets clear and the external-account identity
+holds (eq.~\ref{eq:financing-external-account}).
 
 \subsection{Why only three economies}\label{subsec:why-three}
 % TODO: the equivalence box --- Propositions 1-3 in one paragraph

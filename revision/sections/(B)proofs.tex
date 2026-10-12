@@ -135,11 +135,11 @@ $ds$ ($ds = 1$ except under F1, where $ds = d$, the preference tilt):
 c_i = (1-s)(1-m_i)\,\omega_i\, ds_i\; E\; p_i^{-\sigma} \Big/
       \textstyle\sum_j \omega_j ds_j\, p_j^{1-\sigma},
 \qquad
-E = (1-\tau)\, w \textstyle\sum_i L_i + F,
+E = (1-\tau)\, w \textstyle\sum_i L_i + R,
 \label{eq:cons}
 \end{equation}
 with the lump-sum tax rate $\tau = p\!\cdot\! g^G / (w \sum_i L_i)$ under
-F1/F3 and $\tau = p\!\cdot\!(g^G + g)/(w \sum_i L_i)$ under F2, and $F$ the
+F1/F3 and $\tau = p\!\cdot\!(g^G + g)/(w \sum_i L_i)$ under F2, and $R$ the
 net external transfer entering expenditure after tax (ADR-0019).
 At $\eta = 0$ the wage bill is
 $\sum_i w_i \bar{L}_i$ in \eqref{eq:cons}. Saving
@@ -153,7 +153,7 @@ where $g_i$ appears only under the additive financings F2/F3
 ($g_i = 0$ under F1; legacy manna is zero in the matrix).
 
 \paragraph{The four regimes.} The mobile systems solve for
-$X = (p, y, w, F) \in \mathbb{R}^{2N+2}$ with the numeraire
+$X = (p, y, w, R) \in \mathbb{R}^{2N+2}$ with the numeraire
 $\Pi(p) = 1$, where
 \begin{equation}
 \Pi(p) = \Big( \textstyle\sum_i \omega_i\, p_i^{1-\sigma}
@@ -170,16 +170,16 @@ and close with the labour equation
 \label{eq:beta}
 \end{align}
 The fixed-wage systems solve for $X = (p, y) \in \mathbb{R}^{2N}$ with the
-wage pinned $w \equiv 1$ and $F \equiv 0$; employment is a post-solve
+wage pinned $w \equiv 1$ and $R \equiv 0$; employment is a post-solve
 outcome. The fixed real wage closure runs them at the baseline elasticities,
 the Leontief closure at the Leontief
 corner $(\theta_\delta,\epsilon_\delta,\sigma_\delta) = (10^{-4},10^{-4},
 10^{-4})$. The no-reallocation closure is the sectoral-wage system at
-$\eta = 0$ (ADR-0020 option C, superseding the ADR-0019 $F = 0$ pin): the
+$\eta = 0$ (ADR-0020 option C, superseding the ADR-0019 $R = 0$ pin): the
 allocation stays frozen at the baseline, $L_i = \bar{L}_i$, and $N$ sectoral
 wages $w_i$ are solved from each sector's own first-order condition
 $L^{cm}_i(p, y_i, w_i) = \bar{L}_i$ jointly with zero profit, with unknowns
-$[\,p;\; y;\; w(1{:}N);\; F\,]$ and the external transfer $F$ free. All rows
+$[\,p;\; y;\; w(1{:}N);\; R\,]$ and the external transfer $R$ free. All rows
 in the matrix use $\eta = 1$ except the no-reallocation closure.
 
 \subsection{The demand-only reduction}\label{sec:reduction}
@@ -245,28 +245,28 @@ L &= \mathrm{diag}(\alpha)\, y, &
 \sum_i L_i &= \alpha^{\!\top} y,
 \label{eq:leontiefblocks}\\
 c &= (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)\; E, &
-E &= \alpha^{\!\top} y - \textstyle\sum g^G + F
+E &= \alpha^{\!\top} y - \textstyle\sum g^G + R
    \;\; (\text{F1/F3}), \nonumber
 \end{align}
 where $\tilde\omega(ds) = (\omega \odot ds)\,/\, \one^{\!\top}(\omega \odot
 ds)$ and $E = \alpha^{\!\top} y - \sum g^G - \sum g$ under F2. Hence the
 clearing system \eqref{eq:clearing} is exactly affine,
 \begin{equation}
-y = G\, y + b(F),
+y = G\, y + b(R),
 \qquad
 G = \Omega^{\!\top}\mathrm{diag}(a)
   + (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)\,\alpha^{\!\top},
 \label{eq:affine}
 \end{equation}
 \begin{equation}
-b(F) = (1-m)\odot\big( g^G + inv + g \big) + X
+b(R) = (1-m)\odot\big( g^G + inv + g \big) + X
      + (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)
-       \big( F - \textstyle\sum g^G - \mathbf{1}_{F2}\textstyle\sum g \big),
+       \big( R - \textstyle\sum g^G - \mathbf{1}_{F2}\textstyle\sum g \big),
 \label{eq:bvec}
 \end{equation}
 with $g$ present only under the additive financings
 F2/F3 and $\mathbf{1}_{F2}$ selecting the tax-financed column (the bracket is
-$F-\sum g^G$ under F1/F3 and $F-\sum g^G-\sum g$ under F2).
+$R-\sum g^G$ under F1/F3 and $R-\sum g^G-\sum g$ under F2).
 No elasticity parameter enters $G$ or $b$. At
 $\eta = 0$ the aggregate is still pinned, $\sum_i L_i = \Lbar$, but the
 unit-price reduction below describes only the \emph{retired} common-wage
@@ -337,7 +337,7 @@ equivalent, equation by equation.
 
 \begin{proposition}[The fixed real wage closure $\equiv$ the Leontief
 closure]\label{prop:gd}
-Let $A \equiv \one$, $\eta = 1$, $F \equiv 0$, $w \equiv 1$. Then
+Let $A \equiv \one$, $\eta = 1$, $R \equiv 0$, $w \equiv 1$. Then
 $(p,y) = (\one,\, y^{\ast})$ with
 $y^{\ast} = (I - G)^{-1} b(0)$ solves the fixed-wage system at
 \emph{every} elasticity triple $(\theta,\epsilon,\sigma)$; the employment
@@ -396,7 +396,7 @@ Fixed real wage $\equiv$ Leontief corner & definitional in form, & $(\theta,\eps
 Standard CGE $\equiv$ single-wage supply & derivable & $\eta_s$ in the single-wage gauge \\
  & (Cor.~\ref{cor:realwage}) & \\
 F2 $\equiv$ F3 (mobile rows) & derivable & the financing label; \\
- & (Section~\ref{sec:gauge}) & $F_{F3} = F_{F2} - B_{gov}$ \\
+ & (Section~\ref{sec:gauge}) & $R_{F3} = R_{F2} - B_{gov}$ \\
 No reallocation vs standard CGE & not a coincidence: & --- (the $\eta=0$ row is an \\
  & ADR-0020 option C gives the & identified equilibrium: own \\
  & frozen allocation a price & prices, wage vector \\
@@ -415,7 +415,7 @@ demand-only programme in a one-factor CRS economy cannot identify any
 elasticity of the kernel (the mechanism is Remark~\ref{rem:samuelson}). The
 fourth entry is different in kind: the no-reallocation / standard-CGE
 coincidence held only in the
-superseded $F = 0$ pin generation (ADR-0019 D2), where the frozen allocation
+superseded $R = 0$ pin generation (ADR-0019 D2), where the frozen allocation
 had no channel to prices; under ADR-0020 option C the $\eta = 0$ row carries
 sectoral wages and is an identified equilibrium, so no quantity of the
 no-reallocation row is left
@@ -459,8 +459,8 @@ L^{cm}_i(p, y_i, w_i) \;=\; \bar{L}_i\,
 \label{eq:etas}
 \end{equation}
 solved jointly with zero profit \eqref{eq:zp}, clearing \eqref{eq:clearing},
-the numeraire $\Pi(p) = 1$ and a free transfer $F$, in the unknowns
-$X = (p, y, w(1{:}N), F) \in \mathbb{R}^{3N+1}$ (ADR-0022). The scalar closure
+the numeraire $\Pi(p) = 1$ and a free transfer $R$, in the unknowns
+$X = (p, y, w(1{:}N), R) \in \mathbb{R}^{3N+1}$ (ADR-0022). The scalar closure
 \eqref{eq:beta} is the member of this family with one common wage and
 $\eta_{s,i} \equiv \eta_s$; it is retained only as a single-wage benchmark.
 The matrix's elastic-supply row is the sectoral member of the family at
@@ -486,7 +486,7 @@ and the $\eta = 0$ endpoint of ADR-0020 option C have the same solution set.
 \end{proposition}
 
 \begin{proof}
-Write both systems in the unknowns $X = (p, y, w, F)$ as four row blocks:
+Write both systems in the unknowns $X = (p, y, w, R)$ as four row blocks:
 \begin{align*}
 \text{(P)} \quad & p_i = c_i(p, w_i; A), & & i = 1,\dots,N,
    & & \text{\eqref{eq:zp}} \\
@@ -532,8 +532,8 @@ closure (real wage pinned,
 allocation free) at the elastic one. Two qualifications are exact and matter
 for reading the table below. First, the elastic end is a \emph{limit}, not a
 cell: the supply slope diverges and the direct solve eventually fails
-($\eta_s = 10^6$; probe13). Second, the family keeps the transfer $F$ free,
-whereas the fixed-wage system pins $F \equiv 0$; the family therefore
+($\eta_s = 10^6$; probe13). Second, the family keeps the transfer $R$ free,
+whereas the fixed-wage system pins $R \equiv 0$; the family therefore
 \emph{spans} the two rigidity rows without terminating in either.
 \end{remark}
 
@@ -589,7 +589,7 @@ Fixed real wage & $0.000000$ & $0.000000$ & $1.001260$ & $-0.015333$ \\
 \end{table}
 
 \emph{The corner is the endpoint, numerically.} Solving the sectoral system at
-$\eta_{s,i} = 0$ from the $\eta = 0$ solution reproduces $(p, y, w, F)$ exactly
+$\eta_{s,i} = 0$ from the $\eta = 0$ solution reproduces $(p, y, w, R)$ exactly
 --- $\max|\Delta| = 0.00 \times 10^0$ in all four blocks, and below $10^{-10}$
 from a cold start (\texttt{tests/test\_sectoral\_labour.jl};
 ADR-0022) --- as Proposition~\ref{prop:nest} requires. No separate
@@ -622,33 +622,33 @@ regime (the sectoral-wage system):
 {\small
 \begin{tabular}{lccc}
 \toprule
-Rows & $F$ & Employment & Household round in $G$ \\
+Rows & $R$ & Employment & Household round in $G$ \\
 \midrule
 Standard CGE, elastic supply ($\eta = 1$) & free (instrument) & pinned, $L = \Lbar$ & active \\
-Fixed real wage, Leontief corner ($\eta = 1$) & $F \equiv 0$ & endogenous, $L = \alpha^{\!\top}y$ & active \\
+Fixed real wage, Leontief corner ($\eta = 1$) & $R \equiv 0$ & endogenous, $L = \alpha^{\!\top}y$ & active \\
 No reallocation ($\eta = 0$) & free (solved) & pinned via allocation & active (wage bill) \\
 \bottomrule
 \end{tabular}
 }
 \end{center}
 
-\paragraph{The $F$-instrument.} In the mobile regime the labour pin selects
-the transfer. Writing $y(F) = (I-G)^{-1}(b_0 + f\,F)$ with
+\paragraph{The $R$-instrument.} In the mobile regime the labour pin selects
+the transfer. Writing $y(R) = (I-G)^{-1}(b_0 + f\,R)$ with
 $f = (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)$, the pin
 $\alpha^{\!\top}y = \Lbar$ gives
 \begin{equation}
-F^{\ast} = \frac{\Lbar - \alpha^{\!\top}(I-G)^{-1} b_0}
+R^{\ast} = \frac{\Lbar - \alpha^{\!\top}(I-G)^{-1} b_0}
                {\alpha^{\!\top}(I-G)^{-1} f}.
 \label{eq:finstrument}
 \end{equation}
 This instrument is why the mobile F2 and F3 columns are real-neutral: F2
 charges the programme through the lump-sum tax ($E = \alpha^{\!\top}y -
 \sum g^G - \sum g$), F3 through the external account ($E = \alpha^{\!\top}y
-- \sum g^G + F$), and the two $b$-vectors differ by exactly
+- \sum g^G + R$), and the two $b$-vectors differ by exactly
 $f\,\sum g$. The pin \eqref{eq:finstrument} therefore yields
-$F^{\ast}_{F3} = F^{\ast}_{F2} - \sum g$, identical real allocations, and
-an identical net external position $F + B_{gov}$. Measured: $F_{F3} - F_{F2} = -0.01330991 = -G_0$ to eight
-decimals in every mobile row (the $F$ values are printed
+$R^{\ast}_{F3} = R^{\ast}_{F2} - \sum g$, identical real allocations, and
+an identical net external position $R + B_{gov}$. Measured: $R_{F3} - R_{F2} = -0.01330991 = -G_0$ to eight
+decimals in every mobile row (the $R$ values are printed
 in \texttt{paper/superseded/matrix\_5x3\_v6\_flows.md}, Table~2, which the v10
 re-mint reproduces to all printed decimals; $G_0 = \sum_i g_i = 0.013310$,
 ADR-0024).
@@ -656,7 +656,7 @@ ADR-0024).
 \paragraph{Who pays.} The economically meaningful difference between the
 two paradigms is which margin absorbs the programme. In the mobile rows the
 labour pin forces the household to pay (consumption $-1.82\%$ under F2/F3;
-the $F$ instrument crowds it out exactly), while real GDP is flat by
+the $R$ instrument crowds it out exactly), while real GDP is flat by
 construction ($w\,\Lbar$ deflated, ADR-0018). In the fixed-wage rows
 employment is the margin: F3 expands employment by $1.78\%$ and consumption
 by $2.26\%$ (the Keynesian case), F2 leaves GDP nearly neutral
@@ -672,11 +672,11 @@ differences were carried by the pin, not by the frozen allocation
 (replacing the pin by the labour equation reproduced the standard CGE cells
 to
 $2.8\times10^{-17}$), and the $\eta = 0$ external position was not
-identified (every pin value $F = c$ an exact root that moved the booked
+identified (every pin value $R = c$ an exact root that moved the booked
 position one-for-one). Option C resolves both: the account closes to
-$\le 1.04\times10^{-11}$ at the no-reallocation closure, $F$ is a solved
+$\le 1.04\times10^{-11}$ at the no-reallocation closure, $R$ is a solved
 equilibrium object,
-financing neutrality extends to $\eta = 0$ ($F_{F3} = F_{F2} - B_{gov}$ to
+financing neutrality extends to $\eta = 0$ ($R_{F3} = R_{F2} - B_{gov}$ to
 $3.5\times10^{-14}$), and no entry of that row need be withheld.
 
 \paragraph{Admissibility.} All fifteen cells execute
@@ -867,7 +867,7 @@ No reallocation & F3 & $-0.000162$ & $-0.019800$ & $1.000000$ \\
 is safe to state as a theorem-backed claim: the flexible-wage rows form one
 equivalence class (composition at pinned employment), the fixed-wage rows
 another (employment at pinned real wage), and the difference between the
-classes is the $F$-instrument --- a derivation, not an observation.
+classes is the $R$-instrument --- a derivation, not an observation.
 (ii) The null results for $\eta_s$ and for $(\theta,\epsilon,\sigma)$ under
 demand-only shocks should be reported as identification statements
 (Corollary~\ref{cor:class}), which is precisely what reviewer 2's critique

@@ -96,5 +96,19 @@ by `docs/archive/` only, not by `paper/` or `revision/`.
 `baseline/test.log`, `baseline/latex/*.log` are `*.log` files: once
 committed, the repo gate's `tracked-artifacts` rule ("*.log files are
 transient; do not commit them") flags them. Per the WP0 plan the gate was
-NOT weakened; the post-commit `scripts/check_repo.jl` outcome is recorded
-in the follow-up commit message / handoff report.
+NOT weakened. Recorded outcome (2026-10-12, after commit `73e1d84`):
+
+- `julia --project=. scripts/check_repo.jl` → exit 1, **3 violations**,
+  all `tracked-artifacts` for the three committed `*.log` files
+  (`baseline/test.log`, `baseline/latex/main.log`,
+  `baseline/latex/refresponse.log`); the other nine checks pass.
+- `julia --project=. scripts/status.jl --check` → "docs/status.md is up
+  to date.", exit 0 (board current).
+
+Consequence to weigh: `tests/test_check_repo.jl` asserts the
+`tracked-artifacts` check passes on the real repo, so `Pkg.test()` will
+fail on that testset as long as the `*.log` baseline artifacts are tracked
+(the capture in `test.log` predates the commit and is green). Resolving
+this needs a decision — rename the artifacts (e.g. `*.log.txt`), exempt
+`baseline/` in the gate, or keep the logs untracked — which is outside
+WP0's write set (`baseline/**` + `scripts/reproduce.jl` only).

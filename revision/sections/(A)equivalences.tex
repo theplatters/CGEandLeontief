@@ -1,0 +1,79 @@
+% =====================================================================
+% Appendix A --- Equivalences and overlaps of the closure matrix
+% ---------------------------------------------------------------------
+% New front appendix (2026-10). A short companion to Section 3: it states
+% the overlaps the section discusses, gives the one-paragraph mechanism,
+% and forward-points to the full proofs (moved to Appendix B, label
+% app:proofs). It reuses the lemmas/propositions of that appendix BY \ref
+% ONLY -- no label is duplicated here, so the proofs remain the single
+% source. Kept to prose (~1.5 pages, double-spaced); the classification
+% table already lives in Appendix B (Cor.~\ref{cor:class}).
+% =====================================================================
+\section{Equivalences and overlaps of the closure matrix}\label{app:equivalences}
+
+\noindent Section~\ref{sec:two-questions} observes that several of the five
+labour-market closures overlap at characteristic parameter values. This
+appendix collects those overlaps, states why each holds, and marks what kind
+of statement it is --- an exact identity, a limit, or a definitional
+inclusion. The derivations are in Appendix~\ref{app:proofs}; only the
+mechanism is kept here.
+
+\subsection{Why overlaps arise}\label{app:eqwhy}
+
+The programme enters final demand, so the shock is demand-only ($A \equiv
+\one$) and touches neither the price nor the technology margin. Two features
+of the kernel then make overlap the rule. First, the zero-profit conditions
+are homogeneous of degree one in $(p,w)$ and contain no demand variable, so
+relative prices are pinned by technology alone (Lemma~\ref{lem:price}) and,
+under the consumption-price numeraire, the real wage sits at its baseline
+anchor $w/\Pi(p) = 1$ for every demand vector, financing closure and shock
+size (Corollary~\ref{cor:realwage}). A closure whose only task is to move the
+\emph{wage} margin is therefore inert: the margin it is meant to clear is
+already at rest. Second, at those prices the clearing system is exactly
+affine and independent of $(\theta, \epsilon, \sigma)$
+(Lemma~\ref{lem:affine}) --- the production side of the Samuelson
+nonsubstitution theorem (Remark~\ref{rem:samuelson}) --- so any closure that
+pegs the real wage solves the same affine system.
+
+\subsection{The three pair-wise overlaps}\label{app:eqpairs}
+
+\begin{itemize}
+\item \textbf{Standard CGE $\equiv$ single-wage elastic supply.} The anchor
+  binds, so the supply equation $\sum_i L_i = \Lbar\,(w/\Pi)^{\eta_s}$
+  reduces to $\sum_i L_i = \Lbar$ for \emph{every} $\eta_s$: the two systems
+  coincide equation by equation (Proposition~\ref{prop:ab}), and the
+  single-wage elasticity $\eta_s$ is unidentified on the demand-only slice.
+\item \textbf{Fixed real wage $\equiv$ Leontief closure.} With the real wage
+  pegged, $(p, y) = (\one, y^{\ast})$ solves the system at every elasticity
+  triple, and the Leontief corner selects the same candidate
+  (Proposition~\ref{prop:gd}); the equivalence is exact, not an
+  $\epsilon \to 0$ artefact.
+\item \textbf{No-reallocation $\equiv$ the rigid corner of the sectoral
+  family.} A frozen allocation and an infinitely inelastic supply curve are
+  the same row of algebra: $\eta_{s,i} = 0$ for all $i$ reproduces the
+  $\eta = 0$ endpoint (Proposition~\ref{prop:nest}).
+\end{itemize}
+
+\subsection{One family, two rigidities}\label{app:eqfamily}
+
+The elastic closure is a curve rather than a point, and it connects the two
+rigidities: at $\eta_s \to 0$ the allocation is frozen and the closure is the
+no-reallocation case, while at $\eta_s \to \infty$ the supply slope diverges
+and it approaches the fixed real wage --- a limit, never an attained cell.
+The standard CGE closure is the zero-elasticity limit of the \emph{aggregate}
+(single-wage) variant of the same family. The two limits differ in what the
+vanishing elasticity freezes --- the sectoral allocation or only the total
+--- which is why the family reaches both rigidities without coinciding with
+either.
+
+\subsection{Scope}\label{app:eqscope}
+
+Every statement above is bounded by three conditions: the shock is
+demand-only; the first equivalence uses the \emph{single-wage} form; and the
+overlap concerns the price margin, since employment still adjusts under the
+fixed-wage and Leontief closures. The sectoral family breaks the price-block
+rigidity --- with $N$ wages, demand reaches prices through the wage structure
+--- so the sectoral rows are distinct economies rather than further copies.
+The breakdown off the demand-only slice, and the no-go result for nominal
+wage rules, are derived in Section~\ref{sec:scope} of
+Appendix~\ref{app:proofs}.

@@ -1,0 +1,35 @@
+# Citation metadata for the BeyondHulten paper and reproduction materials.
+# DRAFT: author names/order and the repository URL are pending user review.
+cff-version: 1.2.0
+message: "If you use these materials, cite the paper and the OpenCGE software separately."
+title: "BeyondHulten: paper and reproduction materials — a production-network model of green public investment"
+type: software
+authors:
+  - family-names: "Scharnreitner"
+    given-names: "Franz"
+    email: "fscharnreitner@gmail.com"
+  - family-names: "Kapeller"
+    given-names: "Jakob"
+    email: "jakob.kapeller@uni-due.de"
+version: 0.1.0
+date-released: "2026-10-12"
+abstract: "Paper and reproduction materials for a production-network model of green public investment that compares labour-market and financing closures on a 71-sector German input-output calibration."
+license: MIT
+keywords:
+  - computable general equilibrium
+  - production networks
+  - green public investment
+  - labour market closures
+  - financing closures
+  - reproducibility
+references:
+  - type: software
+    title: "OpenCGE"
+    authors:
+      - family-names: "Scharnreitner"
+        given-names: "Franz"
+        email: "fscharnreitner@gmail.com"
+    version: 0.1.0
+    date-released: "2026-10-12"
+    license: MIT
+    repository-code: "https://github.com/theplatters/opencge"

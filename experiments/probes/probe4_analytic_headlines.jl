@@ -20,7 +20,7 @@
 #      GAMMA = DELTA equivalence is not a coincidence of two solves, it is one
 #      solve and its analytic limit.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, TOML, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath

@@ -4,8 +4,12 @@
 # Status vocabulary: idea | spec | implemented | tested | validated | rejected | superseded.
 # Nothing here is validated: the Phase 4 gates of ROADMAP.md have not all passed
 # for any closure, and no run manifest is recorded.
+#
+# Schema v2 (kernel split): paths and doc ids that live in the separate OpenCGE
+# kernel repo are repo-qualified as `OpenCGE@<path-or-id>` (see registry/README.md,
+# "Cross-repo references"); unqualified paths and ids resolve in this paper repo.
 
-schema_version = 1
+schema_version = 2
 generated_at = "2026-09-17"
 generated_by = "phase-0 agent"
 
@@ -20,12 +24,12 @@ formulation = "eta selects the kept BF endpoints: eta = 0 keeps the baseline all
 interpretation = "Static intersectoral allocation selector; eta is NOT a labour-supply elasticity. At eta = 0 the allocation is frozen and the wage is sector-specific, so the endpoint is a genuine immobile benchmark (Baqaee-Farhi-style immobility, cbase2/review.md §1); at eta = 1 one common wage clears the aggregate labour market."
 status = "tested"
 symbols = ["MobileLaborCES"]
-files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
+files = ["OpenCGE@src/core/equilibrium.jl", "OpenCGE@src/closures/labor/types.jl"]
 references = ["docs/archive/labor_closures.md", "docs/DOCS_ASSESSMENT.md", "docs/archive/vertdict.md", "ROADMAP.md"]
-tests = ["tests/test_mobile_labor.jl", "tests/test_kernel_regression.jl", "tests/test_external_closure.jl"]
+tests = ["OpenCGE@tests/test_mobile_labor.jl", "OpenCGE@tests/test_kernel_regression.jl", "tests/test_external_closure.jl"]
 evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v6-BF-F1/manifest.toml", "runs/matrix_5x3-v6-BF-F2/manifest.toml", "runs/matrix_5x3-v6-BF-F3/manifest.toml", "runs/matrix_5x3-v5-BF-F1/manifest.toml", "runs/matrix_5x3-v5-BF-F2/manifest.toml", "runs/matrix_5x3-v5-BF-F3/manifest.toml", "runs/matrix_5x3-v10-BF-F1/manifest.toml", "runs/matrix_5x3-v10-BF-F2/manifest.toml", "runs/matrix_5x3-v10-BF-F3/manifest.toml"]
-dead_ends = ["DE-0001", "DE-0002", "DE-0004"]
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017", "ADR-0019", "ADR-0020"]
+dead_ends = ["OpenCGE@DE-0001", "OpenCGE@DE-0002", "OpenCGE@DE-0004"]
+adrs = ["ADR-0002", "OpenCGE@ADR-0005", "OpenCGE@ADR-0010", "OpenCGE@ADR-0014", "OpenCGE@ADR-0017", "OpenCGE@ADR-0019", "OpenCGE@ADR-0020"]
 open_gates = [
     "RESOLVED by ADR-0020 option C (2026-09-18): the eta = 0 endpoint now carries sector-specific wages, so the cbase2/review.md §1 gap (one common wage with fixed quantities) is closed in the kernel and the F = 0 pin (ADR-0019 D2) is retired",
     "Phase-4 residual gates (ROADMAP.md): all-N clearing residuals (ADR-0019; the omitted-equation rotation is retired), household-expenditure exhaustion, homogeneity, multi-start convergence, Tornqvist consistency",
@@ -43,12 +47,12 @@ formulation = "sum_i L_i = Lbar; one economy-wide flexible wage; full cost-minim
 interpretation = "Standard full-employment CGE endpoint."
 status = "implemented"
 symbols = ["MobileLaborCES", "FlexibleWageClosure"]
-files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
+files = ["OpenCGE@src/core/equilibrium.jl", "OpenCGE@src/closures/labor/types.jl"]
 references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
-tests = ["tests/test_mobile_labor.jl", "tests/test_external_closure.jl"]
+tests = ["OpenCGE@tests/test_mobile_labor.jl", "tests/test_external_closure.jl"]
 evidence = ["runs/matrix_5x3-v6-ALPHA-F1/manifest.toml", "runs/matrix_5x3-v6-ALPHA-F2/manifest.toml", "runs/matrix_5x3-v6-ALPHA-F3/manifest.toml", "runs/matrix_5x3-v5-ALPHA-F1/manifest.toml", "runs/matrix_5x3-v5-ALPHA-F2/manifest.toml", "runs/matrix_5x3-v5-ALPHA-F3/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F1/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F2/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F3/manifest.toml"]
-dead_ends = ["DE-0002"]
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0019", "ADR-0020"]
+dead_ends = ["OpenCGE@DE-0002"]
+adrs = ["ADR-0002", "OpenCGE@ADR-0005", "OpenCGE@ADR-0010", "OpenCGE@ADR-0019", "OpenCGE@ADR-0020"]
 open_gates = [
     "Phase-4 residual gates (ROADMAP.md)",
     "run manifests recorded: runs/matrix_5x3-v6-ALPHA-F1|F2|F3/manifest.toml (executed, 2026-09-18; v6 reproduces the v5 ALPHA cells to 6.7e-16)",
@@ -63,12 +67,12 @@ formulation = "sum_i L_i = Lbar * ((w/P)/(w0/P0))^eta_s (P = CPI); the sectoral 
 interpretation = "Intended as a labour-leisure / voluntary supply response; the income effect is not implemented."
 status = "tested"
 symbols = ["ElasticLaborClosure", "SectoralElasticLaborClosure"]
-files = ["src/closures/labor/types.jl", "src/closures/labor/labor.jl", "src/core/equilibrium.jl"]
+files = ["OpenCGE@src/closures/labor/types.jl", "OpenCGE@src/closures/labor/labor.jl", "OpenCGE@src/core/equilibrium.jl"]
 references = ["docs/closures/beta.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md", "ROADMAP.md"]
-tests = ["tests/test_promoted_closures.jl", "tests/test_sectoral_labour.jl"]
+tests = ["OpenCGE@tests/test_promoted_closures.jl", "tests/test_sectoral_labour.jl"]
 evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v5-BETA-F1/manifest.toml", "runs/matrix_5x3-v5-BETA-F2/manifest.toml", "runs/matrix_5x3-v5-BETA-F3/manifest.toml", "experiments/probes/supply_identification.jl", "experiments/probes/numeraire_invariance.jl", "runs/matrix_5x3-v10-BETA-F1-etas05/manifest.toml", "runs/matrix_5x3-v10-BETA-F2-rigidprog/manifest.toml", "runs/matrix_5x3-v10-BETA-F3-rigidhalf/manifest.toml", "runs/matrix_5x3-v10-BETA-F1/manifest.toml", "runs/matrix_5x3-v10-BETA-F2/manifest.toml", "runs/matrix_5x3-v10-BETA-F3/manifest.toml"]
-dead_ends = ["DE-0004", "DE-0011"]
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0019", "ADR-0022"]
+dead_ends = ["OpenCGE@DE-0004", "OpenCGE@DE-0011"]
+adrs = ["ADR-0002", "OpenCGE@ADR-0005", "OpenCGE@ADR-0010", "OpenCGE@ADR-0014", "OpenCGE@ADR-0019", "OpenCGE@ADR-0022"]
 open_gates = [
     "labour-leisure income effect not implemented (cbase2/review.md §1)",
     "w0 anchor vs baseline wage (cbase2/review.md §3.4)",
@@ -88,12 +92,12 @@ formulation = "w/P = wbar (= 1); employment endogenous and uncapped"
 interpretation = "Perfectly elastic labour supply at a fixed real wage; the fixed-wage endpoint of the sweep."
 status = "implemented"
 symbols = ["FixedWageClosure"]
-files = ["src/core/equilibrium.jl", "src/closures/labor/types.jl"]
+files = ["OpenCGE@src/core/equilibrium.jl", "OpenCGE@src/closures/labor/types.jl"]
 references = ["ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
-tests = ["tests/test_fixed_closure.jl"]
+tests = ["OpenCGE@tests/test_fixed_closure.jl"]
 evidence = ["runs/matrix_5x3-v6-GAMMA-F1/manifest.toml", "runs/matrix_5x3-v6-GAMMA-F2/manifest.toml", "runs/matrix_5x3-v6-GAMMA-F3/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F1/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F2/manifest.toml", "runs/matrix_5x3-v5-GAMMA-F3/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F1/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F2/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F3/manifest.toml"]
-dead_ends = ["DE-0003"]
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017", "ADR-0021"]
+dead_ends = ["OpenCGE@DE-0003"]
+adrs = ["ADR-0002", "OpenCGE@ADR-0005", "OpenCGE@ADR-0010", "OpenCGE@ADR-0014", "OpenCGE@ADR-0017", "OpenCGE@ADR-0021"]
 open_gates = [
     "the canonical one-sided wage floor with rationed employment is not implemented (that is ZETA; cbase2/review.md §1)",
     "the closure carries one degree of freedom in the matrix: F2 and F3 are real-neutral (financing neutrality) and DELTA reproduces GAMMA to six digits, so the three GAMMA cells are effectively two economies. The wage vector is pinned to its degenerate value (all sectors equal), which is a property of the design rather than of the model class; a wage-structure dimension is proposed in ADR-0021 (proposed, 2026-09-18) with measured evidence (a uniform rescale is a numeraire change, a tilted vector moves employment by about half a percent and the external account still closes at the solver-residual level; experiments/probes/probe11_gamma_wage_structure.jl)",
@@ -109,12 +113,12 @@ formulation = "GAMMA (w/P = 1) + Leontief limit of the CES core (theta, epsilon,
 interpretation = "Robinson-2006-style fixed-price multiplier corner."
 status = "tested"
 symbols = ["delta_elasticities", "delta_model", "leontief_multiplier"]
-files = ["src/closures/labor/labor.jl", "src/core/equilibrium.jl"]
+files = ["OpenCGE@src/closures/labor/labor.jl", "OpenCGE@src/core/equilibrium.jl"]
 references = ["docs/closures/delta.md", "ROADMAP.md", "docs/DOCS_ASSESSMENT.md"]
-tests = ["tests/test_promoted_closures.jl"]
+tests = ["OpenCGE@tests/test_promoted_closures.jl"]
 evidence = ["cbase2/scripts/verify_v3.jl", "runs/matrix_5x3-v5-DELTA-F1/manifest.toml", "runs/matrix_5x3-v5-DELTA-F2/manifest.toml", "runs/matrix_5x3-v5-DELTA-F3/manifest.toml", "runs/matrix_5x3-v10-DELTA-F1/manifest.toml", "runs/matrix_5x3-v10-DELTA-F2/manifest.toml", "runs/matrix_5x3-v10-DELTA-F3/manifest.toml", "experiments/probes/analytic_headlines.jl"]
 dead_ends = []
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017"]
+adrs = ["ADR-0002", "OpenCGE@ADR-0005", "OpenCGE@ADR-0010", "OpenCGE@ADR-0014", "OpenCGE@ADR-0017"]
 open_gates = [
     "Type I vs Type II multiplier identification unresolved (cbase2/review.md §1)",
     "exactness rests on p = 1 under demand-only shocks, not on the epsilon limit (cbase2/review.md §3.5) -- RE-MEASURED on the v5 runs (2026-09-18, experiments/probes/analytic_headlines.jl): DELTA-F3 reproduces leontief_multiplier to max|y - y_analytic| = 5.6e-17 and DELTA-F2 to 2.2e-12, with L = 1.0177957289 / 1.0012598064 identical to the analytic values; the equivalence is a check, not a result",
@@ -134,7 +138,7 @@ files = []
 references = ["ROADMAP.md", "docs/archive/vertdict.md"]
 tests = []
 evidence = []
-dead_ends = ["DE-0007"]
+dead_ends = ["OpenCGE@DE-0007"]
 adrs = ["ADR-0002"]
 open_gates = [
     "equations",
@@ -156,12 +160,12 @@ formulation = "beta_tilde_i = beta_i d_i / sum_j beta_j d_j; sum_i p_i c_i^h = E
 interpretation = "Compositional household demand shift; the budget closes by construction within fixed household expenditure; government spending untouched."
 status = "tested"
 symbols = ["PreferenceReallocation"]
-files = ["src/closures/financing/financing.jl"]
+files = ["OpenCGE@src/closures/financing/financing.jl"]
 references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
-tests = ["tests/test_promoted_closures.jl", "tests/test_f1_tilt.jl"]
+tests = ["OpenCGE@tests/test_promoted_closures.jl", "tests/test_f1_tilt.jl"]
 evidence = ["cbase2/process_comments.md", "cbase2/scripts/verify_v3.jl", "experiments/probes/analytic_headlines.jl", "runs/matrix_5x3-v10-BF-F1/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F1/manifest.toml", "runs/matrix_5x3-v10-BETA-F1/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F1/manifest.toml", "runs/matrix_5x3-v10-DELTA-F1/manifest.toml"]
-dead_ends = ["DE-0001"]
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0014", "ADR-0017"]
+dead_ends = ["OpenCGE@DE-0001"]
+adrs = ["ADR-0002", "OpenCGE@ADR-0005", "OpenCGE@ADR-0010", "OpenCGE@ADR-0014", "OpenCGE@ADR-0017"]
 open_gates = [
     "F1 cells executed for BF/ALPHA/BETA (runs/matrix_5x3-*-F1/manifest.toml); GAMMA-F1 and DELTA-F1 failed the retired heuristic guard in v1 because F1 has no additive anchor (recorded, not dropped) and execute in the v2/v3 generations under the ADR-0017 actual-matrix assessment (column-sum shortcut, else (I − G) rank and positive-solution test)",
     "the ADR-0014 closed-form round-gain trigger is corrected by ADR-0017: the fixed-wage eta = 1 admissibility guard assesses the actual clearing matrix G at the baseline prices; on the full-71 A-bill calibration the actual max column sum is 0.8314 < 1, so all v2/v3 fixed-wage cells take the shortcut path",
@@ -177,12 +181,12 @@ formulation = "sum_i p_i g_i = T(p); lump-sum / balanced-budget tax"
 interpretation = "Autonomous public investment financed by an explicit tax counterparty (balanced government budget)."
 status = "tested"
 symbols = ["TaxFinanced"]
-files = ["src/closures/financing/financing.jl"]
+files = ["OpenCGE@src/closures/financing/financing.jl"]
 references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
-tests = ["tests/test_promoted_closures.jl"]
+tests = ["OpenCGE@tests/test_promoted_closures.jl"]
 evidence = ["cbase2/process_comments.md", "experiments/probes/numeraire_invariance.jl", "experiments/probes/analytic_headlines.jl", "runs/matrix_5x3-v10-BF-F2/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F2/manifest.toml", "runs/matrix_5x3-v10-BETA-F2/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F2/manifest.toml", "runs/matrix_5x3-v10-DELTA-F2/manifest.toml"]
 dead_ends = []
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0018"]
+adrs = ["ADR-0002", "OpenCGE@ADR-0005", "OpenCGE@ADR-0010", "ADR-0018"]
 open_gates = [
     "F2 cells executed for all five labour rows. RESOLVED by ADR-0018 and the matrix_5x3_v4 generation (runs/matrix_5x3-v4-*-F2/manifest.toml, 2026-09-18): the mobile full-employment rows read gdp_rel = 0.0 (income-side real GDP, flat -- the pre-registered 'aggregate ~ 0' signature holds) while consumption_rel = -1.69e-2 is the household-welfare contraction from the tax; the v3 real_gdp_rel = -1.69e-2 column was the welfare index, not GDP",
     "budget helper pricing inconsistency noted in review §2.7",
@@ -198,12 +202,12 @@ formulation = "sum_i p_i g_i = F; external balance F"
 interpretation = "Net new expenditure with an external counterpart; resources arrive via the external balance (imports serve the investment). It is an accounting open-economy closure, not a monetary mechanism."
 status = "tested"
 symbols = ["ExternalDebt"]
-files = ["src/closures/financing/financing.jl"]
+files = ["OpenCGE@src/closures/financing/financing.jl"]
 references = ["docs/closures/financing.md", "docs/DOCS_ASSESSMENT.md", "cbase2/documentation.md"]
-tests = ["tests/test_promoted_closures.jl", "tests/test_external_closure.jl"]
+tests = ["OpenCGE@tests/test_promoted_closures.jl", "tests/test_external_closure.jl"]
 evidence = ["cbase2/process_comments.md", "runs/matrix_5x3-v6-ALPHA-F3/manifest.toml", "runs/matrix_5x3-v6-BETA-F3/manifest.toml", "runs/matrix_5x3-v6-BF-F3/manifest.toml", "runs/matrix_5x3-v6-GAMMA-F3/manifest.toml", "runs/matrix_5x3-v6-DELTA-F3/manifest.toml", "runs/matrix_5x3-v5-BF-F3/manifest.toml", "runs/matrix_5x3-v10-BF-F3/manifest.toml", "runs/matrix_5x3-v10-ALPHA-F3/manifest.toml", "runs/matrix_5x3-v10-BETA-F3/manifest.toml", "runs/matrix_5x3-v10-GAMMA-F3/manifest.toml", "runs/matrix_5x3-v10-DELTA-F3/manifest.toml"]
 dead_ends = []
-adrs = ["ADR-0002", "ADR-0005", "ADR-0010", "ADR-0019", "ADR-0020"]
+adrs = ["ADR-0002", "OpenCGE@ADR-0005", "OpenCGE@ADR-0010", "OpenCGE@ADR-0019", "OpenCGE@ADR-0020"]
 open_gates = [
     "F3 cells executed for all five labour rows (runs/matrix_5x3-*-F3/manifest.toml, 2026-09-17); the recorded external position is canary_diff = -8.5e-3 for the mobile eta = 1 rows and ~1e-16 for the fixed-wage rows, while the programme value F = dot(p, g) = 1.33e-2 -- the pre-registered 'external deficit = F' signature needs an agreed definition. RESOLVED by ADR-0019 and the matrix_5x3_v5 generation (15/15 executed 2026-09-18, commit f0af583): the programme financing is booked as B_gov = Σ p·g, the net external position is F + B_gov, and F2/F3 are real-neutral in the mobile regime (identical p, y, w; F_F3 = F_F2 - B_gov)",
     "at eta = 0 the programme booking is valued at the sectoral-wage prices (ADR-0020 option C), so B_gov reads +0.01484628 at BF-F3 against +0.01330991 in the v5 pin generation and in the GAMMA/DELTA rows (where the prices stay at the baseline); the net position F + B_gov = -0.008528 is financing-neutral at eta = 0 (runs/matrix_5x3-v6-BF-F3/manifest.toml)",

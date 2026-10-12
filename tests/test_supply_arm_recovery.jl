@@ -1,4 +1,12 @@
-using BeyondHulten, Test, LinearAlgebra
+# Staged for the paper repo by the kernel split (2026-10-12, WP1).
+# WHOLE-FILE MOVE: the only testset needs the real table AND the executed
+# runs/supply_etas_s1-BETA-F2-*/manifest.toml goldens (ADR-0023 supply arm),
+# so there is no synthetic half and the kernel keeps nothing. Needs
+# data/I-O_DE2019_formatiert.csv and runs/ in the paper repo.
+# Adapted to the renamed kernel package (using OpenCGE). Drop-in replacement
+# for the paper repo's tests/test_supply_arm_recovery.jl.
+
+using OpenCGE, Test, LinearAlgebra
 using TOML
 
 isdefined(Main, :tiny_fixture) || include(joinpath(@__DIR__, "test_helpers.jl"))

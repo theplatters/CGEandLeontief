@@ -18,7 +18,7 @@
 # 1.0098299882 / 1.0247564458 for eta_s = 0.5 / 2 / 5, elasticities recovered
 # exactly.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, TOML, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath

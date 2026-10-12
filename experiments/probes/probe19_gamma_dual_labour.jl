@@ -31,11 +31,11 @@
 # the outsider-only employment change; consumption; and the insider output
 # relative to its ceiling.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, Printf
 import NonlinearSolve
 
-const BH = BeyondHulten
+const BH = OpenCGE
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath
 
 data = recalibrate_open(retained_dataset(read_data("I-O_DE2019_formatiert.csv"; datadir = ROOT),

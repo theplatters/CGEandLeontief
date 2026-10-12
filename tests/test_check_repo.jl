@@ -1,4 +1,4 @@
-using BeyondHulten
+using OpenCGE
 using TOML
 using CSV
 using DataFrames
@@ -7,10 +7,6 @@ using Test
 # Contract tests for scripts/check_repo.jl (ADR-0007), the mandatory
 # pre/post-batch gate. Coverage map:
 #   - checks 1, 2, 5, 6, 7, 8, 9, 10 pass on the real repo (first testset);
-#   - check 3 (closure-subtypes) negative: an unregistered AbstractLaborClosure
-#     subtype planted in a temp src/ tree is flagged;
-#   - check 4 (kernel-reachability) negative: a zombie src/ file outside the
-#     include graph is flagged while a reachable one is clean;
 #   - check 5 (runs) negatives: a run dir without manifest.toml, and an
 #     index/manifest mismatch, are each flagged;
 #   - check 6 (runs-visible) negative: a failed row with no manifest that is
@@ -53,34 +49,9 @@ end
     @test isempty(vs)
 end
 
-@testset "check_repo: unregistered closure subtype is flagged" begin
-    tmp = check_tmp()
-    mkpath(joinpath(tmp, "registry"))
-    cp(joinpath(check_test_root(), "registry", "closures.toml"),
-        joinpath(tmp, "registry", "closures.toml"))
-    mkpath(joinpath(tmp, "src"))
-    write(joinpath(tmp, "src", "fake.jl"),
-        "struct FakeClosure <: AbstractLaborClosure end\n")
-    vs = check_closure_subtypes(tmp)
-    @test length(vs) == 1
-    @test occursin("FakeClosure", vs[1].message)
-    # A registered symbol is clean.
-    write(joinpath(tmp, "src", "fake.jl"),
-        "struct FixedWageClosure <: AbstractLaborClosure end\n")
-    @test isempty(check_closure_subtypes(tmp))
-end
-
-@testset "check_repo: zombie kernel file is flagged" begin
-    tmp = check_tmp()
-    mkpath(joinpath(tmp, "src"))
-    write(joinpath(tmp, "src", "BeyondHulten.jl"), "include(\"a.jl\")\n")
-    write(joinpath(tmp, "src", "a.jl"), "# reachable\n")
-    write(joinpath(tmp, "src", "zombie.jl"), "# not included\n")
-    vs = check_kernel_reachability(tmp)
-    @test length(vs) == 1
-    @test occursin("zombie.jl", vs[1].message)
-    @test !any(occursin("a.jl"), string(v.message) for v in vs)
-end
+# Checks 3 (closure-subtypes) and 4 (kernel-reachability) were dropped with
+# the kernel split: kernel CI owns the subtype registry and include-graph
+# checks now. Their temp fixtures lived here and are gone with them.
 
 @testset "check_repo: run dir without manifest, and index mismatch" begin
     tmp = check_tmp()

@@ -33,10 +33,10 @@
 # `programme_vectors`, `build_reference`, `build_cell_model`,
 # `evaluate_gates`, `execute_cell`, `run_design`, `main`.
 #
-# Headless-safe: never loads GLMakie (only `BeyondHulten` plus stdlibs and
+# Headless-safe: never loads GLMakie (only `OpenCGE` plus stdlibs and
 # the kernel's CSV/DataFrames deps).
 
-using BeyondHulten
+using OpenCGE
 using TOML
 using SHA
 using Dates
@@ -298,7 +298,7 @@ function build_reference(design_d::Dict{String,Any}; root::AbstractString = defa
 
     dat = design_d["data"]
     # `Vector{Int}(...)`, not `Int.(...)`: inside any process that has loaded
-    # BeyondHulten (the NonlinearSolve/SciML stack), inference returns `Any`
+    # OpenCGE (the NonlinearSolve/SciML stack), inference returns `Any`
     # for `Int(::Any)`, so broadcasting over an EMPTY vector degrades to
     # `Vector{Any}` (`Int.(Any[]) === Any[]`) and `retained_dataset` rejects
     # it. Typed conversion is inference-independent.
@@ -742,6 +742,38 @@ end
 
 # ── Manifest / index / scenarios ───────────────────────────────────────
 
+"""
+The pinned OpenCGE kernel recorded in every run manifest's `[provenance]`
+block (post kernel split): `version`, `repo_url`, `repo_rev` and
+`git_tree_sha1` read from the committed `Manifest.toml`'s `OpenCGE` entry.
+Falls back to the active project's Manifest for roots without one (smoke
+fixtures); fields read `"absent"` when no Manifest carries an OpenCGE entry.
+"""
+function opencge_pin(root::AbstractString)::Dict{String,Any}
+    out = Dict{String,Any}("version" => "absent", "repo_url" => "absent",
+        "repo_rev" => "absent", "git_tree_sha1" => "absent")
+    mpath = joinpath(root, "Manifest.toml")
+    if !isfile(mpath)
+        ap = Base.active_project()
+        ap === nothing || (mpath = joinpath(dirname(ap), "Manifest.toml"))
+    end
+    isfile(mpath) || return out
+    man = try
+        TOML.parsefile(mpath)
+    catch
+        return out
+    end
+    entries = get(get(man, "deps", Dict{String,Any}()), "OpenCGE", nothing)
+    (entries isa AbstractVector) || (entries = entries === nothing ? [] : [entries])
+    isempty(entries) && return out
+    e = entries[1]
+    out["version"] = string(get(e, "version", "absent"))
+    out["repo_url"] = string(get(e, "repo-url", "absent"))
+    out["repo_rev"] = string(get(e, "repo-rev", "absent"))
+    out["git_tree_sha1"] = string(get(e, "git-tree-sha1", "absent"))
+    return out
+end
+
 """Provenance block shared by all manifests of a batch."""
 function batch_provenance(design::AbstractString, design_d::Dict{String,Any};
         root::AbstractString = default_root())::Dict{String,Any}
@@ -762,6 +794,7 @@ function batch_provenance(design::AbstractString, design_d::Dict{String,Any};
         "git_dirty" => git_dirty(root),
         "julia_version" => string(VERSION),
         "manifest_sha256" => sha256_or_absent(joinpath(root, "Manifest.toml")),
+        "opencge" => opencge_pin(root),
         "design_sha256" => design_sha256(design; root = root),
         "data_sha256" => data_sha,
         "seed" => RUN_SEED,
@@ -1026,7 +1059,7 @@ function run_design(design::AbstractString; root::AbstractString = default_root(
 
     ref = build_reference(design_d; root = root, data = data)
     # Typed conversion (see the note in `build_reference`): broadcasting over
-    # an empty `drops = []` yields `Vector{Any}` once BeyondHulten is loaded.
+    # an empty `drops = []` yields `Vector{Any}` once OpenCGE is loaded.
     drops = Vector{Int}(design_d["data"]["drops"])
     kept = if data !== nothing
         collect(1:length(ref.data.factor_share))

@@ -78,6 +78,22 @@ function hasdoc(dir::String, id::AbstractString)::Bool
     return any(f -> (startswith(f, id * "-") || startswith(f, id * "_")) && endswith(f, ".md"), readdir(dir))
 end
 
+"""Resolve a registry path against the paper repo root, or — for the
+`Name@rest` cross-repo convention (closures.toml schema v2) — against the root
+of the named package: `OpenCGE@src/core/equilibrium.jl` resolves inside the
+pinned OpenCGE kernel (`Base.find_package("OpenCGE")` → `<root>/src/OpenCGE.jl`,
+root = `dirname(dirname(...))`). Returns `nothing` when the owning package
+cannot be located."""
+function resolve_repo_path(root::AbstractString, p::AbstractString)::Union{String,Nothing}
+    if occursin('@', p)
+        name, rest = split(p, '@'; limit = 2)
+        entry = Base.find_package(String(strip(name)))
+        entry === nothing && return nothing
+        return normpath(joinpath(dirname(dirname(entry)), String(strip(rest))))
+    end
+    return normpath(joinpath(root, String(strip(p))))
+end
+
 """Load one closure axis (`labor`/`financing`) as id-sorted dicts."""
 function load_axis(clos::Dict, axis::String)::Vector{Dict{String,Any}}
     raw = get(clos, axis, Dict())
@@ -101,15 +117,17 @@ function check_closure(row::Dict{String,Any}, root::String, warns::Vector{String
     for field in ("files", "references", "tests", "evidence")
         for p in asvec(getk(row, field, String[]))
             isblank(p) && continue
-            full = joinpath(root, strip(p))
-            (isfile(full) || isdir(full)) ||
+            full = resolve_repo_path(root, strip(p))
+            (full !== nothing && (isfile(full) || isdir(full))) ||
                 push!(warns, "closure $id: $field not found: $p")
         end
     end
-    # Read each existing listed file once for the symbol grep.
+    # Read each existing listed file once for the symbol grep (kernel files via
+    # the `OpenCGE@` convention resolve against the pinned kernel checkout).
     for p in asvec(getk(row, "files", String[]))
         isblank(p) && continue
-        full = joinpath(root, strip(p))
+        full = resolve_repo_path(root, strip(p))
+        full === nothing && continue
         isfile(full) || continue
         haskey(cache, full) || (cache[full] = try read(full, String) catch; "" end)
     end
@@ -118,14 +136,17 @@ function check_closure(row::Dict{String,Any}, root::String, warns::Vector{String
         any(contents -> occursin(sym, contents), values(cache)) ||
             push!(warns, "closure $id: symbol \"$sym\" not found in listed files")
     end
+    # `Name@id` doc references are cross-repo (OpenCGE@DE-*, OpenCGE@ADR-* live
+    # in the kernel's DECISIONS.md): they skip the local hasdoc check and render
+    # on the board as cross-repo references.
     for de in asvec(getk(row, "dead_ends", String[]))
         isblank(de) && continue
-        hasdoc(joinpath(root, "docs", "dead-ends"), strip(de)) ||
+        (occursin('@', de) || hasdoc(joinpath(root, "docs", "dead-ends"), strip(de))) ||
             push!(warns, "closure $id: dead_ends record $de has no file in docs/dead-ends/")
     end
     for a in asvec(getk(row, "adrs", String[]))
         isblank(a) && continue
-        hasdoc(joinpath(root, "docs", "decisions"), strip(a)) ||
+        (occursin('@', a) || hasdoc(joinpath(root, "docs", "decisions"), strip(a))) ||
             push!(warns, "closure $id: ADR record $a has no file in docs/decisions/")
     end
     return cache

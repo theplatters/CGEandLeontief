@@ -14,7 +14,7 @@
 # still describe the measured consumption_rel? Measure, do not assume: under
 # ADR-0019 E = (1-tau)*w*sum(L) + F changed the system.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, TOML, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath

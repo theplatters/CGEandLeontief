@@ -15,10 +15,17 @@ must never be hand-edited. Prose documents never restate status; they link to
 Read first, always:
 
 1. `docs/status.md` — current board (generated).
-2. `registry/README.md` — schemas and status vocabularies.
+2. `registry/README.md` — schemas and status vocabularies (including the `OpenCGE@…` cross-repo reference convention).
 3. `docs/decisions/README.md`, `docs/dead-ends/README.md` — ADR and DE rules.
-4. `docs/log/2026-09.md` — lab-log format (newest `docs/log/YYYY-MM.md`).
+4. the newest `docs/log/YYYY-MM.md` — lab-log format.
 5. `registry/freeze.toml` — what is frozen or read-only.
+
+Since the kernel split (ADR-0028) this repository is the **paper repo**: it
+holds the paper-relevant ADRs/DE records in `docs/decisions/` and
+`docs/dead-ends/`, while the kernel-side decisions and dead ends are
+summarized in the `OpenCGE` kernel's `DECISIONS.md` (`../opencge`) and
+referenced as `OpenCGE@ADR-…` / `OpenCGE@DE-…` from `registry/`. The ADR/DE/
+IDEA workflow below is unchanged; only the kernel records moved.
 
 ## Status vocabularies and evidence gates
 
@@ -50,7 +57,7 @@ julia --project=. scripts/status.jl --check      # "docs/status.md is up to date
 # 4. commit registry changes and the regenerated docs/status.md together
 ```
 
-Warnings mean a dangling reference: missing `files`/`tests`/`evidence` path, unknown closure id in a scenario, missing `DE-`/`ADR-` file, duplicate `run_id`, or a frozen zone modified since freeze. Fix the reference; never delete the row and never edit `docs/status.md` directly. `--check` fails only on staleness, so regenerate and commit the board in the same change.
+Warnings mean a dangling reference: missing `files`/`tests`/`evidence` path, unknown closure id in a scenario, missing `DE-`/`ADR-` file, duplicate `run_id`, or a frozen zone modified since freeze. `OpenCGE@…` paths resolve against the pinned kernel checkout and `OpenCGE@…` doc ids are cross-repo (they skip the local file check). Fix the reference; never delete the row and never edit `docs/status.md` directly. `--check` fails only on staleness, so regenerate and commit the board in the same change.
 
 ## ADRs (`docs/decisions/`)
 
@@ -58,6 +65,7 @@ Warnings mean a dangling reference: missing `files`/`tests`/`evidence` path, unk
 - A decision is immutable once `accepted`. To change it, write a new ADR with `Supersedes: ADR-####` and change the old record's status to `superseded by ADR-####`; do not rewrite its content.
 - Status values: `proposed | accepted | superseded | rejected`. Cite related `DE-` ids, registry entries, and code paths.
 - Required when changing a closure formulation, a status rule, or the freeze policy; when unfreezing or moving a frozen zone; when adding a closure id. Template and index: `docs/decisions/README.md`.
+- The kernel-side ADRs (0001, 0005, 0010, 0011, 0014–0017, 0019–0022) were migrated to the `OpenCGE` kernel's `DECISIONS.md` in the repo split (ADR-0028): summarize them there, keep the ids, and reference them from `registry/` as `OpenCGE@ADR-…`. Numbering here stays intact; never renumber or reuse an id.
 
 ## Dead ends (`docs/dead-ends/`)
 
@@ -65,6 +73,7 @@ Warnings mean a dangling reference: missing `files`/`tests`/`evidence` path, unk
 - Required when an approach taken seriously is abandoned (not for typos or ordinary bug fixes; when in doubt, record it).
 - Must state what was tried, evidence, what replaced it, and the conditions under which it could be revived. Link the DE from `registry/closures.toml` (`dead_ends = [...]`) and add it to the index table in `docs/dead-ends/README.md`.
 - Never rewrite an old DE; a revival gets a new ADR plus a registry note.
+- The kernel-side formulation dead ends (DE-0001–0004, DE-0007–0011) live as summaries in the `OpenCGE` kernel's `DECISIONS.md` (`OpenCGE@DE-…`); DE-0005 and DE-0006 stay here (measurement-of-reported-results provenance).
 
 ## Lab log (`docs/log/YYYY-MM.md`)
 
@@ -76,7 +85,7 @@ Warnings mean a dangling reference: missing `files`/`tests`/`evidence` path, unk
 
 - ADR-0001 and `registry/freeze.toml` are authoritative: frozen snapshots and read-only zones are never edited.
 - Frozen/read-only zones: `cbase2/`, `bf_replication/`, `bf_replication2/`, `Replication Files/`, `Dokumente/`, `Notebooks/`, the archived legacy notebooks (`docs/archive/notebooks/`, ADR-0009), and `archive/` (including the orphan-source archive `archive/src-orphans/`).
-- Read frozen sources if needed, but write all changes in the root kernel. Never copy the kernel (ADR-0001).
+- Read frozen sources if needed, but write kernel changes in the `OpenCGE` kernel repository (`../opencge`), never here. Never copy the kernel (ADR-0001).
 - Unfreezing or moving a zone requires a superseding ADR and a new freeze record; `scripts/status.jl` warns when a zone differs from its recorded commit/tree hash.
 
 ## Commit conventions
@@ -96,4 +105,4 @@ Warnings mean a dangling reference: missing `files`/`tests`/`evidence` path, unk
 | settle a design question | add an ADR |
 | abandon an approach | add a DE record and link it |
 | run an experiment | register a scenario (see `experiments` skill) |
-| implement or change a closure | root `src/` only (see `closures` skill) |
+| implement or change a closure | in the `OpenCGE` kernel repo `../opencge` (see `closures` skill); this repo owns `registry/closures.toml` |

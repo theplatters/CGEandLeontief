@@ -21,7 +21,7 @@
 #   D. The channel that DOES move the real wage: a +20 % productivity shock in
 #      sector 1 under BETA with eta_s in {0.5, 2, 5} against ALPHA.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, TOML, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath
@@ -67,7 +67,7 @@ function report(tag, model, sol)
     X = fixed ? [p; q] : [p; q; w]
     resid = maximum(abs, equilibrium_residuals(model, X))
     Ld = sum(sectoral_labor_demand(p, q, w, model))
-    Lc = sum(BeyondHulten._positive_floor(BeyondHulten._cost_minimizing_labor(p, q, w, model)))
+    Lc = sum(OpenCGE._positive_floor(OpenCGE._cost_minimizing_labor(p, q, w, model)))
     cpi_v = sum(data.consumption_share .* p .^ (1 - 0.9))^(1 / (1 - 0.9))
     @printf("%-26s |resid|=%.2e w=%.10f realw=%.10f L_d=%.10f L_cost=%.10f maxdp=%.2e realGDP=%.10f\n",
         tag, resid, w, w / cpi_v, Ld, Lc, maximum(abs.(p .- 1)), real_gdp(sol))
@@ -110,7 +110,7 @@ for L in ("BF", "ALPHA", "BETA"), F in ("F1", "F2", "F3")
     end
     X = stored_X(id)
     p, q, w = X[1:N], X[N+1:2N], X[2N+1]
-    Lc = sum(BeyondHulten._positive_floor(BeyondHulten._cost_minimizing_labor(p, q, w, m)))
+    Lc = sum(OpenCGE._positive_floor(OpenCGE._cost_minimizing_labor(p, q, w, m)))
     Ld = sum(sectoral_labor_demand(p, q, w, m))
     canary = external_balance_canary(m, X)
     pm = dot(p, market_clearing_residuals(m, X))

@@ -3,14 +3,19 @@
 # Usage:
 #   julia --project=. scripts/check_repo.jl [--root DIR] [--quiet]
 #
-# Runs ten checks over the working tree and exits 1 on any violation:
+# Runs the checks over the working tree and exits 1 on any violation:
 #   1. board ......... docs/status.md is up to date and the registry reports 0 warnings
 #   2. closures ...... registry/closures.toml is bidirectional with the kernel registry
-#   3. closure-subtypes  every AbstractLabor/FinancingClosure subtype is a registered symbol
-#   4. kernel-reachability  every src/**/*.jl is reachable from src/BeyondHulten.jl
+#   3. closure-subtypes  (DROPPED with the kernel split: every AbstractLabor/
+#      FinancingClosure subtype being a registered symbol is owned by the
+#      OpenCGE kernel's CI now — the kernel sources are no longer in this repo)
+#   4. kernel-reachability  (DROPPED with the kernel split: reachability of the
+#      kernel include graph is owned by the OpenCGE kernel's CI now)
 #   5. runs .......... every runs/<id>/ has a schema-valid manifest, index, and scenario row
 #   6. runs-visible .. executed/provisional/failed rows are manifest-backed or pre-manifest history
 #   7. tracked-artifacts  no generated artifacts are tracked by git
+#      (the root Manifest.toml is exempt: it is the required committed pin of
+#      the OpenCGE dependency, post kernel split)
 #   8. kernel-copies . no living file includes a cbase2/src path
 #   9. preregistration  every preregistration record matches its design file SHA-256
 #  10. wip-limit ..... at most one scenario row is `running`
@@ -18,14 +23,13 @@
 # The file can be `include`d by tests without running the CLI (guard at the
 # bottom). Every check takes an explicit `root` so tests can point at
 # fixtures. Public API: `check_repo(root)` (all violations),
-# `check_board`, `check_closure_registry`, `check_closure_subtypes`,
-# `check_kernel_reachability`, `check_runs`, `check_failed_visible`,
+# `check_board`, `check_closure_registry`, `check_runs`, `check_failed_visible`,
 # `check_tracked_artifacts`, `check_kernel_copies`, `check_preregistration`,
 # `check_wip_limit`, `check_main`.
 #
-# Headless-safe: only BeyondHulten plus stdlibs and the kernel's CSV/DataFrames deps.
+# Headless-safe: only OpenCGE plus stdlibs and the kernel's CSV/DataFrames deps.
 
-using BeyondHulten
+using OpenCGE
 using TOML
 using Dates
 using SHA
@@ -55,12 +59,6 @@ const PRE_MANIFEST_ROWS = Set([
     "cbase2-v3-DELTA-analytic-F3",
     "cbase2-v3-BETA-mobile",
 ])
-
-"""Concrete closure-description types that are NOT taxonomy closures and hence
-need no registry symbol: `ExogenousLaborClosure` (the legacy CES exogenous-labor
-callback wrapper, ADR-0005) and `NoFinancing` (the unfinanced baseline reference;
-an unfinanced experiment is explicitly inadmissible, ROADMAP §4.3)."""
-const NON_CLOSURE_SUBTYPES = Set(["ExogenousLaborClosure", "NoFinancing"])
 
 """SHA-256 hex digest of a file's bytes."""
 file_sha256(path::AbstractString) = bytes2hex(SHA.sha256(read(path)))
@@ -103,19 +101,6 @@ function tracked_files(root::AbstractString)::Vector{String}
     end
 end
 
-"""All `.jl` files under a directory, sorted repo-relatively for stable output."""
-function all_jl_files(dir::AbstractString)::Vector{String}
-    out = String[]
-    isdir(dir) || return out
-    for (d, _, files) in walkdir(dir)
-        for f in files
-            endswith(f, ".jl") && push!(out, joinpath(d, f))
-        end
-    end
-    sort!(out)
-    return out
-end
-
 """Closure entries as id => (axis, table) from registry/closures.toml."""
 function registry_entries(root::AbstractString)::Dict{String,Tuple{String,Dict{String,Any}}}
     clos = TOML.parsefile(joinpath(root, "registry", "closures.toml"))
@@ -131,20 +116,6 @@ function registry_entries(root::AbstractString)::Dict{String,Tuple{String,Dict{S
         end
     end
     return out
-end
-
-"""All code symbols claimed by the closure registry."""
-function registry_symbols(entries::Dict{String,Tuple{String,Dict{String,Any}}})::Set{String}
-    syms = Set{String}()
-    for (_, (_, t)) in entries
-        v = get(t, "symbols", String[])
-        v === nothing && continue
-        for s in (v isa AbstractVector ? v : [v])
-            st = strip(string(s))
-            (isempty(st) || st == "TBD") || push!(syms, st)
-        end
-    end
-    return syms
 end
 
 # ── Check 1: board up to date + zero registry warnings ───────────────────
@@ -167,11 +138,12 @@ end
 # ── Check 2: closure registry is bidirectional ───────────────────────────
 
 """Every registry id resolves in the kernel and vice versa, axes agree,
-non-idea closures have constructors, and ZETA has none."""
+non-idea closures have constructors, and ZETA has none. The kernel registry is
+the pinned OpenCGE package (`OpenCGE.closure_ids` & friends)."""
 function check_closure_registry(root::AbstractString)::Vector{RepoViolation}
     out = RepoViolation[]
     entries = registry_entries(root)
-    code_ids = Set(string.(closure_ids()))
+    code_ids = Set(string.(OpenCGE.closure_ids()))
     reg_ids = Set(keys(entries))
     reg_ids == code_ids || push!(out, RepoViolation("closures",
         "closure id mismatch: registry has $(sort(collect(reg_ids))), code has $(sort(collect(code_ids)))"))
@@ -179,14 +151,14 @@ function check_closure_registry(root::AbstractString)::Vector{RepoViolation}
         axis, t = entries[id]
         status = strip(string(get(t, "status", "")))
         ok = try
-            string(closure_axis(Symbol(id))) == axis
+            string(OpenCGE.closure_axis(Symbol(id))) == axis
         catch
             false
         end
         ok || push!(out, RepoViolation("closures",
             "closure $id: axis mismatch or unknown to the kernel (registry says \"$axis\")"))
         ctor = try
-            closure_constructor(Symbol(id))
+            OpenCGE.closure_constructor(Symbol(id))
         catch
             :__unknown__
         end
@@ -197,60 +169,6 @@ function check_closure_registry(root::AbstractString)::Vector{RepoViolation}
             (ctor !== nothing && ctor !== :__unknown__) || push!(out, RepoViolation("closures",
                 "closure $id: status `$status` requires a kernel constructor"))
         end
-    end
-    return out
-end
-
-# ── Check 3: no unregistered labour-closure subtypes ─────────────────────
-
-"""Every `struct X <: AbstractLaborClosure` / `AbstractFinancing` in src/ must
-appear in some closure entry's symbols (or be listed in NON_CLOSURE_SUBTYPES)."""
-function check_closure_subtypes(root::AbstractString)::Vector{RepoViolation}
-    out = RepoViolation[]
-    syms = registry_symbols(registry_entries(root))
-    for jl in all_jl_files(joinpath(root, "src"))
-        contents = try
-            read(jl, String)
-        catch
-            continue
-        end
-        for m in eachmatch(r"struct\s+([A-Za-z_]\w*)\s*<:\s*Abstract(Labor|Financing)Closure", contents)
-            t = string(m.captures[1])
-            (t in syms || t in NON_CLOSURE_SUBTYPES) || push!(out, RepoViolation("closure-subtypes",
-                "unregistered closure subtype `$t` in $(relpath(jl, root)): add it to a closure entry's symbols"))
-        end
-    end
-    return out
-end
-
-# ── Check 4: no zombie kernel files ──────────────────────────────────────
-
-"""Every src/**/*.jl must be reachable from src/BeyondHulten.jl via include()."""
-function check_kernel_reachability(root::AbstractString)::Vector{RepoViolation}
-    out = RepoViolation[]
-    entry = joinpath(root, "src", "BeyondHulten.jl")
-    if !isfile(entry)
-        return [RepoViolation("kernel-reachability", "src/BeyondHulten.jl is missing")]
-    end
-    seen = Set{String}()
-    stack = String[normpath(entry)]
-    while !isempty(stack)
-        f = pop!(stack)
-        f in seen && continue
-        push!(seen, f)
-        contents = try
-            read(f, String)
-        catch
-            push!(out, RepoViolation("kernel-reachability", "included file missing: $(relpath(f, root))"))
-            continue
-        end
-        for m in eachmatch(r"include\s*\(\s*\"([^\"]+)\"", contents)
-            push!(stack, normpath(joinpath(dirname(f), string(m.captures[1]))))
-        end
-    end
-    for jl in all_jl_files(joinpath(root, "src"))
-        normpath(jl) in seen || push!(out, RepoViolation("kernel-reachability",
-            "zombie kernel file $(relpath(jl, root)): not reachable from src/BeyondHulten.jl (promote it, or archive it with a DE record)"))
     end
     return out
 end
@@ -373,8 +291,9 @@ end
 
 # ── Check 7: no tracked generated artifacts ─────────────────────────────
 
-"""No tracked, non-frozen file may be a generated artifact: Manifest.toml,
-*.log, .ipynb_checkpoints, plots/*.png, output/ contents, or runs/ contents
+"""No tracked, non-frozen file may be a generated artifact: a Manifest.toml
+(except the root one, the required committed OpenCGE pin), *.log,
+.ipynb_checkpoints, plots/*.png, output/ contents, or runs/ contents
 other than runs/index.csv and runs/*/manifest.toml."""
 function check_tracked_artifacts(root::AbstractString)::Vector{RepoViolation}
     out = RepoViolation[]
@@ -382,6 +301,9 @@ function check_tracked_artifacts(root::AbstractString)::Vector{RepoViolation}
     for f in tracked_files(root)
         is_frozen(f, frozen) && continue
         rel = "tracked artifact `$f`"
+        if f == "Manifest.toml"
+            continue  # exempt: the root Manifest.toml is a required committed artifact
+        end
         if basename(f) == "Manifest.toml"
             push!(out, RepoViolation("tracked-artifacts", "$rel: Manifest.toml is generated; do not commit it"))
             continue
@@ -478,8 +400,8 @@ end
 const CHECKS = [
     ("board", check_board),
     ("closures", check_closure_registry),
-    ("closure-subtypes", check_closure_subtypes),
-    ("kernel-reachability", check_kernel_reachability),
+    # 3/4 dropped with the kernel split (see the header map): closure-subtypes
+    # and kernel-reachability are owned by the OpenCGE kernel's CI now.
     ("runs", check_runs),
     ("runs-visible", check_failed_visible),
     ("tracked-artifacts", check_tracked_artifacts),

@@ -40,7 +40,7 @@
 include(joinpath(@__DIR__, "..", "run.jl"))
 using Printf, LinearAlgebra
 import NonlinearSolve
-const BH = BeyondHulten
+const BH = OpenCGE
 
 cpi_of(model, p) = begin
     σ = model.options.elasticities.σ

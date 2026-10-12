@@ -164,7 +164,7 @@ Steps 1 to 4 are reading exercises and can be done in one session. Step 5 is a b
 
 - `paper/submission-metro/submission.tex` §5 (`subsec:CGE_elasticity`, the inter-paradigmatic comparison) and §6 (`sec:labor`) --- the five sectoral exhibits and their readings.
 - `paper/equivalence.tex` Lemma 1 and the sectoral section (why single-wage closures are demand-free in prices, hence why the scatter separates the regimes).
-- `docs/decisions/ADR-0022-sectoral-labour-markets.md` (the sectoral family, the C1 amendment, the citation rule for v9 versus v10); `docs/decisions/ADR-0004-runs-are-immutable-manifests.md` (artifacts and citation).
+- `OpenCGE@ADR-0022` (the sectoral family, the C1 amendment, the citation rule for v9 versus v10; migrated to the kernel's `DECISIONS.md`, ADR-0028); `docs/decisions/ADR-0004-runs-are-immutable-manifests.md` (artifacts and citation).
 - `docs/grouping_rule_evidence.md` (the seven programme sectors and the incidence shares); `docs/decisions/ADR-0024-programme-total-settled.md` (the shock magnitude).
 - `docs/ideas/IDEA-0003-sectoral-sobol.md` (the expensive companion route).
 

@@ -16,7 +16,7 @@
 #   A2. The factor-market gap L_costmin(y) - sum(labor_share) at the stored v5
 #       solutions (BF/ALPHA/BETA x F1/F2/F3), which the canary carries at eta=0.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, TOML, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath
@@ -151,7 +151,7 @@ for L in ("BF", "ALPHA", "BETA"), F in ("F1", "F2", "F3")
     m = L == "BETA" ? cell_model("BETA", F; eta_s = Float64(cl["eta_s"])) : cell_model(L == "BF" ? "BF" : "ALPHA", F)
     X, _ = stored_X(lid)
     p, q, w = X[1:N], X[N+1:2N], X[2N+1]
-    Lc = sum(BeyondHulten._positive_floor(BeyondHulten._cost_minimizing_labor(p, q, w, m)))
+    Lc = sum(OpenCGE._positive_floor(OpenCGE._cost_minimizing_labor(p, q, w, m)))
     Ld = sum(sectoral_labor_demand(p, q, w, m))
     canary = external_balance_canary(m, X)
     pm = dot(p, market_clearing_residuals(m, X))

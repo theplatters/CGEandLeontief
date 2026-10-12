@@ -21,7 +21,7 @@
 # demand-sensitivity signature), employment, consumption, the deflator, and the
 # wage spread.
 
-using BeyondHulten
+using OpenCGE
 using CSV, DataFrames, LinearAlgebra, Printf
 
 const ROOT = joinpath(@__DIR__, "..", "..") |> normpath

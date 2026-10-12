@@ -5,7 +5,7 @@
 # The fixture constructors are copied verbatim from tests/test_kernel_regression.jl
 # and tests/test_promoted_closures.jl (they are file-local there).
 
-using BeyondHulten, Printf, DataFrames
+using OpenCGE, Printf, DataFrames
 
 function three_sector_fixture()
     io = DataFrame("Sektoren" => ["a", "b", "c"],

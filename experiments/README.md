@@ -66,7 +66,7 @@ Hornykewycz 2025; ~58 bn in 2023 prices). The raw impulse table is in
 current (2023) prices: its horizon mean is 58,893 EUR m, and
 58,893 / 1.46 = 40,338 EUR m ≈ `total_eur_m`. The legacy deflation
 apparatus is still in the kernel — `const inflator = 1.46`
-(`src/BeyondHulten.jl`) and `impulse_shock` (`src/core/diagnostics.jl`,
+(`src/OpenCGE.jl`) and `impulse_shock` (`src/core/diagnostics.jl`,
 exercised by `tests/test_model.jl`) — but the harness does not call it: the
 deflation is implicit in `total_eur_m`, and the incidence `ψ` is the raw
 current-price 2024 composition (undeflated). See ADR-0024 (accepted
@@ -198,7 +198,7 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   validation report.
 - Figures need GLMakie: install it with
   `import Pkg; Pkg.add("GLMakie")`, then `using GLMakie` alongside
-  `using BeyondHulten` (headless rendering works). `--no-figures` runs the
+  `using OpenCGE` (headless rendering works). `--no-figures` runs the
   validation + data export only and never loads GLMakie (headless mode);
   without GLMakie on the figure path the driver prints the install
   instruction and exits 1.

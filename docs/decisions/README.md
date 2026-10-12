@@ -64,3 +64,4 @@ settled question.
 | ADR-0025 | Matrix visualisation: validated re-solve, headless data layer, figures are not runs | accepted |
 | ADR-0026 | Retire `docs/definitive_guide.md`: moved to `docs/archive/`, superseded results, salvage review recorded | accepted |
 | ADR-0027 | Consolidate operating docs: merge/archive MERITOF, WORKPLAN, labor_closures; one plan (ROADMAP) | accepted |
+| ADR-0028 | Split into paper repo and OpenCGE kernel repo | accepted |

@@ -1,0 +1,84 @@
+% =====================================================================
+% Table 3b --- the closure matrix, TRANSPOSED (DRAFT, v2)
+% ---------------------------------------------------------------------
+% Same content as table3_closure-matrix-5x3.tex, axes inverted: the three
+% financing closures are the ROWS and the five labour closures the COLUMNS,
+% so the orientation now matches Table~\ref{tab:closure-conditions}
+% (financing = rows, short-run closure = columns). The two-equations-per-
+% cell logic is unchanged.
+%
+% Block labels: each cell tags its conditions by block --
+%   labour market: the labour-market closure condition (the column, varies)
+%   production:    a production-side condition, where one is added
+%                  (only the Leontief column pins substitution)
+%   financing:     the financing condition (the row, varies)
+% The tag is repeated in every cell for the same reason Table 2 repeats
+% both equations; drop the \textit{...:} prefixes to get the plain version.
+% =====================================================================
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.85cm}
+                  >{\raggedright\arraybackslash}p{2.45cm}
+                  >{\raggedright\arraybackslash}p{2.45cm}
+                  >{\raggedright\arraybackslash}p{2.45cm}
+                  >{\raggedright\arraybackslash}p{2.45cm}
+                  >{\raggedright\arraybackslash}p{2.45cm}@{}}
+\toprule
+\textbf{Financing closure}
+& \textbf{Standard CGE}\newline \scriptsize one flexible wage, mobile labour ($\eta = 1$)
+& \textbf{Elastic labour supply}\newline \scriptsize behavioural supply on the real wage
+& \textbf{Fixed real wage}\newline \scriptsize real wage pegged, employment uncapped
+& \textbf{Leontief closure}\newline \scriptsize real wage pegged, quantities absorb
+& \textbf{No-reallocation}\newline \scriptsize immobile labour, sectoral wages ($\eta = 0$) \\
+\midrule
+
+\textbf{F1}\newline \scriptsize repurposing of consumption
+& \textit{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$
+  \newline \textit{financing:} $\sum_i p_i c_i^{h} = E^{h}$
+& \textit{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$
+  \newline \textit{financing:} $\sum_i p_i c_i^{h} = E^{h}$
+& \textit{labour market:} $w/P = \bar w = 1$, $L = \sum_i L_i$
+  \newline \textit{financing:} $\sum_i p_i c_i^{h} = E^{h}$
+& \textit{labour market:} $w/P = 1$; \textit{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline \textit{financing:} $\sum_i p_i c_i^{h} = E^{h}$
+& \textit{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free
+  \newline \textit{financing:} $\sum_i p_i c_i^{h} = E^{h}$ \\
+\midrule
+
+\textbf{F2}\newline \scriptsize refinancing via taxes
+& \textit{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$
+  \newline \textit{financing:} $T(p) = \sum_i p_i g_i$
+& \textit{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$
+  \newline \textit{financing:} $T(p) = \sum_i p_i g_i$
+& \textit{labour market:} $w/P = \bar w = 1$, $L = \sum_i L_i$
+  \newline \textit{financing:} $T(p) = \sum_i p_i g_i$
+& \textit{labour market:} $w/P = 1$; \textit{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline \textit{financing:} $T(p) = \sum_i p_i g_i$
+& \textit{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free
+  \newline \textit{financing:} $T(p) = \sum_i p_i g_i$ \\
+\midrule
+
+\textbf{F3}\newline \scriptsize external / debt finance
+& \textit{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$
+  \newline \textit{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textit{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$
+  \newline \textit{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textit{labour market:} $w/P = \bar w = 1$, $L = \sum_i L_i$
+  \newline \textit{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textit{labour market:} $w/P = 1$; \textit{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline \textit{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textit{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free
+  \newline \textit{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
+\bottomrule
+\end{tabular}
+\caption{The closure matrix, transposed: the three financing closures
+(rows) crossed with the five labour-market closures (columns). Each cell
+states the two or three closure conditions that define that economy, tagged
+by block --- the labour-market condition (the column), any production-side
+condition (only the Leontief column pins substitution), and the financing
+condition (the row). The orientation matches Table~\ref{tab:closure-conditions}.}
+\label{tab:closure-matrix-3x5}
+\end{table}

@@ -1,0 +1,96 @@
+% =====================================================================
+% Table 3c --- the closure matrix, transposed (DRAFT, v3)
+% ---------------------------------------------------------------------
+% Same content as table3b, with three edits:
+%   1. the no-reallocation closure moves to the LEFTMOST labour column, to
+%      mimic the figure (where no reallocation is the left anchor of the
+%      sectoral row); the remaining four keep the figure's left-to-right
+%      reading, so the order is no-reallocation, standard CGE, elastic
+%      labour supply, fixed real wage, Leontief.
+%   2. the block signifiers are \textbf (was \textit).
+%   3. a small vertical pad follows each dimension line inside a cell.
+%
+% LINE BREAKS INSIDE CELLS: cells are p{} columns, where a literal \\ is
+% the ROW separator, NOT a line break -- using \\[4pt] there ends the row
+% early and scrambles the columns. Line breaks therefore use \newline (for
+% the header labels) and \par for the tagged blocks, with a local \parskip
+% supplying the padding (edit 3).
+%
+% Block labels: labour market: the labour closure condition (the column);
+% production: the substitution pin (only the Leontief column); financing:
+% the financing condition (the row). Spelling kept British ("labour") to
+% match the manuscript.
+% =====================================================================
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}% padding between the tagged blocks in a cell
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.85cm}
+                  >{\raggedright\arraybackslash}p{2.45cm}
+                  >{\raggedright\arraybackslash}p{2.45cm}
+                  >{\raggedright\arraybackslash}p{2.45cm}
+                  >{\raggedright\arraybackslash}p{2.45cm}
+                  >{\raggedright\arraybackslash}p{2.45cm}@{}}
+\toprule
+\textbf{Financing closure}
+& \textbf{No-reallocation}\newline \scriptsize immobile labour, sectoral wages ($\eta = 0$)
+& \textbf{Standard CGE}\newline \scriptsize one flexible wage, mobile labour ($\eta = 1$)
+& \textbf{Elastic labour supply}\newline \scriptsize behavioural supply on the real wage
+& \textbf{Fixed real wage}\newline \scriptsize real wage pegged, employment uncapped
+& \textbf{Leontief closure}\newline \scriptsize real wage pegged, quantities absorb \\
+\midrule
+
+\textbf{F1}\newline \scriptsize repurposing of consumption
+& \textbf{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free \par
+  \textbf{financing:} $\sum_i p_i c_i^{h} = E^{h}$
+& \textbf{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$ \par
+  \textbf{financing:} $\sum_i p_i c_i^{h} = E^{h}$
+& \textbf{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$ \par
+  \textbf{financing:} $\sum_i p_i c_i^{h} = E^{h}$
+& \textbf{labour market:} $w/P = \bar w = 1$, $L = \sum_i L_i$ \par
+  \textbf{financing:} $\sum_i p_i c_i^{h} = E^{h}$
+& \textbf{labour market:} $w/P = 1$ \par
+  \textbf{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$ \par
+  \textbf{financing:} $\sum_i p_i c_i^{h} = E^{h}$ \\
+\midrule
+
+\textbf{F2}\newline \scriptsize refinancing via taxes
+& \textbf{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free \par
+  \textbf{financing:} $T(p) = \sum_i p_i g_i$
+& \textbf{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$ \par
+  \textbf{financing:} $T(p) = \sum_i p_i g_i$
+& \textbf{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$ \par
+  \textbf{financing:} $T(p) = \sum_i p_i g_i$
+& \textbf{labour market:} $w/P = \bar w = 1$, $L = \sum_i L_i$ \par
+  \textbf{financing:} $T(p) = \sum_i p_i g_i$
+& \textbf{labour market:} $w/P = 1$ \par
+  \textbf{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$ \par
+  \textbf{financing:} $T(p) = \sum_i p_i g_i$ \\
+\midrule
+
+\textbf{F3}\newline \scriptsize external / debt finance
+& \textbf{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free \par
+  \textbf{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textbf{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$ \par
+  \textbf{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textbf{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$ \par
+  \textbf{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textbf{labour market:} $w/P = \bar w = 1$, $L = \sum_i L_i$ \par
+  \textbf{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textbf{labour market:} $w/P = 1$ \par
+  \textbf{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$ \par
+  \textbf{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
+\bottomrule
+\end{tabular}
+\caption{The closure matrix, transposed: the three financing closures
+(rows) crossed with the five labour-market closures (columns). Each cell
+states the two or three closure conditions that define that economy, tagged
+by block --- the labour-market condition (the column), any production-side
+condition (only the Leontief column pins substitution), and the financing
+condition (the row). The columns follow the figure's left-to-right reading,
+with the no-reallocation corner as the left anchor.}
+\label{tab:closure-matrix-3x5}
+\end{table}

@@ -1,0 +1,105 @@
+% =====================================================================
+% Table 3 --- the 5 x 3 matrix: the closure conditions (DRAFT)
+% ---------------------------------------------------------------------
+% Extends Table~\ref{tab:closure-conditions} from the two pole closures
+% (2 columns) to the full five labour closures (5 rows) crossed with the
+% three financing closures (3 columns), as announced in Section 3
+% ("Before we map these five closures in a monumental table ...").
+% Structure mimics Table 2: each cell carries the two equations that
+% define that economy -- one from the short-run (labour) block, one from
+% the financing block. The labour condition is the row, the financing
+% condition is the column; the financing equation therefore repeats down
+% a column, exactly as the short-run equation repeated down its column in
+% Table 2.
+%
+% Ordering of rows follows the registry id order (ALPHA, BETA, GAMMA,
+% DELTA, BF) = standard CGE, elastic (sectoral) supply, fixed real wage,
+% Leontief, no-reallocation. Provisional -- reorder if the narrative
+% prefers the two poles first.
+%
+% NAMING (to match the pending naming sweep): the row labels use the
+% conventional vocabulary -- "standard CGE closure", "elastic labour
+% supply", "fixed real wage closure", "Leontief closure",
+% "no-reallocation closure".
+% =====================================================================
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.30cm}
+                  >{\raggedright\arraybackslash}p{3.90cm}
+                  >{\raggedright\arraybackslash}p{3.90cm}
+                  >{\raggedright\arraybackslash}p{3.90cm}@{}}
+\toprule
+\textbf{Labour-market closure}
+& \textbf{Financing: F1}\newline \scriptsize repurposing of consumption
+& \textbf{Financing: F2}\newline \scriptsize refinancing via taxes
+& \textbf{Financing: F3}\newline \scriptsize external / debt finance \\
+\midrule
+
+\textbf{Standard CGE}\newline
+  \scriptsize full employment, one flexible wage, mobile labour ($\eta = 1$)
+& $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$,\quad $\sum_i L_i = \bar L$
+  \newline $\sum_i p_i c_i^{h} = E^{h}$
+& $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$,\quad $\sum_i L_i = \bar L$
+  \newline $T(p) = \sum_i p_i g_i$
+& $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$,\quad $\sum_i L_i = \bar L$
+  \newline $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
+\midrule
+
+\textbf{Elastic labour supply}\newline
+  \scriptsize behavioural supply on the real wage; $N$ sectoral markets
+& $L_i = \bar L_i\,[\,(w_i/\Pi(p))/(w_i^{0}/\Pi^{0})\,]^{\eta_{s,i}}$
+  \newline $\sum_i p_i c_i^{h} = E^{h}$
+& $L_i = \bar L_i\,[\,(w_i/\Pi(p))/(w_i^{0}/\Pi^{0})\,]^{\eta_{s,i}}$
+  \newline $T(p) = \sum_i p_i g_i$
+& $L_i = \bar L_i\,[\,(w_i/\Pi(p))/(w_i^{0}/\Pi^{0})\,]^{\eta_{s,i}}$
+  \newline $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
+\midrule
+
+\textbf{Fixed real wage}\newline
+  \scriptsize real wage pegged, employment uncapped
+& $w/P = \bar w = 1$,\quad $L = \sum_i L_i$
+  \newline $\sum_i p_i c_i^{h} = E^{h}$
+& $w/P = \bar w = 1$,\quad $L = \sum_i L_i$
+  \newline $T(p) = \sum_i p_i g_i$
+& $w/P = \bar w = 1$,\quad $L = \sum_i L_i$
+  \newline $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
+\midrule
+
+\textbf{Leontief closure}\newline
+  \scriptsize real wage pegged and Leontief limit, quantities absorb
+& $w/P = 1$,\quad $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline $\sum_i p_i c_i^{h} = E^{h}$
+& $w/P = 1$,\quad $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline $T(p) = \sum_i p_i g_i$
+& $w/P = 1$,\quad $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
+\midrule
+
+\textbf{No-reallocation}\newline
+  \scriptsize immobile labour, sectoral wages free ($\eta = 0$)
+& $\eta = 0$:\quad $L_i = \bar L_i$, $w_i$ free
+  \newline $\sum_i p_i c_i^{h} = E^{h}$
+& $\eta = 0$:\quad $L_i = \bar L_i$, $w_i$ free
+  \newline $T(p) = \sum_i p_i g_i$
+& $\eta = 0$:\quad $L_i = \bar L_i$, $w_i$ free
+  \newline $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
+\bottomrule
+\end{tabular}
+\caption{The full closure matrix: the five labour-market closures (rows)
+crossed with the three financing closures (columns). Each cell states the
+two closure conditions that define that economy --- one for the short run
+(labour market, the row), one for the financing of the programme (the
+column). The standard CGE row and the $F1$/$F2$ column reproduce
+Table~\ref{tab:closure-conditions}; the remaining rows add the labour-market
+variations between the two poles --- behavioural supply on the real wage
+(elastic labour supply), an uncapped extensive margin (fixed real wage),
+the fixed-coefficient limit (Leontief), and immobile labour with sectoral
+wages (no-reallocation). Notation follows Section~\ref{sec:kernel};
+$\Pi(p)$ is the consumption price index, $E^{h}$ household consumption
+expenditure, $T(p)$ the programme tax, and $B_{\mathrm{gov}}$ the externally
+booked programme cost.}
+\label{tab:closure-matrix}
+\end{table}

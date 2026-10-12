@@ -34,12 +34,12 @@ against the freshly written baseline (metrics rows and both output CSVs).
 | `output/matrix_5x3_v10_summary.csv` | `julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 --no-figures --data-dir output` (run by the tool), then copied | 15/15 headline cells validated; full precision (round-trip check max abs deviation 0.0 — `CSV.write` shortest round-trip floats; no extra full-precision copies needed) |
 | `output/matrix_5x3_v10_sectoral.csv` | same generator, then copied | tidy long frame, same precision as above |
 | `output/variance_decomposition_sobol.csv` | copy as-is of `output/variance_decomposition_sobol.csv`; see `output/variance_decomposition_sobol.provenance.txt` | legacy pinned artifact (2026-09-03, generator root `rerun_results.jl`, which no longer runs on the current kernel — ADR-0010 retired interpolated η) |
-| `test.log` | `julia --project=. -e 'using Pkg; Pkg.test()'` | exit 0, "Testing BeyondHulten tests passed"; 865 passing assertions across the testsets, 1 known `@test_broken` (GLMakie-optional panel test) |
+| `test.log.txt` | `julia --project=. -e 'using Pkg; Pkg.test()'` | exit 0, "Testing BeyondHulten tests passed"; 865 passing assertions across the testsets, 1 known `@test_broken` (GLMakie-optional panel test) |
 | `status_check.out` | `julia --project=. scripts/status.jl --check` | "docs/status.md is up to date.", exit 0 |
 | `check_repo.out` | `julia --project=. scripts/check_repo.jl` | 0 violations, exit 0 (capture predates the baseline commit; see "Post-commit gate" below) |
 | `pkg_status.txt` | `julia --project=. -e 'using Pkg; Pkg.status()'` | direct deps: CSV 1.0.0, DataFrames 1.8.2, IJulia 1.34.4, NonlinearSolve 4.32.0, ProgressMeter 1.11.0, ThreadsX 0.1.12 + stdlibs |
 | `manifest-pre-split.toml` | `cp Manifest.toml baseline/manifest-pre-split.toml` | dependency-version provenance for the later 1e-8 comparison (Manifest.toml is gitignored, so it is recorded here) |
-| `latex/main.log`, `latex/refresponse.log` | copies of `revision/main.log`, `revision/refresponse.log` | full latexmk logs of the builds below |
+| `latex/main.log.txt`, `latex/refresponse.log.txt` | copies of `revision/main.log`, `revision/refresponse.log` | full latexmk logs of the builds below |
 | `latex/summary.txt` | build record | PDF sha256 + page counts; build outcomes |
 
 ## v10_metrics.csv schema
@@ -93,9 +93,9 @@ by `docs/archive/` only, not by `paper/` or `revision/`.
 
 ## Post-commit gate
 
-`baseline/test.log`, `baseline/latex/*.log` are `*.log` files: once
+`baseline/test.log`, `baseline/latex/*.log` were `*.log` files: once
 committed, the repo gate's `tracked-artifacts` rule ("*.log files are
-transient; do not commit them") flags them. Per the WP0 plan the gate was
+transient; do not commit them") flagged them. Per the WP0 plan the gate was
 NOT weakened. Recorded outcome (2026-10-12, after commit `73e1d84`):
 
 - `julia --project=. scripts/check_repo.jl` → exit 1, **3 violations**,
@@ -105,10 +105,14 @@ NOT weakened. Recorded outcome (2026-10-12, after commit `73e1d84`):
 - `julia --project=. scripts/status.jl --check` → "docs/status.md is up
   to date.", exit 0 (board current).
 
-Consequence to weigh: `tests/test_check_repo.jl` asserts the
-`tracked-artifacts` check passes on the real repo, so `Pkg.test()` will
-fail on that testset as long as the `*.log` baseline artifacts are tracked
-(the capture in `test.log` predates the commit and is green). Resolving
-this needs a decision — rename the artifacts (e.g. `*.log.txt`), exempt
-`baseline/` in the gate, or keep the logs untracked — which is outside
-WP0's write set (`baseline/**` + `scripts/reproduce.jl` only).
+Consequence weighed: `tests/test_check_repo.jl` asserts the
+`tracked-artifacts` check passes on the real repo, so the suite would
+fail on that testset as long as the `*.log` baseline artifacts were
+tracked (the capture in `test.log` predates the commit and is green).
+
+**Resolved 2026-10-12 (WP2, commit following):** the three logs were
+renamed to `*.log.txt` (`baseline/test.log.txt`,
+`baseline/latex/main.log.txt`, `baseline/latex/refresponse.log.txt`),
+which the `endswith(f, ".log")` rule does not match; the gate was not
+weakened and `julia --project=. scripts/check_repo.jl` is back to
+0 violations.

@@ -37,31 +37,28 @@ settled question.
 
 | ID | Title | Status |
 | --- | --- | --- |
-| ADR-0001 | One kernel, no living copies | accepted |
 | ADR-0002 | Closure taxonomy and stable IDs | accepted |
 | ADR-0003 | `registry/` is the single source of truth | accepted |
 | ADR-0004 | Runs are immutable, manifest-backed records | accepted |
-| ADR-0005 | Phase 2 layout and cbase2 backport | accepted |
 | ADR-0006 | Experiment entry point and preregistration | accepted |
 | ADR-0007 | Repository gate and WIP limits | accepted |
 | ADR-0008 | Archive superseded root documents as read-only | accepted |
 | ADR-0009 | Archive the legacy root notebooks | accepted |
-| ADR-0010 | Port the `cbase2/review.md` pipeline fixes | accepted |
-| ADR-0011 | Conform the frozen cbase2 notebook 01 to the canonical kernel | accepted |
 | ADR-0012 | A-bill calibration: domestic intermediate bill, clamp eliminated, s re-anchored | accepted |
 | ADR-0013 | the intermediate-bill tax term: row 75 booked as an external leak | accepted |
-| ADR-0014 | real-wage elastic supply and a verified scale-determinacy guard | accepted |
-| ADR-0015 | monotone polish to ~1e-10 (tolerance-independent metrics) | accepted |
-| ADR-0016 | CES-consistent valuation of the intermediate-bill leaks | accepted |
-| ADR-0017 | Actual-matrix scale determinacy for the fixed-wage η = 1 system | accepted |
 | ADR-0018 | Real GDP measurement in the open economy | accepted |
-| ADR-0019 | All-N goods-market clearing with an explicit external account | accepted |
-| ADR-0020 | The eta = 0 endpoint's external account: closure options | accepted (option C) |
-| ADR-0021 | Wage structure in the fixed-wage closure (GAMMA) | proposed |
-| ADR-0022 | Sectoral labour markets: demand-sensitive prices from the wage block | accepted |
 | ADR-0023 | Supply-shock design schema for the identification arm | accepted |
 | ADR-0024 | Programme total: G0 = 40,300 kept (the 2019-price horizon average) | accepted |
 | ADR-0025 | Matrix visualisation: validated re-solve, headless data layer, figures are not runs | accepted |
 | ADR-0026 | Retire `docs/definitive_guide.md`: moved to `docs/archive/`, superseded results, salvage review recorded | accepted |
 | ADR-0027 | Consolidate operating docs: merge/archive MERITOF, WORKPLAN, labor_closures; one plan (ROADMAP) | accepted |
 | ADR-0028 | Split into paper repo and OpenCGE kernel repo | accepted |
+
+**Migrated to OpenCGE DECISIONS.md** (2026-10-12, ADR-0028): ADR-0001,
+ADR-0005, ADR-0010, ADR-0011, ADR-0014, ADR-0015, ADR-0016, ADR-0017,
+ADR-0019, ADR-0020, ADR-0021 and ADR-0022 were kernel-layout and
+model-kernel decisions. Their one-to-two-sentence summaries live in the
+OpenCGE kernel's `DECISIONS.md` (`../opencge`, referenced as `OpenCGE@ADR-…`
+from `registry/`); the full texts remain recoverable from this repository's
+git history. The ids are never reused or renumbered (ADR-0021 is `proposed`
+there, as it was here).

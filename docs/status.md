@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-10-12 by `scripts/status.jl` · branch `split/open-cge` · HEAD `c19a2d5` (dirty)
+Generated 2026-10-12 by `scripts/status.jl` · branch `split/open-cge` · HEAD `61f366b` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -586,47 +586,27 @@ Scenarios: **417** rows — executed: 373, provisional: 3, failed: 41. Designs: 
 
 ## Dead ends
 
-- [DE-0001 — Unnormalized household demand shifter](dead-ends/DE-0001-unnormalized-demand-shifter.md)
-- [DE-0002 — Dropping a zero-profit equation to close the system](dead-ends/DE-0002-dropped-zero-profit-equation.md)
-- [DE-0003 — `η = 10⁶` as a fixed-real-wage approximation](dead-ends/DE-0003-eta-1e6-as-fixed-wage.md)
-- [DE-0004 — Nominal wage in the labour-supply function](dead-ends/DE-0004-nominal-wage-labour-supply.md)
 - [DE-0005 — Fixed-base quantity sum called real GDP](dead-ends/DE-0005-fixed-base-gdp-sum.md)
 - [DE-0006 — Variance shares renormalized over main effects / silent incomplete designs](dead-ends/DE-0006-renormalized-variance-shares.md)
-- [DE-0007 — Adopting Baqaee–Farhi (2022) wholesale as the base model](dead-ends/DE-0007-bf2022-wholesale-base.md)
-- [DE-0008 — Open-economy calibration without a saving rate (cbase2 v2)](dead-ends/DE-0008-open-economy-without-saving-rate.md)
-- [DE-0009 — Orphan `src/` files archived, never wired into the package module](dead-ends/DE-0009-orphan-src-files.md)
-- [DE-0010 — The cbase2 multi-stage solver ladder](dead-ends/DE-0010-cbase2-solver-ladder.md)
-- [DE-0011 — Re-gauging the numeraire to give eta_s a channel](dead-ends/DE-0011-numeraire-regauging.md)
 
 ## Decisions
 
-- [ADR-0001 — One kernel, no living copies](decisions/ADR-0001-one-kernel-no-living-copies.md)
 - [ADR-0002 — Closure taxonomy and stable IDs](decisions/ADR-0002-closure-taxonomy.md)
 - [ADR-0003 — `registry/` is the single source of truth](decisions/ADR-0003-registry-single-source-of-truth.md)
 - [ADR-0004 — Runs are immutable, manifest-backed records](decisions/ADR-0004-runs-are-immutable-manifests.md)
-- [ADR-0005 — Phase 2 layout and cbase2 backport](decisions/ADR-0005-phase2-layout-and-backport.md)
 - [ADR-0006 — Experiment entry point and preregistration](decisions/ADR-0006-experiment-entry-point-and-preregistration.md)
 - [ADR-0007 — Repository gate and WIP limits](decisions/ADR-0007-repository-gate-and-wip-limits.md)
 - [ADR-0008 — Archive superseded root documents as read-only](decisions/ADR-0008-archive-superseded-root-documents.md)
 - [ADR-0009 — Archive the legacy root notebooks](decisions/ADR-0009-archive-legacy-root-notebooks.md)
-- [ADR-0010 — Port the `cbase2/review.md` pipeline fixes](decisions/ADR-0010-port-review-fixes.md)
-- [ADR-0011 — Conform the frozen cbase2 notebook 01 to the canonical kernel](decisions/ADR-0011-conform-cbase2-notebook-01.md)
 - [ADR-0012 — A-bill calibration: the domestic intermediate bill replaces the purchaser-price bill](decisions/ADR-0012-abill-calibration.md)
 - [ADR-0013 — the intermediate-bill tax term: row 75 booked as an external leak](decisions/ADR-0013-intermediate-bill-tax-term.md)
-- [ADR-0014 — real-wage elastic supply and a verified scale-determinacy guard](decisions/ADR-0014-real-wage-supply-and-scale-guard.md)
-- [ADR-0015 — monotone polish to ~1e-10 (tolerance-independent metrics)](decisions/ADR-0015-monotone-polish.md)
-- [ADR-0016 — CES-consistent valuation of the intermediate-bill leaks](decisions/ADR-0016-ces-consistent-leak-valuation.md)
-- [ADR-0017 — actual-matrix scale determinacy for the fixed-wage η = 1 system](decisions/ADR-0017-actual-matrix-scale-determinacy.md)
 - [ADR-0018 — Real GDP measurement in the open economy](decisions/ADR-0018-real-gdp-measurement.md)
-- [ADR-0019 — All-N goods-market clearing with an explicit external account](decisions/ADR-0019-external-account-closure.md)
-- [ADR-0020 — The eta = 0 endpoint's external account: closure options](decisions/ADR-0020-eta0-external-account-closure.md)
-- [ADR-0021 --- Wage structure in the fixed-wage closure (GAMMA)](decisions/ADR-0021-wage-structure-fixed-wage-closure.md)
-- [ADR-0022 -- Sectoral labour markets: demand-sensitive prices from the wage block](decisions/ADR-0022-sectoral-labour-markets.md)
 - [ADR-0023 — Supply-shock design schema for the identification arm](decisions/ADR-0023-supply-shock-design-schema.md)
 - [ADR-0024 — Programme total: G0 = 40,300 kept (the 2019-price horizon average)](decisions/ADR-0024-programme-total-settled.md)
 - [ADR-0025 — Matrix visualisation: validated re-solve, headless data layer, figures are not runs](decisions/ADR-0025-matrix-visualisation-validated-resolve.md)
 - [ADR-0026 — Retire `docs/definitive_guide.md`](decisions/ADR-0026-retire-definitive-guide.md)
 - [ADR-0027: Consolidate operating docs (one question, one document)](decisions/ADR-0027-consolidate-operating-docs.md)
+- [ADR-0028 — Split into paper repo and OpenCGE kernel repo](decisions/ADR-0028-split-paper-and-opencge-kernel.md)
 
 ## Warnings
 

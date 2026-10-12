@@ -38,14 +38,13 @@ the conditions under which it could be revived.
 
 | ID | Title |
 | --- | --- |
-| DE-0001 | Unnormalized household demand shifter |
-| DE-0002 | Dropping a zero-profit equation to close the system |
-| DE-0003 | `η = 10⁶` as a fixed-real-wage approximation |
-| DE-0004 | Nominal wage in the labour-supply function |
 | DE-0005 | Fixed-base quantity sum called real GDP |
 | DE-0006 | Variance shares renormalized over main effects / silent incomplete designs |
-| DE-0007 | Adopting Baqaee–Farhi (2022) wholesale as the base model |
-| DE-0008 | Open-economy calibration without a saving rate (cbase2 v2) |
-| DE-0009 | Orphan src files archived |
-| DE-0010 | The cbase2 multi-stage solver ladder |
-| DE-0011 | Re-gauging the numeraire to give eta_s a channel |
+
+**Migrated to OpenCGE DECISIONS.md** (2026-10-12, ADR-0028): DE-0001,
+DE-0002, DE-0003, DE-0004, DE-0007, DE-0008, DE-0009, DE-0010 and DE-0011
+were kernel-side formulation dead ends. Their summaries live in the OpenCGE
+kernel's `DECISIONS.md` (`../opencge`, referenced as `OpenCGE@DE-…` from
+`registry/`); the full texts remain recoverable from this repository's git
+history. DE-0005 and DE-0006 stay here: they record how the reported results
+must be measured, and that provenance belongs to the paper.

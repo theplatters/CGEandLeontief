@@ -115,8 +115,8 @@ ADR (the factor space and the design weights) + per-block factor design + prereg
 # Anchored in
 
 - `docs/DOCS_ASSESSMENT.md` Stage 2 item 2; `docs/archive/definitive_guide.md` §7.6 and Phase 7 (archived by ADR-0026); `ROADMAP.md` (the `SobolResult` extension item).
-- `docs/dead-ends/DE-0006` (renormalised shares --- do not repeat); `docs/dead-ends/DE-0010` (the retired cbase2 solver ladder).
-- `docs/decisions/ADR-0022-sectoral-labour-markets.md` (the sectoral family, the exact nesting, the `eta_s -> inf` limit); `docs/decisions/ADR-0021-wage-structure-fixed-wage-closure.md` (the pinned vector, the numeraire invariance).
+- `docs/dead-ends/DE-0006` (renormalised shares --- do not repeat); `OpenCGE@DE-0010` (the retired cbase2 solver ladder; summary in the kernel's `DECISIONS.md`).
+- `OpenCGE@ADR-0022` (the sectoral family, the exact nesting, the `eta_s -> inf` limit); `OpenCGE@ADR-0021` (the pinned vector, the numeraire invariance) --- migrated to the kernel's `DECISIONS.md` (ADR-0028).
 - `paper/equivalence.tex` Lemma 1 and the sectoral section (why single-wage closures are demand-free in prices).
 - `docs/grouping_rule_evidence.md` (the input measure); `docs/grouping_rule_evidence.md` (the grouping rule) and ADR-0022 (the grouping rule and its sign flip).
 

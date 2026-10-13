@@ -15,7 +15,7 @@
 
 % TODO: verbal model overview BEFORE the equations (R1.2).
 
-All fifteen economies of the matrix share one static kernel: a production
+All fifteen different constellations represented by the matrix of approaches covered in table \ref{tab:closure-matrix-3x5} share one static kernel: a production
 network calibrated to an input--output table, cost-minimizing producers and
 a utility-maximizing household. The kernel is held fixed by design; the
 closures change only which variables adjust. This section states the kernel
@@ -40,12 +40,14 @@ p_i y_i &= \sum_{u=1}^N p_u x_{ui} + v_i.
 \label{eq:io-column}
 \end{align}
 Dividing a column by sector revenue turns the table into cost shares: the
-labour share $\alpha_i = v_i/(p_i y_i)$ and the input shares
+factor share $\alpha_i = v_i/(p_i y_i)$ and the input shares
 $\Omega_{iu} = p_u x_{ui}/\sum_{u'} p_{u'}x_{u'i}$ of the intermediate
 bundle, with $\sum_u \Omega_{iu} = 1$. Household consumption shares
 $\omega_i$ follow in the same way from the final-use columns. Imports and
 product taxes on intermediate use are booked as separate leaks
 (Appendix~\ref{app:kernel}).
+%TODO: die notation mit dem strich checke ich gerade nicht. auch bei den indices bin ich unsicher: wenn z_u final use ist, warum ist dann der share omega_i (und nicht u)?
+%NOTE: wir sollten vllt nochmal wo klar hinschreiben, dass wir hier ein one-factor model vor augen haben?
 
 The table is a snapshot: it fixes shares at one point, but says nothing
 about how they respond when prices or demand change. That is the job of the
@@ -53,16 +55,15 @@ optimization problems below.
 
 \subsection{The optimization problems}\label{subsec:optimization}
 
-Each sector is a single competitive firm with a constant-returns technology
-$\Phi_i$ in labour and intermediate inputs. Given prices $p$, its wage $w_i$
-and output $y_i$, it minimizes cost:
+Each sector is represented as a single competitive firm with a constant-returns technology $\Phi_i$ in labour and intermediate inputs. Given prices $p$, its 
+wage $w_i$ and output $y_i$, this firms aims to minimize cost:
 \begin{equation}
 \min_{L_i,\,x_{1i},\ldots,x_{Ni}} \; w_i L_i + \sum_{u=1}^N p_u x_{ui}
 \qquad \text{s.t.} \qquad \Phi_i(L_i, x_{1i},\ldots,x_{Ni}; A_i) \geq y_i,
 \label{eq:cost-min}
 \end{equation}
-where $A_i$ is productivity. Constant returns make total cost
-$c_i(p,w_i;A_i)\,y_i$, with unit cost $c_i$, and perfect competition
+where $A_i$ is productivity. With a unit cost $c_i$, constant returns imply a total cost
+$c_i(p,w_i;A_i)\,y_i$, and perfect competition
 equates price and unit cost, $p_i = c_i(p,w_i;A_i)$. Input demands follow
 from Shephard's lemma, $L_i = y_i\,\partial c_i/\partial w_i$ and
 $x_{ui} = y_i\,\partial c_i/\partial p_u$. The representative household
@@ -74,7 +75,10 @@ maximizes utility given its consumption expenditure $E^h$:
 \end{equation}
 We take $\Phi_i$ to be a nested CES (elasticity $\epsilon$ between labour and
 the intermediate composite, $\theta$ among intermediates) and $U$ to be CES
-with elasticity $\sigma$. The shares of the table are its weights, so at
+with elasticity $\sigma$. We choose this functional form because it sits comfortably between two paradigmatic conceptions of production -- the inflexible, recipe-based Leontief production and the more adaptive Cobb-Douglas production function where substituiton is governed by marginal productivity. Formally, it can reproduce the respective outcomes at corners solutions (SOURCE).
+% TODO können wir da smit den parameters angeben; betrifft dann theta und epsilon, oder?
+
+The shares of the table are its weights, so at
 baseline prices the solutions to~\eqref{eq:cost-min}
 and~\eqref{eq:utility-max} reproduce the table exactly. Equilibrium
 requires that output satisfies intermediate and final demand in every
@@ -87,7 +91,7 @@ optimization problems are silent on both: a closure supplies them.
 \endgroup
 
 \subsection{Five labour closures and three financings}\label{subsec:closures}
-
+%NOTE ich bin nohc nicht ganz sicher wie wir das sinnvoll aufteilen...
 Section~\ref{sec:two-questions} introduced the closures verbally;
 Table~\ref{tab:closure-conditions} states the two poles and
 Table~\ref{tab:closure-matrix-3x5} the full matrix, each cell by one

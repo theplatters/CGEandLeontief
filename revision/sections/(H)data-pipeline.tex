@@ -1,0 +1,95 @@
+% =====================================================================
+% Appendix H --- From the input--output table to Omega: the data pipeline
+% ---------------------------------------------------------------------
+% Job: document, step by step, how the published Destatis input--output
+%      table becomes the calibrated objects the kernel consumes --- above
+%      all the input-share matrix Omega, plus alpha, lambda and the
+%      consumption shares omega. Section 4 states the definitions
+%      (eq:io-row, eq:io-column); Appendix C carries the A-bill leak
+%      accounting; Appendix E the investment vector. This appendix fills the
+%      gap between "the table" and "the shares".
+% Code: OpenCGE@src/core/accounting.jl (read_data, final_demand_split,
+%      generate_data, conditional_input_shares, assemble_data) and
+%      OpenCGE@src/core/calibration.jl (retained_dataset for variants).
+% Status: STUB --- placeholder outline (2026-10-12).
+% =====================================================================
+\section{From the input--output table to $\Omega$: the data pipeline}\label{app:pipeline}
+
+% TODO: short opening paragraph: what goes in (one published table), what
+% comes out (Omega, alpha / factor share, lambda, omega, the leak vectors),
+% and why it matters --- every closure in the paper is calibrated on the
+% same objects, so differences in results cannot come from the data step.
+% Possibly a small flow diagram (TikZ): raw table -> cleaned table ->
+% Z, Z_dom -> Omega / alpha / lambda / omega -> kernel.
+
+\subsection{Source data}\label{app:pipeline-source}
+% TODO: the Destatis input--output table for Germany 2019 (revision 2019),
+% 71 product groups, product-by-product, basic prices; file name in data/
+% (destatis_input_output_2019_revision2019.xlsx -> I-O_DE2019_formatiert.csv);
+% citation of the Destatis release (cross-reference app:provenance).
+% TODO: layout of the table as read: rows 1--71 the sector block, then the
+% valuation rows (row 73 domestic use, row 74 imports, row 75 product taxes
+% less subsidies, row 76 their sum), the value-added rows and gross output;
+% columns 1--71 the users, then the final-demand categories.
+% TODO: the formatting step from xlsx to csv (what is removed or renamed,
+% decimal/missing-value conventions "-" and "x") --- state it is mechanical.
+
+\subsection{The intermediate-use matrix}\label{app:pipeline-z}
+% TODO: Z = intermediate deliveries x_{ui} (supplier u to user i), domestic
+% and imported combined; link to eq:io-row / eq:io-column.
+% TODO: imports are reported by USING sector only (row 74), not by supplier:
+% the proportional allocation assumption that yields the domestic matrix
+% Z_dom (each user keeps its supplier composition).
+% TODO: the clamping guard --- the few sectors whose recorded intermediate
+% imports exceed intermediate use; list them, give their size, and say they
+% are treated as fully import-dependent in Z_dom.
+
+\subsection{Normalizing to cost shares: $\Omega$}\label{app:pipeline-omega}
+% TODO: Omega_{iu} = p_u x_{ui} / sum_{u'} p_{u'} x_{u'i}: column of Z
+% divided by the user's total intermediate bill, transposed to user x
+% supplier; each row sums to one (the contract the CES price index
+% eq:model-ip relies on: unit cost = 1 at the calibration point).
+% TODO: which Omega the kernel uses --- the raw (domestic + imported) Omega
+% for equilibrium technology vs. the domestic Omega_dom kept for incidence
+% and audit; justify the choice and point to the A-bill accounting in
+% app:kernel (the domestic bill A_bill charged to intermediates, M_int and
+% T_int booked as leaks).
+% TODO: descriptive statistics on Omega: sparsity, diagonal (self-supply)
+% shares, the high-self-share sectors (> 0.45) that motivate the "reduced"
+% variant (app:variants); maybe a heat map of Omega as a figure.
+
+\subsection{Value added, factor shares and Domar weights}\label{app:pipeline-va}
+% TODO: value added decomposed into compensation of employees, other
+% production taxes less subsidies, depreciation, net operating surplus
+% (identity checked to 1e-9); the composite factor share alpha_i = v_i /
+% (p_i y_i) --- state clearly that this is total value added, not pure
+% labour, and why the kernel uses it.
+% TODO: Domar weights lambda_i = gross output / GDP and the labour-share
+% weights lambda_i * alpha_i (summing to one).
+
+\subsection{Final demand and household shares $\omega$}\label{app:pipeline-fd}
+% TODO: the final-demand categories (household consumption, government,
+% investment, exports); purchaser-price categories split proportionally into
+% domestic, imported and product-tax components (final_demand_split; source
+% limitation: imports and taxes on final use are reported by category).
+% TODO: consumption shares omega calibrated so the model clears at y =
+% lambda (from (I - diag(1 - alpha) Omega)' y); negative entries clamped to
+% zero and renormalized --- report how many and how large.
+% TODO: government, investment and export blocks and the implied saving rate
+% s (data-implied residual, not assumed); cross-reference app:kernel.
+
+\subsection{Consistency checks}\label{app:pipeline-checks}
+% TODO: the three GDP sides (production = income exactly; production vs.
+% expenditure residual 5.387 %, an open item of the raw table itself) and
+% the 10 % guard.
+% TODO: sum_u Omega_{iu} = 1 for every i; sum lambda_i alpha_i = 1;
+% sum A + sum M_int + sum T_int = sum lambda - 1 to 2e-16 (app:kernel).
+% TODO: the paper-side tests that assert these on the real table
+% (tests/test_calibration.jl) and the 1e-8 reproduction baseline.
+
+\subsection{Sector-exclusion variants}\label{app:pipeline-variants}
+% TODO: how the "70s" and "reduced" variants are rebuilt from the RAW table
+% (retained_dataset) rather than by slicing the full-table matrices: Omega
+% rows renormalized on retained suppliers, lambda and alpha re-derived,
+% final-demand imports/taxes scaled by the retained share. Keep short and
+% point to app:variants for the results.

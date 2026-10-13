@@ -295,6 +295,77 @@ Apply the following go/no-go decisions after the validated sensitivity results e
 4. **Does the IO endpoint emerge under transparent limiting assumptions?**
    - If no, state precisely which other assumptions prevent equivalence and make that decomposition part of the result.
 
+### Phase 7 — The pricing door: capacity/Verdoorn and the distribution markup
+
+A build phase contingent on Phase 6 decisions 1 and 3: where decision 3 would reach for fixed short-run capital and skill classes, this phase instead makes demand reach the **price block** directly, so the application keeps the demand-shock story it already tells. Two routes are in scope, and both target new subsections of the manuscript's Section 6 (6.3, 6.4). Both are catalogued in `docs/ideas/IDEA-0002-five-doors-demand-sensitive-prices.md` and specified in `docs/ETAs.md` ("What the arm does not do"). Neither is decided: each route needs an ADR, a preregistered design and a minted generation before any number is citable.
+
+**Why the phase exists.** All demand-sensitivity enters through the unit-cost line `p = _ces_unit_cost(A_eff, fs, w, ip, ϵ)` in `OpenCGE`. Every argument of that call is a route: `w` (sectoral wages, ADR-0022 — done), `A_eff` (capacity/Verdoorn — Route 1), `ip` (import prices — the external door, deferred and kept in IDEA-0002), and a markup multiplier on the same line (distribution — Route 2). Both routes in this phase move prices under a **pure demand-only** shock, which is what keeps the paper inside the story its application already tells and what distinguishes them from the supply-shock arm (which identifies `eta_s` but leaves the demand-only matrix at `p = 1`).
+
+#### Route 1 — Capacity channel and Kaldor–Verdoorn
+
+**What exists (build on it, do not rebuild).** `experiments/probes/probe17_gamma_capacity.jl` implements
+
+    A_eff_i = A_i (y_i / λ_i)^(−δ),   solved by A ← A · (y/λ)^(−δ)
+
+as a damped geometric fixed point (damp 0.6, tol 1e-12, ≤ 80 iterations) on the 2N fixed-wage system; δ = 0 reproduces the executed `matrix_5x3-v9-GAMMA-*` cells exactly (canary). Measured: δ = +0.5 gives max|p−1| = 0.0985 / 0.1108 / 0.1285 and F3 deflator 1.0215; δ = −0.5 (the Kaldor–Verdoorn sign) gives 0.1235 / 0.1156 / 0.1280 and F3 deflator 0.9853. The externality is **rent-free**: the productivity gain passes into unit cost and hence into p under zero profit, so no income block is created and the accounting canary is untouched.
+
+Coding:
+
+1. ADR — "the pricing door: output-dependent unit cost" (next free id; confirm against the kernel package's own ADR sequence, where 0019–0022 live). Fixes δ's semantics and sign, the nesting at δ = 0, the δ < 0 uniqueness guard, and the promotion checklist for every consumer of the old closure shape.
+2. Kernel hook in `OpenCGE`, then resync `cbase2/src/core/*.jl` and verify with `cbase2/scripts/diff_kernel.jl`. Add a `pricing` field to the model options and compute `A_eff = supply_shock .* alloc_wedge .* (y ./ λ).^(-δ)` at **both** call sites (`problem`, `problem_fixed`) and in every dispatched layout (2N, 2N+1, 3N+1). Keep the factor scale-free in `y ./ λ`; a bare `y^(-δ)` breaks scale determinacy.
+3. Residual consistency — the trap. `equilibrium_residuals`, `_equilibrium_residuals` and the post-solve consumption blocks must close the fixed point *inside* the residual, or every gate measures a non-equilibrium. Audit the same consumer list ADR-0022 had to repair: `evaluate_gates`, `assert_external_account`, `market_clearing_residuals`, and the reported labour-income term (`sum(w .* L_i)`, never `w * L_sum`).
+4. Uniqueness. δ < 0 is increasing returns and a positive feedback (70–76 iterations against 35–39; non-convergence at extreme δ is itself a documented finding). Run a multi-init admissibility check and the ADR-0017 round-gain scale check at reference prices; record both per cell.
+5. Design → generation → preregistration. `experiments/designs/pricing_capacity.toml` with `[pricing] kind = "capacity"`, `delta = [0.0, 0.5, -0.5]` and no shock; `run.jl --preregister` first; mint as `pricing_capacity_v1` on the current kernel base commit, recording design and run commits as the `matrix_5x3_v10` header does.
+6. Pre-flight before the batch: drive `load_design → build_reference → programme_vectors → build_cell_model → solve_cell → evaluate_gates` for one cell of every type (the v7/v8 lesson).
+7. Scope. Fixed-wage gauge only for v1, matching probe17; the mobile-gauge extension is a robustness row (there the CPI numeraire is pinned, so prices move relatively rather than nominally, and the result is not a repeat).
+
+Writing (manuscript 6.3): open with the obstruction (the closure's demand-invariance is a *price-block* property, restated from Lemma 1); state the reduced-form mechanism and that δ is a utilization/Verdoorn elasticity, not a rental rate; present the two signs (capacity pressure against Kaldor–Verdoorn) with Verdoorn (1949), Kaldor (1966) and Sylos-Labini (1995); report the financing-column price signature with run-id provenance; then the two consequences — **GAMMA ≡ DELTA dissolves** and **BETA ≠ ALPHA returns** under demand-only shocks — closed by the scope sentence that Lemma 1 holds on the `A ≡ 1`, price-invariant-technology slice.
+
+#### Route 2 — Distribution: the markup, retained earnings first
+
+**Assumption set.** `μ_i = 1 + κ (y_i / λ_i − 1)`, nested at κ = 0, scale-free in `y/λ`. Stage A (build first): the wedge is **retained** — not distributed, not consumed; the household budget is unchanged and all real effects run through relative prices (substitution in consumption through σ, in intermediates through θ). Retained earnings are a leak from the household budget, booked beside the existing saving-rate leak, and the caveat that retained funds are hoarded (investment is exogenous) is stated rather than implied.
+
+Coding, Stage A (retained):
+
+1. Shared schema. Extend `[pricing]` with `kind = "none" | "capacity" | "markup"` and `kappa`; the Route 1 ADR covers both routes, since one schema change serves both.
+2. Kernel. `out[1:N] .= p .- μ .* cost` in `problem` and `problem_fixed`, with μ as above. Cleanest single-point change: extend `_ces_unit_cost(…; markup = 1.0)` to return `markup .* c`, so every layout inherits it and the call sites cannot drift.
+3. The FOC correction (highest risk). In `sectoral_labor_demand` and `intermediary_demand`, p plays two roles: the purchaser price (stays p) and the marginal-cost multiplier inside the FOC terms (becomes c = p/μ). Re-derive those terms with c and verify numerically at κ > 0 that `w_i = c_i ∂Φ_i/∂L_i` holds at the solution. Missing this leaves the price response right and the employment response wrong.
+4. Leak. `Π_ret = Σ_i (μ_i − 1) c_i y_i`, computed post-solve (never as a guard inside a residual), added to the external-account booking; re-derive the identity so `assert_external_account` still closes at 1e-9.
+5. Budget assertion. `household_expenditure` must still return `(1−τ) w ΣL`, asserted so Stage B cannot leak in early.
+6. Canaries: κ = 0 bit-identity; a uniform-κ analytic canary (with σ = θ → 0, a uniform κ scales prices by exactly `1 + κ(y/y0 − 1)` with quantities unchanged except through the leak); monotonicity in κ; identity gap.
+7. Design → generation: `[pricing] kind = "markup"`, `kappa = [0.0, 0.25, 0.5]`; mint as `pricing_markup_v1`.
+
+Coding, Stage B (domestic profit — the developed target):
+
+8. Budget. `E = (1−τ) w ΣL + (1−s_π) Π`, with `s_π` a profit saving rate (start at `saving_rate`, then free); add `s_pi` to the schema.
+9. Tax base. Keep τ on wage income for v1 and say so; the two-base variant is a one-line change to the `tau_rate` denominator, kept as a robustness row.
+10. Demand side. `(1−s_π)Π` enters `c_dom` with the import margin; `s_π Π` is booked as a leak. Both edit points sit in **both** residual systems.
+11. Welfare. Redefine the reported consumption change to the augmented household and add a real-income companion index (labour plus distributed profit); record both in the manifest.
+12. Diagnostics. Profit share `Π/Y` and its incidence by financing column.
+13. Canaries: `s_π = 1` reproduces Stage A exactly; κ = 0 reproduces the current generation; the identity closes with the new leak *and* the new import content.
+14. Parked extension (Stage C): a two-class household (worker/capitalist) with class-specific consumption — a fourth income foundation, only if the budget allows; it also opens R2.14 (skill classes).
+
+Writing (manuscript 6.4): motivate the pair by the one difference that matters — Route 1 creates no rent, Route 2 creates one — so running both yields a **price-response bracket** ("whether demand-led transformation raises or lowers prices depends on which pricing door is modelled"), which is a result rather than a robustness check. State the retention assumption and defend it as the cheapest closure that keeps the accounting canary; give the routing display (foreign owners / retained / government wedge / domestic profit) as the assumption-disclosure table, marking retention as taken and the domestic-profit scenario as the one developed; report the bracket with the profit-share diagnostic; state what the welfare index now measures; anchor the pricing-power economics (Bils 1987; the Kaleckian markup tradition; Bhaduri–Marglin) behind the guard that this is a pricing-closure paper, not a distribution paper.
+
+#### Shared decisions
+
+| Decision | Recommendation |
+| --- | --- |
+| One ADR or two | One — "the pricing door: output-dependent unit cost", two `kind`s, one schema |
+| Gauge scope | Fixed-wage only for v1; mobile-gauge extension as a robustness row |
+| Rent routing | Retained (Stage A) → domestic (Stage B); foreign-ownership as the robustness row |
+| Tax base | τ on wage income only for v1 |
+| Welfare metric | Augmented-household consumption plus a real-income companion |
+| Uniqueness guard for δ < 0 | Mandatory (increasing returns; 70–76 iterations) |
+
+#### Outputs and sequence
+
+One table in Section 6: rows δ ∈ {0, +0.5, −0.5} and κ ∈ {0, 0.25, 0.5}, columns F1/F2/F3, cells carrying max|p−1|, the GDP deflator, employment, the consumption index and, at Stage B, the profit share — generated from the manifests by a `make_*.py` beside the table with a `Do NOT edit by hand` header. One figure: the price-response bracket, the Kaldor–Verdoorn leg against the markup leg at the same programme. Appendix: the `A_eff`/μ derivation, the FOC re-derivation, the δ < 0 guard, and the routing table.
+
+Order: ADR → Route 1 hook and canaries → pre-flight → `pricing_capacity_v1` → draft 6.3 → Route 2 Stage A hook and FOC correction and canaries → `pricing_markup_v1` → draft 6.4 (retained) → Stage B budget and the `s_π` nesting canary → `pricing_markup_v2` → 6.4 extension and welfare paragraph → table, figure, Appendix, `registry/`, `docs/log/`, `docs/status.md`.
+
+Out of scope for this phase: the import/terms-of-trade route (the external door, `p^M_i = p^M_{i0} (M_i / M_{i0})^ζ`) and the nominal-wage-rule family (ruled out ex ante by the no-go corollary of `paper/equivalence.tex`). The import door stays in IDEA-0002 until Routes 1–2 are minted.
+
 ## 7. Manuscript plan
 
 Rewrite rather than incrementally edit the current narrative.
@@ -335,6 +406,8 @@ Rewrite rather than incrementally edit the current narrative.
 - [ ] Aggregate sensitivity indices with interactions.
 - [ ] Sectoral sensitivity/distribution figure.
 - [ ] Robustness table across financing closures.
+- [ ] Pricing-door table: the capacity (δ) and markup (κ) ladders against the financing closures, with the price response, employment, consumption and the profit share.
+- [ ] Price-response bracket figure: the Kaldor–Verdoorn leg against the markup leg at the same programme.
 
 ### Reviewer-specific revisions
 
@@ -403,6 +476,7 @@ The paper is ready for submission only when:
 - [ ] real GDP uses the common documented quantity index;
 - [ ] sensitivity shares are conditional on stated parameter distributions and include interactions, computed from a documented complete product probability measure with no renormalization over main effects;
 - [ ] residual validation includes all-N clearing (ADR-0019; the omitted-equation rotation is retired) and household-expenditure exhaustion for every experiment type;
+- [ ] if a pricing block is in the model, its nesting canary (δ = 0 and κ = 0 reproduce the previous generation) and its uniqueness guard pass, and the external-account identity still closes at 1e-9;
 - [ ] aggregate and sectoral conclusions are reported separately;
 - [ ] the manuscript no longer claims to discover the IO–CGE bridge or the use of CES functions;
 - [ ] the limitations of a static, aggregated-factor model are explicit;

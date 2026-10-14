@@ -332,7 +332,7 @@ Coding, Stage A (retained):
 3. The FOC correction (highest risk). In `sectoral_labor_demand` and `intermediary_demand`, p plays two roles: the purchaser price (stays p) and the marginal-cost multiplier inside the FOC terms (becomes c = p/μ). Re-derive those terms with c and verify numerically at κ > 0 that `w_i = c_i ∂Φ_i/∂L_i` holds at the solution. Missing this leaves the price response right and the employment response wrong.
 4. Leak. `Π_ret = Σ_i (μ_i − 1) c_i y_i`, computed post-solve (never as a guard inside a residual), added to the external-account booking; re-derive the identity so `assert_external_account` still closes at 1e-9.
 5. Budget assertion. `household_expenditure` must still return `(1−τ) w ΣL`, asserted so Stage B cannot leak in early.
-6. Canaries: κ = 0 bit-identity; a uniform-κ analytic canary (with σ = θ → 0, a uniform κ scales prices by exactly `1 + κ(y/y0 − 1)` with quantities unchanged except through the leak); monotonicity in κ; identity gap.
+6. Canaries: κ = 0 bit-identity; the uniform-markup closed form **`p = μ̄^{(I−B)⁻¹1}`** with `B = diag(1−fs)·Ω_raw` — *not* the naive `p = μ̄`, which ignores the intermediate cascade (probe20 measured the cascade form exactly, to 7e-16; the cascade factor is ≈1.8 on the German table, so the naive reading is wrong by that much); monotonicity in κ; identity gap. The bill factor `k = p^ϵ·A^(ϵ−1)·ip^(1−ϵ)` is a **fourth FOC site** and must move with the closure — it is invisible on any fixture with `M_int = T_int = 0`.
 7. Design → generation: `[pricing] kind = "markup"`, `kappa = [0.0, 0.25, 0.5]`; mint as `pricing_markup_v1`.
 
 Coding, Stage B (domestic profit — the developed target):
@@ -346,6 +346,35 @@ Coding, Stage B (domestic profit — the developed target):
 14. Parked extension (Stage C): a two-class household (worker/capitalist) with class-specific consumption — a fourth income foundation, only if the budget allows; it also opens R2.14 (skill classes).
 
 Writing (manuscript 6.4): motivate the pair by the one difference that matters — Route 1 creates no rent, Route 2 creates one — so running both yields a **price-response bracket** ("whether demand-led transformation raises or lowers prices depends on which pricing door is modelled"), which is a result rather than a robustness check. State the retention assumption and defend it as the cheapest closure that keeps the accounting canary; give the routing display (foreign owners / retained / government wedge / domestic profit) as the assumption-disclosure table, marking retention as taken and the domestic-profit scenario as the one developed; report the bracket with the profit-share diagnostic; state what the welfare index now measures; anchor the pricing-power economics (Bils 1987; the Kaleckian markup tradition; Bhaduri–Marglin) behind the guard that this is a pricing-closure paper, not a distribution paper.
+
+#### Measured so far — `probe20` (real calibration, read-only)
+
+`experiments/probes/probe20_pricing_door.jl` (commit `79d5cc8`) measures both
+routes before any ADR: 75 cells, all solved, on the full retained-sector
+calibration across F1/F2/F3, plus a Cobb–Douglas pass-through canary and a
+mobile-gauge robustness row. It emulates the markup by evaluating the kernel
+demand hook at `y' = y ./ μ.^ϵ` — algebraically identical to the kernel's
+`pFOC = p/μ` hook (both add `−ϵ·log μ` to the FOC), so the FOC correction now
+has two independent derivations. Findings to carry into 6.3/6.4:
+
+- **The price sign is financing-conditional.** At `δ = −0.5` the GDP deflator
+  falls only under F3 (0.9853) and *rises* under F1 (1.0035) and F2 (1.0013).
+  "Verdoorn lowers prices" is an F3 result, not a property of the door.
+- `max|p−1|` is near-symmetric in `δ`; capacity and markup give near-identical
+  prices but different quantities (the retained rent shows up in the quantity
+  block, not the price block).
+- Route 1's external-account gap ≤ 4e-11 (rent-free, as designed); Route 2's is
+  exactly `−Π_ret` (1.1e-11) — the leak the kernel now books as an explicit
+  term, which turns the probe's observation into a closing acceptance test.
+- Under Cobb–Douglas the `δ = −0.5` **outer fixed point diverges at damp 0.6
+  and converges only at damp 0.2**: it iterates the map rather than solving it.
+  That is the case for the kernel route (endogenous `A_eff` inside the
+  residual, one simultaneous solve) as the promoted implementation, with the
+  probe kept as the cheap instrument.
+- The uniform-markup canary is the cascade form (see step 6 above), not `p = μ̄`.
+
+Probe numbers are **not citable**: nothing is preregistered and no manifest
+exists (ADR-0004). `IDEA-0002` is `scoped` and carries them.
 
 #### Shared decisions
 

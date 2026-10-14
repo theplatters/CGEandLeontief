@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-10-12 by `scripts/status.jl` · branch `split/open-cge` · HEAD `61f366b` (dirty)
+Generated 2026-10-14 by `scripts/status.jl` · branch `reorg` · HEAD `d573597` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -607,6 +607,7 @@ Scenarios: **417** rows — executed: 373, provisional: 3, failed: 41. Designs: 
 - [ADR-0026 — Retire `docs/definitive_guide.md`](decisions/ADR-0026-retire-definitive-guide.md)
 - [ADR-0027: Consolidate operating docs (one question, one document)](decisions/ADR-0027-consolidate-operating-docs.md)
 - [ADR-0028 — Split into paper repo and OpenCGE kernel repo](decisions/ADR-0028-split-paper-and-opencge-kernel.md)
+- [ADR-0029 — The pricing door: an output-dependent unit cost (Foundation III)](decisions/ADR-0029-pricing-door.md)
 
 ## Warnings
 

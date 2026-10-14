@@ -4,13 +4,17 @@ author: "Hermes Agent (Lt. Cmdr Data), for Prof. Dr. J. Kapeller"
 date: "2026-09-18"
 project: "BFRep (3)BeyondHulten / Metroeconomica revision"
 tags: [ideas, prices, demand-sensitivity, verdoorn, five-doors, identifiability]
-last-updated: September 2026
+last-updated: October 2026
 ---
 
+**Version 2** (October 2026)
 **Version 1** (September 2026)
 
-Status: `unexplored`. The menu is derived and ranked in `docs/ETAs.md`; nothing
-in it has been probed, calibrated or run.
+Status: `scoped`. The menu is derived and ranked in `docs/ETAs.md`; the
+markup and capacity doors are specified as ROADMAP Phase 7 (Routes 2 and 1)
+and measured by probes (`probe17_gamma_capacity.jl`,
+`probe20_pricing_door.jl`; section "Measured" below). Nothing is calibrated or
+run as a generation, so no number below is citable.
 
 # The shared derivation
 
@@ -95,6 +99,111 @@ hard-codes a null shock and exposes no per-cell parameter), a calibration
 argument for $\delta$ that this note does not supply, and the same diagnostic as
 every other door: does `max abs(p - 1)` move with the financing cell.
 
+# Measured: the capacity and markup doors (probe20, October 2026)
+
+`experiments/probes/probe20_pricing_door.jl` measures ROADMAP Phase 7 before
+any ADR, on the full-71 A-bill calibration, the 2024 programme
+($G_0 = 0.01331$), $\theta = \epsilon = 0.5$, $\sigma = 0.9$, all three
+financing columns. These are probe numbers, not run ids.
+
+- **Route 1, capacity / Kaldor--Verdoorn.** $A^{\mathrm{eff}} = (y/\lambda)^{-\delta}$ is solved
+  as probe17's damped fixed point, with $\delta$ from $-0.75$ to $0.75$ in
+  steps of $0.125$.
+- **Route 2 Stage A, retained markup.** $p = \mu c$ with
+  $\mu = 1 + \kappa (y/\lambda - 1)$ and the household budget unchanged, for
+  $\kappa$ from $0$ to $0.75$. The markup needs **no kernel change** to
+  measure. Every first-order-condition term in the kernel's demand hook
+  carries $p_u^{\epsilon} y_u$, so evaluating the hook at $y/\mu^{\epsilon}$
+  puts marginal cost $c = p/\mu$ into the first-order conditions, while
+  purchaser prices stay in the price indices. This is an exact form of the
+  ROADMAP's "FOC correction". It must be applied at every site that carries
+  $p^{\epsilon}$: the demand hook, the external-account canary and the GDP
+  components.
+
+**Canaries.**
+
+- At $\delta = \kappa = 0$, the fixed gauge reproduces
+  `matrix_5x3-v10-GAMMA-*` (employment 0.999027 / 1.001260 / 1.017796) and
+  the mobile gauge reproduces `matrix_5x3-v10-ALPHA-*` (consumption
+  +0.143 % / -1.823 % / -1.823 %).
+- Route 1 is rent-free: the external-account gap stays below $4 \cdot 10^{-11}$.
+- Route 2's gap equals $-\Pi_{ret}$, with
+  $\Pi_{ret} = \sum_i (\mu_i - 1) c_i y_i$, to $1.1 \cdot 10^{-11}$ on every
+  cell in both gauges. The retained profit is therefore the only missing term
+  in the identity, and this is the sign it is booked with.
+- All 75 cells solve.
+
+**Findings.**
+
+1. **The sign of the price response depends on how the programme is
+   financed.** Kaldor--Verdoorn ($\delta < 0$) lowers the GDP deflator only
+   under F3: 0.9853 at $\delta = -0.5$, against 1.0035 (F1) and 1.0013 (F2).
+   Under budget-neutral financing, the programme shrinks the sectors it
+   displaces. Under increasing returns those sectors lose productivity, and
+   their price rise outweighs the fall in the programme sectors. At
+   $\delta = -0.75$ the deflator is 1.0099 (F1) and 1.0062 (F2). The bracket
+   ("raises or lowers prices depending on the door") is therefore conditional
+   on the financing closure, which strengthens "which money?" and qualifies
+   the planned 6.4 sentence.
+2. **$\max|p - 1|$ cannot carry the bracket.** It is nearly symmetric in
+   $\delta$ (F3: 0.1280 at $-0.5$, 0.1285 at $+0.5$), and small sectors
+   (glass, ceramics) dominate it. The Phase 7 table needs a signed aggregate,
+   either the deflator or the $\lambda$-weighted mean price change.
+3. **Same prices, different quantities.** Under a Hicks-neutral $A$, the two
+   doors scale unit cost by $(y/\lambda)^{\delta}$ and
+   $1 + \kappa(y/\lambda - 1)$. These coincide to first order at
+   $\kappa = \delta$, and the sectoral price patterns are nearly identical.
+   The doors differ in where the wedge goes. Capacity absorbs it as extra
+   input use; markup absorbs it as a rent that leaks from the household
+   circuit. At magnitude 0.5 under F3:
+
+   | | Deflator | Employment | Consumption | $\Pi_{ret}/Y$ |
+   | --- | --- | --- | --- | --- |
+   | GAMMA ($\delta = \kappa = 0$) | 1.0000 | 1.0178 | +2.26 % | 0 |
+   | Capacity $\delta = +0.5$ | 1.0215 | 1.0388 | +2.20 % | 0 |
+   | Markup $\kappa = +0.5$ | 1.0095 | 1.0108 | +0.41 % | 0.95 % |
+
+   The rent/no-rent contrast planned for 6.4 is therefore a contrast in
+   quantities and welfare, not in prices. Under retention, the markup's
+   welfare cost is largely hoarding, which is the case for Stage B.
+4. **Cobb--Douglas pass-through canary.** At $\theta = \epsilon = 1$ the price
+   block is exactly $\log p = (I - B)^{-1} r$, with
+   $B = \mathrm{diag}(1 - fs)\,\Omega$ and $r = \log \mu$ (markup) or
+   $\delta \log(y/\lambda)$ (capacity). It holds to $2.5 \cdot 10^{-12}$ on
+   every probed cell. A constant uniform markup gives the closed form
+   $p = \bar\mu^{(I-B)^{-1}\mathbf 1}$ to $7 \cdot 10^{-16}$. The cascade
+   $(I-B)^{-1}\mathbf 1$ ranges from 1.42 to 4.36 (its $\lambda$-mean is
+   2.18), so a uniform 5 % markup raises prices by 11.3 % on the
+   $\lambda$-weighted mean.
+
+   **Correction to the ROADMAP's Route 2 canary 6:** "a uniform $\kappa$
+   scales prices by exactly $1 + \kappa(y/y_0 - 1)$" ignores the
+   intermediate cascade. It misses by 0.164 in $\log p$ at
+   $\bar\mu = 1.05$. The canary should be stated as the Cobb--Douglas closed
+   form above.
+5. **Numerics.** On the CES ladder, iterations rise from about 30 near
+   $\delta = 0$ to 70--76 at $\delta = -0.5$ and 158--181 at $\delta = -0.75$.
+   No rung failed. Under Cobb--Douglas the $\delta = -0.5$ iteration
+   *diverges* at damp 0.6 and converges at damp 0.2. The equilibrium exists,
+   so the failure belongs to the iteration, not the model. A failed fixed
+   point at one damping is therefore not evidence of non-existence, and the
+   uniqueness guard (multi-start plus the ADR-0017 check at the converged
+   $A$) remains unmeasured.
+6. **Mobile gauge (ALPHA, $\eta = 1$, CPI = 1).**
+   - F2 = F3 neutrality survives both doors (identical rows).
+   - Prices move relatively: $\max|p-1|$ is 0.10--0.13.
+   - The deflator falls at $\delta = -0.5$ in every column (0.997) and rises
+     at $\delta = +0.5$ and $\kappa = 0.5$ (1.003).
+   - The real wage rises slightly under every door (+0.08 % to +0.20 %).
+     That sign is measured but not yet interpreted.
+   - The markup's consumption cost is small here (F2: -1.90 % against
+     -1.82 % at $\kappa = 0$), because employment is pinned.
+
+**Not yet measured:** the $\delta < 0$ uniqueness guard; Stage B (domestic
+profit, the $s_\pi$ nesting canary); and an independent check of
+$w_i = c_i\,\partial\Phi_i/\partial L_i$. The emulation satisfies that last
+identity by construction, so a real check needs the kernel hook.
+
 # Why one note and not five
 
 The doors share the derivation, the diagnostic and the selection criterion, and
@@ -114,3 +223,4 @@ open-economy extension, and the markup and fixed-factor doors wait.
 # Revision Log
 
 - **Version 1** (September 2026)
+- **Version 2** (October 2026) --- status `unexplored` to `scoped` (ROADMAP Phase 7 specifies the markup and capacity doors); added "Measured" (probe20: both Phase 7 routes on F1/F2/F3, the Cobb--Douglas pass-through canary and the mobile-gauge row), including the financing-dependent sign of the Kaldor--Verdoorn price response and the correction to the ROADMAP's uniform-$\kappa$ canary.

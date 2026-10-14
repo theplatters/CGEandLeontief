@@ -4,9 +4,10 @@ author: "Hermes Agent (Lt. Cmdr Data), for Prof. Dr. J. Kapeller"
 date: "2026-09-18"
 project: "BFRep (3)BeyondHulten / Metroeconomica revision"
 tags: [ideas, register, unexplored, adr-annexe, process]
-last-updated: September 2026
+last-updated: October 2026
 ---
 
+**Version 3** (October 2026)
 **Version 2** (September 2026)
 **Version 1** (September 2026)
 
@@ -37,7 +38,7 @@ dropped --- point it at its dead end.
 | Id | Idea | Status | Anchored in |
 | --- | --- | --- | --- |
 | IDEA-0001 | Productivity shocks framed as climate change | unexplored | Door 2 of `docs/VariationinGamma.md`; the `eta_s` identifiability item in `docs/DOCS_ASSESSMENT.md` |
-| IDEA-0002 | The five doors to demand-sensitive prices (labour, markup, capacity, external, technology), with the Verdoorn arm | unexplored | Section 5 of `docs/ETAs.md`; Lemma 1 and Corollaries 1 and 3 of `paper/equivalence.tex`; `docs/ETAs.md` and `docs/VariationinGamma.md` |
+| IDEA-0002 | The five doors to demand-sensitive prices (labour, markup, capacity, external, technology), with the Verdoorn arm | scoped | Section 5 of `docs/ETAs.md`; Lemma 1 and Corollaries 1 and 3 of `paper/equivalence.tex`; `docs/ETAs.md` and `docs/VariationinGamma.md`; ROADMAP Phase 7; `experiments/probes/probe20_pricing_door.jl` |
 | IDEA-0003 | Sobol decomposition of the sectoral labour response (grouped over the elasticity parametrisation) | scoped | `docs/DOCS_ASSESSMENT.md` Stage 2 item 2; `docs/archive/definitive_guide.md` Phase 7 (archived by ADR-0026); `docs/grouping_rule_evidence.md`; `OpenCGE@ADR-0022` (kernel `DECISIONS.md`, migrated by ADR-0028) |
 | IDEA-0004 | Sectoral effects without a Sobol (contribution, incidence, network, similarity, wage-to-price) plus the case for reviving the submission's sectoral figures | scoped | `paper/submission-metro/submission.tex` §5-§6; `OpenCGE@ADR-0022` (kernel `DECISIONS.md`, migrated by ADR-0028); `docs/ideas/IDEA-0003-sectoral-sobol.md` |
 
@@ -60,3 +61,4 @@ to the executed run.
 
 - **Version 1** (September 2026)
 - **Version 2** (September 2026) --- registered IDEA-0004 (sectoral effects without a Sobol, plus the revival verdict on the submission's sectoral figures); IDEA-0003 rewritten as a vantage point and raised from `unexplored` to `scoped`, with `docs/decisions/ADR-0022-sectoral-labour-markets.md` added to its anchors.
+- **Version 3** (October 2026) --- IDEA-0002 raised from `unexplored` to `scoped` (ROADMAP Phase 7 specifies the markup and capacity doors; probe20 measures them), anchors extended.

@@ -132,6 +132,31 @@ closed-form gates still cite the four scripts above.
   supply curve still lets the wage absorb, a quantity constraint forces the cost
   up.
 
+- `probe20_pricing_door.jl` — ROADMAP Phase 7 measured before any ADR:
+  Route 1 (capacity / Kaldor-Verdoorn, probe17's fixed point on a
+  `delta` ladder -0.75..0.75) and Route 2 Stage A (the **retained markup**
+  `p = mu c`, `mu = 1 + kappa (y/lambda - 1)`, `kappa` 0..0.75), all on
+  F1/F2/F3, plus a Cobb-Douglas pass-through canary and the mobile-gauge
+  robustness row. The markup is emulated without a kernel change: the kernel's
+  FOC terms all carry `p^eps * y`, so evaluating the demand hook at
+  `y / mu^eps` puts marginal cost into the FOCs. `--csv DIR` writes the
+  ladder. Canaries: `delta = kappa = 0` reproduces `matrix_5x3-v10-GAMMA-*`
+  and (mobile) `-ALPHA-*`; Route 1's account gap stays <= 4e-11 (rent-free)
+  and Route 2's equals `-Pi_ret` to 1.1e-11 (the retained-profit leak, both
+  gauges). Results: all 75 cells solve; the **sign** of the aggregate price
+  response depends on the financing column (Kaldor-Verdoorn lowers the
+  deflator only under F3: 0.9853, against 1.0035 / 1.0013 under F1 / F2 at
+  `delta = -0.5`), so `max abs(p-1)` (near-symmetric in `delta`) cannot carry
+  the bracket; capacity and markup give near-identical prices at
+  `kappa = delta` but different quantities (F3 at 0.5: employment 1.0388 vs
+  1.0108, consumption +2.20 % vs +0.41 %). The Cobb-Douglas canary holds to
+  <= 2.5e-12 and shows the intermediate cascade: a uniform markup `mu_bar`
+  gives `p = mu_bar^((I - B)^-1 1)` (cascade 1.42..4.36, lambda-mean 2.18),
+  not `p = mu_bar`. Under Cobb-Douglas the `delta = -0.5` iteration diverges at
+  damp 0.6 and converges at damp 0.2. Mobile gauge: F2 = F3 survives both
+  doors; the deflator falls under `delta = -0.5` in every column (0.997).
+  Write-up: `docs/ideas/IDEA-0002-five-doors-demand-sensitive-prices.md`.
+
 - `probe6_reconstruct_run_journals.jl` — the one probe that writes into
   `runs/`: rebuilds missing `runs/<id>/log.txt` journals from the committed
   manifests (`--verify` checks the journals that exist, `--write` writes the

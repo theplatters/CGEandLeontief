@@ -7,14 +7,16 @@ tags: [ideas, prices, demand-sensitivity, verdoorn, five-doors, identifiability]
 last-updated: October 2026
 ---
 
+**Version 3** (October 2026)
 **Version 2** (October 2026)
 **Version 1** (September 2026)
 
-Status: `scoped`. The menu is derived and ranked in `docs/ETAs.md`; the
-markup and capacity doors are specified as ROADMAP Phase 7 (Routes 2 and 1)
-and measured by probes (`probe17_gamma_capacity.jl`,
-`probe20_pricing_door.jl`; section "Measured" below). Nothing is calibrated or
-run as a generation, so no number below is citable.
+Status: `promoted`. The capacity and markup doors are adopted by ADR-0029 and
+ADR-0030 as the pricing closures `P1` and `P2` (`registry/closures.toml`) and
+executed in the `pricing_*_v1` designs; cite those run ids, not this note. The
+probe numbers in "Measured" below remain uncitable. The external (import-price)
+door, the fixed-factor door and the technology door are not promoted and stay
+ideas inside this note.
 
 # The shared derivation
 
@@ -223,4 +225,5 @@ open-economy extension, and the markup and fixed-factor doors wait.
 # Revision Log
 
 - **Version 1** (September 2026)
+- **Version 3** (October 2026) --- status `scoped` to `promoted` for the capacity and markup doors (ADR-0029, ADR-0030; closures P1/P2; designs `pricing_{capacity,markup,profit,mobile}_v1`); the external, fixed-factor and technology doors remain ideas.
 - **Version 2** (October 2026) --- status `unexplored` to `scoped` (ROADMAP Phase 7 specifies the markup and capacity doors); added "Measured" (probe20: both Phase 7 routes on F1/F2/F3, the Cobb--Douglas pass-through canary and the mobile-gauge row), including the financing-dependent sign of the Kaldor--Verdoorn price response and the correction to the ROADMAP's uniform-$\kappa$ canary.

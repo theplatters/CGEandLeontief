@@ -312,7 +312,7 @@ as a damped geometric fixed point (damp 0.6, tol 1e-12, ≤ 80 iterations) on th
 Coding:
 
 1. ADR — "the pricing door: output-dependent unit cost" (next free id; confirm against the kernel package's own ADR sequence, where 0019–0022 live). Fixes δ's semantics and sign, the nesting at δ = 0, the δ < 0 uniqueness guard, and the promotion checklist for every consumer of the old closure shape.
-2. Kernel hook in `OpenCGE`, then resync `cbase2/src/core/*.jl` and verify with `cbase2/scripts/diff_kernel.jl`. Add a `pricing` field to the model options and compute `A_eff = supply_shock .* alloc_wedge .* (y ./ λ).^(-δ)` at **both** call sites (`problem`, `problem_fixed`) and in every dispatched layout (2N, 2N+1, 3N+1). Keep the factor scale-free in `y ./ λ`; a bare `y^(-δ)` breaks scale determinacy.
+2. Kernel hook in `OpenCGE` (`../opencge`; `cbase2/` is frozen and is not resynced since ADR-0028), landing here by a pin bump. Add a `pricing` field to the model options and compute `A_eff = supply_shock .* alloc_wedge .* (y ./ λ).^(-δ)` at **both** call sites (`problem`, `problem_fixed`) and in every dispatched layout (2N, 2N+1, 3N+1). Keep the factor scale-free in `y ./ λ`; a bare `y^(-δ)` breaks scale determinacy.
 3. Residual consistency — the trap. `equilibrium_residuals`, `_equilibrium_residuals` and the post-solve consumption blocks must close the fixed point *inside* the residual, or every gate measures a non-equilibrium. Audit the same consumer list ADR-0022 had to repair: `evaluate_gates`, `assert_external_account`, `market_clearing_residuals`, and the reported labour-income term (`sum(w .* L_i)`, never `w * L_sum`).
 4. Uniqueness. δ < 0 is increasing returns and a positive feedback (70–76 iterations against 35–39; non-convergence at extreme δ is itself a documented finding). Run a multi-init admissibility check and the ADR-0017 round-gain scale check at reference prices; record both per cell.
 5. Design → generation → preregistration. `experiments/designs/pricing_capacity.toml` with `[pricing] kind = "capacity"`, `delta = [0.0, 0.5, -0.5]` and no shock; `run.jl --preregister` first; mint as `pricing_capacity_v1` on the current kernel base commit, recording design and run commits as the `matrix_5x3_v10` header does.
@@ -334,6 +334,8 @@ Coding, Stage A (retained):
 5. Budget assertion. `household_expenditure` must still return `(1−τ) w ΣL`, asserted so Stage B cannot leak in early.
 6. Canaries: κ = 0 bit-identity; the uniform-markup closed form **`p = μ̄^{(I−B)⁻¹1}`** with `B = diag(1−fs)·Ω_raw` — *not* the naive `p = μ̄`, which ignores the intermediate cascade (probe20 measured the cascade form exactly, to 7e-16; the cascade factor is ≈1.8 on the German table, so the naive reading is wrong by that much); monotonicity in κ; identity gap. The bill factor `k = p^ϵ·A^(ϵ−1)·ip^(1−ϵ)` is a **fourth FOC site** and must move with the closure — it is invisible on any fixture with `M_int = T_int = 0`.
 7. Design → generation: `[pricing] kind = "markup"`, `kappa = [0.0, 0.25, 0.5]`; mint as `pricing_markup_v1`.
+
+Recorded 2026-10-15: ADR-0029 accepted (closure ids `P1`/`P2`), ADR-0030 accepted for Stage B, kernel in OpenCGE `v0.2.0` with Stages A and B in one release, pinned here; the designs are `pricing_capacity_v1`, `pricing_markup_v1`, `pricing_profit_v1` (Stage B — the working name `pricing_markup_v2` is not used, since `-v2` marks a re-minted generation) and the mobile robustness row `pricing_mobile_v1`. Status: `docs/status.md`.
 
 Coding, Stage B (domestic profit — the developed target):
 
@@ -391,7 +393,7 @@ exists (ADR-0004). `IDEA-0002` is `scoped` and carries them.
 
 One table in Section 6: rows δ ∈ {0, +0.5, −0.5} and κ ∈ {0, 0.25, 0.5}, columns F1/F2/F3, cells carrying max|p−1|, the GDP deflator, employment, the consumption index and, at Stage B, the profit share — generated from the manifests by a `make_*.py` beside the table with a `Do NOT edit by hand` header. One figure: the price-response bracket, the Kaldor–Verdoorn leg against the markup leg at the same programme. Appendix: the `A_eff`/μ derivation, the FOC re-derivation, the δ < 0 guard, and the routing table.
 
-Order: ADR → Route 1 hook and canaries → pre-flight → `pricing_capacity_v1` → draft 6.3 → Route 2 Stage A hook and FOC correction and canaries → `pricing_markup_v1` → draft 6.4 (retained) → Stage B budget and the `s_π` nesting canary → `pricing_markup_v2` → 6.4 extension and welfare paragraph → table, figure, Appendix, `registry/`, `docs/log/`, `docs/status.md`.
+Order: ADR → Route 1 hook and canaries → pre-flight → `pricing_capacity_v1` → draft 6.3 → Route 2 Stage A hook and FOC correction and canaries → `pricing_markup_v1` → draft 6.4 (retained) → Stage B budget and the `s_π` nesting canary → `pricing_profit_v1` → 6.4 extension and welfare paragraph → table, figure, Appendix, `registry/`, `docs/log/`, `docs/status.md`.
 
 Out of scope for this phase: the import/terms-of-trade route (the external door, `p^M_i = p^M_{i0} (M_i / M_{i0})^ζ`) and the nominal-wage-rule family (ruled out ex ante by the no-go corollary of `paper/equivalence.tex`). The import door stays in IDEA-0002 until Routes 1–2 are minted.
 

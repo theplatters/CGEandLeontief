@@ -1,7 +1,7 @@
 # ADR-0029 — The pricing door: an output-dependent unit cost (Foundation III)
 
-- **Status:** proposed
-- **Date:** 2026-10-14
+- **Status:** accepted
+- **Date:** 2026-10-14 (proposed); accepted 2026-10-15 with OpenCGE v0.2.0
 - **Supersedes:** —
 - **Related:** ADR-0002 (closure taxonomy and ids), ADR-0004 (runs are
   immutable manifests), ADR-0012 / ADR-0013 (the domestic-bill calibration and
@@ -62,6 +62,14 @@ kernel rather than leaving to the probe.
 All three nest exactly: `δ = 0` and `κ = 0` reproduce the baseline bit for bit,
 so every existing number is untouched.
 
+Closure ids (ADR-0002 rule: adding an id is an ADR-level change): `P1` =
+`CapacityPricing`, `P2` = `MarkupPricing` (Stage A and, via `s_pi`, Stage B of
+ADR-0030). The baseline `NoPricing` carries no id, as `NoFinancing` carries
+none on the financing axis. Scenario ids keep the ADR-0002 shape
+`<design>-<labor>-<financing>[-<variant>]`; the door parameter is the variant
+suffix (`-dm05` for `δ = -0.5`, `-k025` for `κ = 0.25`, `-spi05` for
+`s_pi = 0.5`).
+
 **2. `Model` gains a `pricing` field defaulting to `NoPricing()`.** The 3-arg
 and 4-arg constructors keep working, so no existing cell, test or client
 changes.
@@ -83,6 +91,11 @@ labour demand inflated by `μ` — the dangerous failure mode. The FOC pattern
   (ADR-0016);
 - `gdp_components`' `k` — previously a hand-copied duplicate of the third,
   now calling the shared `pricing_bill_factor`.
+
+A fifth occurrence, `economy_wide_wage` (the wage FOC inverted to build solver
+starting points), never enters a residual; it reads `pFOC` and `A_eff` through
+the same hooks all the same, so the "no fifth site" grep below holds without
+an exemption.
 
 Sites 3 and 4 are reached by the accounting gate rather than by the solve, and
 a synthetic fixture CANNOT see them: the leaks they value (`M_int`, `T_int`)
@@ -151,13 +164,28 @@ before an ADR; it is not the promoted form.
 - The scope clause is load-bearing: ALPHA ≡ BETA, and Lemma 1 itself, survive
   only on the slice "`A ≡ 1` AND price-invariant technology".
 
-**11. Explicitly deferred, and NOT decided here.** The `μ >= 1` domain question
-(`μ = 1 + κ (y/λ - 1)` is symmetric about the baseline, so a CONTRACTING sector
-receives a discount — measured `μ = [1.0497, 0.9480]` at `κ = 0.5`; clamp the
-bounded quantity, use a one-sided deviation, or state the discount reading
-deliberately); the `δ < 0` uniqueness guard (increasing returns is positive
-feedback and the ADR-0017 scale guard does not cover it); Stage B; and the
-mobile-gauge ladder for both routes.
+**11. Settled at acceptance (2026-10-15).** The items the proposal deferred:
+
+- **The `μ ≥ 1` domain.** `μ = 1 + κ (y/λ - 1)` stays SYMMETRIC about the
+  baseline: a contracting sector receives a discount (measured
+  `μ = [1.0497, 0.9480]` at `κ = 0.5`, probe20) and its sectoral rent is
+  negative. This keeps the exact nesting at `κ = 0` and a smooth Jacobian at
+  the baseline, which the one-sided form `1 + κ·max(y/λ - 1, 0)` would kink.
+  The discount reading is stated, not hidden: the kernel guards `μ > 0`
+  (`PricingFeasibilityError`) and every priced manifest records `markup_min`
+  / `markup_max`.
+- **The `δ < 0` uniqueness guard.** A gate in the paper harness
+  (`experiments/run.jl`, `evaluate_gates`), on every priced cell: at least two
+  of the `pricing_admissibility` starts converge, all within
+  `[pricing] multistart_tol = 1e-6` of the solution, and the residual
+  Jacobian has full rank. The tolerance is the residual gate's: the measured
+  solver-noise spread is 0.5-8e-9 at condition numbers ~1e7, a distinct
+  equilibrium would sit ~1e-2 away. Each priced cell is reached by a
+  deterministic continuation in its door parameter from the NoPricing twin
+  (`continuation_steps = 4`).
+- **Stage B** is ADR-0030 (distributed profit income).
+- **The mobile-gauge ladder** for both routes is the robustness design
+  `pricing_mobile_v1` (ALPHA × F1-F3 × {δ = ±0.5, κ ∈ {0.25, 0.5}}).
 
 ## Consequences
 
@@ -178,13 +206,22 @@ mobile-gauge ladder for both routes.
 
 ## Enforcement
 
-- Kernel tests, `tests/test_pricing_closure.jl`: the three nesting canaries
-  bit-identical; a demand-only shock pins prices at one WITHOUT a pricing door
-  and moves them with one; `w = c ∂Φ/∂L` holds at a markup solution while
-  `w = p ∂Φ/∂L` does not; the external-account identity holds as written under
-  F2/F3; the legacy-manna reading is unchanged by the rent term; and a
-  hand-split-bill fixture exercises the bill-factor site. Full kernel suite
-  green (454 tests, 58 testsets).
+- Kernel tests, `OpenCGE@tests/test_pricing_closure.jl` (OpenCGE v0.2.0): the
+  three nesting canaries bit-identical; a demand-only shock pins prices at one
+  WITHOUT a pricing door and moves them with one; `w = c ∂Φ/∂L` holds at a
+  markup solution while `w = p ∂Φ/∂L` does not; the external-account identity
+  holds as written under F2/F3; the legacy-manna reading is unchanged by the
+  rent term; and a hand-split-bill fixture exercises the bill-factor site. The
+  full kernel suite is green at the `v0.2.0` tag (68 testsets, 0 failures,
+  re-run 2026-10-15 for this acceptance).
+- Paper tests, `tests/test_pricing_design.jl`: the `[pricing]` design schema,
+  its preregistration pinning, and — because the synthetic fixtures carry
+  `M_int = T_int = 0` — the external account and the companion identity
+  `gdp_wedge = -diff` with each door open ON THE REAL TABLE, plus the Stage B
+  budget gate through `evaluate_gates`.
+- The pin bump to `v0.2.0` is verified on the real pipeline:
+  `scripts/reproduce.jl --check` reproduces every `matrix_5x3_v10` cell with
+  zero difference.
 - `pricing_bill_factor` is the single definition for the pattern; a grep for
   `p .^ ϵ` must not find a fifth site.
 - Promotion checklist before any citable run: this ADR accepted ->

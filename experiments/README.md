@@ -262,22 +262,33 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
 ## Animating the pricing panels
 
 `experiments/animate_pricing_panels.jl` animates the manuscript panel layout
-(programme-sector bars left, quantity/price scatter right) across the markup
-slope κ of a pricing design (ADR-0029/ADR-0030):
+(programme-sector bars left, quantity/price scatter right) across the
+pricing-door parameter of a pricing design (ADR-0029/ADR-0030): the markup
+slope κ for a markup design (P2), the capacity elasticity δ for a capacity
+design (P1):
 
 ```bash
 JULIA_LOAD_PATH="@:<env-with-CairoMakie>:@stdlib" julia --project=. experiments/animate_pricing_panels.jl \
-    [--design pricing_markup_v1] [--cells a,b,c] [--kappa-max 0.5] [--steps 40] \
-    [--fps 8] [--formats mp4,gif] [--outdir output/animations]
+    [--design pricing_markup_v1] [--cells a,b,c] [--kappa-max 0.5] [--delta-max 0.5] \
+    [--steps 40] [--fps 8] [--formats mp4,gif] [--outdir output/animations]
 ```
 
-- One animation per selected markup cell (default: per labour × financing ×
-  `s_pi`, the cell with the largest κ). Frames sit on the grid
-  `kappa_max * (0:steps)/steps`, solved by continuation in κ from the
-  NoPricing twin; axis limits are fixed across frames, and a grey ghost marks
-  the κ = 0 positions.
-- Validation (ADR-0025, figures are not runs): every grid κ that matches an
-  executed run of the same labour, financing and `s_pi` is hard-validated
+- One animation per selected cell (default: per labour × financing ×
+  `s_pi`, the cell with the largest parameter). κ frames sit on the grid
+  `kappa_max * (0:steps)/steps`; δ frames on the symmetric grid
+  `delta_max * (2s - steps)/steps`, s = 0..steps (`--steps` even), running
+  from the Kaldor–Verdoorn side (δ < 0) to capacity pressure (δ > 0). Frames
+  are solved by continuation outward from the NoPricing twin at 0; axis
+  limits are fixed across frames, and a grey ghost marks the door-closed
+  (parameter 0) positions.
+- The final-consumption bar is split by type, each segment in % of the
+  sector's baseline total final consumption (gross household `c_h0` plus
+  government `G0`): household (solid) and government (hatched), the latter
+  including the programme where it is an additive purchase (F2/F3; under F1
+  the programme is a household-demand tilt, so the government segment is
+  zero). The header's ΔW is real household consumption.
+- Validation (ADR-0025, figures are not runs): every grid value that matches
+  an executed run of the same door, labour, financing and `s_pi` is hard-validated
   against its `solution.csv` (max |Δp|, |Δq| < 1e-6) and its `executed`
   status, or the animation aborts. Frames between those anchors are
   interpolating re-solves and say so on the frame; they are not citable.

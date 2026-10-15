@@ -259,6 +259,35 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   `--panel-dir` loads GLMakie on its own and combines with `--no-figures`
   (which suppresses only the six standard exploratory figures).
 
+## Animating the pricing panels
+
+`experiments/animate_pricing_panels.jl` animates the manuscript panel layout
+(programme-sector bars left, quantity/price scatter right) across the markup
+slope κ of a pricing design (ADR-0029/ADR-0030):
+
+```bash
+JULIA_LOAD_PATH="@:<env-with-CairoMakie>:@stdlib" julia --project=. experiments/animate_pricing_panels.jl \
+    [--design pricing_markup_v1] [--cells a,b,c] [--kappa-max 0.5] [--steps 40] \
+    [--fps 8] [--formats mp4,gif] [--outdir output/animations]
+```
+
+- One animation per selected markup cell (default: per labour × financing ×
+  `s_pi`, the cell with the largest κ). Frames sit on the grid
+  `kappa_max * (0:steps)/steps`, solved by continuation in κ from the
+  NoPricing twin; axis limits are fixed across frames, and a grey ghost marks
+  the κ = 0 positions.
+- Validation (ADR-0025, figures are not runs): every grid κ that matches an
+  executed run of the same labour, financing and `s_pi` is hard-validated
+  against its `solution.csv` (max |Δp|, |Δq| < 1e-6) and its `executed`
+  status, or the animation aborts. Frames between those anchors are
+  interpolating re-solves and say so on the frame; they are not citable.
+- The design must be preregistered with a matching SHA-256. The driver never
+  writes `runs/` or `registry/`; output goes to `--outdir` (default
+  `output/animations/`, gitignored).
+- Backend: CairoMakie, which is not a project dependency (the committed
+  Manifest pins the kernel generation); install it in a separate environment
+  and stack it with `JULIA_LOAD_PATH` as above.
+
 ## Preregistration (`registry/preregistration.toml`)
 
 `schema_version = 1`; `[designs.<design>]`: `design_sha256`,

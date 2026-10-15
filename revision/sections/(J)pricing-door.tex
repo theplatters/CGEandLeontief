@@ -1,0 +1,107 @@
+% =====================================================================
+% Appendix J --- The pricing door: derivations, guard and accounting
+% ---------------------------------------------------------------------
+% Job: the formal backing of Sections 6.4-6.5 (subsec:pricing-capacity,
+%      subsec:pricing-markup): the effective-technology and markup hooks,
+%      the first-order conditions at marginal cost, the uniqueness guard,
+%      the Cobb-Douglas price identity, and the external-account and GDP
+%      accounting with the rent booked.
+% Code: OpenCGE@src/closures/pricing/pricing.jl, OpenCGE@src/core/equilibrium.jl
+%      (_mobile_market_demand, _cost_minimizing_labor), OpenCGE@src/core/
+%      diagnostics.jl (gdp_components, retained_profit); the gate lives in
+%      experiments/run.jl (evaluate_gates). Records: ADR-0029, ADR-0030.
+% =====================================================================
+\section{The pricing door: derivations, guard and accounting}\label{app:pricing-door}
+
+\subsection{Two hooks on one cost line}\label{app:pricing-hooks}
+Sector $i$ produces with the CES unit cost
+\begin{equation}\label{eq:app-unit-cost}
+  c_i \;=\; \Bigl[\,(A^{\mathrm{eff}}_i)^{\epsilon-1}\bigl(\alpha_i\,w_i^{1-\epsilon}
+     + (1-\alpha_i)\,P_i^{1-\epsilon}\bigr)\Bigr]^{\frac{1}{1-\epsilon}},
+\end{equation}
+where $P_i$ is the intermediate price index (CES in $\theta$ over the
+purchaser prices $p_j$) and $\alpha_i$ the factor share. The two doors act on
+this one line. The capacity door replaces $A_i$ by
+$A^{\mathrm{eff}}_i = A_i (y_i/\lambda_i)^{-\delta}$ and keeps zero profit,
+$p_i = c_i$. The markup door keeps $A^{\mathrm{eff}}_i = A_i$ and sets
+$p_i = \mu_i c_i$ with $\mu_i = 1 + \kappa(y_i/\lambda_i - 1)$. Both are
+written in $y_i/\lambda_i$, so the reference point ($y = \lambda$) is a
+fixed point of either hook ($A^{\mathrm{eff}} = A$, $\mu = 1$) and the
+scale-determinacy guard of the kernel, evaluated at the reference, is
+unchanged. Their product
+$p_i = \bigl(1 + \kappa(y_i/\lambda_i - 1)\bigr)\,c_i\bigl(A_i (y_i/\lambda_i)^{-\delta}\bigr)$
+is one family with two parameters; $\delta = \kappa = 0$ reproduces the
+kernel exactly (bit for bit, as the nesting cells
+\texttt{pricing\_capacity-v1-GAMMA-*-d0} and
+\texttt{pricing\_markup-v1-GAMMA-*-k0} confirm against
+\texttt{matrix\_5x3-v10-GAMMA-*}).
+
+\subsection{First-order conditions at marginal cost}\label{app:pricing-foc}
+A firm with a markup buys at the purchaser prices but equates marginal revenue
+product to factor cost at its \emph{marginal cost} $c_i = p_i/\mu_i$. Cost
+minimisation (Shephard's lemma on \eqref{eq:app-unit-cost}) gives labour demand
+\begin{equation}\label{eq:app-labour}
+  L_i \;=\; c_i^{\epsilon}\,(A^{\mathrm{eff}}_i)^{\epsilon-1}\,\alpha_i\,y_i\,w_i^{-\epsilon},
+\end{equation}
+and the demand for input $j$ of user $u$ is
+\begin{equation}\label{eq:app-intermediate}
+  x_{ju} \;=\; p_j^{-\theta}\,\Omega_{uj}\;
+     c_u^{\epsilon}\,(A^{\mathrm{eff}}_u)^{\epsilon-1}\,P_u^{\theta-\epsilon}\,a_u\,y_u ,
+\end{equation}
+with $a_u$ the domestic intermediate bill per unit of output. The outer
+$p_j^{-\theta}$ is the price of the demanded input and stays the purchaser
+price; the inner $c_u^{\epsilon}$ is the user's marginal cost. The same factor
+$k_u = c_u^{\epsilon}(A^{\mathrm{eff}}_u)^{\epsilon-1}P_u^{1-\epsilon}$ values
+the two leaks of the purchaser-price intermediate bill, imported
+intermediates $M^{\mathrm{int}}$ and product taxes on intermediate use
+$T^{\mathrm{int}}$. These are the four sites where the price enters a
+first-order condition (labour demand, the inner factor of intermediate demand,
+and both leak valuations); writing $p$ instead of $c$ at any of them inflates
+the corresponding demand by $\mu^{\epsilon}$ while leaving the price response
+untouched. The two leak sites are invisible on any synthetic fixture
+($M^{\mathrm{int}} = T^{\mathrm{int}} = 0$), which is why the paper-side tests
+assert the external account on the German table. Under the capacity door
+$\mu \equiv 1$, so $c = p$ and only $A^{\mathrm{eff}}$ moves: the capacity door
+needs no first-order-condition change.
+
+\subsection{The Cobb--Douglas price identity}\label{app:pricing-cd}
+At $\theta = \epsilon = 1$ and a fixed wage $w = 1$ the price block is
+log-linear: $\log p_i = \log \mu_i - \log A^{\mathrm{eff}}_i
++ (1-\alpha_i)\sum_j \Omega_{ij}\log p_j$, hence
+\begin{equation}\label{eq:app-cd}
+  \log p \;=\; (I - B)^{-1}\bigl(\log \mu - \log A^{\mathrm{eff}}\bigr),
+  \qquad B = \operatorname{diag}(1-\alpha)\,\Omega .
+\end{equation}
+A uniform constant markup $\bar\mu$ therefore raises prices by
+$\bar\mu^{(I-B)^{-1}\mathbf 1}$, not by $\bar\mu$: the markup cascades through
+the intermediate network, by a factor of about $1.8$ on the German table. The
+kernel tests assert \eqref{eq:app-cd} for both doors.
+
+\subsection{The uniqueness guard}\label{app:pricing-guard}
+With $\delta < 0$ a sector's unit cost falls as its output rises, a positive
+feedback that can admit several equilibria. Every priced cell is reached by a
+deterministic continuation in its door parameter (four equal steps from the
+door-free solution) and must pass a uniqueness gate: re-solved from four
+starting points (the default initial point, the door-free solution, and the
+solution with all quantities scaled by $0.9$ and $1.1$), at least two must
+converge and every converged start must lie within $10^{-6}$ of the solution,
+and the Jacobian of the full residual must have full rank. The measured
+spreads are of order $10^{-9}$ at condition numbers of order $10^{7}$; a
+distinct equilibrium would sit about $10^{-2}$ away. All 42 priced cells pass.
+
+\subsection{Accounting with the rent booked}\label{app:pricing-accounting}
+The rent is $\Pi = \sum_i (1 - 1/\mu_i)\,p_i y_i$. With retention rate
+$s_\pi$ the household spends
+$E = (1-\tau)\,w\textstyle\sum_i L_i + F + (1-s_\pi)\Pi$, and the
+external-account identity of the kernel becomes
+\begin{equation}\label{eq:app-account}
+  sE + s_\pi \Pi + T^{\mathrm{int}} + M - (I + X) \;=\; F + B_{\mathrm{gov}},
+\end{equation}
+which every priced run satisfies to $10^{-11}$; dropping the $s_\pi\Pi$ term
+leaves it short by exactly the retained rent. On the income side GDP is factor
+income $w\sum_i L_i + \Pi$, so the companion identity between the GDP wedge and
+the account gap holds unchanged. Retention ($s_\pi = 1$) needs injections in
+the fixed-wage gauge: summing over sectors,
+$(\mu - 1)\,c\,y + (s + m - s m)\,w L = p\,(1-m)(g^G + \mathit{exo}) + pX$, so an
+economy without government demand, investment or exports has no positive
+retained-rent equilibrium. The application carries all three.

@@ -1,0 +1,56 @@
+% =====================================================================
+% Table 6 --- the pricing door: price response by door and financing (GENERATED)
+% ---------------------------------------------------------------------
+% Do NOT edit by hand. Regenerate with:  make_pricing_door.py
+% Source: runs/pricing_{capacity,markup,profit,mobile}-v1-*/manifest.toml (schema v2,
+%   OpenCGE v0.2.0). Per financing column: \Delta P GDP deflator, max|p-1| price
+%   dispersion, \Delta L employment, \Delta W household consumption, \Pi/Y profit share;
+%   all in percent vs. the reference continuation.
+% =====================================================================
+\begin{table}[htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{1.6pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}l@{\hspace{6pt}}rrrrr@{\hspace{6pt}}rrrrr@{\hspace{6pt}}rrrrr@{}}
+\toprule
+ & \multicolumn{5}{c}{\textbf{F1}} & \multicolumn{5}{c}{\textbf{F2}} & \multicolumn{5}{c}{\textbf{F3}} \\
+\cmidrule(lr){2-6}\cmidrule(lr){7-11}\cmidrule(lr){12-16}
+Door and parameter & $\Delta P$ & $\max|\Delta p|$ & $\Delta L$ & $\Delta W$ & $\Pi/Y$ & $\Delta P$ & $\max|\Delta p|$ & $\Delta L$ & $\Delta W$ & $\Pi/Y$ & $\Delta P$ & $\max|\Delta p|$ & $\Delta L$ & $\Delta W$ & $\Pi/Y$ \\
+\midrule
+\multicolumn{16}{@{}l}{\textit{A. Capacity / Kaldor--Verdoorn door ($P_1$), fixed real wage}} \\
+\quad $\delta = 0$ (nesting) & $0.00$ & $0.00$ & $-0.10$ & $-0.08$ & $0.00$ & $0.00$ & $0.00$ & $+0.13$ & $-1.53$ & $0.00$ & $0.00$ & $0.00$ & $+1.78$ & $+2.26$ & $0.00$ \\
+\quad $\delta = +0.5$ & $+0.30$ & $9.85$ & $+0.42$ & $+0.46$ & $0.00$ & $+0.54$ & $11.08$ & $+0.85$ & $-1.08$ & $0.00$ & $+2.15$ & $12.85$ & $+3.88$ & $+2.20$ & $0.00$ \\
+\quad $\delta = -0.5$ & $+0.35$ & $12.35$ & $-0.22$ & $-1.21$ & $0.00$ & $+0.13$ & $11.56$ & $-0.15$ & $-2.46$ & $0.00$ & $-1.47$ & $12.80$ & $+0.34$ & $+2.27$ & $0.00$ \\
+\midrule
+\multicolumn{16}{@{}l}{\textit{B. Markup door ($P_2$), rent retained, fixed real wage}} \\
+\quad $\kappa = 0.25$ & $+0.08$ & $5.23$ & $0.00$ & $+0.13$ & $0.07$ & $+0.15$ & $5.65$ & $+0.16$ & $-1.52$ & $0.14$ & $+0.66$ & $6.12$ & $+1.28$ & $+0.95$ & $0.62$ \\
+\quad $\kappa = 0.5$ & $+0.16$ & $9.36$ & $+0.06$ & $+0.24$ & $0.15$ & $+0.27$ & $10.44$ & $+0.18$ & $-1.50$ & $0.25$ & $+1.01$ & $11.13$ & $+1.08$ & $+0.41$ & $0.95$ \\
+\midrule
+\multicolumn{16}{@{}l}{\textit{C. Markup door ($P_2$), rent distributed, fixed real wage}} \\
+\quad $\kappa = 0.25$, $s_\pi = 0.5$ & $+0.09$ & $5.25$ & $+0.04$ & $+0.21$ & $0.09$ & $+0.18$ & $5.68$ & $+0.23$ & $-1.36$ & $0.17$ & $+0.81$ & $6.26$ & $+1.59$ & $+1.65$ & $0.76$ \\
+\quad $\kappa = 0.25$, $s_\pi = s$ & $+0.11$ & $5.27$ & $+0.08$ & $+0.30$ & $0.10$ & $+0.22$ & $5.71$ & $+0.31$ & $-1.19$ & $0.20$ & $+0.97$ & $6.41$ & $+1.95$ & $+2.43$ & $0.91$ \\
+\quad $\kappa = 0.5$, $s_\pi = 0.5$ & $+0.21$ & $9.42$ & $+0.12$ & $+0.37$ & $0.20$ & $+0.36$ & $10.52$ & $+0.29$ & $-1.27$ & $0.34$ & $+1.36$ & $11.46$ & $+1.49$ & $+1.30$ & $1.27$ \\
+\quad $\kappa = 0.5$, $s_\pi = s$ & $+0.29$ & $9.51$ & $+0.21$ & $+0.56$ & $0.27$ & $+0.48$ & $10.64$ & $+0.44$ & $-0.95$ & $0.45$ & $+1.83$ & $11.91$ & $+2.07$ & $+2.53$ & $1.71$ \\
+\midrule
+\multicolumn{16}{@{}l}{\textit{D. Robustness: mobile labour, CPI numeraire}} \\
+\quad $\delta = +0.5$ & $+0.27$ & $9.77$ & $0.00$ & $0.00$ & $0.00$ & $+0.29$ & $10.80$ & $0.00$ & $-2.01$ & $0.00$ & $+0.29$ & $10.80$ & $0.00$ & $-2.01$ & $0.00$ \\
+\quad $\delta = -0.5$ & $-0.29$ & $13.04$ & $0.00$ & $+0.91$ & $0.00$ & $-0.28$ & $11.87$ & $0.00$ & $-1.03$ & $0.00$ & $-0.28$ & $11.87$ & $0.00$ & $-1.03$ & $0.00$ \\
+\quad $\kappa = 0.25$, retained & $+0.16$ & $5.32$ & $0.00$ & $+0.12$ & $0.07$ & $+0.17$ & $5.68$ & $0.00$ & $-1.86$ & $0.07$ & $+0.17$ & $5.68$ & $0.00$ & $-1.86$ & $0.07$ \\
+\quad $\kappa = 0.5$, retained & $+0.28$ & $9.49$ & $0.00$ & $+0.11$ & $0.10$ & $+0.30$ & $10.50$ & $0.00$ & $-1.90$ & $0.11$ & $+0.30$ & $10.50$ & $0.00$ & $-1.90$ & $0.11$ \\
+\bottomrule
+\end{tabular}
+\caption{The pricing door under the demand-only programme shock. Rows are the door
+and its parameter, columns the financing closures; each block reports the change in
+the price level ($\Delta P$, the GDP deflator; signed), the largest sectoral price
+deviation ($\max|\Delta p|$), employment ($\Delta L$), household consumption
+($\Delta W$) and the markup rent's share of factor income ($\Pi/Y$), all in percent
+against the reference continuation. Panels A--C hold the real wage fixed (the
+\textsc{gamma} gauge); panel D is the mobile-labour robustness row under the CPI
+numeraire, where employment is fixed and prices move relative to the CPI. The
+$\delta = 0$ row reproduces the fixed-wage column of Table~\ref{tab:results-matrix}
+exactly ($\kappa = 0$ does too). $s$ is the household saving rate. Generated from the
+\texttt{pricing\_\{capacity,markup,profit,mobile\}-v1-*} run manifests (OpenCGE
+v0.2.0); no number is hand-typed.}
+\label{tab:pricing-door}
+\end{table}

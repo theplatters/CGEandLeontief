@@ -326,12 +326,12 @@ function anim_main(args::Vector{String} = ARGS; root::AbstractString = default_r
     order = cell_order(o.design; root = root)
     ids = if o.cells === nothing
         # One cell per labour x financing [x s_pi]: the one with the largest parameter.
-        best = Dict{Tuple{String,String,Float64},Tuple{Float64,String}}()
+        best = Dict{Tuple{String,String,Float64,String},Tuple{Float64,String}}()
         for id in order
             c = design_cell(design_d, id)
             pc, _ = cell_pricing(design_d, c)
             pc isa Union{MarkupPricing,CapacityPricing} || continue
-            key = (string(c["labor"]), string(c["financing"]), door_s_pi(pc))
+            key = (string(c["labor"]), string(c["financing"]), door_s_pi(pc), door_name(pc))
             v = door_param(pc)
             (!haskey(best, key) || v > best[key][1]) && (best[key] = (v, id))
         end
@@ -346,20 +346,19 @@ function anim_main(args::Vector{String} = ARGS; root::AbstractString = default_r
     n = length(ref.data.factor_share)
     ψ, g = programme_vectors(design_d, ref.data, collect(1:n); root = root)
     labels = plot_sector_labels(design_d, n; root = root)
-    kind = get(get(design_d, "pricing", Dict{String,Any}()), "kind", "none")
-    vals = if kind == "markup"
-        [o.kappa_max * s / o.steps for s in 0:o.steps]
-    elseif kind == "capacity"
+    # The grid follows each cell's door (a design may mix P1 and P2 cells).
+    grid(::MarkupPricing) = [o.kappa_max * s / o.steps for s in 0:o.steps]
+    function grid(::CapacityPricing)
         iseven(o.steps) || throw(ArgumentError("--steps must be even for the symmetric delta grid"))
-        [o.delta_max * (2s - o.steps) / o.steps for s in 0:o.steps]
-    else
-        throw(ArgumentError("design \"$(o.design)\" has no pricing door to animate"))
+        return [o.delta_max * (2s - o.steps) / o.steps for s in 0:o.steps]
     end
+    grid(::AbstractPricing) = throw(ArgumentError("cell has no pricing door to animate"))
     mkpath(o.outdir)
     written = String[]
     for id in ids
         cell = design_cell(design_d, id)
         pc, _ = cell_pricing(design_d, cell)
+        vals = grid(pc)
         println("$id: solving $(length(vals)) frames")
         frames, anchors = solve_frames(cell, o.design, design_d, ref, ψ, g, labels, vals; root = root)
         stub = pc isa MarkupPricing ?

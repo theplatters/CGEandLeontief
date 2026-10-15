@@ -85,6 +85,26 @@ actor = "hermes-agent"
     eta = 1.0
     programme_year = 2024
 
+[designs.pricing_mobile_v1]
+git_commit = "b04fff308762aa5a1dde5b1697faf5db4d3955b2"
+note = "Phase 7 robustness row: both pricing doors in the mobile gauge (ALPHA, eta = 1, CPI = 1) on all three financing columns: capacity delta in {+0.5, -0.5} (P1) and retained markup kappa in {0.25, 0.5} (P2). Prices move relatively, not nominally, under the CPI numeraire."
+registered_at = "2026-10-15T11:44:48"
+design_sha256 = "5f6f7c5c2f4e69440b15b36bc9bbab9f79565981fdd0be59f017a06814f04ebc"
+actor = "franzs"
+
+    [designs.pricing_mobile_v1.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_continuation_steps = 4
+    eta = 1.0
+    pricing_kind = "none"
+    epsilon = 0.5
+
 [designs.matrix_5x3_v3]
 git_commit = "2c7b05cb09c3379bca43dad3fff560e20c577041"
 note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration under ADR-0014/ADR-0015 (real-wage elastic supply; verified scale-determinacy guard; monotone polish to 1e-10). Supersedes the v1 and v2 generations, whose runs stay as history."
@@ -204,6 +224,49 @@ actor = "hermes-agent"
     eta = 0.0
     programme_year = 0
 
+[designs.pricing_capacity_v1]
+git_commit = "b04fff308762aa5a1dde5b1697faf5db4d3955b2"
+note = "Phase 7 Route 1 (ADR-0029, closure P1): capacity / Kaldor-Verdoorn door A_eff = A (y/lambda)^(-delta) in the fixed-wage gauge (GAMMA) on all three financing columns, delta in {0, +0.5, -0.5}, demand-only programme shock. delta = 0 nests matrix_5x3-v10-GAMMA-* (canary)."
+registered_at = "2026-10-15T11:44:12"
+design_sha256 = "532d7127f77c798ba843bc0523eb7f4ad142f37a4086e9f960d3b90dddfc13f3"
+actor = "franzs"
+
+    [designs.pricing_capacity_v1.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_delta = 0.0
+    pricing_continuation_steps = 4
+    eta = 1.0
+    pricing_kind = "capacity"
+    epsilon = 0.5
+
+[designs.pricing_profit_v1]
+git_commit = "b04fff308762aa5a1dde5b1697faf5db4d3955b2"
+note = "Phase 7 Route 2 Stage B (ADR-0030, closure P2): distributed markup rent, E = (1 - tau) w L + F + (1 - s_pi) Pi, fixed-wage gauge (GAMMA) on all three financing columns, kappa in {0.25, 0.5} x s_pi in {0.5, s = 0.1199}. s_pi = 1 is Stage A (pricing_markup_v1)."
+registered_at = "2026-10-15T11:44:36"
+design_sha256 = "5a90a4792235c4399ba0b7944316bae8f48b83d6e87842198bc5197912eaebef"
+actor = "franzs"
+
+    [designs.pricing_profit_v1.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_s_pi = 1.0
+    pricing_continuation_steps = 4
+    pricing_kind = "markup"
+    eta = 1.0
+    epsilon = 0.5
+    pricing_kappa = 0.0
+
 [designs.supply_etas_unif]
 git_commit = "3b2ac52f9ff8416dc1831aef51521b9793011b9f"
 note = "Supply arm unif: uniform productivity A_i in {1.01,1.02,1.03}; full-71 A-bill; ALPHA control + scalar BETA (eta_s 0.5/1/2/5) + sectoral uniform BETA (eta_s 0.5/2), x F1/F2/F3 x 3 magnitudes. ADR-0023 [shock] schema."
@@ -220,6 +283,28 @@ actor = "hermes-agent"
     exo_scale_steps = 6
     eta = 1.0
     programme_year = 2024
+
+[designs.pricing_markup_v1]
+git_commit = "b04fff308762aa5a1dde5b1697faf5db4d3955b2"
+note = "Phase 7 Route 2 Stage A (ADR-0029, closure P2): retained markup p = mu c, mu = 1 + kappa (y/lambda - 1), rent booked as a leak beside saving (s_pi = 1), fixed-wage gauge (GAMMA) on all three financing columns, kappa in {0, 0.25, 0.5}. kappa = 0 nests matrix_5x3-v10-GAMMA-* (canary)."
+registered_at = "2026-10-15T11:44:24"
+design_sha256 = "d622c2d9b6d144ce8954fbde68c30acbf2ceb10480d24adf94cabbc326339365"
+actor = "franzs"
+
+    [designs.pricing_markup_v1.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_s_pi = 1.0
+    pricing_continuation_steps = 4
+    eta = 1.0
+    pricing_kind = "markup"
+    epsilon = 0.5
+    pricing_kappa = 0.0
 
 [designs.matrix_5x3]
 git_commit = "60c2665acafa107912154c39a7dde1e65dbdfbb0"

@@ -94,7 +94,7 @@ function resolve_repo_path(root::AbstractString, p::AbstractString)::Union{Strin
     return normpath(joinpath(root, String(strip(p))))
 end
 
-"""Load one closure axis (`labor`/`financing`) as id-sorted dicts."""
+"""Load one closure axis (`labor`/`financing`/`pricing`) as id-sorted dicts."""
 function load_axis(clos::Dict, axis::String)::Vector{Dict{String,Any}}
     raw = get(clos, axis, Dict())
     rows = Dict{String,Any}[]
@@ -169,7 +169,7 @@ function trow(buf::IOBuffer, cells::Vector)::Nothing
     return nothing
 end
 
-"""Render a closures table (labour or financing)."""
+"""Render a closures table (labour, financing or pricing)."""
 function closure_table(rows::Vector{Dict{String,Any}})::String
     buf = IOBuffer()
     trow(buf, ["ID", "Status", "Formulation", "Implementation", "Tests", "Dead ends", "Open gates"])
@@ -225,9 +225,10 @@ function build_board(root::String)::Tuple{String,Int}
     clos = TOML.parsefile(clospath)
     lab = load_axis(clos, "labor")
     fin = load_axis(clos, "financing")
+    pri = load_axis(clos, "pricing")
     labids = [string(getk(r, "id", "")) for r in lab]
     finids = [string(getk(r, "id", "")) for r in fin]
-    for r in vcat(lab, fin)
+    for r in vcat(lab, fin, pri)
         check_closure(r, root, warns)
     end
 
@@ -324,9 +325,12 @@ function build_board(root::String)::Tuple{String,Int}
     @printf(buf, "| Labour closures | %d | %d | %d | %d | %d | %d |\n",
         countby(lab, "idea"), countby(lab, "spec"), countby(lab, "implemented"),
         countby(lab, "tested"), countby(lab, "validated"), length(lab))
-    @printf(buf, "| Financing closures | %d | %d | %d | %d | %d | %d |\n\n",
+    @printf(buf, "| Financing closures | %d | %d | %d | %d | %d | %d |\n",
         countby(fin, "idea"), countby(fin, "spec"), countby(fin, "implemented"),
         countby(fin, "tested"), countby(fin, "validated"), length(fin))
+    @printf(buf, "| Pricing closures | %d | %d | %d | %d | %d | %d |\n\n",
+        countby(pri, "idea"), countby(pri, "spec"), countby(pri, "implemented"),
+        countby(pri, "tested"), countby(pri, "validated"), length(pri))
     scenbits = join(["$s: $(scount(s))" for s in SCENARIO_STATES if scount(s) > 0], ", ")
     println(buf, "Scenarios: **$(nrow(df))** rows — $scenbits. " *
                  "Designs: $(join(["`$d`" for d in designs], ", ")).\n")
@@ -334,6 +338,8 @@ function build_board(root::String)::Tuple{String,Int}
     println(buf, closure_table(lab))
     println(buf, "## Financing closures\n")
     println(buf, closure_table(fin))
+    println(buf, "## Pricing closures\n")
+    println(buf, closure_table(pri))
     println(buf, "## Scenario matrix\n")
     println(buf, matrix_table(df, labids, finids))
     println(buf, "### Runs by design\n")
@@ -409,8 +415,9 @@ function main()::Nothing
     clos = TOML.parsefile(joinpath(root, "registry", "closures.toml"))
     nlab = length(load_axis(clos, "labor"))
     nfin = length(load_axis(clos, "financing"))
+    npri = length(load_axis(clos, "pricing"))
     nscen = nrow(DataFrame(CSV.File(joinpath(root, "registry", "scenarios.csv"); stringtype=String)))
-    println("docs/status.md written ($nlab labour, $nfin financing, $nscen scenarios, $nwarn warnings)")
+    println("docs/status.md written ($nlab labour, $nfin financing, $npri pricing, $nscen scenarios, $nwarn warnings)")
     return nothing
 end
 

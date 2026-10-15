@@ -170,7 +170,7 @@ end
 function pinned_params(design_d::Dict{String,Any})::Dict{String,Any}
     prog = get(design_d, "programme", Dict{String,Any}())
     ref = get(design_d, "reference", Dict{String,Any}())
-    return Dict{String,Any}(
+    out = Dict{String,Any}(
         "theta" => get(ref, "theta", 0.0),
         "epsilon" => get(ref, "epsilon", 0.0),
         "sigma" => get(ref, "sigma", 0.0),
@@ -180,6 +180,14 @@ function pinned_params(design_d::Dict{String,Any})::Dict{String,Any}
         "programme_year" => get(prog, "year", 0),
         "f1_shift" => get(prog, "f1_shift", ""),
     )
+    # ADR-0029: a pricing design also pins its door defaults (informational;
+    # pricing-free designs keep the pre-pricing record).
+    if haskey(design_d, "pricing")
+        for (k, v) in design_d["pricing"]
+            out["pricing_" * string(k)] = v
+        end
+    end
+    return out
 end
 
 """
@@ -556,45 +564,118 @@ function resolve_supply_shock(design_d::Dict{String,Any}, cell::Dict{String,Any}
 end
 
 """
+Resolve a cell's pricing closure from the design's `[pricing]` block
+(ADR-0029, ADR-0030). The block gives the design-wide defaults (`kind`,
+`delta`, `kappa`, `s_pi`); a cell overrides any of them with the same keys.
+
+  kind = "none"     (absent, the default) -> `NoPricing()`, bit-for-bit the
+                    pre-pricing harness
+  kind = "capacity" -> `CapacityPricing(delta)`        (closure id P1)
+  kind = "markup"   -> `MarkupPricing(kappa; s_pi)`    (closure id P2;
+                    `s_pi = 1` retains the rent, Stage A)
+
+Returns the pricing object and the scenario fields to record in the manifest
+(empty for `none`, so a pricing-free design keeps its byte-identical
+manifest).
+"""
+function cell_pricing(design_d::Dict{String,Any},
+        cell::Dict{String,Any})::Tuple{AbstractPricing,Dict{String,Any}}
+    pb = get(design_d, "pricing", Dict{String,Any}())
+    val(k, default) = get(cell, k, get(pb, k, default))
+    kind = lowercase(string(val("kind", "none")))
+    kind == "none" && return NoPricing(), Dict{String,Any}()
+    if kind == "capacity"
+        δ = Float64(val("delta", 0.0))
+        return CapacityPricing(δ), Dict{String,Any}(
+            "pricing" => "P1", "pricing_kind" => kind, "delta" => δ)
+    elseif kind == "markup"
+        κ = Float64(val("kappa", 0.0))
+        s_pi = Float64(val("s_pi", 1.0))
+        return MarkupPricing(κ; s_pi = s_pi), Dict{String,Any}(
+            "pricing" => "P2", "pricing_kind" => kind, "kappa" => κ, "s_pi" => s_pi)
+    end
+    throw(ArgumentError("unknown [pricing] kind \"$kind\" (none|capacity|markup)"))
+end
+
+"""The same pricing closure with its door parameter scaled by `t ∈ [0, 1]`
+(the continuation path of `solve_cell`; `s_pi` is not scaled)."""
+scaled_pricing(::NoPricing, t::Real) = NoPricing()
+scaled_pricing(pr::CapacityPricing, t::Real) = CapacityPricing(t * pr.δ)
+scaled_pricing(pr::MarkupPricing, t::Real) = MarkupPricing(t * pr.κ; s_pi = pr.s_pi)
+
+"""
 Equilibrium model for a design cell (no solve). BF/ALPHA: mobile at η;
 BETA: `:beta` via `mobile_labor_model` (solved with `solve_beta`, or the
 sectoral 3N+1 system when the cell pins an elasticity vector, ADR-0022);
 GAMMA: `:fixed`; DELTA: `delta_model` at `delta_epsilon`. Shocks are always
-`Shocks(ones(N), ones(N), zeros(N))`.
+`Shocks(ones(N), ones(N), zeros(N))`. The pricing closure comes from
+`cell_pricing` (ADR-0029); `pricing` overrides it (the continuation path of
+`solve_cell`). Pricing doors are supported on the `mobile_labor_model`
+closures (BF, ALPHA, sectoral BETA, GAMMA); scalar BETA (`solve_beta`) and
+DELTA reject them.
 """
 function build_cell_model(cell::Dict{String,Any}, design_d::Dict{String,Any},
-        data::Data, ψ::Vector{Float64}, g::Vector{Float64})::Model
+        data::Data, ψ::Vector{Float64}, g::Vector{Float64};
+        pricing::Union{AbstractPricing,Nothing} = nothing)::Model
     N = length(data.factor_share)
     shocks, _ = resolve_supply_shock(design_d, cell, data, ψ)
     labor, fin_id = cell["labor"], cell["financing"]
     fin = cell_financing(fin_id, ψ, g, design_d["programme"]["f1_shift"], data)
+    pr = pricing === nothing ? first(cell_pricing(design_d, cell)) : pricing
     if labor == "BF" || labor == "ALPHA"
         return mobile_labor_model(data, shocks, Float64(cell["theta"]),
             Float64(cell["epsilon"]), Float64(cell["sigma"]), Float64(cell["eta"]);
-            financing = fin)
+            financing = fin, pricing = pr)
     elseif labor == "BETA"
         esv = cell_eta_s_vec(cell, data, ψ)
-        esv === nothing && return mobile_labor_model(data, shocks,
-            Float64(cell["theta"]), Float64(cell["epsilon"]), Float64(cell["sigma"]),
-            Float64(cell["eta"]); financing = fin, eta_s = Float64(cell["eta_s"]))
+        if esv === nothing
+            pr isa NoPricing || throw(ArgumentError(
+                "pricing doors are not wired into scalar BETA (solve_beta); use the sectoral form"))
+            return mobile_labor_model(data, shocks,
+                Float64(cell["theta"]), Float64(cell["epsilon"]), Float64(cell["sigma"]),
+                Float64(cell["eta"]); financing = fin, eta_s = Float64(cell["eta_s"]))
+        end
         return mobile_labor_model(data, shocks, Float64(cell["theta"]),
             Float64(cell["epsilon"]), Float64(cell["sigma"]), Float64(cell["eta"]);
-            financing = fin, eta_s = Float64(cell["eta_s"]), eta_s_vec = esv)
+            financing = fin, eta_s = Float64(cell["eta_s"]), eta_s_vec = esv, pricing = pr)
     elseif labor == "GAMMA"
         return mobile_labor_model(data, shocks, Float64(cell["theta"]),
             Float64(cell["epsilon"]), Float64(cell["sigma"]), Float64(cell["eta"]);
-            closure = :fixed, financing = fin)
+            closure = :fixed, financing = fin, pricing = pr)
     elseif labor == "DELTA"
+        pr isa NoPricing || throw(ArgumentError("pricing doors are not wired into DELTA"))
         return delta_model(data, shocks; ε = Float64(cell["delta_epsilon"]), financing = fin)
     end
     throw(ArgumentError("unknown labor id $labor"))
 end
 
-"""Solve a cell model (BETA via `solve_beta`, else `solve`), warm-started.
-A sectoral BETA cell (ADR-0022) solves its own 3N+1 system directly."""
+"""
+Solve a cell model (BETA via `solve_beta`, else `solve`), warm-started.
+A sectoral BETA cell (ADR-0022) solves its own 3N+1 system directly.
+
+A cell with a pricing door (ADR-0029) is reached by continuation in its door
+parameter: the NoPricing twin is solved from `init_warm`, then the door is
+opened in `[pricing] continuation_steps` equal steps (default 4), each solve
+warm-started from the previous canonical vector. Only the final step's
+solution is returned; the path is deterministic.
+"""
 function solve_cell(cell::Dict{String,Any}, design_d::Dict{String,Any}, data::Data,
         ψ::Vector{Float64}, g::Vector{Float64}, init_warm::Vector{Float64})::Solution
     model = build_cell_model(cell, design_d, data, ψ, g)
+    if !(model.pricing isa NoPricing)
+        steps = Int(get(get(design_d, "pricing", Dict{String,Any}()), "continuation_steps", 4))
+        steps >= 1 || throw(ArgumentError("[pricing] continuation_steps must be >= 1"))
+        twin = build_cell_model(cell, design_d, data, ψ, g; pricing = NoPricing())
+        x = OpenCGE._solution_vector(twin, solve(twin; init = init_warm))
+        local sol
+        for k in 1:steps
+            mk = build_cell_model(cell, design_d, data, ψ, g;
+                pricing = scaled_pricing(model.pricing, k / steps))
+            sol = solve(mk; init = x)
+            x = OpenCGE._solution_vector(mk, sol)
+        end
+        return sol
+    end
     if cell["labor"] == "BETA"
         # ADR-0022: the sectoral form is solved by the kernel's own dispatcher.
         model.options.elasticities.eta_s_vec === nothing ||
@@ -650,8 +731,12 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
     wage_income = η0 ? sum(sol.wages_raw .* data.labor_share) :
         model.options.elasticities.eta_s_vec !== nothing ? sum(w .* L_i) :
         w * L_sum
+    # ADR-0030: a markup closure with s_pi < 1 pays the distributed rent
+    # (1 - s_pi)·Π into household expenditure; every other closure adds nothing.
+    comp = gdp_components(model, sol)
+    profit_income = model.pricing isa MarkupPricing ? (1 - model.pricing.s_pi) * comp.profit : 0.0
     E = household_expenditure(fin, model, wage_income, p, L_sum;
-        external_transfer = sol.external_transfer)
+        external_transfer = sol.external_transfer, profit_income = profit_income)
     budget = abs(dot(p, sol.consumption) - (1 - data.saving_rate) * E)
     resid_pass = resid < residual_tol
     budget_pass = budget < budget_tol
@@ -675,15 +760,26 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
                 ("labour", abs(labor_market_residual(labor_closure(model.options), model, L_sum, w, cpi_val)),
                  labour_tol, abs(labor_market_residual(labor_closure(model.options), model, L_sum, w, cpi_val)) < labour_tol)
 
+    # ADR-0029 #11: a pricing door adds the uniqueness gate — the multi-start
+    # spread of `pricing_admissibility` (at least two converged starts, all
+    # within `[pricing] multistart_tol`) and a full-rank residual Jacobian.
+    priced = !(model.pricing isa NoPricing)
+    adm = priced ? pricing_admissibility(model, sol) : nothing
+    if priced
+        ms_tol = Float64(get(get(design_d, "pricing", Dict{String,Any}()), "multistart_tol", 1e-8))
+        uniq_pass = adm.converged >= 2 && adm.spread < ms_tol && adm.rank == adm.n
+    end
+
     gdp = gdp_income(sol, ref_sol)
     gdp_exp = gdp_expenditure(sol, ref_sol)
     defl = gdp_deflator(sol, ref_sol)
     cons = real_consumption(sol) / real_consumption(ref_sol)
     wedge = gdp_wedge(sol)
-    overall = (resid_pass && budget_pass && third_pass) ? "pass" : "fail"
+    overall = (resid_pass && budget_pass && third_pass && (!priced || uniq_pass)) ? "pass" : "fail"
     summary = gate_frag("resid", resid, residual_tol, resid_pass) * "; " *
         gate_frag("budget", budget, budget_tol, budget_pass) * "; " *
         gate_frag(third_name, third_value, third_tol, third_pass)
+    priced && (summary *= "; " * gate_frag("uniqueness", adm.spread, ms_tol, uniq_pass))
 
     # ADR-0019/ADR-0020 external account: every cell asserts all-N clearing and
     # the identity gap S + T + M − (I+X) − (F + B_gov) ≈ 0. Both hold at every
@@ -691,7 +787,6 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
     # what closes the identity there.
     assert_external_account(model, sol)
     canary = external_balance_canary(model, X)
-    comp = gdp_components(model, sol)
     # ADR-0019/ADR-0022 companion identity: the gdp wedge IS the negated
     # canary gap (`gdp_wedge = -canary.diff` exactly, on and off equilibrium).
     # The C1 defect (a scalar-wage collapse in `gdp_components` on ADR-0022
@@ -709,35 +804,62 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
     w_metric = η0 ? sum(sol.wages_raw .* data.labor_share) / sum(data.labor_share) :
         model.options.elasticities.eta_s_vec !== nothing ?
             sum(sol.wages_raw .* L_i) / sum(L_i) : w
-    return (
-        gates = Dict{String,Any}(
-            "residual" => Dict{String,Any}("value" => resid, "tolerance" => residual_tol, "pass" => resid_pass),
-            "budget" => Dict{String,Any}("value" => budget, "tolerance" => budget_tol, "pass" => budget_pass),
-            third_name => Dict{String,Any}("value" => third_value, "tolerance" => third_tol, "pass" => third_pass),
-            "overall" => overall),
-        gate_summary = summary,
-        metrics = Dict{String,Any}(
-            "gdp" => gdp, "gdp_rel" => gdp - 1,
-            "gdp_expenditure" => gdp_exp, "gdp_expenditure_rel" => gdp_exp - 1,
-            "gdp_deflator" => defl, "gdp_wedge" => wedge,
-            "consumption" => cons, "consumption_rel" => cons - 1,
-            "employment" => L_sum, "wage" => w_metric,
-            "nominal_gdp" => nominal_gdp(sol),
-            "max_abs_price_dev" => maximum(abs.(p .- 1)),
-            "external_transfer" => sol.external_transfer,
-            "programme_financing" => canary.programme_financing,
-            "external_position" => canary.financing),
-        diagnostics = Dict{String,Any}(
-            "canary_s" => canary.S, "canary_ixm" => canary.IX - canary.M,
-            "canary_diff" => canary.diff,
-            "wage_min" => minimum(sol.wages_raw),
-            "wage_max" => maximum(sol.wages_raw),
-            "gdp_c" => comp.V[1], "gdp_g" => comp.V[2], "gdp_i" => comp.V[3],
-            "gdp_x" => comp.V[4], "gdp_m_final" => comp.V[5],
-            "gdp_m_int" => comp.V[6], "gdp_t_int" => comp.V[7],
-            "external_balance" => external_balance(fin, model, p),
-            "public_budget" => public_budget(fin, model, p)),
-    )
+    gates_d = Dict{String,Any}(
+        "residual" => Dict{String,Any}("value" => resid, "tolerance" => residual_tol, "pass" => resid_pass),
+        "budget" => Dict{String,Any}("value" => budget, "tolerance" => budget_tol, "pass" => budget_pass),
+        third_name => Dict{String,Any}("value" => third_value, "tolerance" => third_tol, "pass" => third_pass),
+        "overall" => overall)
+    metrics_d = Dict{String,Any}(
+        "gdp" => gdp, "gdp_rel" => gdp - 1,
+        "gdp_expenditure" => gdp_exp, "gdp_expenditure_rel" => gdp_exp - 1,
+        "gdp_deflator" => defl, "gdp_wedge" => wedge,
+        "consumption" => cons, "consumption_rel" => cons - 1,
+        "employment" => L_sum, "wage" => w_metric,
+        "nominal_gdp" => nominal_gdp(sol),
+        "max_abs_price_dev" => maximum(abs.(p .- 1)),
+        "external_transfer" => sol.external_transfer,
+        "programme_financing" => canary.programme_financing,
+        "external_position" => canary.financing)
+    diagnostics_d = Dict{String,Any}(
+        "canary_s" => canary.S, "canary_ixm" => canary.IX - canary.M,
+        "canary_diff" => canary.diff,
+        "wage_min" => minimum(sol.wages_raw),
+        "wage_max" => maximum(sol.wages_raw),
+        "gdp_c" => comp.V[1], "gdp_g" => comp.V[2], "gdp_i" => comp.V[3],
+        "gdp_x" => comp.V[4], "gdp_m_final" => comp.V[5],
+        "gdp_m_int" => comp.V[6], "gdp_t_int" => comp.V[7],
+        "external_balance" => external_balance(fin, model, p),
+        "public_budget" => public_budget(fin, model, p))
+    if priced
+        # Pricing fields only on priced cells, so a pricing-free design keeps
+        # its byte-identical manifest. ADR-0029 #10: SIGNED price statistics
+        # beside max|p - 1| (`price_dev_mean` is weighted by baseline gross
+        # output λ); ADR-0030: rent, its retained part, the profit share and the
+        # household real-income index.
+        dp = p .- 1
+        gates_d["uniqueness"] = Dict{String,Any}("value" => adm.spread, "tolerance" => ms_tol,
+            "pass" => uniq_pass)
+        merge!(metrics_d, Dict{String,Any}(
+            "price_dev_mean" => dot(data.λ, dp) / sum(data.λ),
+            "price_dev_min" => minimum(dp), "price_dev_max" => maximum(dp),
+            "factor_income" => comp.income,
+            "profit" => comp.profit, "retained_profit" => retained_profit(model, sol),
+            "profit_share" => profit_share(model, sol),
+            "real_income" => real_income_index(sol, ref_sol)))
+        if model.pricing isa MarkupPricing
+            μ = pricing_markup(model.pricing, q, data.λ)
+            metrics_d["markup_min"] = minimum(μ)
+            metrics_d["markup_max"] = maximum(μ)
+        end
+        merge!(diagnostics_d, Dict{String,Any}(
+            "canary_retained_profit" => canary.retained_profit,
+            "multistart_converged" => adm.converged,
+            "multistart_starts" => length(adm.starts),
+            "jacobian_rank" => adm.rank, "jacobian_n" => adm.n,
+            "jacobian_cond" => adm.cond))
+    end
+    return (gates = gates_d, gate_summary = summary, metrics = metrics_d,
+        diagnostics = diagnostics_d)
 end
 
 # ── Manifest / index / scenarios ───────────────────────────────────────
@@ -964,6 +1086,15 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
             haskey(scen, "shock_targets") &&
                 (man["scenario"]["shock_targets"] = scen["shock_targets"])
         end
+    end
+    # ADR-0029/ADR-0030: record the pricing closure and the continuation path
+    # (priced cells only, so a pricing-free design keeps its byte-identical
+    # manifest).
+    _, pscen = cell_pricing(design_d, cell)
+    if !isempty(pscen)
+        merge!(man["scenario"], pscen)
+        steps = Int(get(get(design_d, "pricing", Dict{String,Any}()), "continuation_steps", 4))
+        man["solver"]["init"] = "warm:reference-final -> no-pricing twin -> continuation($steps)"
     end
     open(joinpath(rundir, "manifest.toml"), "w") do io
         TOML.print(io, man)

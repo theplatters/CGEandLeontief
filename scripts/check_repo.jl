@@ -105,7 +105,7 @@ end
 function registry_entries(root::AbstractString)::Dict{String,Tuple{String,Dict{String,Any}}}
     clos = TOML.parsefile(joinpath(root, "registry", "closures.toml"))
     out = Dict{String,Tuple{String,Dict{String,Any}}}()
-    for axis in ("labor", "financing")
+    for axis in ("labor", "financing", "pricing")
         sec = get(clos, axis, Dict())
         sec isa AbstractDict || continue
         for (key, v) in sec

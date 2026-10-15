@@ -96,6 +96,30 @@ are provenance-only since ADR-0010 — `recalibrate_open` reads `data.io`),
 `eta`, `eta_s`, `theta`, `epsilon`, `sigma`, `delta_epsilon` for DELTA,
 `note`).
 
+**Pricing doors (ADR-0029, ADR-0030).** An optional `[pricing]` block sets
+the design-wide door defaults — `kind = "none" | "capacity" | "markup"`,
+`delta` (capacity, closure `P1`), `kappa` and `s_pi` (markup, closure `P2`;
+`s_pi = 1` retains the rent, Stage A) — plus `multistart_tol` (the
+uniqueness gate, default `1e-6`) and `continuation_steps` (default 4). A cell
+overrides `kind`, `delta`, `kappa` or `s_pi` with the same keys
+(`cell_pricing` in `run.jl`). Absent or `kind = "none"`, the harness and the
+manifests are byte-identical to the pre-pricing ones. A priced cell is solved
+by continuation: the NoPricing twin from the reference warm start, then the
+door opened in `continuation_steps` equal steps of its parameter. Doors are
+wired into BF, ALPHA, sectoral BETA and GAMMA (`mobile_labor_model`); scalar
+BETA (`solve_beta`) and DELTA reject them. Priced manifests add, to
+`[scenario]`: `pricing` (`P1`/`P2`), `pricing_kind`, `delta` or
+`kappa`/`s_pi`; to `[gates]`: `uniqueness` (the `pricing_admissibility`
+multi-start spread, passing with at least two converged starts within
+`multistart_tol` and a full-rank residual Jacobian); to `[metrics]`:
+`price_dev_mean` (baseline-gross-output-weighted mean of `p − 1`),
+`price_dev_min`, `price_dev_max`, `factor_income` (`w·ΣL + Π`), `profit`,
+`retained_profit`, `profit_share`, `real_income` (`real_income_index`
+against the reference) and, for markup cells, `markup_min` / `markup_max`; to
+`[diagnostics]`: `canary_retained_profit`, `multistart_converged`,
+`multistart_starts`, `jacobian_rank`, `jacobian_n`, `jacobian_cond`. The
+budget gate's `E` includes the distributed rent `(1 − s_pi)·Π`.
+
 ## Manifest schema (`runs/<run_id>/manifest.toml`)
 
 Written `running` at cell start, `executed` (all gates pass) or `failed`

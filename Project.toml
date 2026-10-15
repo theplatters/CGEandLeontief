@@ -22,4 +22,4 @@ ThreadsX = "ac1d9e8a-700a-412c-b207-f0111f4b6c0d"
 TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 
 [compat]
-OpenCGE = "0.1.0"
+OpenCGE = "0.2.0"

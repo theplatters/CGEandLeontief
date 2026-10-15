@@ -20,7 +20,7 @@ referee reports in `docs/reviews/` and the point maps in
 | `refresponse.tex` | Response root (mirrors the manuscript setup); inputs the three referee files. |
 | `sections/(N)name.tex` | One file per section, numbered input order; `(A)`-`(I)` are the appendices. |
 | `references.bib` | Bibliography (currently mirrors `paper/BandF.bib`; trim to the revision's citations). |
-| `tables/` | All tables: the four flow tables (`matrix_5x3_v10_flows.md` + the three supply-arm designs, from `paper/tables/`; linked from Sections 5, 6, App. C) and `table1_closure-overview.tex` (Table 1, `\input` by the introduction, with its crafting comments). |
+| `tables/` | All tables: the four flow tables (`matrix_5x3_v10_flows.md` + the three supply-arm designs, from `paper/tables/`; linked from Sections 5, 6, App. E) and `table1_closure-overview.tex` (Table 1, `\input` by the introduction, with its crafting comments). |
 | `figures/` | Figure files; wired via `\graphicspath`. |
 | `response/{editor,reviewer1,reviewer2}.tex` | One file per referee, prepopulated point by point. |
 
@@ -89,5 +89,5 @@ authblk/biblatex/todonotes/endfloat/biber.
 - Grouping rule ratification (`docs/grouping_rule_evidence.md`) before the
   rigid-group cells in Section 6 are citable.
 - psi composition (raw 2024-price incidence vs.\ constant-2019-price).
-- Appendix E carries a reviewer flag: its closing dominance wording must be
+- Appendix G carries a reviewer flag: its closing dominance wording must be
   checked against the Stage-3 must-not-appear list.

@@ -7,7 +7,7 @@ Source: runs/matrix_5x3-v10-<closure>-<fin>[-<variant>]/manifest.toml (schema v2
 Columns are in table3c order (no-reallocation leftmost). The elastic-supply
 column reads the SECTORAL cells (eta_{s,i} = 0.5, variant ``etas05``; ADR-0022),
 not the single-wage BETA-F* benchmark, which coincides with the standard CGE
-column under demand-only shocks (Appendix B, Prop. ab).
+column under demand-only shocks (Appendix C, Prop. ab).
 """
 import tomllib, os
 

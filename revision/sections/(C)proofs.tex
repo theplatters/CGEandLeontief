@@ -1,6 +1,6 @@
 % =====================================================================
-% Appendix B --- Full proofs (was Appendix A; shifted when the short
-% equivalence appendix was added in front)
+% Appendix C --- Full proofs (was Appendix A, then B; shifted when the
+% equivalence and closure-condition appendices were added in front)
 % ---------------------------------------------------------------------
 % Ported from paper/to_evaluate/equivalence.tex (v4, evidence layer
 % matrix_5x3_v10, 2026-09-20). Standalone front matter (title, abstract,
@@ -383,44 +383,30 @@ differences $\sim 10^{-12}$.
 \end{proof}
 
 \begin{corollary}[Classification]\label{cor:class}
-For the manuscript's framing of the matrix:
+For the manuscript's framing of the matrix, the coincidences, their status
+and what each leaves unidentified are those collected in
+Table~\ref{tab:equiv-class} (Appendix~\ref{app:equivalences}); the
+statuses follow from Lemma~\ref{lem:affine} (fixed real wage $\equiv$
+Leontief corner), Corollary~\ref{cor:realwage} (standard CGE $\equiv$
+single-wage supply), Section~\ref{sec:gauge} (F2 $\equiv$ F3 in the mobile
+rows) and Proposition~\ref{prop:nest} (sectoral corner $\equiv$ no
+reallocation).
 
-\begin{center}
-\begin{tabular}{lll}
-\toprule
-Coincidence & Status & What is unidentified \\
-\midrule
-Fixed real wage $\equiv$ Leontief corner & definitional in form, & $(\theta,\epsilon,\sigma)$ \\
- & substantive in mechanism & in the fixed-wage gauge \\
- & (Lemma~\ref{lem:affine}) & \\
-Standard CGE $\equiv$ single-wage supply & derivable & $\eta_s$ in the single-wage gauge \\
- & (Cor.~\ref{cor:realwage}) & \\
-F2 $\equiv$ F3 (mobile rows) & derivable & the financing label; \\
- & (Section~\ref{sec:gauge}) & $R_{F3} = R_{F2} - B_{gov}$ \\
-No reallocation vs standard CGE & not a coincidence: & --- (the $\eta=0$ row is an \\
- & ADR-0020 option C gives the & identified equilibrium: own \\
- & frozen allocation a price & prices, wage vector \\
- & channel, so it is a distinct & $0.97$--$1.67$, own position) \\
- & economy & \\
-Sectoral corner $\equiv$ no reallocation & exact, by construction & --- (the corner \emph{is} the \\
-($\eta_{s,i} = 0$; Prop.~\ref{prop:nest}) & (Prop.~\ref{prop:nest}) & endpoint: the same equations) \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-The first three entries are not numerical
+The fixed-wage/Leontief, single-wage-supply and mobile-row F2/F3
+coincidences are not numerical
 accidents; they hold at machine precision in the executed generation, and
 none is a mis-specification. They are properties of the \emph{experiment}: a
 demand-only programme in a one-factor CRS economy cannot identify any
 elasticity of the kernel (the mechanism is Remark~\ref{rem:samuelson}). The
-fourth entry is different in kind: the no-reallocation / standard-CGE
+no-reallocation / standard-CGE entry is different in kind: that
 coincidence held only in the
 superseded $R = 0$ pin generation (ADR-0019 D2), where the frozen allocation
 had no channel to prices; under ADR-0020 option C the $\eta = 0$ row carries
-sectoral wages and is an identified equilibrium, so no quantity of the
+sectoral wages and is an identified equilibrium (own prices, wage vector
+$0.97$--$1.67$, own position), so no quantity of the
 no-reallocation row is left
 unidentified and none must be withheld.
-The fifth entry is an equivalence between two
+The sectoral-corner entry is an equivalence between two
 \emph{closures} rather than between two rows of the executed matrix, and it is
 exact by construction: the sectoral family's rigid corner reproduces the
 $\eta = 0$ endpoint, which is why no separate rigid sectoral cell is reported.

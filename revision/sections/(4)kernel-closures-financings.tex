@@ -89,48 +89,31 @@ optimization problems are silent on both: a closure supplies them.
 
 \subsection{The welfare measure}\label{subsec:welfare}
 
-The results below report two aggregate measures that must not be conflated.
+The approach above gives into estimate for \emph{Real GDP} based on inspecting
+the wage bill $w\sum_i L_i$. For scenarios with price changes the wage bill
+is deflated to reflect changes in purchasing power\footnote{Specifcally, we use a seven-component T\"ornqvist price index of final demand (consumption, government purchases and the programme, investment, exports, and the three import and tax leaks booked in Appendix~\ref{app:kernel})}. Under a demand-only shock every price is pinned at its baseline value in the majority of the scenarios captured by table \ref{tab:closure-matrix-3x5}, so the deflator is exactly one and real GDP moves
+with the employment index $w\sum_i L_i$ alone. Specifically, in our setup deflation is only required for the no-reallocation and the elastic labor supply closures. 
 
-\emph{Real GDP} is an income-side quantity index: the wage bill
-$w\sum_i L_i$ deflated by a seven-component T\"ornqvist price index of final
-demand (consumption, government purchases and the programme, investment,
-exports, and the three import and tax leaks booked in
-Appendix~\ref{app:kernel}). Under a demand-only shock every price is pinned
-at its baseline value, so the deflator is exactly one and real GDP moves
-with the employment index $w\sum_i L_i$ alone --- which is why the
-full-employment mobile rows read a flat $0.000\%$ by construction. Real GDP
-measures how much is produced, not how well the household fares.
+However, as real GDP measures how much is produced, not how well the household fares, different assumptions on the valuation of this output can be made and, again, such assumptions oft represent foundational theoretical viewpoints. A conventional approach for our problem would be to employ a \emph{T\"ornqvist welfare index}, that compares household consumption bundle against its baseline. For the closed economy it coincides with real GDP; in an open economy, however, it does not. In practical terms this measure of welfare will be rather sensitive to the financial closure applied -- specifically, only the assumption that households repurpose spending for some reason (F1) will avoid a negative impact on consumption, while shfting expenditures in the public secto will automatically reduce welfare. In this spirit, negative welfare impacts in scenarios for other financial closures are more of an accounting artefact than a real economic effect as, for the purpose of a transformational stimulus, we would take no harm to assume that public and private spending would supply a quite similar and comparable bundle of goods. Against this backdrop that both types of spending could easily lead to the same outcome it is difficult to sustain the assumpton than public expenditures have no impact on welfare.
 
-\emph{The welfare index} is a T\"ornqvist quantity index of the household
-consumption bundle against its baseline. It is the constant-returns
-final-demand aggregator of the kernel, and in the closed economy it
-coincides with real GDP; in our open economy it does not. The F2 mobile row
-is the clean illustration: real GDP is exactly unchanged, yet the
-tax-financed programme costs the household $1.82\%$ of consumption.
-Reporting both is the point --- a measure that read ``GDP-neutral'' and
-stopped there would hide the loss.
+Alternatively, and because the representative household has homothetic CES preferences, the welfare assessemnt could directly honor this assumption by employing an /emph{exact} money-metric assessment of welfare change: with the expenditure function $e(p,u)=u\,\Pi(p)$, the change in real consumption expenditure $E^h/\Pi(p)$ is the consumption-equivalent (equivalent variation) of the shock. Under the consumption-price numeraire $\Pi(p)=1$ this measure is simply the change in after-tax, post-saving household resources $E^h$; so it coincides with the quantity index where prices do not move and corrects it in the price-moving sectoral and no-reallocation rows, where the index is only a second-order approximation. Hence, it seems to be the preferable, more precise baseline choice, although still only focused on private expenditure.
 
-Because the representative household has homothetic CES preferences, the
-model also delivers an \emph{exact} money-metric welfare change: with the
-expenditure function $e(p,u)=u\,\Pi(p)$, the change in real consumption
-expenditure $E^h/\Pi(p)$ is the consumption-equivalent (equivalent
-variation) of the shock, to all orders. Under the consumption-price
-numeraire $\Pi(p)=1$, so this measure is simply the change in after-tax,
-post-saving household resources $E^h$; it coincides with the quantity index
-where prices do not move and corrects it in the price-moving sectoral and
-no-reallocation rows, where the index is only a second-order approximation.
-It is silent, however, on the disutility of the additional work, which
-matters in the rows where employment absorbs the shock.
+Further variations of these indices can be obtained when shifting the definition of what, exactly, is valued by the welfare index. One obvious take here is to introduce a final demand index that captures not only net household consumption but also the spending programme as such, which then undergoes further valuation. A second option is to include leisure as a standalone variabel that determines social welfare jointly with economic output. And, indeed, the options above are not only silent on public expenditure but also on the the disutility of the additional work, which
+matters for all closures where employment absorbs the shock.
 
-Because the reported measures and the exact money-metric each suit different
-cells --- and because how a measure treats \emph{public} spending is itself a
-modelling choice, not an accounting detail ---
-Table~\ref{tab:welfare-measures} places them side by side with three further
-candidates. Section~\ref{sec:application} draws on whichever of them the
-cell at hand supports; we make no single welfare measure the paper's
-headline.
+In what follow we will show three different indices for all closure scenarios: the conventional T\"ornqvist index and a CES-based evaluation taking into account final demand instead of household consumption. In addition, we include a version with a leisure term, where we assume that household perceive supplying additional labor as especially burdensome (setting $\eta_s=0.5$) for those scenarios where a leisure term is not alredy defined.
 
-\input{tables/table5_welfare-measures.tex}
+
+
+% Because the reported measures and the exact money-metric each suit different
+% cells --- and because how a measure treats \emph{public} spending is itself a
+% modelling choice, not an accounting detail ---
+% Table~\ref{tab:welfare-measures} places them side by side with three further
+% candidates. Section~\ref{sec:application} draws on whichever of them the
+% cell at hand supports; we make no single welfare measure the paper's
+% headline.
+
+% \input{tables/table5_welfare-measures.tex}
 \subsection{Why fifteen cells are not fifteen economies}\label{subsec:why-few}
 % TODO: the equivalence box --- Propositions 1-3 in one paragraph
 % (demand-only scope, the A = 1 branch the numeraire selects); forward

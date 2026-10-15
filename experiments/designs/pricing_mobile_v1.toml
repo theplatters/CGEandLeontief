@@ -1,0 +1,197 @@
+# experiments/designs/pricing_mobile_v1.toml — ROADMAP Phase 7, mobile-gauge row.
+#
+# The robustness row for both pricing doors (ADR-0029 Shared decisions: the
+# fixed-wage gauge is the v1 headline; the mobile gauge is a robustness row).
+# Under the CPI = 1 numeraire the doors move RELATIVE prices and the real
+# wage; the free external transfer F absorbs a retained rent (ADR-0029 #7),
+# so a retained rent is effectively externally financed here. Cells choose
+# their door per cell (kind override); the nesting canaries are the v10 ALPHA
+# cells. Same generation as pricing_capacity_v1 (OpenCGE v0.2.0 pin).
+#
+schema_version = 1
+design = "pricing_mobile_v1"
+description = "Phase 7 robustness row: both pricing doors in the mobile gauge (ALPHA, eta = 1, CPI = 1) on all three financing columns: capacity delta in {+0.5, -0.5} (P1) and retained markup kappa in {0.25, 0.5} (P2). Prices move relatively, not nominally, under the CPI numeraire."
+smoke = false
+[data]
+vintage = "full-71-abill"
+drops = []
+calibration_root = "src"
+source_table = "data/I-O_DE2019_formatiert.csv"
+calibration_artifacts = []
+
+[calibration]
+saving_rate = 0.1199
+intermediate_imports = 0.2214
+intermediate_taxes = 0.0257449423974625
+baseline_root_tol = 1e-12
+
+[programme]
+source = "cbase2/data_raw/impulses.csv"
+year = 2024
+column_slice = [3, 73]
+total_eur_m = 40300.0
+f1_shift = "tilt_g0_over_c0"
+
+[reference]
+labor = "ALPHA"
+eta = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+exo_scale_steps = 6
+thetas = [2.0, 1.5, 1.2, 1.0, 0.8, 0.65, 0.5]
+
+[gates]
+residual_tol = 1e-6
+budget_tol = 1e-9
+labour_tol = 1e-6
+wage_tol = 1e-8
+
+[pricing]
+kind = "none"
+multistart_tol = 1e-6
+continuation_steps = 4
+
+[cells.pricing_mobile-v1-ALPHA-F1-dp05]
+labor = "ALPHA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "capacity"
+delta = 0.5
+note = "P1 capacity door, delta = +0.5; full-employment mobile labour, compositional F1 shift"
+
+[cells.pricing_mobile-v1-ALPHA-F1-dm05]
+labor = "ALPHA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "capacity"
+delta = -0.5
+note = "P1 capacity door, delta = -0.5 (Kaldor-Verdoorn); full-employment mobile labour, compositional F1 shift"
+
+[cells.pricing_mobile-v1-ALPHA-F1-k025]
+labor = "ALPHA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "markup"
+kappa = 0.25
+note = "P2 retained markup, kappa = 0.25; full-employment mobile labour, compositional F1 shift"
+
+[cells.pricing_mobile-v1-ALPHA-F1-k05]
+labor = "ALPHA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "markup"
+kappa = 0.5
+note = "P2 retained markup, kappa = 0.5; full-employment mobile labour, compositional F1 shift"
+
+[cells.pricing_mobile-v1-ALPHA-F2-dp05]
+labor = "ALPHA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "capacity"
+delta = 0.5
+note = "P1 capacity door, delta = +0.5; full-employment mobile labour, tax-financed programme"
+
+[cells.pricing_mobile-v1-ALPHA-F2-dm05]
+labor = "ALPHA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "capacity"
+delta = -0.5
+note = "P1 capacity door, delta = -0.5 (Kaldor-Verdoorn); full-employment mobile labour, tax-financed programme"
+
+[cells.pricing_mobile-v1-ALPHA-F2-k025]
+labor = "ALPHA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "markup"
+kappa = 0.25
+note = "P2 retained markup, kappa = 0.25; full-employment mobile labour, tax-financed programme"
+
+[cells.pricing_mobile-v1-ALPHA-F2-k05]
+labor = "ALPHA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "markup"
+kappa = 0.5
+note = "P2 retained markup, kappa = 0.5; full-employment mobile labour, tax-financed programme"
+
+[cells.pricing_mobile-v1-ALPHA-F3-dp05]
+labor = "ALPHA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "capacity"
+delta = 0.5
+note = "P1 capacity door, delta = +0.5; full-employment mobile labour, externally financed programme"
+
+[cells.pricing_mobile-v1-ALPHA-F3-dm05]
+labor = "ALPHA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "capacity"
+delta = -0.5
+note = "P1 capacity door, delta = -0.5 (Kaldor-Verdoorn); full-employment mobile labour, externally financed programme"
+
+[cells.pricing_mobile-v1-ALPHA-F3-k025]
+labor = "ALPHA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "markup"
+kappa = 0.25
+note = "P2 retained markup, kappa = 0.25; full-employment mobile labour, externally financed programme"
+
+[cells.pricing_mobile-v1-ALPHA-F3-k05]
+labor = "ALPHA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kind = "markup"
+kappa = 0.5
+note = "P2 retained markup, kappa = 0.5; full-employment mobile labour, externally financed programme"

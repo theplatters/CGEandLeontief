@@ -1,0 +1,160 @@
+# experiments/designs/pricing_capacity_v1.toml — ROADMAP Phase 7, Route 1.
+#
+# The pricing door (ADR-0029, closure P1): effective technology
+# A_eff_i = A_i (y_i/lambda_i)^(-delta) inside the residual (OpenCGE v0.2.0),
+# so a pure demand shock moves the price block. Rent-free: the productivity
+# change passes into unit cost under zero profit.
+#
+# Generation: the first pricing generation on the OpenCGE v0.2.0 pin. The
+# delta = 0 cells must reproduce matrix_5x3-v10-GAMMA-* to 1e-8 (the v0.1.0
+# -> v0.2.0 nesting, verified on the real pipeline by scripts/reproduce.jl
+# --check before this design was registered).
+#
+# Gates: the matrix gates plus, on priced cells, the ADR-0029 #11 uniqueness
+# gate (multi-start spread of pricing_admissibility < multistart_tol with a
+# full-rank residual Jacobian). Each priced cell is reached by continuation
+# in delta from its NoPricing twin (run.jl solve_cell).
+#
+schema_version = 1
+design = "pricing_capacity_v1"
+description = "Phase 7 Route 1 (ADR-0029, closure P1): capacity / Kaldor-Verdoorn door A_eff = A (y/lambda)^(-delta) in the fixed-wage gauge (GAMMA) on all three financing columns, delta in {0, +0.5, -0.5}, demand-only programme shock. delta = 0 nests matrix_5x3-v10-GAMMA-* (canary)."
+smoke = false
+[data]
+vintage = "full-71-abill"
+drops = []
+calibration_root = "src"
+source_table = "data/I-O_DE2019_formatiert.csv"
+calibration_artifacts = []
+
+[calibration]
+saving_rate = 0.1199
+intermediate_imports = 0.2214
+intermediate_taxes = 0.0257449423974625
+baseline_root_tol = 1e-12
+
+[programme]
+source = "cbase2/data_raw/impulses.csv"
+year = 2024
+column_slice = [3, 73]
+total_eur_m = 40300.0
+f1_shift = "tilt_g0_over_c0"
+
+[reference]
+labor = "ALPHA"
+eta = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+exo_scale_steps = 6
+thetas = [2.0, 1.5, 1.2, 1.0, 0.8, 0.65, 0.5]
+
+[gates]
+residual_tol = 1e-6
+budget_tol = 1e-9
+labour_tol = 1e-6
+wage_tol = 1e-8
+
+[pricing]
+kind = "capacity"
+delta = 0.0
+multistart_tol = 1e-6
+continuation_steps = 4
+
+[cells.pricing_capacity-v1-GAMMA-F1-d0]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.0
+note = "P1 capacity door, delta = 0, the nesting canary (reproduces matrix_5x3-v10-GAMMA-F1); fixed real wage, compositional F1 shift"
+
+[cells.pricing_capacity-v1-GAMMA-F1-dp05]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.5
+note = "P1 capacity door, delta = +0.5, capacity pressure; fixed real wage, compositional F1 shift"
+
+[cells.pricing_capacity-v1-GAMMA-F1-dm05]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = -0.5
+note = "P1 capacity door, delta = -0.5, the Kaldor-Verdoorn sign (increasing returns; uniqueness gate); fixed real wage, compositional F1 shift"
+
+[cells.pricing_capacity-v1-GAMMA-F2-d0]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.0
+note = "P1 capacity door, delta = 0, the nesting canary (reproduces matrix_5x3-v10-GAMMA-F2); fixed real wage, tax-financed programme"
+
+[cells.pricing_capacity-v1-GAMMA-F2-dp05]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.5
+note = "P1 capacity door, delta = +0.5, capacity pressure; fixed real wage, tax-financed programme"
+
+[cells.pricing_capacity-v1-GAMMA-F2-dm05]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = -0.5
+note = "P1 capacity door, delta = -0.5, the Kaldor-Verdoorn sign (increasing returns; uniqueness gate); fixed real wage, tax-financed programme"
+
+[cells.pricing_capacity-v1-GAMMA-F3-d0]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.0
+note = "P1 capacity door, delta = 0, the nesting canary (reproduces matrix_5x3-v10-GAMMA-F3); fixed real wage, externally financed programme"
+
+[cells.pricing_capacity-v1-GAMMA-F3-dp05]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.5
+note = "P1 capacity door, delta = +0.5, capacity pressure; fixed real wage, externally financed programme"
+
+[cells.pricing_capacity-v1-GAMMA-F3-dm05]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = -0.5
+note = "P1 capacity door, delta = -0.5, the Kaldor-Verdoorn sign (increasing returns; uniqueness gate); fixed real wage, externally financed programme"

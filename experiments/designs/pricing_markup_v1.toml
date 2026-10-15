@@ -1,0 +1,158 @@
+# experiments/designs/pricing_markup_v1.toml — ROADMAP Phase 7, Route 2 Stage A.
+#
+# The distribution door (ADR-0029, closure P2): p_i = mu_i c_i with
+# mu_i = 1 + kappa (y_i/lambda_i - 1); the first-order conditions use the
+# marginal cost c = p/mu at all four FOC sites (OpenCGE v0.2.0). Stage A
+# RETAINS the rent Pi = sum (1 - 1/mu_i) p_i y_i: it is booked as a leak beside
+# saving and the household budget is unchanged (s_pi = 1).
+#
+# The markup is symmetric about the baseline, so contracting sectors carry
+# mu < 1 (a discount); the run records min/max mu and the kernel guards
+# mu > 0 (PricingFeasibilityError), per the accepted ADR-0029 #11.
+#
+# Same generation as pricing_capacity_v1 (OpenCGE v0.2.0 pin).
+#
+schema_version = 1
+design = "pricing_markup_v1"
+description = "Phase 7 Route 2 Stage A (ADR-0029, closure P2): retained markup p = mu c, mu = 1 + kappa (y/lambda - 1), rent booked as a leak beside saving (s_pi = 1), fixed-wage gauge (GAMMA) on all three financing columns, kappa in {0, 0.25, 0.5}. kappa = 0 nests matrix_5x3-v10-GAMMA-* (canary)."
+smoke = false
+[data]
+vintage = "full-71-abill"
+drops = []
+calibration_root = "src"
+source_table = "data/I-O_DE2019_formatiert.csv"
+calibration_artifacts = []
+
+[calibration]
+saving_rate = 0.1199
+intermediate_imports = 0.2214
+intermediate_taxes = 0.0257449423974625
+baseline_root_tol = 1e-12
+
+[programme]
+source = "cbase2/data_raw/impulses.csv"
+year = 2024
+column_slice = [3, 73]
+total_eur_m = 40300.0
+f1_shift = "tilt_g0_over_c0"
+
+[reference]
+labor = "ALPHA"
+eta = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+exo_scale_steps = 6
+thetas = [2.0, 1.5, 1.2, 1.0, 0.8, 0.65, 0.5]
+
+[gates]
+residual_tol = 1e-6
+budget_tol = 1e-9
+labour_tol = 1e-6
+wage_tol = 1e-8
+
+[pricing]
+kind = "markup"
+kappa = 0.0
+s_pi = 1.0
+multistart_tol = 1e-6
+continuation_steps = 4
+
+[cells.pricing_markup-v1-GAMMA-F1-k0]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kappa = 0.0
+note = "P2 retained markup (Stage A, s_pi = 1), kappa = 0, the nesting canary (reproduces matrix_5x3-v10-GAMMA-F1); fixed real wage, compositional F1 shift"
+
+[cells.pricing_markup-v1-GAMMA-F1-k025]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kappa = 0.25
+note = "P2 retained markup (Stage A, s_pi = 1), kappa = 0.25; fixed real wage, compositional F1 shift"
+
+[cells.pricing_markup-v1-GAMMA-F1-k05]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kappa = 0.5
+note = "P2 retained markup (Stage A, s_pi = 1), kappa = 0.5; fixed real wage, compositional F1 shift"
+
+[cells.pricing_markup-v1-GAMMA-F2-k0]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kappa = 0.0
+note = "P2 retained markup (Stage A, s_pi = 1), kappa = 0, the nesting canary (reproduces matrix_5x3-v10-GAMMA-F2); fixed real wage, tax-financed programme"
+
+[cells.pricing_markup-v1-GAMMA-F2-k025]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kappa = 0.25
+note = "P2 retained markup (Stage A, s_pi = 1), kappa = 0.25; fixed real wage, tax-financed programme"
+
+[cells.pricing_markup-v1-GAMMA-F2-k05]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kappa = 0.5
+note = "P2 retained markup (Stage A, s_pi = 1), kappa = 0.5; fixed real wage, tax-financed programme"
+
+[cells.pricing_markup-v1-GAMMA-F3-k0]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kappa = 0.0
+note = "P2 retained markup (Stage A, s_pi = 1), kappa = 0, the nesting canary (reproduces matrix_5x3-v10-GAMMA-F3); fixed real wage, externally financed programme"
+
+[cells.pricing_markup-v1-GAMMA-F3-k025]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kappa = 0.25
+note = "P2 retained markup (Stage A, s_pi = 1), kappa = 0.25; fixed real wage, externally financed programme"
+
+[cells.pricing_markup-v1-GAMMA-F3-k05]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+kappa = 0.5
+note = "P2 retained markup (Stage A, s_pi = 1), kappa = 0.5; fixed real wage, externally financed programme"

@@ -181,8 +181,12 @@ end
     for k in ("version", "repo_url", "repo_rev", "git_tree_sha1")
         @test haskey(pin, k)
     end
-    @test pin["version"] == "0.1.0"
-    @test pin["repo_rev"] == "v0.1.0"
+    # The recorded pin is the committed Manifest's OpenCGE entry, whatever
+    # generation it names (a pin bump must not need a test edit).
+    man_pin = TOML.parsefile(joinpath(@__DIR__, "..", "Manifest.toml"))["deps"]["OpenCGE"][1]
+    @test pin["version"] == man_pin["version"]
+    @test pin["repo_rev"] == man_pin["repo-rev"]
+    @test startswith(pin["repo_rev"], "v")
     @test pin["git_tree_sha1"] != "absent" && length(pin["git_tree_sha1"]) == 40
     scen = man["scenario"]
     @test scen["labour"] == "BF"

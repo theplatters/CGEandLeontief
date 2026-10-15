@@ -1,26 +1,24 @@
 % =====================================================================
-% Section 4 --- One kernel, five closures, three financings
+% Section 4 --- A shared machine room: the core model setup
 % ---------------------------------------------------------------------
-% Job: the formal basis in its most minimal form --- the input--output
-%      table and the producer/household optimization problems (oriented on
-%      paper/submission-metro/submission.tex, Sec. 2 and 2.2), then the
-%      closures in words. All functional forms and closure equations live
-%      in Appendix G (app:model); equation labels moved there unchanged.
-%      Still to come: the "why only three economies" box and the
-%      presentation rule.
+% Job: the KERNEL only --- the input--output table and the producer/household
+%      optimization problems (oriented on paper/submission-metro/submission.tex,
+%      Sec. 2 and 2.2), plus the welfare measure. The closures no longer live
+%      here: the kernel and functional forms are in Appendix H (app:model),
+%      the closure first-order conditions in Appendix B (app:closure-focs),
+%      the equivalences in Appendix A (app:equivalences).
+%      Still to come: the "why only N economies" box and the presentation rule.
 % Mindmap: N02A, N06, N11, N12.
-% Status: DRAFT --- minimal rewrite (2026-10-12).
+% Status: DRAFT --- minimal rewrite (2026-10-15; closures moved to App. B).
 % =====================================================================
-\section{One kernel, five closures, three financings}\label{sec:kernel}
+\section{A shared machine room: the core model setup}\label{sec:kernel}
 
 % TODO: verbal model overview BEFORE the equations (R1.2).
 
-All fifteen different constellations represented by the matrix of approaches covered in table \ref{tab:closure-matrix-3x5} share one static kernel: a production
+All fifteen different constellations captured in the matrix presented in table \ref{tab:closure-matrix-3x5} share one static kernel: a production
 network calibrated to an input--output table, cost-minimizing producers and
-a utility-maximizing household. The kernel is held fixed by design; the
-closures change only which variables adjust. This section states the kernel
-in its most minimal form; functional forms and the closure equations are in
-Appendix~\ref{app:model}.
+a utility-maximizing household. This kernel is held fixed by design as it provides a shared analytical skeleton; the closures change only which variables adjust. This section states this core analytical component in its most minimal form; the relevant first-order conditions that emerge from different closure setups are summarized in Appendix~\ref{app:closure-focs}.
+%TODO das wäre mein vorschlag das etwas fokussierter auszrichten. hier könnte dann auch dis jetzige section 4.3 ggf nützlich sein als ansatzpunkt?
 
 \begingroup
 \renewcommand*{\theHequation}{kernel.\arabic{equation}}
@@ -47,16 +45,12 @@ $\omega_i$ follow in the same way from the final-use columns. Imports and
 product taxes on intermediate use are booked as separate leaks
 (Appendix~\ref{app:kernel}).
 %TODO: die notation mit dem strich checke ich gerade nicht. auch bei den indices bin ich unsicher: wenn z_u final use ist, warum ist dann der share omega_i (und nicht u)?
-%NOTE: wir sollten vllt nochmal wo klar hinschreiben, dass wir hier ein one-factor model vor augen haben?
 
-The table is a snapshot: it fixes shares at one point, but says nothing
-about how they respond when prices or demand change. That is the job of the
-optimization problems below.
+The table is a static snapshot of the underlying economy: it fixes shares at one point, is silent about how they respond when prices or demand change. That is the job of the optimization problems discussed below.
 
 \subsection{The optimization problems}\label{subsec:optimization}
 
-Each sector is represented as a single competitive firm with a constant-returns technology $\Phi_i$ in labour and intermediate inputs. Given prices $p$, its 
-wage $w_i$ and output $y_i$, this firms aims to minimize cost:
+On the production side each sector is represented as a single competitive firm with a constant-returns technology $\Phi_i$ in labour and intermediate inputs. Given prices $p$, its wage $w_i$ and output $y_i$, these firms aim to minimize cost:
 \begin{equation}
 \min_{L_i,\,x_{1i},\ldots,x_{Ni}} \; w_i L_i + \sum_{u=1}^N p_u x_{ui}
 \qquad \text{s.t.} \qquad \Phi_i(L_i, x_{1i},\ldots,x_{Ni}; A_i) \geq y_i,
@@ -66,18 +60,21 @@ where $A_i$ is productivity. With a unit cost $c_i$, constant returns imply a to
 $c_i(p,w_i;A_i)\,y_i$, and perfect competition
 equates price and unit cost, $p_i = c_i(p,w_i;A_i)$. Input demands follow
 from Shephard's lemma, $L_i = y_i\,\partial c_i/\partial w_i$ and
-$x_{ui} = y_i\,\partial c_i/\partial p_u$. The representative household
+$x_{ui} = y_i\,\partial c_i/\partial p_u$. 
+We take $\Phi_i$ to be a nested CES (elasticity $\epsilon$ between labour and
+the intermediate composite, $\theta$ among intermediates). We choose this functional form because it sits comfortably between two paradigmatic conceptions of production -- the inflexible, recipe-based Leontief production and the more adaptive Cobb-Douglas production function where substituiton is governed by marginal productivity. Formally, it can reproduce the respective outcomes at corners solutions (SOURCE).
+% TODO können wir da smit den parameters angeben; betrifft dann theta und epsilon, oder?
+
+On the consumption side, a representative household
 maximizes utility given its consumption expenditure $E^h$:
 \begin{equation}
 \max_{c^h} \; U(c^h)
 \qquad \text{s.t.} \qquad \sum_{i=1}^N p_i c_i^h \leq E^h.
 \label{eq:utility-max}
 \end{equation}
-We take $\Phi_i$ to be a nested CES (elasticity $\epsilon$ between labour and
-the intermediate composite, $\theta$ among intermediates) and $U$ to be CES
-with elasticity $\sigma$. We choose this functional form because it sits comfortably between two paradigmatic conceptions of production -- the inflexible, recipe-based Leontief production and the more adaptive Cobb-Douglas production function where substituiton is governed by marginal productivity. Formally, it can reproduce the respective outcomes at corners solutions (SOURCE).
-% TODO können wir da smit den parameters angeben; betrifft dann theta und epsilon, oder?
+We again represent $U$ by a CES function with elasticity $\sigma$. 
 
+%TODO das hier drunter ist komisch selbstreferentiell – weißt du was hier gemeint ist?
 The shares of the table are its weights, so at
 baseline prices the solutions to~\eqref{eq:cost-min}
 and~\eqref{eq:utility-max} reproduce the table exactly. Equilibrium
@@ -90,74 +87,50 @@ employment and household resources are pinned down. The table and the
 optimization problems are silent on both: a closure supplies them.
 \endgroup
 
-\subsection{Five labour closures and three financings}\label{subsec:closures}
-%NOTE ich bin nohc nicht ganz sicher wie wir das sinnvoll aufteilen...
-Section~\ref{sec:two-questions} introduced the closures verbally;
-Table~\ref{tab:closure-conditions} states the two poles and
-Table~\ref{tab:closure-matrix-3x5} the full matrix, each cell by one
-labour-market and one financing condition. With the kernel in place, the
-symbols in these conditions can now be read off.
+\subsection{The welfare measure}\label{subsec:welfare}
 
-\paragraph{Labour-market conditions.} $L_i$ is employment in sector $i$ and
-$L = \sum_i L_i$ total employment; a bar marks the baseline, so $\bar L_i$ is
-baseline sectoral and $\bar L$ baseline total employment. $w$ is the common
-wage of the mobile closures, $w_i$ the sector-specific wage where labour
-markets are sectoral, and $\bar w$ the pegged real wage. Real wages are
-deflated by the consumption price index $\Pi(p)$, the CES price of the
-household's bundle, and a superscript $0$ marks baseline values.
-$L_i^{\mathrm{cm}}(p, y_i, w)$ is the labour demand that solves the firm's
-cost-minimization problem~\eqref{eq:cost-min} at prices $p$ and output
-$y_i$. The allocation parameter $\eta$ takes only its endpoints: $\eta = 1$
-lets labour move to its cost-minimizing use, $\eta = 0$ freezes the
-baseline allocation. The labour-supply elasticity $\eta_{s,i}$ governs how
-strongly sectoral employment responds to the real wage; the headline
-results set it to a common value $\eta_s$. Finally, $\theta$, $\epsilon$
-and $\sigma$ are the substitution elasticities of
-Section~\ref{subsec:optimization} (among intermediates, between labour and
-intermediates, and in consumption); their limit $0^{+}$ is fixed
-proportions.
+The results below report two aggregate measures that must not be conflated.
 
-\paragraph{Financing conditions.} $c_i^h$ is the household's purchase of
-good $i$ and $E^h$ its consumption expenditure, so $\sum_i p_i c_i^h = E^h$
-is the household budget of~\eqref{eq:utility-max}, held fixed while F1
-tilts its composition. $g_i$ is the programme bundle, the real public
-investment in sector $i$, and $\sum_i p_i g_i$ its cost at current prices.
-Under F2 that cost is raised as the programme tax $T(p)$; under F3 it is
-booked as external programme financing $B_{\mathrm{gov}}$.
+\emph{Real GDP} is an income-side quantity index: the wage bill
+$w\sum_i L_i$ deflated by a seven-component T\"ornqvist price index of final
+demand (consumption, government purchases and the programme, investment,
+exports, and the three import and tax leaks booked in
+Appendix~\ref{app:kernel}). Under a demand-only shock every price is pinned
+at its baseline value, so the deflator is exactly one and real GDP moves
+with the employment index $w\sum_i L_i$ alone --- which is why the
+full-employment mobile rows read a flat $0.000\%$ by construction. Real GDP
+measures how much is produced, not how well the household fares.
 
-In words, the columns of Table~\ref{tab:closure-matrix-3x5} are as follows.
-% NAMING (2026-10-11): the internal ids (BF/ALPHA/BETA/GAMMA/DELTA) are no
-% longer printed anywhere in the paper; the names below are the ones
-% proposed in the item-E note of section (3) and were swept through the
-% draft, tables included. The ids survive only in run ids, registry keys
-% and \label anchors, which are literal identifiers.
-\textbf{The no-reallocation closure} fixes employment in each sector at its
-baseline level and lets sector-specific wages adjust
-(eq.~\ref{eq:closure-bf}). \textbf{The standard CGE closure} allows labour
-to move between sectors at one flexible wage while keeping total employment
-fixed (eq.~\ref{eq:closure-alpha}). \textbf{The elastic labour-supply
-closure} lets sectoral employment respond to each sector's real wage,
-deflated by the consumption price index, with a common supply elasticity
-but separate wages (eq.~\ref{eq:closure-beta}). \textbf{The fixed real
-wage closure} fixes the common real wage and lets employment adjust without
-a cap (eq.~\ref{eq:closure-gamma}). \textbf{The Leontief closure} applies
-the fixed-wage rule in the Leontief limit, with fixed proportions in
-production and consumption (eq.~\ref{eq:closure-delta}); it is a corner
-rather than a separate labour-market mechanism.
+\emph{The welfare index} is a T\"ornqvist quantity index of the household
+consumption bundle against its baseline. It is the constant-returns
+final-demand aggregator of the kernel, and in the closed economy it
+coincides with real GDP; in our open economy it does not. The F2 mobile row
+is the clean illustration: real GDP is exactly unchanged, yet the
+tax-financed programme costs the household $1.82\%$ of consumption.
+Reporting both is the point --- a measure that read ``GDP-neutral'' and
+stopped there would hide the loss.
 
-The rows of the table, the financing closures, specify how
-programme-related demand is accommodated and who bears its cost. \textbf{F1} redirects household spending towards
-programme sectors by changing preferences: larger spending shares there are
-paid for by smaller shares elsewhere within the household budget, without
-additional public purchases (eq.~\ref{eq:closure-f1}). \textbf{F2} adds
-public investment financed by a household tax equal to the programme's
-current-price cost (eq.~\ref{eq:closure-f2}). \textbf{F3} adds the same
-public-investment bundle with external financing and no additional domestic
-programme tax (eq.~\ref{eq:closure-f3}). This external financing is an
-accounting counterpart, not a monetary mechanism. Under every combination
-all $N$ goods markets clear and the external-account identity
-holds (eq.~\ref{eq:financing-external-account}).
+Because the representative household has homothetic CES preferences, the
+model also delivers an \emph{exact} money-metric welfare change: with the
+expenditure function $e(p,u)=u\,\Pi(p)$, the change in real consumption
+expenditure $E^h/\Pi(p)$ is the consumption-equivalent (equivalent
+variation) of the shock, to all orders. Under the consumption-price
+numeraire $\Pi(p)=1$, so this measure is simply the change in after-tax,
+post-saving household resources $E^h$; it coincides with the quantity index
+where prices do not move and corrects it in the price-moving sectoral and
+no-reallocation rows, where the index is only a second-order approximation.
+It is silent, however, on the disutility of the additional work, which
+matters in the rows where employment absorbs the shock.
 
+Because the reported measures and the exact money-metric each suit different
+cells --- and because how a measure treats \emph{public} spending is itself a
+modelling choice, not an accounting detail ---
+Table~\ref{tab:welfare-measures} places them side by side with three further
+candidates. Section~\ref{sec:application} draws on whichever of them the
+cell at hand supports; we make no single welfare measure the paper's
+headline.
+
+\input{tables/table5_welfare-measures.tex}
 \subsection{Why only three economies}\label{subsec:why-three}
 % TODO: the equivalence box --- Propositions 1-3 in one paragraph
 % (demand-only scope, the A = 1 branch the numeraire selects); forward

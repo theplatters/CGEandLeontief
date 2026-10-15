@@ -2,7 +2,7 @@
 title: "Revision draft --- BeyondHulten / Metroeconomica"
 project: "BFRep/(3)BeyondHulten"
 created: 2026-10-04
-status: "scaffold + ported appendices A and E; compiles in-container"
+status: "appendices A+B inserted 2026-10-15, appendices re-lettered A-I; compiles in-container (52 pp)"
 tags: [revision, manuscript, latex, reviewer-response]
 ---
 
@@ -18,7 +18,7 @@ referee reports in `docs/reviews/` and the point maps in
 | --- | --- |
 | `main.tex` | Manuscript root: preamble, title/abstract, section inputs, appendix. |
 | `refresponse.tex` | Response root (mirrors the manuscript setup); inputs the three referee files. |
-| `sections/(N)name.tex` | One file per section, numbered input order; `(A)`-`(E)` are the appendices. |
+| `sections/(N)name.tex` | One file per section, numbered input order; `(A)`-`(I)` are the appendices. |
 | `references.bib` | Bibliography (currently mirrors `paper/BandF.bib`; trim to the revision's citations). |
 | `tables/` | All tables: the four flow tables (`matrix_5x3_v10_flows.md` + the three supply-arm designs, from `paper/tables/`; linked from Sections 5, 6, App. C) and `table1_closure-overview.tex` (Table 1, `\input` by the introduction, with its crafting comments). |
 | `figures/` | Figure files; wired via `\graphicspath`. |
@@ -38,16 +38,20 @@ Two title suggestions sit as a comment above `\papertitle` in `main.tex`.
 | 1 | Introduction | stub |
 | 2 | From transformation research to IO models | stub |
 | 3 | Two primitive questions | stub |
-| 4 | One kernel, five closures, three financings | stub |
+| 4 | A shared machine room: the core model setup | kernel + 4.3 welfare; closures moved to App. B |
 | 5 | Application: the programme through the matrix | stub |
 | 6 | Beyond demand-only shocks | stub |
 | 7 | Discussion | stub |
 | 8 | Conclusion | stub |
-| A | Full proofs | ported from `equivalence.tex` v4 (842 lines, 8 subsections) |
-| B | Kernel, calibration, A-bill accounting | stub |
-| C | Matrix variants and gamma/beta robustness | stub |
-| D | Vector construction and data provenance | stub |
-| E | Closures and the neo-Keynesian mapping | ported from `closures_and_demand_shocks.md` (NEW vs. the outline's A-D) |
+| A | Equivalences and overlaps of the closure matrix | NEW 2026-10-15 (absorbs the old App. A prose + App. B Cor. 2 table) |
+| B | The closure first-order conditions | NEW 2026-10-15 (absorbs the condensed Section 4.3 prose) |
+| C | Full proofs | ported from `equivalence.tex` v4 (was App. B) |
+| D | Kernel, calibration, A-bill accounting | was App. C |
+| E | Matrix variants and gamma/beta robustness | was App. D |
+| F | Vector construction and data provenance | was App. E |
+| G | Closures and the neo-Keynesian mapping | was App. F; ported from `closures_and_demand_shocks.md` |
+| H | The model: kernel and closure formulations | was App. G |
+| I | From the input--output table to Omega | was App. H |
 
 # Compile (in-container, verified 2026-10-04)
 

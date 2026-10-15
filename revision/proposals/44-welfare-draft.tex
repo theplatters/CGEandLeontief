@@ -1,0 +1,73 @@
+% =====================================================================
+% Section 4.4 --- The welfare measure (DRAFT, 2026-10-15)
+% ---------------------------------------------------------------------
+% Proposal file --- NOT wired into main.tex. Intended as a short new
+% subsection of Section 4 (kernel), placed after the notation glossaries.
+% If Section 4.3 is moved out to the closure appendix (App. G/B), this
+% becomes 4.3.
+%
+% Job: (i) state the two aggregate measures the paper reports -- real GDP
+%      and the welfare index -- and why they are not the same object;
+%      (ii) name the alternatives and recommend one.
+% Numbers cited are from Table 4 (matrix_5x3_v10): F2 mobile  dY = 0.00 %,
+%      dW = -1.82 %; fixed-wage F3  dY = +1.78 %, dW = +2.26 %.
+% =====================================================================
+\subsection{The welfare measure}\label{subsec:welfare}
+
+The results below report two aggregate measures that must not be conflated.
+
+\emph{Real GDP} is an income-side quantity index: the wage bill
+$w\sum_i L_i$ deflated by a seven-component T\"ornqvist price index of final
+demand (consumption, government purchases and the programme, investment,
+exports, and the three import and tax leaks booked in
+Appendix~\ref{app:kernel}). Under a demand-only shock every price is pinned
+at its baseline value, so the deflator is exactly one and real GDP moves
+with the employment index $w\sum_i L_i$ alone --- which is why the
+full-employment mobile rows read a flat $0.000\%$ by construction. Real GDP
+measures how much is produced, not how well the household fares.
+
+\emph{The welfare index} is a T\"ornqvist quantity index of the household
+consumption bundle against its baseline. It is the constant-returns
+final-demand aggregator of the Baqaee--Farhi kernel, and in the closed
+economy it coincides with real GDP; in our open economy it does not.
+The F2 mobile row is the clean illustration: real GDP is exactly
+unchanged, yet the tax-financed programme costs the household
+$1.82\%$ of consumption. Reporting both is the point --- a measure that
+would read ``GDP-neutral'' and stop there would hide the loss.
+
+Because the representative household has homothetic CES preferences, the
+model also delivers an \emph{exact} money-metric welfare change: with the
+expenditure function $e(p,u)=u\,\Pi(p)$, the change in real consumption
+expenditure $E^h/\Pi(p)$ is the consumption-equivalent (equivalent
+variation) of the shock, to all orders. Under the consumption-price
+numeraire $\Pi(p)=1$, so this measure is simply the change in after-tax,
+post-saving household resources $E^h$. Where prices do not move it agrees
+with the reported quantity index exactly (equal proportional expansion of
+every $c_i$), and it differs from it only in the price-moving sectoral and
+no-reallocation rows, where the T\"ornqvist quantity index is a
+second-order approximation to it. One caveat of scope: under F1 the
+preference weights $d_i$ are themselves shifted, so an F1 ``welfare'' number
+is a statement about the composition of the bundle rather than a
+utility comparison across unchanged preferences, and should be read as
+such.
+A second caveat travels with both: the index prices the consumption bundle
+only and is silent on the disutility of the additional work. In the
+fixed-wage rows, where employment absorbs the shock (F3: consumption
+$+2.26\%$, employment $+1.78\%$), a welfare measure that counted the
+leisure margin would report a smaller gain; the elastic-supply closures are
+reduced forms without a labour--leisure income effect
+(Appendix~\ref{app:labour-closures}), so a leisure-augmented measure would
+require an explicit preference over leisure.
+
+\emph{Alternatives.} Three candidates are worth naming. (i) The exact CES
+money-metric above, $E^h/\Pi(p)$ --- free in the current kernel, exact, and
+identical to the reported index on the demand-only price-pinned rows; we
+recommend reporting it as the headline welfare number, with the quantity
+index kept as a cross-check. (ii) A leisure-augmented equivalent variation,
+which would require specifying a labour--leisure preference and is the
+natural home of any future extension that makes the extensive margin
+central. (iii) A broader final-demand index that aggregates consumption
+\emph{and} the programme ($c+g$), which avoids reading a public-investment
+programme through household consumption alone; we would report it as a
+supplementary series rather than as the welfare measure, since it embeds a
+valuation of public goods the model does not otherwise take a stance on.

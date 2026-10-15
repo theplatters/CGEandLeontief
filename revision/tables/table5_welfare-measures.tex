@@ -1,0 +1,50 @@
+% =====================================================================
+% Table 5 --- Candidate aggregate measures (NEW, 2026-10-15)
+% ---------------------------------------------------------------------
+% Spec (user): one row per measure; the columns are
+%   (a) what it measures, (b) which closures it represents well,
+%   (c) how it treats public spending.
+% Rows: real GDP (income-side), the T\"ornqvist consumption welfare index,
+%       the exact CES money-metric (consumption-equivalent), a
+%       leisure-augmented EV, and a final-demand (c+g) index.
+% The two measures the paper reports are rows 1 and 2; the rest are
+% named candidates (Section 4.3 text). No number is hand-typed.
+% =====================================================================
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.85cm}>{\raggedright\arraybackslash}p{3.9cm}>{\raggedright\arraybackslash}p{4.3cm}>{\raggedright\arraybackslash}p{4.3cm}@{}}
+\toprule
+\textbf{Measure} & \textbf{What it measures} & \textbf{Faithful for which closures} & \textbf{How it treats public spending} \\
+\midrule
+Real GDP\newline \scriptsize (income-side)
+& The wage bill $w\sum_i L_i$ deflated by a seven-component T\"ornqvist price index of final demand.
+& Every closure, cell by cell; flat by construction in the full-employment mobile rows.
+& Counts $g^G$ and the programme as final demand --- it records output, not welfare. \\
+Consumption welfare \newline \scriptsize (T\"ornqvist)
+& A T\"ornqvist quantity index of the household consumption bundle against its baseline (the kernel's final-demand aggregator).
+& The mobile rows, where prices are pinned; a second-order approximation where prices move.
+& Only through the household budget: a tax-financed programme lowers $E^h$; the bundle itself is not valued. \\
+CES money-metric \newline \scriptsize (consumption-equivalent)
+& $E^h/\Pi(p)$, the exact equivalent variation (expenditure function $u\,\Pi(p)$); under the numeraire, the change in $E^h$.
+& Every closure (exact); coincides with the index where prices are pinned and corrects it in the sectoral and no-reallocation rows.
+& Through the household budget (taxes) and the price index; silent on the valuation of public goods. \\
+Leisure-augmented EV
+& A money-metric over consumption and leisure, needed whenever the extensive margin moves.
+& The fixed-real-wage/Leontief and elastic-supply rows, where employment absorbs the shock (the elastic closures are reduced forms without a leisure margin).
+& As the money-metric, plus the employment/leisure channel of a programme that mobilises labour. \\
+Final-demand index \newline \scriptsize ($c+g$)
+& A quantity index of household consumption plus the programme bundle.
+& Programme-heavy cells; read as a supplement to the two welfare measures above.
+& Values the programme as consumption-equivalent --- it embeds a stance on public goods. \\
+\bottomrule
+\end{tabular}
+\caption{Candidate aggregate measures. Each row states what the measure is,
+the closures for which it is a faithful representation, and how it treats
+public spending. The paper reports real GDP and the consumption welfare
+index in Section~\ref{sec:application}; the remaining entries are named as
+alternatives, the last two as extensions.}
+\label{tab:welfare-measures}
+\end{table}

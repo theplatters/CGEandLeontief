@@ -7,6 +7,7 @@ tags: [welfare, indices, closure-matrix, beyondhulten, revision]
 project: BeyondHulten
 ---
 
+**Version 2** \textcolor{revisionV1}{(October 2026)}
 **Version 1** (October 2026)
 
 This note fixes the specification of the three welfare indices announced in
@@ -32,6 +33,14 @@ For any cell, let $E = w\sum_i L_i - T_G(p) - T(p) + F$ be household resources a
 - **(b) final-demand index over $c+g$.** The CES aggregate $\left[\sum_i \omega_i^{f} (f_i/f_{i0})^{(\sigma-1)/\sigma}\right]^{\sigma/(\sigma-1)}$ with $f_i = c_i + g_i$ and weights $\omega_i^{f} = f_{i0}/\sum_j f_{j0}$. Equivalent to the value ratio divided by a bundle-specific price index.
 - **(c) leisure-augmented money-metric on the $c+g$ base.** To first order, $\Delta W_\ell = \left[\Delta V_f - w\,\Delta N\right]/V_{f0}$, with $V_f = E^h + g$ under the leak convention and $V_f = E + g$ under deferred saving. $w$ is the real wage and $\Delta N$ the employment change. The first-order form is parameter-free: the baseline calibration makes the marginal disutility of work equal to the wage, so the extra wage income and the leisure given up coincide to first order and only the curvature survives.
 
+# Why the Tornqvist and the exact measure agree
+
+\textcolor{revisionV1}{The Tornqvist quantity index is exact for a translog aggregator, not for CES, so at $\sigma = 0.9$ it is \emph{not} the exact money-metric in general. At $\sigma = 1$ (Cobb--Douglas) the two coincide exactly and nowhere else. In this model they nevertheless agree to within $10^{-6}$ on the price-moving cells, and the reason is structural: pinning the CES price index as the numeraire forces the share-weighted log price change to vanish to second order, so the leading Tornqvist--CES discrepancy terms cancel and only a higher-order residual survives. A synthetic check on the model's own structure fits that residual to a cubic in the price dispersion (fitted log-log exponent $3.09$), giving $1.6\times10^{-4}$ pp at the model's dispersion of $0.3$. What makes the term visible is $|\sigma - 1|$, not the dispersion: at $\sigma = 1.5$ and dispersion $0.5$ it reaches $0.02$ pp. The measured null on the F2 and F3 cells is therefore expected, and it checks the reconstruction rather than posing a puzzle.}
+
+\textcolor{revisionV1}{The F1 cells are the exception, and they are not an approximation effect. Their gap is $0.043$ pp, two orders of magnitude above the price residual, and it appears where prices are pinned --- where the approximation gap is exactly zero. It is a compositional artifact of the preference shifter $d_i$: the Tornqvist weights are geared to price-driven substitution, so a pure reallocation of demand weights is not captured by them. The first-order term cancels exactly, because the tilt reallocates expenditure shares without changing their sum, so the leading surviving term is second order in the programme size and is scaled by the programme's concentration relative to the consumption shares. That its size is identical in three cells with different labour closures but the same tilt is the proof of the mechanism.}
+
+\textcolor{revisionV1}{The practical consequence is that the choice between the two indices carries almost no numerical weight --- except under F1, where the two are not answering the same question at all, since the tilt changes the preference ordering.}
+
 # Does the deflator need adapting?
 
 Yes --- a new one, and only for six cells.
@@ -53,7 +62,7 @@ These two are the sharpest available canaries; they also state the paper's finan
 # Canaries
 
 - **C1 baseline.** Every index equals 1 at the reference continuation.
-- **C2 coincidence.** Where prices are pinned and $d_i=1$, the exact money-metric and the Tornqvist index agree to solver precision. Verified at manifest level: $-1.8226$ against $-1.8226$ in the F2/F3 mobile rows.
+- **C2 coincidence.** Where prices are pinned and $d_i=1$, the exact money-metric and the Tornqvist index agree to solver precision. Verified at manifest level: $-1.8226$ against $-1.8226$ in the F2/F3 mobile rows. \textcolor{revisionV1}{The agreement is not a knife-edge: it follows from the numeraire and holds to third order in the price change even where prices move.}
 - **C3 F1 gap.** The gap in the F1 cells reproduces at a constant $+0.0433$ pp. Regression guard.
 - **C4 sigma limit.** As $\sigma \to 1$ the CES aggregate converges to the geometric index.
 - **C5 envelope identity.** With $\Delta T_G = \Delta T = \Delta F = 0$ and $s \to 0$, the leisure correction vanishes for any $\Delta N$.
@@ -76,8 +85,9 @@ These two are the sharpest available canaries; they also state the paper's finan
 - **(b) and (c) on the $c+g$ base are blocked for six cells** until $\Pi_{c+g}(p)$ exists in the kernel. Those cells are currently `n/a` in the panel.
 - **BF leisure valuation** uses the wage-bill-weighted aggregate wage; it should use the binding sectoral wage.
 - **Second-order leisure term** needs the curvature mapping $\eta_s \to \theta$ and the time-endowment convention; the first-order measure is free of both.
-- **Section 4.3 wording.** The claim that the exact measure "corrects a pure quantity index ... for which the former is only a second-order approximation" holds for prices but not for F1, where the gap is compositional and first-order; and the paragraph still carries the typos `assessemnt`, `functioj`, `bthe`, `approaces`, `variabel`, `alredy`, `In what follow`, `gives into estimate`.
+- **Section 4.3 wording.** \textcolor{revisionV1}{The sentence claiming the exact measure "corrects a pure quantity index ... for which the former is only a second-order approximation" misdescribes both margins: on prices the approximation is third order under this numeraire, so there is nothing to correct, and under F1 the two differ for a compositional reason, not an approximation one. Suggested replacement: \emph{where prices are pinned the two coincide; where they move the quantity index tracks the exact measure to higher order; and they diverge only under the preference reallocation of F1, where the two are not measuring the same object.}} The paragraph also still carries the typos `assessemnt`, `functioj`, `bthe`, `approaces`, `variabel`, `alredy`, `In what follow`, `gives into estimate`.
 
 ## Revision Log
 
 - **Version 1** (October 2026)
+- **Version 2** \textcolor{revisionV1}{(October 2026)} — Added the section on why the Tornqvist and the exact measure agree, with the measured order of the residual; sharpened canary C2 and the Section 4.3 wording item.

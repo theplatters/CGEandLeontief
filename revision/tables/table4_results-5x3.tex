@@ -3,7 +3,8 @@
 % ---------------------------------------------------------------------
 % Do NOT edit by hand. Regenerate with:  make_table4_results.py
 % Source: runs/matrix_5x3-v10-<closure>-<fin>/manifest.toml (schema v2);
-%   elastic-supply column: the sectoral cells matrix_5x3-v10-BETA-<fin>-etas05.
+%   elastic-supply column: the sectoral cells matrix_5x3-v10-BETA-<fin>-etas{025,05,1,2},
+%   one sub-column per uniform eta_{s,i} (0.5 = headline value, bold).
 % Columns in table3c order (no-reallocation leftmost). Five outcomes per cell:
 %   \Delta Y real GDP, \Delta L employment, \Delta P price level (GDP deflator),
 %   \Delta D net external position (= F + B_gov, 'external debt'),
@@ -17,12 +18,13 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2pt}
 \renewcommand{\arraystretch}{1.25}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.7cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{2.5cm} >{\raggedright\arraybackslash}p{2.5cm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.5cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{4.2cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{2.1cm}@{}}
 \toprule
 \textbf{Financing closure}
 & \textbf{No-reallocation}\newline \scriptsize immobile labour, sectoral wages
 & \textbf{Standard CGE}\newline \scriptsize one flexible wage, mobile labour
-& \textbf{Elastic labour supply}\newline \scriptsize sectoral supply on the real wage ($\eta_{s,i} = 0.5$)
+& \textbf{Elastic labour supply}\newline \scriptsize sectoral supply on the real wage, by $\eta_{s,i}$\newline {\footnotesize\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.6cm}*{4}{@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{0.76cm}}@{}}
+$\eta_{s,i}$ & $0.25$ & $\mathbf{0.5}$ & $1$ & $2$\end{tabular}}
 & \textbf{Fixed real wage}\newline \scriptsize real wage pegged, employment uncapped
 & \textbf{Leontief closure}\newline \scriptsize real wage pegged, quantities absorb
 \\
@@ -40,12 +42,12 @@ $\Delta L$ & $0.00$ \\
 $\Delta P$ & $0.00$ \\
 $\Delta D$ & $+0.08$ \\
 $\Delta W$ & $+0.14$\end{tabular}
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$\Delta Y$ & $+0.12$ \\
-$\Delta L$ & $+0.12$ \\
-$\Delta P$ & $+0.27$ \\
-$\Delta D$ & $-0.09$ \\
-$\Delta W$ & $+0.42$\end{tabular}
+& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.6cm}*{4}{@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{0.76cm}}@{}}
+$\Delta Y$ & $+0.08$ & $+0.12$ & $+0.16$ & $+0.19$ \\
+$\Delta L$ & $+0.08$ & $+0.12$ & $+0.16$ & $+0.19$ \\
+$\Delta P$ & $+0.38$ & $+0.27$ & $+0.17$ & $+0.10$ \\
+$\Delta D$ & $-0.23$ & $-0.09$ & $+0.04$ & $+0.14$ \\
+$\Delta W$ & $+0.33$ & $+0.42$ & $+0.51$ & $+0.58$\end{tabular}
 & \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $-0.10$ \\
 $\Delta L$ & $-0.10$ \\
@@ -73,12 +75,12 @@ $\Delta L$ & $0.00$ \\
 $\Delta P$ & $0.00$ \\
 $\Delta D$ & $-0.10$ \\
 $\Delta W$ & $-1.82$\end{tabular}
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$\Delta Y$ & $+0.13$ \\
-$\Delta L$ & $+0.13$ \\
-$\Delta P$ & $+0.29$ \\
-$\Delta D$ & $-0.28$ \\
-$\Delta W$ & $-1.57$\end{tabular}
+& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.6cm}*{4}{@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{0.76cm}}@{}}
+$\Delta Y$ & $+0.09$ & $+0.13$ & $+0.17$ & $+0.19$ \\
+$\Delta L$ & $+0.09$ & $+0.13$ & $+0.16$ & $+0.19$ \\
+$\Delta P$ & $+0.41$ & $+0.29$ & $+0.18$ & $+0.10$ \\
+$\Delta D$ & $-0.44$ & $-0.28$ & $-0.14$ & $-0.05$ \\
+$\Delta W$ & $-1.69$ & $-1.57$ & $-1.47$ & $-1.39$\end{tabular}
 & \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $+0.13$ \\
 $\Delta L$ & $+0.13$ \\
@@ -106,12 +108,12 @@ $\Delta L$ & $0.00$ \\
 $\Delta P$ & $0.00$ \\
 $\Delta D$ & $-0.10$ \\
 $\Delta W$ & $-1.82$\end{tabular}
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$\Delta Y$ & $+0.13$ \\
-$\Delta L$ & $+0.13$ \\
-$\Delta P$ & $+0.29$ \\
-$\Delta D$ & $-0.28$ \\
-$\Delta W$ & $-1.57$\end{tabular}
+& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.6cm}*{4}{@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{0.76cm}}@{}}
+$\Delta Y$ & $+0.09$ & $+0.13$ & $+0.17$ & $+0.19$ \\
+$\Delta L$ & $+0.09$ & $+0.13$ & $+0.16$ & $+0.19$ \\
+$\Delta P$ & $+0.41$ & $+0.29$ & $+0.18$ & $+0.10$ \\
+$\Delta D$ & $-0.44$ & $-0.28$ & $-0.14$ & $-0.05$ \\
+$\Delta W$ & $-1.69$ & $-1.57$ & $-1.47$ & $-1.39$\end{tabular}
 & \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $+1.78$ \\
 $\Delta L$ & $+1.78$ \\
@@ -135,10 +137,12 @@ change in real GDP ($\Delta Y$), employment ($\Delta L$), the price level
 financing received, i.e.\ external debt) and household consumption welfare
 ($\Delta W$), all in percent against the reference continuation. Generated from the
 \texttt{matrix\_5x3-v10-*} run manifests; no number is hand-typed. The
-elastic-supply column is the sectoral closure at $\eta_{s,i} = 0.5$
-(\texttt{matrix\_5x3-v10-BETA-F*-etas05}). The fixed-wage and Leontief columns
+elastic-supply column is the sectoral closure at four uniform supply elasticities,
+$\eta_{s,i} \in \{0.25, 0.5, 1, 2\}$ (\texttt{matrix\_5x3-v10-BETA-F*-etas025},
+\dots, \texttt{-etas2}); $\eta_{s,i} = 0.5$ (bold) is the headline value used in
+the text. The fixed-wage and Leontief columns
 coincide (bit-identical), and F2 and F3 coincide in the three flexible-wage
-columns, so the fifteen cells describe nine distinct economies: the standard-CGE
+columns, so at the headline elasticity the fifteen cells describe nine distinct economies: the standard-CGE
 column is exactly output-neutral, and equilibrium prices move away from the
 baseline only in the two sectoral-wage columns (no reallocation, elastic supply).}
 \label{tab:results-matrix}

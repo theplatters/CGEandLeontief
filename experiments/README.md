@@ -103,7 +103,13 @@ the design-wide door defaults — `kind = "none" | "capacity" | "markup"`,
 uniqueness gate, default `1e-6`) and `continuation_steps` (default 4). A cell
 overrides `kind`, `delta`, `kappa` or `s_pi` with the same keys
 (`cell_pricing` in `run.jl`). Absent or `kind = "none"`, the harness and the
-manifests are byte-identical to the pre-pricing ones. A priced cell is solved
+manifests are byte-identical to the pre-pricing ones. Since OpenCGE v0.2.1
+(ADR-0031) the capacity `delta` is the value-added (Verdoorn) elasticity; the
+kernel scales the exponent by `factor_share`. A capacity cell (or the block)
+may set `delta_services`: the sectors in `[pricing] services` (1-based
+indices, with `[pricing] n_sectors`) then carry `delta_services` and all
+others `delta`, a per-sector `CapacityPricing` vector; the manifest adds
+`delta_services` and `services`. A priced cell is solved
 by continuation: the NoPricing twin from the reference warm start, then the
 door opened in `continuation_steps` equal steps of its parameter. Doors are
 wired into BF, ALPHA, sectoral BETA and GAMMA (`mobile_labor_model`); scalar

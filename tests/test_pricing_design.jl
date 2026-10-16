@@ -43,16 +43,60 @@ isdefined(Main, :ext_test_data) || include(joinpath(@__DIR__, "test_external_clo
     @test scaled_pricing(CapacityPricing(-0.5), 1.0).δ == -0.5
 end
 
-@testset "pricing design: the four Phase 7 designs parse and pin their door" begin
+@testset "pricing design: delta_services gives a per-sector capacity vector" begin
+    pb = Dict{String,Any}("kind" => "capacity", "delta" => 0.0, "n_sectors" => 5,
+        "services" => [4, 5])
+    d = Dict{String,Any}("pricing" => pb)
+    # Without delta_services the door stays the scalar (homogeneous) closure.
+    pr, f = cell_pricing(d, Dict{String,Any}("delta" => -0.5))
+    @test pr isa CapacityPricing{Float64} && pr.δ == -0.5
+    @test !haskey(f, "delta_services")
+    pr, f = cell_pricing(d, Dict{String,Any}("delta" => -0.5, "delta_services" => 0.0))
+    @test pr isa CapacityPricing{Vector{Float64}}
+    @test pr.δ == [-0.5, -0.5, -0.5, 0.0, 0.0]
+    @test f["delta"] == -0.5 && f["delta_services"] == 0.0 && f["services"] == [4, 5]
+    # The continuation path scales the whole vector.
+    @test scaled_pricing(pr, 0.5).δ == [-0.25, -0.25, -0.25, 0.0, 0.0]
+    bad(svc) = cell_pricing(Dict{String,Any}("pricing" => merge(pb, Dict{String,Any}("services" => svc))),
+        Dict{String,Any}("delta_services" => 0.0))
+    @test_throws ArgumentError bad([6])
+    @test_throws ArgumentError bad([4, 4])
+    @test_throws ArgumentError bad(Int[])
+end
+
+@testset "pricing design: the services block is CPA G-T of the source table" begin
+    root = normpath(joinpath(@__DIR__, ".."))
+    src = joinpath(root, "data", "I-O_DE2019_formatiert.csv")
+    if !isfile(src)
+        @test_skip "real IO table absent"
+    else
+        hdr = String.(names(CSV.File(src; delim = ';', limit = 1)))
+        for design in ("pricing_capacity_v2", "pricing_mobile_v2")
+            pb = load_design(design; root = root)["pricing"]
+            @test pb["n_sectors"] == 71
+            @test pb["services"] == collect(36:71)
+        end
+        # Column k + 1 of the header row is sector k: 35 is the last
+        # construction sector (CPA F), 36 the first trade sector (CPA G).
+        sectors = hdr[2:end]
+        @test startswith(sectors[35], "Vorb.Baustellen")
+        @test startswith(sectors[36], "Handelsleistungen mit Kfz")
+        @test startswith(sectors[71], "Sonstige überwiegend persönliche")
+    end
+end
+
+@testset "pricing design: the Phase 7 designs parse and pin their door" begin
     root = normpath(joinpath(@__DIR__, ".."))
     kinds = Dict("pricing_capacity_v1" => CapacityPricing, "pricing_markup_v1" => MarkupPricing,
         "pricing_profit_v1" => MarkupPricing)
-    for design in ("pricing_capacity_v1", "pricing_markup_v1", "pricing_profit_v1", "pricing_mobile_v1")
+    kinds["pricing_capacity_v2"] = kinds["pricing_mobile_v2"] = CapacityPricing
+    for design in ("pricing_capacity_v1", "pricing_markup_v1", "pricing_profit_v1", "pricing_mobile_v1",
+            "pricing_capacity_v2", "pricing_mobile_v2")
         d = load_design(design; root = root)
         cells = cell_order(design; root = root)
         @test !isempty(cells)
         for id in cells
-            @test startswith(id, replace(design, "_v1" => "-v1-"))
+            @test startswith(id, replace(design, r"_(v\d+)$" => s"-\1-"))
             pr, f = cell_pricing(d, design_cell(d, id))
             haskey(kinds, design) && @test pr isa kinds[design]
             @test f["pricing"] in ("P1", "P2")
@@ -109,8 +153,10 @@ end
         @test_skip "real IO table or impulse file absent"
     else
         @test sum(data.M_int) > 0 && sum(data.T_int) > 0
-        for (fin_id, pr) in (("F2", CapacityPricing(-0.5)), ("F3", MarkupPricing(0.5)),
-                ("F1", MarkupPricing(0.5; s_pi = 0.1199)))
+        N = length(data.factor_share)
+        goods = [i <= 35 ? -0.5 : 0.0 for i in 1:N]  # the services-zero profile
+        for (fin_id, pr) in (("F2", CapacityPricing(-0.5)), ("F1", CapacityPricing(goods)),
+                ("F3", MarkupPricing(0.5)), ("F1", MarkupPricing(0.5; s_pi = 0.1199)))
             c = pricing_real_cell(fin_id, pr)
             m = c.sol.model
             @test maximum(abs, equilibrium_residuals(m, c.X)) < 1e-9

@@ -574,6 +574,13 @@ Resolve a cell's pricing closure from the design's `[pricing]` block
   kind = "markup"   -> `MarkupPricing(kappa; s_pi)`    (closure id P2;
                     `s_pi = 1` retains the rent, Stage A)
 
+Since OpenCGE v0.2.1 (OpenCGE@ADR-0031) `delta` is the value-added
+(Verdoorn) elasticity and the kernel scales the exponent by the value-added
+share. A capacity cell may set `delta_services` (cell or block): the sectors
+listed in `[pricing] services` (1-based indices) then carry `delta_services`
+and every other sector `delta`, a per-sector `CapacityPricing` vector.
+Without `delta_services` the door stays the scalar (homogeneous) closure.
+
 Returns the pricing object and the scenario fields to record in the manifest
 (empty for `none`, so a pricing-free design keeps its byte-identical
 manifest).
@@ -586,8 +593,20 @@ function cell_pricing(design_d::Dict{String,Any},
     kind == "none" && return NoPricing(), Dict{String,Any}()
     if kind == "capacity"
         δ = Float64(val("delta", 0.0))
-        return CapacityPricing(δ), Dict{String,Any}(
-            "pricing" => "P1", "pricing_kind" => kind, "delta" => δ)
+        fields = Dict{String,Any}("pricing" => "P1", "pricing_kind" => kind, "delta" => δ)
+        val("delta_services", nothing) === nothing && return CapacityPricing(δ), fields
+        δs = Float64(val("delta_services", 0.0))
+        svc = Vector{Int}(get(pb, "services", Int[]))
+        N = Int(get(pb, "n_sectors", 0))
+        (!isempty(svc) && N > 0) || throw(ArgumentError(
+            "delta_services needs `[pricing] services` and `[pricing] n_sectors`"))
+        (allunique(svc) && all(in(1:N), svc)) || throw(ArgumentError(
+            "`[pricing] services` must be distinct sector indices in 1..$N"))
+        v = fill(δ, N)
+        v[svc] .= δs
+        fields["delta_services"] = δs
+        fields["services"] = svc
+        return CapacityPricing(v), fields
     elseif kind == "markup"
         κ = Float64(val("kappa", 0.0))
         s_pi = Float64(val("s_pi", 1.0))

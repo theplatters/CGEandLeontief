@@ -55,6 +55,7 @@ settled question.
 | ADR-0028 | Split into paper repo and OpenCGE kernel repo | accepted |
 | ADR-0029 | The pricing door: an output-dependent unit cost (Foundation III) | accepted |
 | ADR-0030 | Distributed profit income: Stage B of the markup door | accepted |
+| ADR-0031 | Value-added-scaled capacity door (OpenCGE v0.2.1) and the services-zero δ profile | accepted |
 
 **Migrated to OpenCGE DECISIONS.md** (2026-10-12, ADR-0028): ADR-0001,
 ADR-0005, ADR-0010, ADR-0011, ADR-0014, ADR-0015, ADR-0016, ADR-0017,

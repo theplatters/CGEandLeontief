@@ -1,0 +1,238 @@
+# experiments/designs/pricing_capacity_v2.toml — ROADMAP Phase 7, Route 1.
+#
+# The capacity door (closure P1) re-minted on OpenCGE v0.2.1: the exponent is
+# scaled by the value-added share (OpenCGE@ADR-0031),
+# A_eff_i = A_i (y_i/lambda_i)^(-delta_i v_i), v_i = factor_share_i, so delta
+# is the value-added (Verdoorn) elasticity, beta = -delta. The same delta
+# gives a weaker gross-output exponent than in pricing_capacity_v1 (which it
+# supersedes; v1 stays on record).
+#
+# Two delta profiles per financing column: homogeneous (every sector carries
+# delta, cells -dp05/-dm05) and services-zero (-s0: delta on the goods sectors,
+# CPA sections A-F, indices 1-35; delta_services = 0 on CPA G-T, the
+# `[pricing] services` list), the Verdoorn law read as a goods-sector law.
+# delta = 0 must reproduce matrix_5x3-v10-GAMMA-* (nesting canary).
+#
+# Gates: the matrix gates plus, on priced cells, the ADR-0029 #11 uniqueness
+# gate. Each priced cell is reached by continuation in delta from its
+# NoPricing twin (run.jl solve_cell).
+#
+schema_version = 1
+design = "pricing_capacity_v2"
+description = "Phase 7 Route 1 on OpenCGE v0.2.1 (OpenCGE@ADR-0031, closure P1): value-added-scaled capacity / Kaldor-Verdoorn door A_eff = A (y/lambda)^(-delta v) in the fixed-wage gauge (GAMMA) on all three financing columns, delta in {0, +0.5, -0.5}, homogeneous and services-zero (delta_services = 0 on CPA G-T), demand-only programme shock. delta = 0 nests matrix_5x3-v10-GAMMA-* (canary)."
+smoke = false
+[data]
+vintage = "full-71-abill"
+drops = []
+calibration_root = "src"
+source_table = "data/I-O_DE2019_formatiert.csv"
+calibration_artifacts = []
+
+[calibration]
+saving_rate = 0.1199
+intermediate_imports = 0.2214
+intermediate_taxes = 0.0257449423974625
+baseline_root_tol = 1e-12
+
+[programme]
+source = "cbase2/data_raw/impulses.csv"
+year = 2024
+column_slice = [3, 73]
+total_eur_m = 40300.0
+f1_shift = "tilt_g0_over_c0"
+
+[reference]
+labor = "ALPHA"
+eta = 1.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+exo_scale_steps = 6
+thetas = [2.0, 1.5, 1.2, 1.0, 0.8, 0.65, 0.5]
+
+[gates]
+residual_tol = 1e-6
+budget_tol = 1e-9
+labour_tol = 1e-6
+wage_tol = 1e-8
+
+[pricing]
+kind = "capacity"
+delta = 0.0
+multistart_tol = 1e-6
+continuation_steps = 4
+# CPA sections G-T of the full-71 table (Handelsleistungen mit Kfz .. sonstige
+# persoenliche DL); cells with delta_services carry that delta on these sectors.
+n_sectors = 71
+services = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]
+
+[cells.pricing_capacity-v2-GAMMA-F1-d0]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.0
+note = "P1 capacity door, delta = 0, the nesting canary (reproduces matrix_5x3-v10-GAMMA-F1); fixed real wage, compositional F1 shift"
+
+[cells.pricing_capacity-v2-GAMMA-F1-dp05]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.5
+note = "P1 VA-scaled capacity door, delta = +0.5 homogeneous, capacity pressure; fixed real wage, compositional F1 shift"
+
+[cells.pricing_capacity-v2-GAMMA-F1-dp05-s0]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.5
+delta_services = 0.0
+note = "P1 VA-scaled capacity door, delta = +0.5 on goods (CPA A-F), 0 on services (CPA G-T), capacity pressure; fixed real wage, compositional F1 shift"
+
+[cells.pricing_capacity-v2-GAMMA-F1-dm05]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = -0.5
+note = "P1 VA-scaled capacity door, delta = -0.5 homogeneous, the Kaldor-Verdoorn sign (increasing returns; uniqueness gate); fixed real wage, compositional F1 shift"
+
+[cells.pricing_capacity-v2-GAMMA-F1-dm05-s0]
+labor = "GAMMA"
+financing = "F1"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = -0.5
+delta_services = 0.0
+note = "P1 VA-scaled capacity door, delta = -0.5 on goods (CPA A-F), 0 on services (CPA G-T), the Kaldor-Verdoorn sign (increasing returns; uniqueness gate); fixed real wage, compositional F1 shift"
+
+[cells.pricing_capacity-v2-GAMMA-F2-d0]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.0
+note = "P1 capacity door, delta = 0, the nesting canary (reproduces matrix_5x3-v10-GAMMA-F2); fixed real wage, tax-financed programme"
+
+[cells.pricing_capacity-v2-GAMMA-F2-dp05]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.5
+note = "P1 VA-scaled capacity door, delta = +0.5 homogeneous, capacity pressure; fixed real wage, tax-financed programme"
+
+[cells.pricing_capacity-v2-GAMMA-F2-dp05-s0]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.5
+delta_services = 0.0
+note = "P1 VA-scaled capacity door, delta = +0.5 on goods (CPA A-F), 0 on services (CPA G-T), capacity pressure; fixed real wage, tax-financed programme"
+
+[cells.pricing_capacity-v2-GAMMA-F2-dm05]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = -0.5
+note = "P1 VA-scaled capacity door, delta = -0.5 homogeneous, the Kaldor-Verdoorn sign (increasing returns; uniqueness gate); fixed real wage, tax-financed programme"
+
+[cells.pricing_capacity-v2-GAMMA-F2-dm05-s0]
+labor = "GAMMA"
+financing = "F2"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = -0.5
+delta_services = 0.0
+note = "P1 VA-scaled capacity door, delta = -0.5 on goods (CPA A-F), 0 on services (CPA G-T), the Kaldor-Verdoorn sign (increasing returns; uniqueness gate); fixed real wage, tax-financed programme"
+
+[cells.pricing_capacity-v2-GAMMA-F3-d0]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.0
+note = "P1 capacity door, delta = 0, the nesting canary (reproduces matrix_5x3-v10-GAMMA-F3); fixed real wage, externally financed programme"
+
+[cells.pricing_capacity-v2-GAMMA-F3-dp05]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.5
+note = "P1 VA-scaled capacity door, delta = +0.5 homogeneous, capacity pressure; fixed real wage, externally financed programme"
+
+[cells.pricing_capacity-v2-GAMMA-F3-dp05-s0]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = 0.5
+delta_services = 0.0
+note = "P1 VA-scaled capacity door, delta = +0.5 on goods (CPA A-F), 0 on services (CPA G-T), capacity pressure; fixed real wage, externally financed programme"
+
+[cells.pricing_capacity-v2-GAMMA-F3-dm05]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = -0.5
+note = "P1 VA-scaled capacity door, delta = -0.5 homogeneous, the Kaldor-Verdoorn sign (increasing returns; uniqueness gate); fixed real wage, externally financed programme"
+
+[cells.pricing_capacity-v2-GAMMA-F3-dm05-s0]
+labor = "GAMMA"
+financing = "F3"
+eta = 1.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = -0.5
+delta_services = 0.0
+note = "P1 VA-scaled capacity door, delta = -0.5 on goods (CPA A-F), 0 on services (CPA G-T), the Kaldor-Verdoorn sign (increasing returns; uniqueness gate); fixed real wage, externally financed programme"

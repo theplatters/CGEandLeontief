@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-10-15 by `scripts/status.jl` · branch `reorg` · HEAD `32cf6d1` (dirty)
+Generated 2026-10-16 by `scripts/status.jl` · branch `reorg` · HEAD `8c86f18` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -40,7 +40,7 @@ Scenarios: **459** rows — executed: 415, provisional: 3, failed: 41. Designs: 
 
 | ID | Status | Formulation | Implementation | Tests | Dead ends | Open gates |
 | --- | --- | --- | --- | --- | --- | --- |
-| P1 | tested | A_eff_i = A_i (y_i / lambda_i)^(-delta) in the CES unit cost and every FOC site, solved inside the residual; p = c (zero profit); delta = 0 nests NoPricing bit for bit | OpenCGE@src/closures/pricing/pricing.jl, OpenCGE@src/core/equilibrium.jl | OpenCGE@tests/test_pricing_closure.jl, tests/test_pricing_design.jl | OpenCGE@DE-0012 | delta < 0 is increasing returns (positive feedback): every priced cell carries the ADR-0029 #11 uniqueness gate (pricing_admissibility multi-start spread < 1e-6 and a full-rank residual Jacobian); non-convergence at extreme delta is a documented finding, not a bug; the ADR-0017 scale guard runs on a NoPricing clone at the reference (exact there, since A_eff(lambda) = A); determinacy away from the reference rests on the local Jacobian check |
+| P1 | tested | A_eff_i = A_i (y_i / lambda_i)^(-delta_i v_i), v_i = factor_share_i the value-added share (OpenCGE@ADR-0031; delta is the value-added Verdoorn elasticity, scalar or per sector), in the CES unit cost and every FOC site, solved inside the residual; p = c (zero profit); delta = 0 nests NoPricing bit for bit | OpenCGE@src/closures/pricing/pricing.jl, OpenCGE@src/core/equilibrium.jl | OpenCGE@tests/test_pricing_closure.jl, tests/test_pricing_design.jl | OpenCGE@DE-0012 | delta < 0 is increasing returns (positive feedback): every priced cell carries the ADR-0029 #11 uniqueness gate (pricing_admissibility multi-start spread < 1e-6 and a full-rank residual Jacobian); non-convergence at extreme delta is a documented finding, not a bug; the ADR-0017 scale guard runs on a NoPricing clone at the reference (exact there, since A_eff(lambda) = A); determinacy away from the reference rests on the local Jacobian check |
 | P2 | tested | p_i = mu_i c_i, mu_i = 1 + kappa (y_i / lambda_i - 1); FOCs at the marginal cost c = p/mu; rent Pi = sum_i (1 - 1/mu_i) p_i y_i, retained s_pi Pi beside saving and (1 - s_pi) Pi distributed into E = (1 - tau) w L + F + (1 - s_pi) Pi; kappa = 0 and s_pi = 1 nest NoPricing and Stage A bit for bit | OpenCGE@src/closures/pricing/pricing.jl, OpenCGE@src/core/equilibrium.jl, OpenCGE@src/core/diagnostics.jl, OpenCGE@src/closures/financing/financing.jl | OpenCGE@tests/test_pricing_closure.jl, tests/test_pricing_design.jl |  | the markup is symmetric about the baseline, so contracting sectors carry mu < 1 (a discount, negative sectoral rent): accepted as stated in ADR-0029 #11, guarded by mu > 0 (PricingFeasibilityError), min/max mu recorded per cell; retention needs injections in the fixed-wage gauge (ADR-0029 #7): with none the system has no positive solution (demand shortfall); the application carries injections; Stage B v1 leaves the rent untaxed (tau on wage income only); the two-base tax variant is a robustness row, not run; Stage C (a two-class household) is parked |
 
 ## Scenario matrix
@@ -679,6 +679,7 @@ Scenarios: **459** rows — executed: 415, provisional: 3, failed: 41. Designs: 
 - [ADR-0028 — Split into paper repo and OpenCGE kernel repo](decisions/ADR-0028-split-paper-and-opencge-kernel.md)
 - [ADR-0029 — The pricing door: an output-dependent unit cost (Foundation III)](decisions/ADR-0029-pricing-door.md)
 - [ADR-0030 — Distributed profit income: Stage B of the markup door](decisions/ADR-0030-distributed-profit-income.md)
+- [ADR-0031 — Value-added-scaled capacity door and the services-zero profile](decisions/ADR-0031-value-added-scaled-capacity-door.md)
 
 ## Warnings
 

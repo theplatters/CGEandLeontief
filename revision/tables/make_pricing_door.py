@@ -4,11 +4,14 @@ from the Phase 7 run manifests (ADR-0029, ADR-0030).
 
 No number is hand-typed: every value is a manifest field. Run from anywhere:
     python3 make_pricing_door.py
-Sources (schema v2, OpenCGE v0.2.0 generation):
-    runs/pricing_capacity-v1-GAMMA-<fin>-<d0|dp05|dm05>/manifest.toml
+Sources (schema v2; the capacity door on OpenCGE v0.2.1 with the
+value-added-scaled exponent, ADR-0031; the markup door on v0.2.0, which
+v0.2.1 leaves unchanged):
+    runs/pricing_capacity-v2-GAMMA-<fin>-<d0|dp05|dm05|dp05-s0|dm05-s0>/manifest.toml
     runs/pricing_markup-v1-GAMMA-<fin>-<k025|k05>/manifest.toml
     runs/pricing_profit-v1-GAMMA-<fin>-<k025|k05>-<spi05|spis>/manifest.toml
-    runs/pricing_mobile-v1-ALPHA-<fin>-<dp05|dm05|k025|k05>/manifest.toml
+    runs/pricing_mobile-v2-ALPHA-<fin>-<dp05|dm05|dp05-s0|dm05-s0>/manifest.toml
+    runs/pricing_mobile-v1-ALPHA-<fin>-<k025|k05>/manifest.toml
 Outputs:
     revision/tables/table6_pricing-door.tex
     revision/figures/fig_pricing-bracket.tex   (plain TikZ, no pgfplots)
@@ -24,9 +27,11 @@ FIN = ["F1", "F2", "F3"]
 # (panel, row label, run-id template with {f} for the financing column)
 PANELS = [
     ("A. Capacity / Kaldor--Verdoorn door ($P_1$), fixed real wage", [
-        (r"$\delta = 0$ (nesting)", "pricing_capacity-v1-GAMMA-{f}-d0"),
-        (r"$\delta = +0.5$", "pricing_capacity-v1-GAMMA-{f}-dp05"),
-        (r"$\delta = -0.5$", "pricing_capacity-v1-GAMMA-{f}-dm05"),
+        (r"$\delta = 0$ (nesting)", "pricing_capacity-v2-GAMMA-{f}-d0"),
+        (r"$\delta = +0.5$, all", "pricing_capacity-v2-GAMMA-{f}-dp05"),
+        (r"$\delta = -0.5$, all", "pricing_capacity-v2-GAMMA-{f}-dm05"),
+        (r"$\delta = +0.5$, goods", "pricing_capacity-v2-GAMMA-{f}-dp05-s0"),
+        (r"$\delta = -0.5$, goods", "pricing_capacity-v2-GAMMA-{f}-dm05-s0"),
     ]),
     ("B. Markup door ($P_2$), rent retained, fixed real wage", [
         (r"$\kappa = 0.25$", "pricing_markup-v1-GAMMA-{f}-k025"),
@@ -39,8 +44,10 @@ PANELS = [
         (r"$\kappa = 0.5$, $s_\pi = s$", "pricing_profit-v1-GAMMA-{f}-k05-spis"),
     ]),
     ("D. Robustness: mobile labour, CPI numeraire", [
-        (r"$\delta = +0.5$", "pricing_mobile-v1-ALPHA-{f}-dp05"),
-        (r"$\delta = -0.5$", "pricing_mobile-v1-ALPHA-{f}-dm05"),
+        (r"$\delta = +0.5$, all", "pricing_mobile-v2-ALPHA-{f}-dp05"),
+        (r"$\delta = -0.5$, all", "pricing_mobile-v2-ALPHA-{f}-dm05"),
+        (r"$\delta = +0.5$, goods", "pricing_mobile-v2-ALPHA-{f}-dp05-s0"),
+        (r"$\delta = -0.5$, goods", "pricing_mobile-v2-ALPHA-{f}-dm05-s0"),
         (r"$\kappa = 0.25$, retained", "pricing_mobile-v1-ALPHA-{f}-k025"),
         (r"$\kappa = 0.5$, retained", "pricing_mobile-v1-ALPHA-{f}-k05"),
     ]),
@@ -50,8 +57,8 @@ PANELS = [
 # Categorical slots 1-4 of the validated default palette (light surface);
 # marker shape is the secondary encoding (two hues sit below 3:1 contrast).
 SERIES = [
-    (r"Kaldor--Verdoorn, $\delta = -0.5$", "pricing_capacity-v1-GAMMA-{f}-dm05", "2a78d6", "circle"),
-    (r"capacity pressure, $\delta = +0.5$", "pricing_capacity-v1-GAMMA-{f}-dp05", "eb6834", "rectangle"),
+    (r"Kaldor--Verdoorn, $\delta = -0.5$", "pricing_capacity-v2-GAMMA-{f}-dm05", "2a78d6", "circle"),
+    (r"capacity pressure, $\delta = +0.5$", "pricing_capacity-v2-GAMMA-{f}-dp05", "eb6834", "rectangle"),
     (r"markup retained, $\kappa = 0.5$", "pricing_markup-v1-GAMMA-{f}-k05", "1baf7a", "triangle"),
     (r"markup distributed, $\kappa = 0.5$, $s_\pi = s$", "pricing_profit-v1-GAMMA-{f}-k05-spis", "eda100", "diamond"),
 ]
@@ -86,8 +93,9 @@ def build_table():
     A(r"% Table 6 --- the pricing door: price response by door and financing (GENERATED)")
     A(r"% ---------------------------------------------------------------------")
     A(r"% Do NOT edit by hand. Regenerate with:  make_pricing_door.py")
-    A(r"% Source: runs/pricing_{capacity,markup,profit,mobile}-v1-*/manifest.toml (schema v2,")
-    A(r"%   OpenCGE v0.2.0). Per financing column: \Delta P GDP deflator, max|p-1| price")
+    A(r"% Source: runs/pricing_{capacity,mobile}-v2-*/manifest.toml (capacity door, OpenCGE")
+    A(r"%   v0.2.1) and runs/pricing_{markup,profit,mobile}-v1-*/manifest.toml (markup door,")
+    A(r"%   v0.2.0). Per financing column: \Delta P GDP deflator, max|p-1| price")
     A(r"%   dispersion, \Delta L employment, \Delta W household consumption, \Pi/Y profit share;")
     A(r"%   all in percent vs. the reference continuation.")
     A(r"% =====================================================================")
@@ -122,9 +130,12 @@ def build_table():
     A(r"\textsc{gamma} gauge); panel D is the mobile-labour robustness row under the CPI")
     A(r"numeraire, where employment is fixed and prices move relative to the CPI. The")
     A(r"$\delta = 0$ row reproduces the fixed-wage column of Table~\ref{tab:results-matrix}")
-    A(r"exactly ($\kappa = 0$ does too). $s$ is the household saving rate. Generated from the")
-    A(r"\texttt{pricing\_\{capacity,markup,profit,mobile\}-v1-*} run manifests (OpenCGE")
-    A(r"v0.2.0); no number is hand-typed.}")
+    A(r"exactly ($\kappa = 0$ does too). $\delta$ is the value-added elasticity of")
+    A(r"equation~\eqref{eq:capacity-door}; ``all'' applies it to every sector, ``goods'' sets $\delta = 0$ on the")
+    A(r"services sectors (CPA G--T). $s$ is the household saving rate. Generated from the")
+    A(r"\texttt{pricing\_\{capacity,mobile\}-v2-*} (capacity door, OpenCGE v0.2.1) and")
+    A(r"\texttt{pricing\_\{markup,profit,mobile\}-v1-*} (markup door, v0.2.0) run")
+    A(r"manifests; no number is hand-typed.}")
     A(r"\label{tab:pricing-door}")
     A(r"\end{table}")
     return "\n".join(L) + "\n"
@@ -156,7 +167,8 @@ def build_figure():
     A(r"% =====================================================================")
     A(r"% Figure --- the price-response bracket (GENERATED)")
     A(r"% Do NOT edit by hand. Regenerate with:  revision/tables/make_pricing_door.py")
-    A(r"% Source: the pricing_*-v1-GAMMA-* run manifests (OpenCGE v0.2.0); y = 100 (gdp_deflator - 1).")
+    A(r"% Source: pricing_capacity-v2-GAMMA-* (OpenCGE v0.2.1) and pricing_{markup,profit}-v1-GAMMA-* (v0.2.0)")
+    A(r"%   run manifests; y = 100 (gdp_deflator - 1).")
     A(r"% Colours: validated categorical slots 1-4 (light); markers are the secondary encoding.")
     A(r"% =====================================================================")
     for i, (_, _, col, _) in enumerate(SERIES):

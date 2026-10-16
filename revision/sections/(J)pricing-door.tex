@@ -9,7 +9,7 @@
 % Code: OpenCGE@src/closures/pricing/pricing.jl, OpenCGE@src/core/equilibrium.jl
 %      (_mobile_market_demand, _cost_minimizing_labor), OpenCGE@src/core/
 %      diagnostics.jl (gdp_components, retained_profit); the gate lives in
-%      experiments/run.jl (evaluate_gates). Records: ADR-0029, ADR-0030.
+%      experiments/run.jl (evaluate_gates). Records: ADR-0029, ADR-0030, ADR-0031.
 % =====================================================================
 \section{The pricing door: derivations, guard and accounting}\label{app:pricing-door}
 
@@ -22,17 +22,21 @@ Sector $i$ produces with the CES unit cost
 where $P_i$ is the intermediate price index (CES in $\theta$ over the
 purchaser prices $p_j$) and $\alpha_i$ the factor share. The two doors act on
 this one line. The capacity door replaces $A_i$ by
-$A^{\mathrm{eff}}_i = A_i (y_i/\lambda_i)^{-\delta}$ and keeps zero profit,
-$p_i = c_i$. The markup door keeps $A^{\mathrm{eff}}_i = A_i$ and sets
+$A^{\mathrm{eff}}_i = A_i (y_i/\lambda_i)^{-\delta_i \alpha_i}$ and keeps zero profit,
+$p_i = c_i$. The factor share in the exponent converts the value-added
+elasticity $\delta_i$ into a gross-output one: at fixed input prices a
+Hicks-neutral change $d\ln A^{\mathrm{eff}}_i$ raises value added per worker by
+$d\ln A^{\mathrm{eff}}_i/\alpha_i$, so value-added productivity responds to own
+output with elasticity $-\delta_i$. The markup door keeps $A^{\mathrm{eff}}_i = A_i$ and sets
 $p_i = \mu_i c_i$ with $\mu_i = 1 + \kappa(y_i/\lambda_i - 1)$. Both are
 written in $y_i/\lambda_i$, so the reference point ($y = \lambda$) is a
 fixed point of either hook ($A^{\mathrm{eff}} = A$, $\mu = 1$) and the
 scale-determinacy guard of the kernel, evaluated at the reference, is
 unchanged. Their product
-$p_i = \bigl(1 + \kappa(y_i/\lambda_i - 1)\bigr)\,c_i\bigl(A_i (y_i/\lambda_i)^{-\delta}\bigr)$
+$p_i = \bigl(1 + \kappa(y_i/\lambda_i - 1)\bigr)\,c_i\bigl(A_i (y_i/\lambda_i)^{-\delta_i\alpha_i}\bigr)$
 is one family with two parameters; $\delta = \kappa = 0$ reproduces the
 kernel exactly (bit for bit, as the nesting cells
-\texttt{pricing\_capacity-v1-GAMMA-*-d0} and
+\texttt{pricing\_capacity-v2-GAMMA-*-d0} and
 \texttt{pricing\_markup-v1-GAMMA-*-k0} confirm against
 \texttt{matrix\_5x3-v10-GAMMA-*}).
 
@@ -78,7 +82,7 @@ the intermediate network, by a factor of about $1.8$ on the German table. The
 kernel tests assert \eqref{eq:app-cd} for both doors.
 
 \subsection{The uniqueness guard}\label{app:pricing-guard}
-With $\delta < 0$ a sector's unit cost falls as its output rises, a positive
+With $\delta_i < 0$ a sector's unit cost falls as its output rises, a positive
 feedback that can admit several equilibria. Every priced cell is reached by a
 deterministic continuation in its door parameter (four equal steps from the
 door-free solution) and must pass a uniqueness gate: re-solved from four

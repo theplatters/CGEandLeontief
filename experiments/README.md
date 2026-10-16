@@ -270,21 +270,33 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
 `experiments/animate_pricing_panels.jl` animates the manuscript panel layout
 (programme-sector bars left, quantity/price scatter right) across the
 pricing-door parameter of a pricing design (ADR-0029/ADR-0030): the markup
-slope κ for a markup design (P2), the capacity elasticity δ for a capacity
-design (P1):
+slope κ for a markup design (P2), the homogeneous capacity elasticity δ for a
+capacity design (P1; per-sector `delta_services` cells are not animated and
+not used as anchors); or across the labour-supply elasticity η_s of the
+uniform-sectoral BETA cells (ADR-0022, the manuscript's BETA panel, e.g.
+`--design matrix_5x3_v10`):
 
 ```bash
 JULIA_LOAD_PATH="@:<env-with-CairoMakie>:@stdlib" julia --project=. experiments/animate_pricing_panels.jl \
     [--design pricing_markup_v1] [--cells a,b,c] [--kappa-max 0.5] [--delta-max 0.5] \
-    [--steps 40] [--fps 8] [--formats mp4,gif] [--outdir output/animations]
+    [--etas-max 10] [--steps 40] [--max-jump 0.25] [--max-refine 10] [--fps 8] [--formats mp4,gif] [--outdir output/animations]
 ```
 
 - One animation per selected cell (default: per labour × financing ×
   `s_pi`, the cell with the largest parameter). κ frames sit on the grid
   `kappa_max * (0:steps)/steps`; δ frames on the symmetric grid
   `delta_max * (2s - steps)/steps`, s = 0..steps (`--steps` even), running
-  from the Kaldor–Verdoorn side (δ < 0) to capacity pressure (δ > 0). Frames
-  are solved by continuation outward from the NoPricing twin at 0; axis
+  from the Kaldor–Verdoorn side (δ < 0) to capacity pressure (δ > 0); η_s
+  frames on `etas_max * (0:steps)/steps`, starting from η_s = 0 (sectoral
+  labour fixed). A design without pricing cells defaults to its
+  uniform-sectoral BETA cells (`eta_s_rigid_group = "none"`), one per
+  financing. Scalar BETA is not animated: under the programme shock alone it
+  reproduces ALPHA at every η_s. The base grid is refined adaptively: an
+  interval in which any sector's price or quantity moves more than
+  `--max-jump` percentage points (default 0.25) is bisected, up to
+  `--max-refine` passes (default 10; `--max-jump Inf` keeps the plain grid),
+  so the frames are dense where the panel moves fast. Frames
+  are solved by continuation outward from the door-closed twin at 0; axis
   limits are fixed across frames, and a grey ghost marks the door-closed
   (parameter 0) positions.
 - The final-consumption bar is split by type, each segment in % of the
@@ -294,7 +306,8 @@ JULIA_LOAD_PATH="@:<env-with-CairoMakie>:@stdlib" julia --project=. experiments/
   the programme is a household-demand tilt, so the government segment is
   zero). The header's ΔW is real household consumption.
 - Validation (ADR-0025, figures are not runs): every grid value that matches
-  an executed run of the same door, labour, financing and `s_pi` is hard-validated
+  an executed run of the same door, labour, financing and `s_pi` (for η_s: any
+uniform-sectoral BETA cell of the financing) is hard-validated
   against its `solution.csv` (max |Δp|, |Δq| < 1e-6) and its `executed`
   status, or the animation aborts. Frames between those anchors are
   interpolating re-solves and say so on the frame; they are not citable.

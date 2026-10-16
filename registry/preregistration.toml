@@ -68,6 +68,52 @@ actor = "hermes-agent"
     eta = 1.0
     programme_year = 2024
 
+[designs.pricing_mobile_v2]
+git_commit = "29a90993471495ca48f1074996ab9ee6e19c05c2"
+note = "Phase 7 robustness row on OpenCGE v0.2.1 (OpenCGE@ADR-0031): the value-added-scaled capacity door (P1) in the mobile gauge (ALPHA, eta = 1, CPI = 1) on all three financing columns, delta in {+0.5, -0.5}, homogeneous and services-zero (delta_services = 0 on CPA G-T)."
+registered_at = "2026-10-16T10:13:32"
+design_sha256 = "580b6a1b53cee10856c6b7c2dddbecd72ff0380df9fc1f18e90064ca9a570398"
+actor = "franzs"
+
+    [designs.pricing_mobile_v2.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    pricing_n_sectors = 71
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_delta = 0.0
+    pricing_continuation_steps = 4
+    eta = 1.0
+    pricing_kind = "capacity"
+    pricing_services = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]
+    epsilon = 0.5
+
+[designs.pricing_capacity_v2]
+git_commit = "29a90993471495ca48f1074996ab9ee6e19c05c2"
+note = "Phase 7 Route 1 on OpenCGE v0.2.1 (OpenCGE@ADR-0031, closure P1): value-added-scaled capacity / Kaldor-Verdoorn door A_eff = A (y/lambda)^(-delta v) in the fixed-wage gauge (GAMMA) on all three financing columns, delta in {0, +0.5, -0.5}, homogeneous and services-zero (delta_services = 0 on CPA G-T), demand-only programme shock. delta = 0 nests matrix_5x3-v10-GAMMA-* (canary)."
+registered_at = "2026-10-16T10:13:09"
+design_sha256 = "e5fb60862d86e52907a68d446c5e9e1d01bb08fc85280c6a9dcc75b5485c055d"
+actor = "franzs"
+
+    [designs.pricing_capacity_v2.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    pricing_n_sectors = 71
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_delta = 0.0
+    pricing_continuation_steps = 4
+    eta = 1.0
+    pricing_kind = "capacity"
+    pricing_services = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]
+    epsilon = 0.5
+
 [designs.matrix_5x3_v2]
 git_commit = "8ca057b6855ef9e2807a9df3a43d314f47dd18d2"
 note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration under ADR-0014 (real-wage elastic supply; verified scale-determinacy guard). Supersedes the v1 generation (design matrix_5x3), whose runs stay as history."

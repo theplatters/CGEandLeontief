@@ -1,0 +1,81 @@
+% =====================================================================
+% Table 4 (ALT) --- the closure matrix with the three welfare measures
+% ---------------------------------------------------------------------
+% Do NOT edit by hand. Regenerate with:
+%   julia --project=. experiments/make_table4_alt.jl
+% Source: the matrix_5x3_v10 design, re-solved in memory through the harness and
+%   gated against runs/<id>/manifest.toml (consumption_rel, tol 1e-6). The
+%   macro columns are the recorded manifest fields; the welfare columns are
+%   computed in the kernel by real_consumption / real_consumption_ev /
+%   real_final_demand_ces / welfare_leisure. No number is hand-typed and no
+%   run directory is created or modified.
+% All in percent against the reference continuation. B^own is the OWN-WEIGHTS
+%   bundle aggregate over c+lambda*g (lambda=1): each state under its own
+%   composition weights, which reduces to the bundle value ratio --- the
+%   regime-consistent measure (spec v6). W_b is the fixed-weight CES at
+%   sigma=0.9 --- NOT the value ratio --- and is unidentified under F1. W_c is
+%   the first-order leisure-augmented measure on the OWN-WEIGHTS bundle under
+%   the two saving conventions; the saving convention, not the leisure
+%   preference, sets the sign at the wage-pinned pole.
+% =====================================================================
+\begin{table}[htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.9cm}>{\raggedleft\arraybackslash}p{1.05cm}>{\raggedleft\arraybackslash}p{1.05cm}>{\raggedleft\arraybackslash}p{1.05cm}>{\raggedleft\arraybackslash}p{1.05cm}>{\raggedleft\arraybackslash}p{1.05cm}>{\raggedleft\arraybackslash}p{1.05cm}>{\raggedleft\arraybackslash}p{1.05cm}>{\raggedleft\arraybackslash}p{1.05cm}>{\raggedleft\arraybackslash}p{1.05cm}>{\raggedleft\arraybackslash}p{1.05cm}@{}}
+\toprule
+& \multicolumn{4}{c}{\textbf{Macro outcomes}} & \multicolumn{6}{c}{\textbf{Welfare measures}} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-11}
+\textbf{Cell} & $\Delta Y$ & $\Delta L$ & $\Delta P$ & $\Delta D$ & $W_a$ & $W_a'$ & $B^{\mathrm{own}}$ & $W_b$ & $W_c^{\mathrm{leak}}$ & $W_c^{\mathrm{def}}$ \\
+\midrule
+\multicolumn{11}{@{}l}{\textit{Financing \textbf{F1}: repurposing}\textsuperscript{\ddag}}\\
+\quad \textbf{BF} \scriptsize No-reallocation & -0.01 & 0.00 & +0.63 & -0.58 & +0.096 & +0.142 & -0.013 & -- & -0.013 & -0.013 \\
+\quad \textbf{ALPHA} \scriptsize Standard CGE & 0.00 & 0.00 & 0.00 & +0.08 & +0.143 & +0.100 & +0.076 & -- & +0.076 & +0.078 \\
+\quad \textbf{BETA} \scriptsize Elastic supply & +0.12 & +0.12 & +0.27 & -0.09 & +0.423 & +0.420 & +0.261 & -- & +0.129 & +0.149 \\
+\quad \textbf{GAMMA} \scriptsize Fixed real wage & -0.10 & -0.10 & 0.00 & 0.00 & -0.081 & -0.124 & -0.095 & -- & +0.013 & 0.000 \\
+\quad \textbf{DELTA} \scriptsize Leontief & -0.10 & -0.10 & 0.00 & 0.00 & -0.081 & -0.124 & -0.095 & -- & +0.013 & 0.000 \\
+\midrule
+\multicolumn{11}{@{}l}{\textit{Financing \textbf{F2}: taxes}}\\
+\quad \textbf{BF} \scriptsize No-reallocation & -0.02 & 0.00 & +0.72 & -0.85 & -1.980 & -1.980 & -0.028 & -0.318 & -0.028 & -0.210 \\
+\quad \textbf{ALPHA} \scriptsize Standard CGE & 0.00 & 0.00 & 0.00 & -0.10 & -1.823 & -1.823 & +0.078 & -0.291 & +0.078 & -0.101 \\
+\quad \textbf{BETA} \scriptsize Elastic supply & +0.13 & +0.13 & +0.29 & -0.28 & -1.571 & -1.571 & +0.272 & -0.059 & +0.133 & -0.027 \\
+\quad \textbf{GAMMA} \scriptsize Fixed real wage & +0.13 & +0.13 & 0.00 & 0.00 & -1.533 & -1.533 & +0.299 & -0.069 & +0.160 & 0.000 \\
+\quad \textbf{DELTA} \scriptsize Leontief & +0.13 & +0.13 & 0.00 & 0.00 & -1.533 & -1.533 & +0.299 & -0.069 & +0.160 & 0.000 \\
+\midrule
+\multicolumn{11}{@{}l}{\textit{Financing \textbf{F3}: external}}\\
+\quad \textbf{BF} \scriptsize No-reallocation & -0.02 & 0.00 & +0.72 & -0.85 & -1.980 & -1.980 & -0.028 & -0.318 & -0.028 & -0.210 \\
+\quad \textbf{ALPHA} \scriptsize Standard CGE & 0.00 & 0.00 & 0.00 & -0.10 & -1.823 & -1.823 & +0.078 & -0.291 & +0.078 & -0.101 \\
+\quad \textbf{BETA} \scriptsize Elastic supply & +0.13 & +0.13 & +0.29 & -0.28 & -1.571 & -1.571 & +0.272 & -0.059 & +0.133 & -0.027 \\
+\quad \textbf{GAMMA} \scriptsize Fixed real wage & +1.78 & +1.78 & 0.00 & +1.33 & +2.264 & +2.264 & +3.199 & +2.827 & +1.234 & +1.331 \\
+\quad \textbf{DELTA} \scriptsize Leontief & +1.78 & +1.78 & 0.00 & +1.33 & +2.264 & +2.264 & +3.199 & +2.827 & +1.234 & +1.331 \\
+\bottomrule
+\end{tabular}
+\caption{The closure matrix with the three welfare measures. $W_a$ is
+the T\"ornqvist index of household consumption (the measure currently
+reported); $W_a'$ the exact money-metric of consumption, on the same base;
+$W_b$ the CES quantity aggregate over $c+g$ at $\lambda=1$, $\sigma=0.9$ ---
+which is \emph{not} the value ratio, and differs from it at first order
+wherever the basket does not grow proportionally, as the programme cells
+do; $B^{\mathrm{own}}$ the own-weights bundle aggregate --- each state's
+$c+g$ valued by its own composition weights, which reduces identically to
+$\sum_i f_i$, the bundle value ratio at base prices; it is the
+preference-consistent bundle measure and carries the F1 rows, where the
+fixed-weight aggregates are not defined (see the dagger);
+$W_c$ that same own-weights bundle less the value of the
+additional work $w\,\Delta N$, to first order, under the two saving
+conventions; it therefore inherits the bundle column's regime-consistency,
+to first order, under the two saving conventions. $W_a$ and $W_a'$ coincide
+except under F1, whose preference shifter moves the basket off proportional
+growth. Macro columns: the recorded manifest fields, all in percent against
+the reference continuation. \textsuperscript{\ddag}~F1 rows report the
+consumption measures, $B^{\mathrm{own}}$ and $W_c$, but not the fixed-weight
+aggregates. Under F1 the preference weights are themselves shifted, so the
+fixed-weight CES has no utility foundation: on the same consumption basket it
+sits about $0.47$ pp below the exact money-metric in every F1 cell, and
+would report the intended reallocation as a loss; the own-weights aggregate,
+being regime-consistent, is unaffected. \texttt{experiments/welfare-f1-decomp.jl}
+and \texttt{experiments/welfare-ownweights.jl} reproduce the two.
+}
+\label{tab:results-matrix-alt}
+\end{table}

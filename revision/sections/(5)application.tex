@@ -20,13 +20,33 @@
 
 \subsection{Aggregate results}\label{subsec:aggregate}
 
+The main results for applying the demand stimulus as described in section \ref{sec:io-bridge} to a set of model economies as conceptualized in sections \ref{sec:two-questions} and \ref{sec:kernel} are summarized in Table~\ref{tab:results-matrix} below. This table now asks a more direct question on the fifteen economies captured in our exposition: not what happens on a level of formalities, but what the happening is worth in terms of economic implications.
+
 \input{tables/table4_results-5x3.tex}
 
-\input{tables/table4_results-5x3-ALT.tex}
+\paragraph{The labour margin.} Holding the financing fixed at $F1$, a pure repurposing of consumption, three observations stand out. First, the standard CGE closure is \emph{exactly}
+output-neutral: real GDP and the price level are unchanged to the printed digit in all three
+financings. This is what the Hulten-type aggregations lead one to expect, and it deserves to
+be said plainly, because it defines the benchmark against which the rest of the table is read:
+with one flexible wage and freely mobile labour, a reallocation of demand has no first-order
+aggregate output effect whatever, and the programme acts on composition alone. Second, closing
+the labour margin at either end breaks that neutrality, and does so in opposite directions.
+With immobile labour and sectoral wages the economy absorbs the programme almost entirely
+through relative prices: the deflator rises by $+0.63$ per cent while output slips by $-0.01$
+per cent. With a sectoral supply response, employment and output rise together instead, by
+between $+0.12$ and $+0.19$ per cent over the elasticity bracket we report, and the price
+response is correspondingly damped, from $+0.27$ down to $+0.10$ per cent as $\eta_{s,i}$
+rises. Third, the wage-pinned closures sit at the opposite end again, and their distinguishing
+feature is that they carry no price response at all ($\Delta P = 0.00$): the real-wage peg
+makes the consumer price index the numeraire, so adjustment happens entirely on the quantity
+side.
 
-Table~\ref{tab:welfare-comparison} asks a narrower question of the same fifteen economies:
-not what happens, but what the happening is worth. Four of its six columns are new readings of
-one identical allocation, and their disagreements are the substance of the table.
+Because the elastic-supply responses are monotone in $\eta_{s,i}$ --- output, employment and
+consumption rise with it while the price response falls --- we report that column as an
+interval rather than at a single elasticity. The bracket $\eta_{s,i}\in[0.5,2]$ spans the
+substantive range of answers, with $\eta_{s,i}=0.5$, close to the values usually calibrated for
+sectoral labour supply, as the headline point value; the ranking of the columns is unaffected
+anywhere inside it.
 
 The first two columns separate the private from the total. $W_C$ values household consumption
 alone; $W_D$ the demand bundle including the programme. They never disagree in sign, and in the
@@ -54,7 +74,7 @@ that registers as a loss or a gain is decided not by the allocation but by wheth
 household's preferences fixed while the basket moves. The leisure-augmented columns damp the
 magnitudes --- from $+3.56$ to $+1.59$ at the wage-pinned pole, where the employment gain is
 largest and the leisure term therefore bites hardest --- and leave that pattern untouched.
-\input{tables/table5_welfare-measures.tex}
+%\input{tables/table5_welfare-measures.tex}
 
 % DRAFT (2026-10-16): aggregate-results prose on the rewritten Table 4.
 % TODO still open: multipliers, the sectoral cells, and the R1.7 channel
@@ -68,30 +88,7 @@ programme but the margin through which the economy is allowed to absorb it --- a
 axes along which we have organised the closures, the labour market and the financing of the
 programme, contribute very unequally to the answer.
 
-\paragraph{The labour margin.} Holding the financing fixed at $F1$, a pure repurposing of
-consumption, three observations stand out. First, the standard CGE closure is \emph{exactly}
-output-neutral: real GDP and the price level are unchanged to the printed digit in all three
-financings. This is what the Hulten-type aggregations lead one to expect, and it deserves to
-be said plainly, because it defines the benchmark against which the rest of the table is read:
-with one flexible wage and freely mobile labour, a reallocation of demand has no first-order
-aggregate output effect whatever, and the programme acts on composition alone. Second, closing
-the labour margin at either end breaks that neutrality, and does so in opposite directions.
-With immobile labour and sectoral wages the economy absorbs the programme almost entirely
-through relative prices: the deflator rises by $+0.63$ per cent while output slips by $-0.01$
-per cent. With a sectoral supply response, employment and output rise together instead, by
-between $+0.12$ and $+0.19$ per cent over the elasticity bracket we report, and the price
-response is correspondingly damped, from $+0.27$ down to $+0.10$ per cent as $\eta_{s,i}$
-rises. Third, the wage-pinned closures sit at the opposite end again, and their distinguishing
-feature is that they carry no price response at all ($\Delta P = 0.00$): the real-wage peg
-makes the consumer price index the numeraire, so adjustment happens entirely on the quantity
-side.
 
-Because the elastic-supply responses are monotone in $\eta_{s,i}$ --- output, employment and
-consumption rise with it while the price response falls --- we report that column as an
-interval rather than at a single elasticity. The bracket $\eta_{s,i}\in[0.5,2]$ spans the
-substantive range of answers, with $\eta_{s,i}=0.5$, close to the values usually calibrated for
-sectoral labour supply, as the headline point value; the ranking of the columns is unaffected
-anywhere inside it.
 
 \paragraph{The financing margin.} The financing of the programme turns out to be the heavier
 of the two axes. For every flexible-wage closure, moving from $F1$ to $F2$ or $F3$ turns
@@ -124,6 +121,8 @@ household-consumption index $\Delta W_C$, which values the private bundle at bas
 It is one defensible reading of the same allocation among several. Table~\ref{tab:welfare-comparison}
 collects the alternatives, including the demand-based indices that price the composition shift
 the programme imposes, and Section~\ref{subsec:robust} compares them.
+
+\input{tables/table4_results-5x3-ALT.tex}
 
 \subsection{Sectoral results}\label{subsec:sectoral}
 % TODO: sectoral detail; the ladder and rigid-group cells.

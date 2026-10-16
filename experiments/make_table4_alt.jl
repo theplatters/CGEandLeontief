@@ -1,221 +1,210 @@
-# experiments/make_table4_alt.jl — Table 4 (ALT): the three welfare measures
-#
-# Re-solves the fifteen matrix cells of `matrix_5x3_v10` IN MEMORY through the
-# harness and reports, per cell, the four macro outcomes plus the three welfare
-# measures of Section 4.3:
-#
-#   W_a    Tornqvist quantity index of consumption      (`real_consumption`)
-#   W_a'   exact money-metric of consumption            (`real_consumption_ev`)
-#   W_b    CES quantity index of the c+g bundle         (`real_final_demand_ces`)
-#   W_c    first-order leisure-augmented measure        (`welfare_leisure`),
-#          under both saving conventions
-#
-# Nothing is hand-typed. The driver NEVER creates run directories and never
-# writes to `runs/`: it only reads the design and the recorded manifests, which
-# it also uses as a validity gate — each re-solved cell must reproduce the
-# recorded `consumption_rel` to `#GATE_TOL`, otherwise the row is marked and the
-# run reports it.
-#
+# =====================================================================
+# Table 4 (ALT) --- the WELFARE-COMPARISON table (GENERATED)
+# ---------------------------------------------------------------------
+# Do NOT edit by hand. Regenerate with:
 #   julia --project=. experiments/make_table4_alt.jl
-#   julia --project=. experiments/make_table4_alt.jl --design matrix_5x3_v10 --out <path>
+#
+# Job: compare the welfare reads of one and the same allocation. The macro
+# outcomes and the indices already shown in Table 4 are dropped; only W_C is
+# carried over, so the table reads as a welfare comparison.
+#
+#   W_C      household-consumption welfare (the Table 4 column, from the manifest)
+#   W_D      quantity index of demand: the own-weights aggregate over c + g
+#   W_CES    CES evaluation of the bundle at the BASELINE preference weights
+#   W_CES*   CES evaluation of the bundle at the ADOPTED preference weights
+#   W_CES*^L the same, first-order leisure-augmented, under both saving conventions
+#
+# Preferences are ADOPTED throughout: the weights of a state are read off that
+# state's own bundle, alpha_i ∝ f_i p_i^sigma, with g SUBSUMED into the private
+# part. F2/F3 therefore adopt preferences too --- the household is treated as
+# having taken the programme into its own demand --- which is why W_CES* differs
+# from W_CES in every financing rather than only under F1.
+#
+# The ALT layout keeps the matrix grammar with the elastic-supply row
+# bracketed over the executed elasticities, as in Table 4.
+# =====================================================================
 
 using OpenCGE, TOML, Printf
 
-const GATE_TOL = 1e-6            # re-solve vs recorded consumption_rel
-const SIGMA = 0.9                # decision D3
-const LAMBDA = 1.0               # decision D2
+const AbstractPricing = OpenCGE.AbstractPricingClosure   # harness/kernel name drift
+isdefined(Main, :load_design) || include(joinpath(@__DIR__, "run.jl"))
 
-# Compatibility shim (2026-10-16): the working-copy kernel renamed the abstract
-# pricing type to `AbstractPricingClosure`, while `experiments/run.jl` (and
-# `animate_pricing_panels.jl`) still refer to it as `AbstractPricing`, so the
-# harness does not load against the checkout. This alias restores the old name
-# for THIS script only; drop it once the harness is updated. Nothing else in
-# `run.jl` is touched, and the reproduction gate below would expose any deeper
-# drift between the working copy and the kernel that minted the v10 runs.
-const AbstractPricing = OpenCGE.AbstractPricingClosure
+const SIGMA = 0.9
+const LAMBDA = 1.0
+const GATE_TOL = 1e-6
 
-if !isdefined(Main, :load_design)
-    include(joinpath(@__DIR__, "run.jl"))
-end
-
-function _parse(args)
-    design, out = "matrix_5x3_v10", nothing
-    i = 1
-    while i <= length(args)
-        if args[i] == "--design"; design = args[i + 1]; i += 2
-        elseif args[i] == "--out"; out = args[i + 1]; i += 2
-        else; i += 1
-        end
-    end
-    return design, out
-end
-
-const LABOUR = ["BF", "ALPHA", "BETA", "GAMMA", "DELTA"]
 const FIN = ["F1", "F2", "F3"]
+const LABOUR = ["BF", "ALPHA", "BETA", "GAMMA", "DELTA"]
+const ETAS = ["-etas05", "-etas1", "-etas2"]          # the bracket, low end first
+const ETAS_LO, ETAS_HI = "0.5", "2"
+
+const FINLABEL = Dict("F1" => "repurposing of consumption",
+                      "F2" => "refinancing via taxes",
+                      "F3" => "external / debt finance")
 const LABEL = Dict("BF" => "No-reallocation", "ALPHA" => "Standard CGE",
-    "BETA" => "Elastic supply", "GAMMA" => "Fixed real wage",
-    "DELTA" => "Leontief")
-const FINLABEL = Dict("F1" => "repurposing", "F2" => "taxes", "F3" => "external")
+                   "BETA" => "Elastic supply", "GAMMA" => "Fixed real wage",
+                   "DELTA" => "Leontief")
 
-cell_id(lab, fin) = "matrix_5x3-v10-$lab-$fin" * (lab == "BETA" ? "-etas05" : "")
+cell_id(lab, fin, suf = "") = "matrix_5x3-v10-$lab-$fin" * (lab == "BETA" ? (suf == "" ? "-etas05" : suf) : "")
 
-"""
-	own_bundle(sol, base) -> Float64
-
-Own-weights bundle aggregate (spec v6): each state's `c + lambda*g` bundle valued
-by its own composition weights, which reduces identically to the ratio of bundle
-quantity sums. Equals the bundle's value ratio where prices are at base level.
-"""
-function own_bundle(sol::Solution, base::Solution)::Float64
-	f(s) = final_demand_bundle(s.model, s.prices_raw, s.quantities,
-		OpenCGE._bundle_wage(s); lambda = LAMBDA, external_transfer = s.external_transfer).f
-	return sum(f(sol)) / sum(f(base))
+"""The bundle block: c, g, L_i and wage_bill at one solution."""
+function bundle_block(sol::Solution; lam::Real = LAMBDA)
+    final_demand_bundle(sol.model, sol.prices_raw, sol.quantities,
+        OpenCGE._bundle_wage(sol); lambda = lam, external_transfer = sol.external_transfer)
 end
 
-function table4_alt_main(args = ARGS)
-    design, out = _parse(args)
+"""The bundle vector f = stretch*c + lambda*g."""
+fvec(b, stretch::Real; lam::Real = LAMBDA) = stretch .* b.c .+ lam .* b.g
+
+"""
+CES aggregate of q against q0 under weights w, in the kernel's index
+parameterisation (`ces_quantity_index`): weights enter linearly, not as
+w^(1/sigma). Support-restricted, since c_i = 0 in many of the 62 sectors.
+"""
+function U_idx(q::AbstractVector, q0::AbstractVector, w::AbstractVector)
+    k = (q .> 0) .& (q0 .> 0)
+    qk, q0k, wk = q[k], q0[k], w[k]
+    wk = wk ./ sum(wk)
+    r = qk ./ q0k
+    return (sum(wk .* r .^ ((SIGMA - 1) / SIGMA)))^(SIGMA / (SIGMA - 1))
+end
+
+"""The five computed reads for one cell, under both saving conventions."""
+function reads(sol::Solution, ref)
+    b1, b0 = bundle_block(sol), bundle_block(ref.sol)
+    ls, ls0 = sum(b1.L_i), sum(b0.L_i)
+    w = b1.wage_bill / ls
+    out = Dict{Symbol,Float64}()
+    for (key, stretch) in ((:leak, 1.0), (:def, 1.0 / (1 - sol.model.data.saving_rate)))
+        f, f0 = fvec(b1, stretch), fvec(b0, stretch)
+        alpha = f .* sol.prices .^ SIGMA        # the state's own, ADOPTED weights
+        r_ces, r_star = U_idx(f, f0, f0), U_idx(f, f0, alpha)
+        v0 = sum(ref.sol.prices .* f0)
+        out[Symbol(:ces, key)] = 100 * (r_ces - 1)
+        out[Symbol(:star, key)] = 100 * (r_star - 1)
+        out[Symbol(:starl, key)] = 100 * ((r_star - 1) - w * (ls - ls0) / v0)
+    end
+    out[:d] = 100 * (sum(fvec(b1, 1.0)) / sum(fvec(b0, 1.0)) - 1)     # W_D
+    return out
+end
+
+function main()
     root = default_root()
-    dd = load_design(design; root = root)
-    @printf("building reference continuation for %s ...\n", design)
+    dd = load_design("matrix_5x3_v10"; root = root)
+    @printf("building reference continuation for matrix_5x3_v10 ...\n")
     ref = build_reference(dd; root = root)
     drops = Vector{Int}(dd["data"]["drops"])
-    n_full = length(ref.data.factor_share) + length(drops)
-    kept = sort(setdiff(1:n_full, drops))
+    kept = sort(setdiff(1:(length(ref.data.factor_share) + length(drops)), drops))
     ψ, g = programme_vectors(dd, ref.data, kept; root = root)
 
     rows = NamedTuple[]
     for fin in FIN, lab in LABOUR
-        id = cell_id(lab, fin)
-        cell = design_cell(dd, id)
-        manpath = joinpath(root, "runs", id, "manifest.toml")
-        man = isfile(manpath) ? TOML.parsefile(manpath) : nothing
-        sol = solve_cell(cell, dd, ref.data, ψ, g, ref.init_warm)
-        w_a = 100 * (real_consumption(sol) / real_consumption(ref.sol) - 1)
-        w_ap = 100 * (real_consumption_ev(sol, ref.sol) - 1)
-        w_b = 100 * (real_final_demand_ces(sol, ref.sol; lambda = LAMBDA, sigma = SIGMA) - 1)
-        w_bo = 100 * (own_bundle(sol, ref.sol) - 1)
-        # W_c hangs off the SAME bundle as the bundle column: own weights (spec v6),
-        # so the leisure term rides on a regime-consistent aggregate.
-        lk = welfare_leisure(sol, ref.sol; lambda = LAMBDA, sigma = SIGMA,
-            saving = :leak, aggregator = :ownweights)
-        df = welfare_leisure(sol, ref.sol; lambda = LAMBDA, sigma = SIGMA,
-            saving = :deferred, aggregator = :ownweights)
-        rec = man === nothing ? NaN : 100 * man["metrics"]["consumption_rel"]
-        ok = isfinite(rec) ? abs(w_a - rec) < GATE_TOL : false
-        push!(rows, (lab = lab, fin = fin, id = id, ok = ok,
-            dY = man === nothing ? NaN : 100 * man["metrics"]["gdp_rel"],
-            dL = man === nothing ? NaN : 100 * (man["metrics"]["employment"] - 1),
-            dP = man === nothing ? NaN : 100 * (man["metrics"]["gdp_deflator"] - 1),
-            dD = man === nothing ? NaN : 100 * man["metrics"]["external_position"],
-            wa = w_a, wap = w_ap, wbo = w_bo, wb = w_b,
-            wcl = 100 * lk.welfare, wcd = 100 * df.welfare,
-            q = 100 * (lk.value_ratio - 1)))
-        @printf("  %-22s gate %s  Wa %+7.3f  Wap %+7.3f  Bown %+7.3f  Wb %+7.3f  Wc %+7.3f/%+7.3f\n",
-            id, ok ? "ok" : "FAIL", w_a, w_ap, w_bo, w_b, 100 * lk.welfare, 100 * df.welfare)
+        sufs = lab == "BETA" ? ETAS : [""]
+        got, okall, wc = NamedTuple[], true, NaN
+        for suf in sufs
+            id = cell_id(lab, fin, suf)
+            manpath = joinpath(root, "runs", id, "manifest.toml")
+            man = isfile(manpath) ? TOML.parsefile(manpath) : nothing
+            sol = solve_cell(design_cell(dd, id), dd, ref.data, ψ, g, ref.init_warm)
+            r = reads(sol, ref)
+            wc = man === nothing ? NaN : 100 * man["metrics"]["consumption_rel"]
+            # canary: the baseline-weight CES must reproduce the kernel's index
+            ker = real_final_demand_ces(sol, ref.sol; lambda = LAMBDA, sigma = SIGMA) - 1
+            abs(r[:cesleak] - 100 * ker) < 1e-8 || @warn "W_CES differs from the kernel" id r[:cesleak] ker
+            ok = man !== nothing && abs(wc - 100 * (real_consumption(sol) / real_consumption(ref.sol) - 1)) < GATE_TOL
+            push!(got, (; wc = wc, ok = ok, d = r[:d], cesleak = r[:cesleak],
+                starleak = r[:starleak], starlleak = r[:starlleak], starldef = r[:starldef]))
+        end
+        okall = all(x -> x.ok, got)
+        lo, hi = x -> minimum(x), x -> maximum(x)
+        agg(f) = (lo([f(x) for x in got]), hi([f(x) for x in got]))
+        push!(rows, (lab = lab, fin = fin, ok = okall,
+            wc = agg(x -> x.wc), wd = agg(x -> x[:d]),
+            ces = agg(x -> x[:cesleak]), star = agg(x -> x[:starleak]),
+            sl = agg(x -> x[:starlleak]), sd = agg(x -> x[:starldef])))
+        @printf("  %-26s gate %s  Wc %+7.3f  Wd %+7.3f  CES %+7.3f  CES* %+7.3f  L %+7.3f/%+7.3f\n",
+            cell_id(lab, fin), okall ? "ok" : "FAIL", got[1].wc, got[1][:d],
+            got[1][:cesleak], got[1][:starleak], got[1][:starlleak], got[1][:starldef])
     end
-    path = out === nothing ? joinpath(root, "revision", "tables", "table4_results-5x3-ALT.tex") : out
+    path = joinpath(root, "revision", "tables", "table4_results-5x3-ALT.tex")
     open(path, "w") do io
-        render(io, rows, design)
+        render(io, rows)
     end
     println("wrote ", path)
     return all(r -> r.ok, rows) ? 0 : 1
 end
 
 num(x) = (!isfinite(x)) ? "n/a" : (abs(x) < 5e-5 ? "0.00" : @sprintf("%+.2f", x))
-num4(x) = (!isfinite(x)) ? "n/a" : (abs(x) < 5e-5 ? "0.000" : @sprintf("%+.3f", x))
 
-function render(io, rows, design)
+"""min--max interval cell; a single value where the bracket is flat."""
+function rng(p, f)
+    lo, hi = f(p)
+    abs(hi - lo) < 5e-5 && return num(lo)
+    return num(lo) * "--" * num(hi)
+end
+
+function render(io, rows)
     println(io, "% =====================================================================")
-    println(io, "% Table 4 (ALT) --- the closure matrix with the three welfare measures")
+    println(io, "% Table 4 (ALT) --- welfare comparison across the closure matrix (GENERATED)")
     println(io, "% ---------------------------------------------------------------------")
     println(io, "% Do NOT edit by hand. Regenerate with:")
     println(io, "%   julia --project=. experiments/make_table4_alt.jl")
-    println(io, "% Source: the ", design, " design, re-solved in memory through the harness and")
-    println(io, "%   gated against runs/<id>/manifest.toml (consumption_rel, tol 1e-6). The")
-    println(io, "%   macro columns are the recorded manifest fields; the welfare columns are")
-    println(io, "%   computed in the kernel by real_consumption / real_consumption_ev /")
-    println(io, "%   real_final_demand_ces / welfare_leisure. No number is hand-typed and no")
-    println(io, "%   run directory is created or modified.")
-    println(io, "% All in percent against the reference continuation. B^own is the OWN-WEIGHTS")
-    println(io, "%   bundle aggregate over c+lambda*g (lambda=1): each state under its own")
-    println(io, "%   composition weights, which reduces to the bundle value ratio --- the")
-    println(io, "%   regime-consistent measure (spec v6). W_b is the fixed-weight CES at")
-    println(io, "%   sigma=0.9 --- NOT the value ratio --- and is unidentified under F1. W_c is")
-    println(io, "%   the first-order leisure-augmented measure on the OWN-WEIGHTS bundle under")
-    println(io, "%   the two saving conventions; the saving convention, not the leisure")
-    println(io, "%   preference, sets the sign at the wage-pinned pole.")
+    println(io, "% Source: the matrix_5x3_v10 design, re-solved in memory through the harness")
+    println(io, "%   and gated against runs/<id>/manifest.toml (consumption_rel, tol 1e-6).")
+    println(io, "%   No run directory is created or modified, and no number is hand-typed.")
+    println(io, "% W_C is the manifest field; W_D, W_CES and W_CES* are computed here. The")
+    println(io, "%   elastic-supply row is the min--max bracket over the executed")
+    println(io, "%   eta_{s,i} in {0.5, 1, 2}.")
     println(io, "% =====================================================================")
     println(io, "\\begin{table}[htbp]")
     println(io, "\\centering")
-    println(io, "\\scriptsize")
-    println(io, "\\setlength{\\tabcolsep}{4pt}")
-    println(io, "\\renewcommand{\\arraystretch}{1.15}")
-    print(io, "\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{1.9cm}")
-    for _ in 1:10
-        print(io, ">{\\raggedleft\\arraybackslash}p{1.05cm}")
+    println(io, "\\footnotesize")
+    println(io, "\\setlength{\\tabcolsep}{3pt}")
+    println(io, "\\renewcommand{\\arraystretch}{1.2}")
+    print(io, "\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{1.5cm}")
+    for _ in 1:6
+        print(io, ">{\\raggedleft\\arraybackslash}p{2.0cm}")
     end
     println(io, "@{}}")
     println(io, "\\toprule")
-    println(io, "& \\multicolumn{4}{c}{\\textbf{Macro outcomes}} & \\multicolumn{6}{c}{\\textbf{Welfare measures}} \\\\")
-    println(io, "\\cmidrule(lr){2-5}\\cmidrule(lr){6-11}")
-    println(io, "\\textbf{Cell} & \$\\Delta Y\$ & \$\\Delta L\$ & \$\\Delta P\$ & \$\\Delta D\$ " *
-                "& \$W_a\$ & \$W_a'\$ & \$B^{\\mathrm{own}}\$ & \$W_b\$ & \$W_c^{\\mathrm{leak}}\$ & \$W_c^{\\mathrm{def}}\$ \\\\")
+    println(io, "\\textbf{Cell} & \$W_C\$ & \$W_D\$ & \$W_{CES}\$ & \$W_{CES^*}\$" *
+                " & \$W_{CES^*}^{L,\\mathrm{leak}}\$ & \$W_{CES^*}^{L,\\mathrm{def}}\$ \\\\")
     println(io, "\\midrule")
     lastfin = ""
     for r in rows
         if r.fin != lastfin
             r.fin == "F1" || println(io, "\\midrule")
-            mark = r.fin == "F1" ? "\\textsuperscript{\\ddag}" : ""
-            println(io, "\\multicolumn{11}{@{}l}{\\textit{Financing \\textbf{$(r.fin)}: $(FINLABEL[r.fin])}$mark}\\\\")
+            println(io, "\\multicolumn{7}{@{}l}{\\textit{Financing \\textbf{$(r.fin)}: $(FINLABEL[r.fin])}}\\\\")
             lastfin = r.fin
         end
         flag = r.ok ? "" : "\\textsuperscript{\\dag}"
-        # The bundle indices are NOT identified under F1: the preference tilt
-        # replaces the aggregator's own weights, so the CES aggregate loses its
-        # utility foundation and reads the intended reallocation as a loss
-        # (measured: ~ -0.47 pp against the exact money-metric on the SAME
-        # consumption basket, in every F1 cell; see welfare-f1-decomp.jl).
-        wb = r.fin == "F1" ? "--" : num4(r.wb)
         println(io, "\\quad \\textbf{$(r.lab)} \\scriptsize $(LABEL[r.lab])$flag" *
-                    " & $(num(r.dY)) & $(num(r.dL)) & $(num(r.dP)) & $(num(r.dD))" *
-                    " & $(num4(r.wa)) & $(num4(r.wap)) & $(num4(r.wbo)) & $wb" *
-                    " & $(num4(r.wcl)) & $(num4(r.wcd)) \\\\")
+                    " & $(rng(r.wc, identity)) & $(rng(r.wd, identity)) & $(rng(r.ces, identity))" *
+                    " & $(rng(r.star, identity)) & $(rng(r.sl, identity)) & $(rng(r.sd, identity)) \\\\")
     end
     println(io, "\\bottomrule")
     println(io, "\\end{tabular}")
-    println(io, "\\caption{The closure matrix with the three welfare measures. \$W_a\$ is")
-    println(io, "the T\\\"ornqvist index of household consumption (the measure currently")
-    println(io, "reported); \$W_a'\$ the exact money-metric of consumption, on the same base;")
-    println(io, "\$W_b\$ the CES quantity aggregate over \$c+g\$ at \$\\lambda=1\$, \$\\sigma=0.9\$ ---")
-    println(io, "which is \\emph{not} the value ratio, and differs from it at first order")
-    println(io, "wherever the basket does not grow proportionally, as the programme cells")
-    println(io, "do; \$B^{\\mathrm{own}}\$ the own-weights bundle aggregate --- each state's")
-    println(io, "\$c+g\$ valued by its own composition weights, which reduces identically to")
-    println(io, "\$\\sum_i f_i\$, the bundle value ratio at base prices; it is the")
-    println(io, "preference-consistent bundle measure and carries the F1 rows, where the")
-    println(io, "fixed-weight aggregates are not defined (see the dagger);")
-    println(io, "\$W_c\$ that same own-weights bundle less the value of the")
-    println(io, "additional work \$w\\,\\Delta N\$, to first order, under the two saving")
-    println(io, "conventions; it therefore inherits the bundle column's regime-consistency,")
-    println(io, "to first order, under the two saving conventions. \$W_a\$ and \$W_a'\$ coincide")
-    println(io, "except under F1, whose preference shifter moves the basket off proportional")
-    println(io, "growth. Macro columns: the recorded manifest fields, all in percent against")
-    println(io, "the reference continuation. \\textsuperscript{\\ddag}~F1 rows report the")
-    println(io, "consumption measures, \$B^{\\mathrm{own}}\$ and \$W_c\$, but not the fixed-weight")
-    println(io, "aggregates. Under F1 the preference weights are themselves shifted, so the")
-    println(io, "fixed-weight CES has no utility foundation: on the same consumption basket it")
-    println(io, "sits about \$0.47\$ pp below the exact money-metric in every F1 cell, and")
-    println(io, "would report the intended reallocation as a loss; the own-weights aggregate,")
-    println(io, "being regime-consistent, is unaffected. \\texttt{experiments/welfare-f1-decomp.jl}")
-    println(io, "and \\texttt{experiments/welfare-ownweights.jl} reproduce the two.")
+    println(io, "\\caption{Welfare comparison across the closure matrix: one allocation, six")
+    println(io, "reads of it, all in percent against the reference continuation. The macro")
+    println(io, "outcomes and the indices already reported in Table~\\ref{tab:results-matrix}")
+    println(io, "are dropped, so that the table isolates the welfare question. \$W_C\$ is the")
+    println(io, "household-consumption index of Table~\\ref{tab:results-matrix}; \$W_D\$ the")
+    println(io, "quantity index of demand, i.e.\\ the own-weights aggregate over \$c+g\$;")
+    println(io, "\$W_{CES}\$ the CES evaluation of that bundle at the \\emph{baseline}")
+    println(io, "preference weights, which is what prices the composition shift the programme")
+    println(io, "imposes; \$W_{CES^*}\$ the same bundle evaluated at the \\emph{adopted}")
+    println(io, "weights, read off the counterfactual bundle itself with \$g\$ subsumed into")
+    println(io, "the private part; and \$W_{CES^*}^{L}\$ the first-order leisure-augmented")
+    println(io, "form under the two saving conventions. The elastic-supply row is the")
+    println(io, "min--max bracket over the executed \$\\eta_{s,i}\\in\\{0.5,1,2\\}\$.")
     if !all(r -> r.ok, rows)
         println(io, "\\textsuperscript{\\dag}~cell did not reproduce through the in-memory solve within \$10^{-6}\$; regenerate and inspect.")
     end
     println(io, "}")
-    println(io, "\\label{tab:results-matrix-alt}")
+    println(io, "\\label{tab:welfare-comparison}")
     println(io, "\\end{table}")
 end
 
 if abspath(PROGRAM_FILE) == abspath(@__FILE__)
-    exit(table4_alt_main())
+    exit(main())
 end

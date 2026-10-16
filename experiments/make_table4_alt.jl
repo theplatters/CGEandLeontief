@@ -134,72 +134,119 @@ function main()
     return all(r -> r.ok, rows) ? 0 : 1
 end
 
-num(x) = (!isfinite(x)) ? "n/a" : (abs(x) < 5e-5 ? "0.00" : @sprintf("%+.2f", x))
+# same convention as table4_results-5x3.tex: values in math mode, so the
+# unary minus is a proper minus sign and "--" stays a text en-dash between them
+num(x) = (!isfinite(x)) ? "n/a" : (abs(x) < 5e-5 ? "\$0.00\$" :
+         (x > 0 ? @sprintf("\$+%.2f\$", x) : @sprintf("\$%.2f\$", x)))
 
-"""min--max interval cell; a single value where the bracket is flat."""
-function rng(p, f)
-    lo, hi = f(p)
+"""min--max interval from a (lo, hi) pair; a point where the bracket is flat."""
+function rngv(p)
+    lo, hi = p
     abs(hi - lo) < 5e-5 && return num(lo)
     return num(lo) * "--" * num(hi)
 end
 
+# the variables shown, in the order they appear inside each cell
+const MEAS = [(:wc,   "\$W_C\$"),
+              (:wd,   "\$W_D\$"),
+              (:ces,  "\$W_{CES}\$"),
+              (:star, "\$W_{CES^*}\$"),
+              (:sl,   "\$W^{L}_{\\mathrm{leak}}\$"),
+              (:sd,   "\$W^{L}_{\\mathrm{def}}\$")]
+
+CELL_SPEC = raw"@{}l@{\hspace{3pt}}r@{}"
+# elastic-supply cell: label column + one bracketed column
+ETAS_CELL_SPEC = raw"@{}>{\raggedright\arraybackslash}p{1.05cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}"
+
+"""One plain cell: the six welfare variables stacked, as in Table 4."""
+function plain_cell(io, r)
+    println(io, "\\begin{tabular}{" * CELL_SPEC * "}")
+    for (k, lab) in MEAS
+        println(io, lab * " & " * num(getfield(r, k)[1]) * " \\\\")
+    end
+    print(io, "\\end{tabular}")
+end
+
+"""The elastic-supply cell: same variables, each as a min--max interval."""
+function etas_cell(io, r)
+    println(io, "\\begin{tabular}{" * ETAS_CELL_SPEC * "}")
+    for (k, lab) in MEAS
+        println(io, lab * " & " * rngv(getfield(r, k)) * " \\\\")
+    end
+    print(io, "\\end{tabular}")
+end
+
+"""The elasticity bracket, printed in the elastic-supply column header."""
+function etas_head()
+    return ("{\\footnotesize\\begin{tabular}{" * ETAS_CELL_SPEC * "}\n"
+            * "& \$\\eta_{s,i} \\in [" * ETAS_LO * "," * ETAS_HI * "]\$\\end{tabular}}")
+end
+
 function render(io, rows)
+    by = Dict((r.fin, r.lab) => r for r in rows)
     println(io, "% =====================================================================")
     println(io, "% Table 4 (ALT) --- welfare comparison across the closure matrix (GENERATED)")
     println(io, "% ---------------------------------------------------------------------")
     println(io, "% Do NOT edit by hand. Regenerate with:")
     println(io, "%   julia --project=. experiments/make_table4_alt.jl")
-    println(io, "% Source: the matrix_5x3_v10 design, re-solved in memory through the harness")
-    println(io, "%   and gated against runs/<id>/manifest.toml (consumption_rel, tol 1e-6).")
-    println(io, "%   No run directory is created or modified, and no number is hand-typed.")
-    println(io, "% W_C is the manifest field; W_D, W_CES and W_CES* are computed here. The")
-    println(io, "%   elastic-supply row is the min--max bracket over the executed")
-    println(io, "%   eta_{s,i} in {0.5, 1, 2}.")
+    println(io, "% Layout mirrors table4_results-5x3.tex exactly --- same axes, same matrix")
+    println(io, "%   grammar --- with the welfare variables in place of the macro outcomes.")
+    println(io, "% W_C is the manifest field; W_D, W_CES and W_CES* are computed here and")
+    println(io, "%   gated against runs/<id>/manifest.toml (consumption_rel, tol 1e-6). No run")
+    println(io, "%   directory is created or modified, and no number is hand-typed.")
     println(io, "% =====================================================================")
     println(io, "\\begin{table}[htbp]")
     println(io, "\\centering")
     println(io, "\\footnotesize")
     println(io, "\\setlength{\\tabcolsep}{3pt}")
-    println(io, "\\renewcommand{\\arraystretch}{1.2}")
+    println(io, "\\setlength{\\parindent}{0pt}")
+    println(io, "\\setlength{\\parskip}{2pt}")
+    println(io, "\\renewcommand{\\arraystretch}{1.25}")
+    width = Dict("BETA" => "3.5cm")
     print(io, "\\begin{tabular}{@{}>{\\raggedright\\arraybackslash}p{1.5cm}")
-    for _ in 1:6
-        print(io, ">{\\raggedleft\\arraybackslash}p{2.0cm}")
+    for lab in LABOUR
+        print(io, " >{\\raggedright\\arraybackslash}p{" * get(width, lab, "1.95cm") * "}")
     end
     println(io, "@{}}")
     println(io, "\\toprule")
-    println(io, "\\textbf{Cell} & \$W_C\$ & \$W_D\$ & \$W_{CES}\$ & \$W_{CES^*}\$" *
-                " & \$W_{CES^*}^{L,\\mathrm{leak}}\$ & \$W_{CES^*}^{L,\\mathrm{def}}\$ \\\\")
+    println(io, "\\textbf{Financing closure}")
+    println(io, "& \\textbf{No-reallocation}\\newline \\scriptsize immobile labour, sectoral wages")
+    println(io, "& \\textbf{Standard CGE}\\newline \\scriptsize one flexible wage, mobile labour")
+    println(io, "& \\textbf{Elastic labour supply}\\newline \\scriptsize sectoral supply on the real wage\\newline " * etas_head())
+    println(io, "& \\textbf{Fixed real wage}\\newline \\scriptsize real wage pegged, employment uncapped")
+    println(io, "& \\textbf{Leontief closure}\\newline \\scriptsize real wage pegged, quantities absorb")
+    println(io, "\\\\")
     println(io, "\\midrule")
-    lastfin = ""
-    for r in rows
-        if r.fin != lastfin
-            r.fin == "F1" || println(io, "\\midrule")
-            println(io, "\\multicolumn{7}{@{}l}{\\textit{Financing \\textbf{$(r.fin)}: $(FINLABEL[r.fin])}}\\\\")
-            lastfin = r.fin
+    for (i, fin) in enumerate(FIN)
+        flag = all(by[(fin, lab)].ok for lab in LABOUR) ? "" : "\\textsuperscript{\\dag}"
+        println(io, "\\textbf{" * fin * "}\\newline \\scriptsize " * FINLABEL[fin] * flag)
+        for lab in LABOUR
+            r = by[(fin, lab)]
+            print(io, "& ")
+            lab == "BETA" ? etas_cell(io, r) : plain_cell(io, r)
         end
-        flag = r.ok ? "" : "\\textsuperscript{\\dag}"
-        println(io, "\\quad \\textbf{$(r.lab)} \\scriptsize $(LABEL[r.lab])$flag" *
-                    " & $(rng(r.wc, identity)) & $(rng(r.wd, identity)) & $(rng(r.ces, identity))" *
-                    " & $(rng(r.star, identity)) & $(rng(r.sl, identity)) & $(rng(r.sd, identity)) \\\\")
+        println(io, "\\\\")
+        i < length(FIN) && println(io, "\\midrule")
     end
     println(io, "\\bottomrule")
     println(io, "\\end{tabular}")
-    println(io, "\\caption{Welfare comparison across the closure matrix: one allocation, six")
-    println(io, "reads of it, all in percent against the reference continuation. The macro")
-    println(io, "outcomes and the indices already reported in Table~\\ref{tab:results-matrix}")
-    println(io, "are dropped, so that the table isolates the welfare question. \$W_C\$ is the")
+    println(io, "\\caption{Welfare comparison across the closure matrix. The layout mirrors")
+    println(io, "Table~\\ref{tab:results-matrix} exactly --- the same three financing closures")
+    println(io, "(rows) crossed with the same five labour-market closures (columns), with the")
+    println(io, "elastic-supply column bracketed the same way --- but the variables reported in")
+    println(io, "each cell are welfare reads of the identical allocation rather than macro")
+    println(io, "outcomes, all in percent against the reference continuation. \$W_C\$ is the")
     println(io, "household-consumption index of Table~\\ref{tab:results-matrix}; \$W_D\$ the")
     println(io, "quantity index of demand, i.e.\\ the own-weights aggregate over \$c+g\$;")
     println(io, "\$W_{CES}\$ the CES evaluation of that bundle at the \\emph{baseline}")
     println(io, "preference weights, which is what prices the composition shift the programme")
-    println(io, "imposes; \$W_{CES^*}\$ the same bundle evaluated at the \\emph{adopted}")
-    println(io, "weights, read off the counterfactual bundle itself with \$g\$ subsumed into")
-    println(io, "the private part; and \$W_{CES^*}^{L}\$ the first-order leisure-augmented")
-    println(io, "form under the two saving conventions. The elastic-supply row is the")
-    println(io, "min--max bracket over the executed \$\\eta_{s,i}\\in\\{0.5,1,2\\}\$.")
-    if !all(r -> r.ok, rows)
-        println(io, "\\textsuperscript{\\dag}~cell did not reproduce through the in-memory solve within \$10^{-6}\$; regenerate and inspect.")
-    end
+    println(io, "imposes; \$W_{CES^*}\$ the same bundle evaluated at the \\emph{adopted} weights,")
+    println(io, "read off the counterfactual bundle itself with \$g\$ subsumed into the private")
+    println(io, "part; and \$W^{L}\$ the first-order leisure-augmented form of \$W_{CES^*}\$")
+    println(io, "under the leak (\\text{leak}) and deferred (\\text{def}) saving conventions.")
+    println(io, "The elastic-supply column is the min--max bracket over the executed")
+    println(io, "\$\\eta_{s,i}\\in\\{" * ETAS_LO * ",1," * ETAS_HI * "\\}\$, as in")
+    println(io, "Table~\\ref{tab:results-matrix}.")
     println(io, "}")
     println(io, "\\label{tab:welfare-comparison}")
     println(io, "\\end{table}")

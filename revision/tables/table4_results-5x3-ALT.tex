@@ -3,57 +3,162 @@
 % ---------------------------------------------------------------------
 % Do NOT edit by hand. Regenerate with:
 %   julia --project=. experiments/make_table4_alt.jl
-% Source: the matrix_5x3_v10 design, re-solved in memory through the harness
-%   and gated against runs/<id>/manifest.toml (consumption_rel, tol 1e-6).
-%   No run directory is created or modified, and no number is hand-typed.
-% W_C is the manifest field; W_D, W_CES and W_CES* are computed here. The
-%   elastic-supply row is the min--max bracket over the executed
-%   eta_{s,i} in {0.5, 1, 2}.
+% Layout mirrors table4_results-5x3.tex exactly --- same axes, same matrix
+%   grammar --- with the welfare variables in place of the macro outcomes.
+% W_C is the manifest field; W_D, W_CES and W_CES* are computed here and
+%   gated against runs/<id>/manifest.toml (consumption_rel, tol 1e-6). No run
+%   directory is created or modified, and no number is hand-typed.
 % =====================================================================
 \begin{table}[htbp]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.2}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedleft\arraybackslash}p{2.0cm}>{\raggedleft\arraybackslash}p{2.0cm}>{\raggedleft\arraybackslash}p{2.0cm}>{\raggedleft\arraybackslash}p{2.0cm}>{\raggedleft\arraybackslash}p{2.0cm}>{\raggedleft\arraybackslash}p{2.0cm}@{}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.5cm} >{\raggedright\arraybackslash}p{1.95cm} >{\raggedright\arraybackslash}p{1.95cm} >{\raggedright\arraybackslash}p{3.5cm} >{\raggedright\arraybackslash}p{1.95cm} >{\raggedright\arraybackslash}p{1.95cm}@{}}
 \toprule
-\textbf{Cell} & $W_C$ & $W_D$ & $W_{CES}$ & $W_{CES^*}$ & $W_{CES^*}^{L,\mathrm{leak}}$ & $W_{CES^*}^{L,\mathrm{def}}$ \\
+\textbf{Financing closure}
+& \textbf{No-reallocation}\newline \scriptsize immobile labour, sectoral wages
+& \textbf{Standard CGE}\newline \scriptsize one flexible wage, mobile labour
+& \textbf{Elastic labour supply}\newline \scriptsize sectoral supply on the real wage\newline {\footnotesize\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.05cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
+& $\eta_{s,i} \in [0.5,2]$\end{tabular}}
+& \textbf{Fixed real wage}\newline \scriptsize real wage pegged, employment uncapped
+& \textbf{Leontief closure}\newline \scriptsize real wage pegged, quantities absorb
+\\
 \midrule
-\multicolumn{7}{@{}l}{\textit{Financing \textbf{F1}: repurposing of consumption}}\\
-\quad \textbf{BF} \scriptsize No-reallocation & +0.10 & -0.01 & -0.25 & +0.33 & +0.33 & +0.34 \\
-\quad \textbf{ALPHA} \scriptsize Standard CGE & +0.14 & +0.08 & -0.28 & +0.42 & +0.42 & +0.43 \\
-\quad \textbf{BETA} \scriptsize Elastic supply & +0.42--+0.58 & +0.26--+0.40 & -0.04--+0.06 & +0.61--+0.75 & +0.48--+0.54 & +0.51--+0.58 \\
-\quad \textbf{GAMMA} \scriptsize Fixed real wage & -0.08 & -0.09 & -0.45 & +0.25 & +0.36 & +0.35 \\
-\quad \textbf{DELTA} \scriptsize Leontief & -0.08 & -0.09 & -0.45 & +0.25 & +0.36 & +0.35 \\
+\textbf{F1}\newline \scriptsize repurposing of consumption
+& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $+0.10$ \\
+$W_D$ & $-0.01$ \\
+$W_{CES}$ & $-0.25$ \\
+$W_{CES^*}$ & $+0.33$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.33$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.34$ \\
+\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $+0.14$ \\
+$W_D$ & $+0.08$ \\
+$W_{CES}$ & $-0.28$ \\
+$W_{CES^*}$ & $+0.42$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.42$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.43$ \\
+\end{tabular}& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.05cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
+$W_C$ & $+0.42$--$+0.58$ \\
+$W_D$ & $+0.26$--$+0.40$ \\
+$W_{CES}$ & $-0.04$--$+0.06$ \\
+$W_{CES^*}$ & $+0.61$--$+0.75$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.48$--$+0.54$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.51$--$+0.58$ \\
+\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $-0.08$ \\
+$W_D$ & $-0.09$ \\
+$W_{CES}$ & $-0.45$ \\
+$W_{CES^*}$ & $+0.25$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.36$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.35$ \\
+\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $-0.08$ \\
+$W_D$ & $-0.09$ \\
+$W_{CES}$ & $-0.45$ \\
+$W_{CES^*}$ & $+0.25$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.36$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.35$ \\
+\end{tabular}\\
 \midrule
-\multicolumn{7}{@{}l}{\textit{Financing \textbf{F2}: refinancing via taxes}}\\
-\quad \textbf{BF} \scriptsize No-reallocation & -1.98 & -0.03 & -0.32 & +0.40 & +0.40 & +0.14 \\
-\quad \textbf{ALPHA} \scriptsize Standard CGE & -1.82 & +0.08 & -0.29 & +0.43 & +0.43 & +0.19 \\
-\quad \textbf{BETA} \scriptsize Elastic supply & -1.57---1.39 & +0.27--+0.41 & -0.06--+0.05 & +0.66--+0.78 & +0.52--+0.56 & +0.29--+0.35 \\
-\quad \textbf{GAMMA} \scriptsize Fixed real wage & -1.53 & +0.30 & -0.07 & +0.65 & +0.51 & +0.29 \\
-\quad \textbf{DELTA} \scriptsize Leontief & -1.53 & +0.30 & -0.07 & +0.65 & +0.51 & +0.29 \\
+\textbf{F2}\newline \scriptsize refinancing via taxes
+& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $-1.98$ \\
+$W_D$ & $-0.03$ \\
+$W_{CES}$ & $-0.32$ \\
+$W_{CES^*}$ & $+0.40$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.40$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.14$ \\
+\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $-1.82$ \\
+$W_D$ & $+0.08$ \\
+$W_{CES}$ & $-0.29$ \\
+$W_{CES^*}$ & $+0.43$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.43$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.19$ \\
+\end{tabular}& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.05cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
+$W_C$ & $-1.57$--$-1.39$ \\
+$W_D$ & $+0.27$--$+0.41$ \\
+$W_{CES}$ & $-0.06$--$+0.05$ \\
+$W_{CES^*}$ & $+0.66$--$+0.78$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.52$--$+0.56$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.29$--$+0.35$ \\
+\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $-1.53$ \\
+$W_D$ & $+0.30$ \\
+$W_{CES}$ & $-0.07$ \\
+$W_{CES^*}$ & $+0.65$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.51$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.29$ \\
+\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $-1.53$ \\
+$W_D$ & $+0.30$ \\
+$W_{CES}$ & $-0.07$ \\
+$W_{CES^*}$ & $+0.65$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.51$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.29$ \\
+\end{tabular}\\
 \midrule
-\multicolumn{7}{@{}l}{\textit{Financing \textbf{F3}: external / debt finance}}\\
-\quad \textbf{BF} \scriptsize No-reallocation & -1.98 & -0.03 & -0.32 & +0.40 & +0.40 & +0.14 \\
-\quad \textbf{ALPHA} \scriptsize Standard CGE & -1.82 & +0.08 & -0.29 & +0.43 & +0.43 & +0.19 \\
-\quad \textbf{BETA} \scriptsize Elastic supply & -1.57---1.39 & +0.27--+0.41 & -0.06--+0.05 & +0.66--+0.78 & +0.52--+0.56 & +0.29--+0.35 \\
-\quad \textbf{GAMMA} \scriptsize Fixed real wage & +2.26 & +3.20 & +2.83 & +3.56 & +1.59 & +1.62 \\
-\quad \textbf{DELTA} \scriptsize Leontief & +2.26 & +3.20 & +2.83 & +3.56 & +1.59 & +1.62 \\
+\textbf{F3}\newline \scriptsize external / debt finance
+& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $-1.98$ \\
+$W_D$ & $-0.03$ \\
+$W_{CES}$ & $-0.32$ \\
+$W_{CES^*}$ & $+0.40$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.40$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.14$ \\
+\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $-1.82$ \\
+$W_D$ & $+0.08$ \\
+$W_{CES}$ & $-0.29$ \\
+$W_{CES^*}$ & $+0.43$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.43$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.19$ \\
+\end{tabular}& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.05cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
+$W_C$ & $-1.57$--$-1.39$ \\
+$W_D$ & $+0.27$--$+0.41$ \\
+$W_{CES}$ & $-0.06$--$+0.05$ \\
+$W_{CES^*}$ & $+0.66$--$+0.78$ \\
+$W^{L}_{\mathrm{leak}}$ & $+0.52$--$+0.56$ \\
+$W^{L}_{\mathrm{def}}$ & $+0.29$--$+0.35$ \\
+\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $+2.26$ \\
+$W_D$ & $+3.20$ \\
+$W_{CES}$ & $+2.83$ \\
+$W_{CES^*}$ & $+3.56$ \\
+$W^{L}_{\mathrm{leak}}$ & $+1.59$ \\
+$W^{L}_{\mathrm{def}}$ & $+1.62$ \\
+\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W_C$ & $+2.26$ \\
+$W_D$ & $+3.20$ \\
+$W_{CES}$ & $+2.83$ \\
+$W_{CES^*}$ & $+3.56$ \\
+$W^{L}_{\mathrm{leak}}$ & $+1.59$ \\
+$W^{L}_{\mathrm{def}}$ & $+1.62$ \\
+\end{tabular}\\
 \bottomrule
 \end{tabular}
-\caption{Welfare comparison across the closure matrix: one allocation, six
-reads of it, all in percent against the reference continuation. The macro
-outcomes and the indices already reported in Table~\ref{tab:results-matrix}
-are dropped, so that the table isolates the welfare question. $W_C$ is the
+\caption{Welfare comparison across the closure matrix. The layout mirrors
+Table~\ref{tab:results-matrix} exactly --- the same three financing closures
+(rows) crossed with the same five labour-market closures (columns), with the
+elastic-supply column bracketed the same way --- but the variables reported in
+each cell are welfare reads of the identical allocation rather than macro
+outcomes, all in percent against the reference continuation. $W_C$ is the
 household-consumption index of Table~\ref{tab:results-matrix}; $W_D$ the
 quantity index of demand, i.e.\ the own-weights aggregate over $c+g$;
 $W_{CES}$ the CES evaluation of that bundle at the \emph{baseline}
 preference weights, which is what prices the composition shift the programme
-imposes; $W_{CES^*}$ the same bundle evaluated at the \emph{adopted}
-weights, read off the counterfactual bundle itself with $g$ subsumed into
-the private part; and $W_{CES^*}^{L}$ the first-order leisure-augmented
-form under the two saving conventions. The elastic-supply row is the
-min--max bracket over the executed $\eta_{s,i}\in\{0.5,1,2\}$.
+imposes; $W_{CES^*}$ the same bundle evaluated at the \emph{adopted} weights,
+read off the counterfactual bundle itself with $g$ subsumed into the private
+part; and $W^{L}$ the first-order leisure-augmented form of $W_{CES^*}$
+under the leak (\text{leak}) and deferred (\text{def}) saving conventions.
+The elastic-supply column is the min--max bracket over the executed
+$\eta_{s,i}\in\{0.5,1,2\}$, as in
+Table~\ref{tab:results-matrix}.
 }
 \label{tab:welfare-comparison}
 \end{table}

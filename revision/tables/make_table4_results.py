@@ -134,7 +134,7 @@ def build():
     A(r"crossed with the five labour-market closures (columns). Each cell reports the")
     A(r"change in real GDP ($\Delta Y$), employment ($\Delta L$), the price level")
     A(r"($\Delta P$, the GDP deflator), the net external position")
-    A(r"($\Delta D = F + B_{\mathrm{gov}}$, the external-account block; positive = net external")
+    A(r"($\Delta D = R + B_{\mathrm{gov}}$, the external-account block; positive = net external")
     A(r"financing received, i.e.\ external debt) and household consumption welfare")
     A(r"($\Delta W_C$), all in percent against the reference continuation. Generated from the")
     A(r"\texttt{matrix\_5x3-v10-*} run manifests; no number is hand-typed. The")

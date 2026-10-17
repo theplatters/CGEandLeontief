@@ -11,6 +11,17 @@ executed elasticity: each outcome is the min--max interval over
 eta_{s,i} in ETA_BRACKET, read from the executed sectoral cells
 ``-etas05`` ... ``-etas2`` (ADR-0022). The headline point value is the lower
 end of the bracket, eta_{s,i} = 0.5.
+
+COLLAPSE (2026-10-17): the coincidences the caption states are PRINTED ONCE.
+  * F2 and F3 coincide in the three flexible-wage columns -> that cell is set
+    with \\multirow{2} on the F2 row, the F3 row leaves those columns empty,
+    and the rule between the two rows is a \\cmidrule over the two right-hand
+    columns only (a full \\midrule would cut through the merged cell).
+  * the fixed real wage and Leontief columns coincide -> one \\multicolumn{2}
+    cell per row, vertically centred (m column).
+  The generator ASSERTS each coincidence on the PRINTED strings before it
+  writes (see check_collapses): a kernel change that breaks an equivalence
+  aborts the build instead of silently printing one value in two cells.
 """
 
 import tomllib, os
@@ -34,6 +45,19 @@ cols = [("BF",    "No-reallocation",      "immobile labour, sectoral wages"),
 fin = [("F1", "repurposing of consumption"),
        ("F2", "refinancing via taxes"),
        ("F3", "external / debt finance")]
+
+# the two collapses, as printed: rows that share a solution, columns that share one
+FLEX_COLS = ("BF", "ALPHA", "BETA")   # the three flexible-wage columns
+SHARED_ROWS = ("F2", "F3")           # coincide in FLEX_COLS
+SHARED_COLS = ("GAMMA", "DELTA")     # coincide in every financing row
+
+# merged width of the GAMMA+DELTA pair: 2.1 + 2*\tabcolsep(3pt) + 2.1
+MERGED_W = "4.35cm"
+
+# Set to False to emit the plain 15-cell matrix (no \multirow, no \multicolumn).
+# Use it on a TeX installation without multirow.sty -- and then also comment out
+# the \usepackage{multirow} line in main.tex, which is what would fail first.
+COLLAPSE_LAYOUT = True
 
 
 def get(c, f, suffix=None):
@@ -70,7 +94,6 @@ def cell(v):
 OUTCOMES = [("Y", r"$\Delta Y$"), ("L", r"$\Delta L$"), ("P", r"$\Delta P$"),
             ("D", r"$\Delta D$"), ("WC", r"$\Delta W_C$")]
 # inner layout of the elastic-supply column: outcome label + one bracketed column
-# (0.6 + 0.105 + 2.0 = 2.7cm inside the 2.8cm column)
 ETAS_SPEC = r"@{}>{\raggedright\arraybackslash}p{0.85cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}"
 
 
@@ -87,7 +110,49 @@ def etas_cell(f):
             + " \\\\\n".join(rows) + r"\end{tabular}")
 
 
+def cellstr(c, f):
+    """The printed content of one cell -- the object the assertions compare."""
+    return etas_cell(f) if c == "BETA" else cell(get(c, f))
+
+
+def check_collapses():
+    """Refuse to print a shared cell unless the two printed cells are identical."""
+    for c in FLEX_COLS:
+        a, b = cellstr(c, SHARED_ROWS[0]), cellstr(c, SHARED_ROWS[1])
+        assert a == b, f"F2 != F3 in column {c}: the row merge would print a wrong value"
+    for f, _ in fin:
+        a, b = cellstr(SHARED_COLS[0], f), cellstr(SHARED_COLS[1], f)
+        assert a == b, f"GAMMA != DELTA in row {f}: the column merge would print a wrong value"
+
+
+def multirow(n, w, content):
+    return r"\multirow{%d}{%s}{\centering %s}" % (n, w, content)
+
+
+def multicol(content):
+    return (r"\multicolumn{2}{>{\centering\arraybackslash}m{" + MERGED_W + r"}}{"
+            + content + "}")
+
+
+
+def plain_caption():
+    """Caption for the uncollapsed fallback: identical, minus the merge clause."""
+    return (r"\caption{Estimated impacts of a transformational stimulus in the German residential" "\n"
+            r"sector across the closure matrix. Each cell reports the change in real GDP" "\n"
+            r"($\Delta Y$), employment ($\Delta L$), the price level ($\Delta P$, the GDP deflator)," "\n"
+            r"the net external position ($\Delta D = R + B_{\mathrm{gov}}$, positive = net external" "\n"
+            r"financing received, i.e.\ external debt) and household consumption welfare" "\n"
+            r"($\Delta W_C$), all in percent against the reference continuation. The" "\n"
+            r"elastic-supply column is bracketed: each entry is the interval over the executed" "\n"
+            r"$\eta_{s,i} \in \{" + r",\ ".join(e for e, _ in ETA_BRACKET) + r"\}$, with" "\n"
+            r"$\eta_{s,i} = " + ETA_LO + r"$ the headline point value. The fixed-wage and" "\n"
+            r"Leontief columns coincide, and F2 and F3 coincide in the three flexible-wage" "\n"
+            r"columns, so the fifteen cells describe nine distinct economies.}")
+
+
 def build():
+    if COLLAPSE_LAYOUT:
+        check_collapses()
     L = []
     A = L.append
     A(r"% =====================================================================")
@@ -99,9 +164,14 @@ def build():
     A(r"%   matrix_5x3-v10-BETA-<fin>-etas{05,1,2}, reported as a min--max bracket.")
     A(r"% Columns in table3c order (no-reallocation leftmost). Five outcomes per cell:")
     A(r"%   \Delta Y real GDP, \Delta L employment, \Delta P price level (GDP deflator),")
-    A(r"%   \Delta D net external position (= F + B_gov, 'external debt'),")
+    A(r"%   \Delta D net external position (= R + B_gov, 'external debt'),")
     A(r"%   \Delta W_C household consumption welfare.")
     A(r"% All in percent vs. the reference continuation; GDP at basic prices = 1.")
+    A(r"% COLLAPSED CELLS: F2/F3 share one cell in the three flexible-wage columns")
+    A(r"%   (\multirow{2}, the rule between those rows is a \cmidrule over the two")
+    A(r"%   right-hand columns only); the fixed-real-wage and Leontief columns share")
+    A(r"%   one \multicolumn{2} cell per row. The generator asserts both coincidences")
+    A(r"%   on the printed strings, so a broken equivalence aborts the build.")
     A(r"% =====================================================================")
     A(r"\begin{table}[htbp]")
     A(r"\centering")
@@ -121,35 +191,75 @@ def build():
           + ((r"\newline " + etas_head()) if c == "BETA" else ""))
     A(r"\\")
     A(r"\midrule")
-    for i, (f, fd) in enumerate(fin):
-        A(r"\textbf{" + f + r"}\newline \scriptsize " + fd)
-        for c, _, _ in cols:
-            A(r"& " + (etas_cell(f) if c == "BETA" else cell(get(c, f))))
-        A(r"\\")
-        if i < len(fin) - 1:
-            A(r"\midrule")
+
+    def flex_cells(f, wrap=None):
+        out = []
+        for c in FLEX_COLS:
+            s = cellstr(c, f)
+            if wrap == "multirow":
+                s = multirow(len(SHARED_ROWS), width.get(c, "2.1cm"), s)
+            out.append(r"& " + s)
+        return out
+
+    if not COLLAPSE_LAYOUT:
+        # plain matrix: fifteen cells, nothing merged (the fallback layout)
+        for i, (f, fd) in enumerate(fin):
+            A(r"\textbf{" + f + r"}\newline \scriptsize " + fd)
+            for c, _, _ in cols:
+                A(r"& " + cellstr(c, f))
+            A(r"\\")
+            if i < len(fin) - 1:
+                A(r"\midrule")
+        A(r"\bottomrule")
+        A(r"\end{tabular}")
+        A(plain_caption())
+        A(r"\label{tab:results-matrix}")
+        A(r"\end{table}")
+        return "\n".join(L) + "\n"
+
+    # --- row F1: nothing is shared, all five columns are separate cells
+    A(r"\textbf{F1}\newline \scriptsize " + fin[0][1])
+    for s in flex_cells("F1"):
+        A(s)
+    A(r"& " + multicol(cellstr(SHARED_COLS[0], "F1")))
+    A(r"\\")
+    A(r"\midrule")
+
+    # --- row F2: its first three cells are shared with F3 (\multirow), the
+    #     GAMMA/DELTA pair is shared within the row (\multicolumn).
+    #     NB \multirow counts LINES, not logical rows: both spanned rows are
+    #     len(OUTCOMES) lines tall, so the span is len(OUTCOMES)*2 lines. Passing
+    #     "2" here (the logical count) makes LaTeX size the box for two lines,
+    #     overflow it by ~36pt and print nothing but an "Overfull \vbox".
+    A(r"\textbf{F2}\newline \scriptsize " + fin[1][1])
+    for c in FLEX_COLS:
+        A(r"& " + multirow(len(OUTCOMES) * len(SHARED_ROWS), width.get(c, "2.1cm"),
+                           cellstr(c, "F2")))
+    A(r"& " + multicol(cellstr(SHARED_COLS[0], "F2")))
+    A(r"\\")
+    # no full rule here: it would cut through the merged cells
+    A(r"\cmidrule(lr){5-6}")
+
+    # --- row F3: the flexible-wage columns are already printed (the F2 cells,
+    #     whose values equal F3's); only the GAMMA/DELTA pair belongs to this row
+    A(r"\textbf{F3}\newline \scriptsize " + fin[2][1])
+    A(r"& & & & " + multicol(cellstr(SHARED_COLS[0], "F3")))
+    A(r"\\")
     A(r"\bottomrule")
     A(r"\end{tabular}")
-    A(r"\caption{Results across the closure matrix: the three financing closures (rows)")
-    A(r"crossed with the five labour-market closures (columns). Each cell reports the")
-    A(r"change in real GDP ($\Delta Y$), employment ($\Delta L$), the price level")
-    A(r"($\Delta P$, the GDP deflator), the net external position")
-    A(r"($\Delta D = R + B_{\mathrm{gov}}$, the external-account block; positive = net external")
+    A(r"\caption{Estimated impacts of a transformational stimulus in the German residential")
+    A(r"sector across the closure matrix. Each cell reports the change in real GDP")
+    A(r"($\Delta Y$), employment ($\Delta L$), the price level ($\Delta P$, the GDP deflator),")
+    A(r"the net external position ($\Delta D = R + B_{\mathrm{gov}}$, positive = net external")
     A(r"financing received, i.e.\ external debt) and household consumption welfare")
-    A(r"($\Delta W_C$), all in percent against the reference continuation. Generated from the")
-    A(r"\texttt{matrix\_5x3-v10-*} run manifests; no number is hand-typed. The")
-    A(r"elastic-supply column is bracketed rather than tabulated at one elasticity:")
-    A(r"each entry is the min--max interval over the executed supply elasticities")
-    cells = (r"\texttt{matrix\_5x3-v10-BETA-F*" + ETA_BRACKET[0][1] + "}"
-             + "".join(", " + r"\texttt{" + suf + "}" for _, suf in ETA_BRACKET[1:]))
-    A(r"$\eta_{s,i} \in \{" + r",\ ".join(e for e, _ in ETA_BRACKET) + r"\}$"
-      + r" (" + cells + r"),")
-    A(r"with $\eta_{s,i} = " + ETA_LO + r"$ the headline point value. The fixed-wage and")
-    A(r"Leontief columns coincide (bit-identical), and F2 and F3 coincide in the three")
-    A(r"flexible-wage columns, so the fifteen cells describe nine distinct economies:")
-    A(r"the standard-CGE column is exactly output-neutral, and equilibrium prices move")
-    A(r"away from the baseline only in the two sectoral-wage columns (no reallocation,")
-    A(r"elastic supply).}")
+    A(r"($\Delta W_C$), all in percent against the reference continuation. The")
+    A(r"elastic-supply column is bracketed: each entry is the interval over the executed")
+    A(r"$\eta_{s,i} \in \{" + r",\ ".join(e for e, _ in ETA_BRACKET) + r"\}$, with")
+    A(r"$\eta_{s,i} = " + ETA_LO + r"$ the headline point value. The fixed-wage and")
+    A(r"Leontief columns coincide, and F2 and F3 coincide in the three flexible-wage")
+    A(r"columns, so the fifteen cells describe nine distinct economies; a cell spanning")
+    A(r"two columns or two rows is one of these coincidences, the shared solution")
+    A(r"printed once and centred.}")
     A(r"\label{tab:results-matrix}")
     A(r"\end{table}")
     return "\n".join(L) + "\n"

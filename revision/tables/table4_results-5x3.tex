@@ -7,9 +7,14 @@
 %   matrix_5x3-v10-BETA-<fin>-etas{05,1,2}, reported as a min--max bracket.
 % Columns in table3c order (no-reallocation leftmost). Five outcomes per cell:
 %   \Delta Y real GDP, \Delta L employment, \Delta P price level (GDP deflator),
-%   \Delta D net external position (= F + B_gov, 'external debt'),
+%   \Delta D net external position (= R + B_gov, 'external debt'),
 %   \Delta W_C household consumption welfare.
 % All in percent vs. the reference continuation; GDP at basic prices = 1.
+% COLLAPSED CELLS: F2/F3 share one cell in the three flexible-wage columns
+%   (\multirow{2}, the rule between those rows is a \cmidrule over the two
+%   right-hand columns only); the fixed-real-wage and Leontief columns share
+%   one \multicolumn{2} cell per row. The generator asserts both coincidences
+%   on the printed strings, so a broken equivalence aborts the build.
 % =====================================================================
 \begin{table}[htbp]
 \centering
@@ -48,89 +53,63 @@ $\Delta L$ & $+0.12$--$+0.19$ \\
 $\Delta P$ & $+0.10$--$+0.27$ \\
 $\Delta D$ & $-0.09$--$+0.14$ \\
 $\Delta W_C$ & $+0.42$--$+0.58$\end{tabular}
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+& \multicolumn{2}{>{\centering\arraybackslash}m{4.35cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $-0.10$ \\
 $\Delta L$ & $-0.10$ \\
 $\Delta P$ & $0.00$ \\
 $\Delta D$ & $0.00$ \\
-$\Delta W_C$ & $-0.08$\end{tabular}
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$\Delta Y$ & $-0.10$ \\
-$\Delta L$ & $-0.10$ \\
-$\Delta P$ & $0.00$ \\
-$\Delta D$ & $0.00$ \\
-$\Delta W_C$ & $-0.08$\end{tabular}
+$\Delta W_C$ & $-0.08$\end{tabular}}
 \\
 \midrule
 \textbf{F2}\newline \scriptsize refinancing via taxes
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+& \multirow{10}{2.1cm}{\centering \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $-0.02$ \\
 $\Delta L$ & $0.00$ \\
 $\Delta P$ & $+0.72$ \\
 $\Delta D$ & $-0.85$ \\
-$\Delta W_C$ & $-1.98$\end{tabular}
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$\Delta W_C$ & $-1.98$\end{tabular}}
+& \multirow{10}{2.1cm}{\centering \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $0.00$ \\
 $\Delta L$ & $0.00$ \\
 $\Delta P$ & $0.00$ \\
 $\Delta D$ & $-0.10$ \\
-$\Delta W_C$ & $-1.82$\end{tabular}
-& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.85cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
+$\Delta W_C$ & $-1.82$\end{tabular}}
+& \multirow{10}{3.3cm}{\centering \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.85cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
 $\Delta Y$ & $+0.13$--$+0.19$ \\
 $\Delta L$ & $+0.13$--$+0.19$ \\
 $\Delta P$ & $+0.10$--$+0.29$ \\
 $\Delta D$ & $-0.28$--$-0.05$ \\
-$\Delta W_C$ & $-1.57$--$-1.39$\end{tabular}
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$\Delta W_C$ & $-1.57$--$-1.39$\end{tabular}}
+& \multicolumn{2}{>{\centering\arraybackslash}m{4.35cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $+0.13$ \\
 $\Delta L$ & $+0.13$ \\
 $\Delta P$ & $0.00$ \\
 $\Delta D$ & $0.00$ \\
-$\Delta W_C$ & $-1.53$\end{tabular}
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$\Delta Y$ & $+0.13$ \\
-$\Delta L$ & $+0.13$ \\
-$\Delta P$ & $0.00$ \\
-$\Delta D$ & $0.00$ \\
-$\Delta W_C$ & $-1.53$\end{tabular}
+$\Delta W_C$ & $-1.53$\end{tabular}}
 \\
-\midrule
+\cmidrule(lr){5-6}
 \textbf{F3}\newline \scriptsize external / debt finance
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$\Delta Y$ & $-0.02$ \\
-$\Delta L$ & $0.00$ \\
-$\Delta P$ & $+0.72$ \\
-$\Delta D$ & $-0.85$ \\
-$\Delta W_C$ & $-1.98$\end{tabular}
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$\Delta Y$ & $0.00$ \\
-$\Delta L$ & $0.00$ \\
-$\Delta P$ & $0.00$ \\
-$\Delta D$ & $-0.10$ \\
-$\Delta W_C$ & $-1.82$\end{tabular}
-& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.85cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
-$\Delta Y$ & $+0.13$--$+0.19$ \\
-$\Delta L$ & $+0.13$--$+0.19$ \\
-$\Delta P$ & $+0.10$--$+0.29$ \\
-$\Delta D$ & $-0.28$--$-0.05$ \\
-$\Delta W_C$ & $-1.57$--$-1.39$\end{tabular}
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+& & & & \multicolumn{2}{>{\centering\arraybackslash}m{4.35cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $+1.78$ \\
 $\Delta L$ & $+1.78$ \\
 $\Delta P$ & $0.00$ \\
 $\Delta D$ & $+1.33$ \\
-$\Delta W_C$ & $+2.26$\end{tabular}
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$\Delta Y$ & $+1.78$ \\
-$\Delta L$ & $+1.78$ \\
-$\Delta P$ & $0.00$ \\
-$\Delta D$ & $+1.33$ \\
-$\Delta W_C$ & $+2.26$\end{tabular}
+$\Delta W_C$ & $+2.26$\end{tabular}}
 \\
 \bottomrule
 \end{tabular}
-\caption{Estimated impacts of a transformational stimulus in the German residential sector across the closure matrix. Each cell reports the change in real GDP ($\Delta Y$), employment ($\Delta L$), the price level ($\Delta P$, the GDP deflator), the net external position ($\Delta D$) and household consumption welfare ($\Delta W_C$), all in percent against the reference continuation. The fixed-wage and
-Leontief columns coincide, and F2 and F3 coincide in the three
-flexible-wage columns, so the fifteen cells describe nine distinct economies.}
+\caption{Estimated impacts of a transformational stimulus in the German residential
+sector across the closure matrix. Each cell reports the change in real GDP
+($\Delta Y$), employment ($\Delta L$), the price level ($\Delta P$, the GDP deflator),
+the net external position ($\Delta D = R + B_{\mathrm{gov}}$, positive = net external
+financing received, i.e.\ external debt) and household consumption welfare
+($\Delta W_C$), all in percent against the reference continuation. The
+elastic-supply column is bracketed: each entry is the interval over the executed
+$\eta_{s,i} \in \{0.5,\ 1,\ 2\}$, with
+$\eta_{s,i} = 0.5$ the headline point value. The fixed-wage and
+Leontief columns coincide, and F2 and F3 coincide in the three flexible-wage
+columns, so the fifteen cells describe nine distinct economies; a cell spanning
+two columns or two rows is one of these coincidences, the shared solution
+printed once and centred.}
 \label{tab:results-matrix}
 \end{table}

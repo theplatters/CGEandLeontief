@@ -10,7 +10,9 @@
 
 using OpenCGE, Printf
 
-const AbstractPricing = OpenCGE.AbstractPricingClosure
+if !isdefined(OpenCGE, :AbstractPricing)   # the pricing-door line renames the type;
+    @eval const AbstractPricing = OpenCGE.AbstractPricingClosure   # the release exports it
+end
 isdefined(Main, :load_design) || include(joinpath(@__DIR__, "run.jl"))
 
 const SIGMA = 0.9

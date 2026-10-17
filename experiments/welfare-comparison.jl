@@ -26,11 +26,17 @@
 # collapses to W_CES whenever preferences do not move (F2/F3: alpha = omega),
 # which is the reduction the specification requires.
 #
-#   julia --project=. experiments/welfare-comparison.jl
+#   julia --project=<OPEN_CGE_CHECKOUT> experiments/welfare-comparison.jl.jl
+#
+#   NOT `--project=.`: this script calls kernel functions added in OpenCGE
+#   09e2b83 (diag(WELFARE)), which the paper repo's Manifest does not yet pin.
+#   Point --project at a checkout that contains them, or the load fails.
 
 using OpenCGE, Printf
 
-const AbstractPricing = OpenCGE.AbstractPricingClosure
+if !isdefined(OpenCGE, :AbstractPricing)   # the pricing-door line renames the type;
+    @eval const AbstractPricing = OpenCGE.AbstractPricingClosure   # the release exports it
+end
 isdefined(Main, :load_design) || include(joinpath(@__DIR__, "run.jl"))
 
 const SIGMA = 0.9

@@ -9,11 +9,17 @@
 # gdp_components changes (in GDP units, baseline GDP = 1) alongside F, so the
 # driver is visible rather than asserted.
 #
-#   julia --project=. experiments/external-position-decomp.jl
+#   julia --project=<OPEN_CGE_CHECKOUT> experiments/external-position-decomp.jl.jl
+#
+#   NOT `--project=.`: this script calls kernel functions added in OpenCGE
+#   09e2b83 (diag(WELFARE)), which the paper repo's Manifest does not yet pin.
+#   Point --project at a checkout that contains them, or the load fails.
 
 using OpenCGE, Printf
 
-const AbstractPricing = OpenCGE.AbstractPricingClosure
+if !isdefined(OpenCGE, :AbstractPricing)   # the pricing-door line renames the type;
+    @eval const AbstractPricing = OpenCGE.AbstractPricingClosure   # the release exports it
+end
 isdefined(Main, :load_design) || include(joinpath(@__DIR__, "run.jl"))
 
 const NAMES = ["C_gross", "G+prog", "I", "X", "-M_final", "-M_int", "-T_int"]

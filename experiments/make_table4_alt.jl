@@ -2,7 +2,11 @@
 # Table 4 (ALT) --- the WELFARE-COMPARISON table (GENERATED)
 # ---------------------------------------------------------------------
 # Do NOT edit by hand. Regenerate with:
-#   julia --project=. experiments/make_table4_alt.jl
+#   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table4_alt.jl.jl
+#
+#   NOT `--project=.`: this script calls kernel functions added in OpenCGE
+#   09e2b83 (diag(WELFARE)), which the paper repo's Manifest does not yet pin.
+#   Point --project at a checkout that contains them, or the load fails.
 #
 # Job: compare the welfare reads of one and the same allocation. The macro
 # outcomes and the indices already shown in Table 4 are dropped; only W_C is
@@ -26,7 +30,9 @@
 
 using OpenCGE, TOML, Printf
 
-const AbstractPricing = OpenCGE.AbstractPricingClosure   # harness/kernel name drift
+if !isdefined(OpenCGE, :AbstractPricing)   # the pricing-door line renames the type;
+    @eval const AbstractPricing = OpenCGE.AbstractPricingClosure   # the release exports it
+end
 isdefined(Main, :load_design) || include(joinpath(@__DIR__, "run.jl"))
 
 const SIGMA = 0.9
@@ -151,8 +157,7 @@ const MEAS = [(:wc,   "\$W_C\$"),
               (:wd,   "\$W_D\$"),
               (:ces,  "\$W_{CES}\$"),
               (:star, "\$W_{CES^*}\$"),
-              (:sl,   "\$W^{L}_{\\mathrm{leak}}\$"),
-              (:sd,   "\$W^{L}_{\\mathrm{def}}\$")]
+              (:sl,   "\$W^{L}\$")]
 
 CELL_SPEC = raw"@{}l@{\hspace{3pt}}r@{}"
 # elastic-supply cell: label column + one bracketed column
@@ -188,7 +193,7 @@ function render(io, rows)
     println(io, "% Table 4 (ALT) --- welfare comparison across the closure matrix (GENERATED)")
     println(io, "% ---------------------------------------------------------------------")
     println(io, "% Do NOT edit by hand. Regenerate with:")
-    println(io, "%   julia --project=. experiments/make_table4_alt.jl")
+    println(io, "%   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table4_alt.jl")
     println(io, "% Layout mirrors table4_results-5x3.tex exactly --- same axes, same matrix")
     println(io, "%   grammar --- with the welfare variables in place of the macro outcomes.")
     println(io, "% W_C is the manifest field; W_D, W_CES and W_CES* are computed here and")
@@ -242,9 +247,12 @@ function render(io, rows)
     println(io, "preference weights, which is what prices the composition shift the programme")
     println(io, "imposes; \$W_{CES^*}\$ the same bundle evaluated at the \\emph{adopted} weights,")
     println(io, "read off the counterfactual bundle itself with \$g\$ subsumed into the private")
-    println(io, "part; and \$W^{L}\$ the first-order leisure-augmented form of \$W_{CES^*}\$")
-    println(io, "under the leak (\\text{leak}) and deferred (\\text{def}) saving conventions.")
-    println(io, "The elastic-supply column is the min--max bracket over the executed")
+    println(io, "part; and \$W^{L}\$ the first-order leisure-augmented form, which also")
+    println(io, "charges the household for the additional work a programme requires.")
+    println(io, "It is expressed on the household's resources rather than on a consumption basket,")
+    println(io, "so the treatment of saving has to be stated; the conservative reading, in which")
+    println(io, "saving is a leak that never returns, is the one tabulated here, and the deferred")
+    println(io, "alternative is discussed in the text.")
     println(io, "\$\\eta_{s,i}\\in\\{" * ETAS_LO * ",1," * ETAS_HI * "\\}\$, as in")
     println(io, "Table~\\ref{tab:results-matrix}.")
     println(io, "}")

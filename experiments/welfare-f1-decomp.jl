@@ -14,7 +14,9 @@
 
 using OpenCGE, TOML, Printf
 
-const AbstractPricing = OpenCGE.AbstractPricingClosure   # harness/kernel name drift
+if !isdefined(OpenCGE, :AbstractPricing)   # the pricing-door line renames the type;
+    @eval const AbstractPricing = OpenCGE.AbstractPricingClosure   # the release exports it
+end
 
 isdefined(Main, :load_design) || include(joinpath(@__DIR__, "run.jl"))
 

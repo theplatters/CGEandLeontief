@@ -1,33 +1,40 @@
 % =====================================================================
-% Table 3c --- the closure matrix, transposed (DRAFT, v3)
+% Table 3c --- the closure matrix, transposed
 % ---------------------------------------------------------------------
-% Same content as table3b, with three edits:
-%   1. the no-reallocation closure moves to the LEFTMOST labour column, to
-%      mimic the figure (where no reallocation is the left anchor of the
-%      sectoral row); the remaining four keep the figure's left-to-right
-%      reading, so the order is no-reallocation, standard CGE, elastic
-%      labour supply, fixed real wage, Leontief.
-%   2. the block signifiers are \textbf (was \textit).
-%   3. a small vertical pad follows each dimension line inside a cell.
-%
-% LINE BREAKS INSIDE CELLS: cells are p{} columns, where a literal \\ is
-% the ROW separator, NOT a line break -- using \\[4pt] there ends the row
-% early and scrambles the columns. Line breaks therefore use \newline (for
-% the header labels) and \par for the tagged blocks, with a local \parskip
-% supplying the padding (edit 3).
-%
+% Content unchanged; LAYOUT reworked 2026-10-17 to the Table 2 convention:
+%   * every block carries its signifier on its OWN line, with the condition
+%     indented beneath it: \lblk (labour block), \fblk (financing block),
+%     \pblk (the production pin, used inside the Leontief labour block).
+%   * \lblk reserves a FIXED height \tbh, so the labour block occupies the
+%     same vertical space in every cell and the "financing:" signifiers of
+%     a row sit on the SAME baseline in all five columns (verified by
+%     measuring the word boxes in the compiled PDF). The Leontief cell's
+%     extra "production:" block lives inside that reserved height.
+%   * \vspace{6pt} between the blocks = the padding before "financing:".
+%   * LINE BREAKS INSIDE CELLS: cells are p{} columns, where a literal \\
+%     is the ROW separator, NOT a line break. \newline is for the header
+%     labels only: \lblk already ends its paragraph, so a \newline after it
+%     dies with "There's no line here to end".
+% \tbh is the single tunable: raise it if a condition grows a line. An
+% "Overfull \vbox" warning in the log means it is too small.
 % Block labels: labour market: the labour closure condition (the column);
 % production: the substitution pin (only the Leontief column); financing:
-% the financing condition (the row). Spelling kept British ("labour") to
-% match the manuscript.
+% the financing condition (the row). British spelling ("labour") kept.
 % =====================================================================
 \begin{table}[htbp]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{2pt}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{2pt}% padding between the tagged blocks in a cell
+\setlength{\parskip}{0pt}
 \renewcommand{\arraystretch}{1.3}
+\def\tbh{38pt}% reserved height of the labour block: the tallest of the five
+%   natural heights (the standard-CGE cell, 36.6pt) plus a half-point of slack.
+%   Measured, not guessed: see the header comment.
+\newcommand{\tagline}[1]{\textbf{#1:}}
+\newcommand{\pblk}[2]{\tagline{#1}\par\hspace{0.6em}#2\par}
+\newcommand{\lblk}[3]{\parbox[t][\tbh][t]{\linewidth}{\tagline{#1}\par\hspace{0.6em}#2\par#3}\par\vspace{6pt}}
+\newcommand{\fblk}[2]{\tagline{#1}\par\hspace{0.6em}#2}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.85cm}
                   >{\raggedright\arraybackslash}p{2.45cm}
                   >{\raggedright\arraybackslash}p{2.45cm}
@@ -42,55 +49,45 @@
 & \textbf{Fixed real wage}\newline \scriptsize real wage pegged, employment uncapped
 & \textbf{Leontief closure}\newline \scriptsize real wage pegged, quantities absorb \\
 \midrule
-
 \textbf{F1}\newline \scriptsize repurposing of consumption
-& \textbf{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free \par
-  \textbf{financing:} $\sum_i p_i c_i^{h} = E^{h}$
-& \textbf{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$ \par
-  \textbf{financing:} $\sum_i p_i c_i^{h} = E^{h}$
-& \textbf{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$ \par
-  \textbf{financing:} $\sum_i p_i c_i^{h} = E^{h}$
-& \textbf{labour market:} $w/\Pi(p) = \bar w = 1$, $L = \sum_i L_i$ \par
-  \textbf{financing:} $\sum_i p_i c_i^{h} = E^{h}$
-& \textbf{labour market:} $w/\Pi(p) = 1$ \par
-  \textbf{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$ \par
-  \textbf{financing:} $\sum_i p_i c_i^{h} = E^{h}$ \\
+& \lblk{labour market}{$\eta = 0$: $L_i = \bar L_i$, $w_i$ free}{}
+  \fblk{financing}{$\sum_i p_i c_i^{h} = E^{h}$}
+& \lblk{labour market}{$L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$}{}
+  \fblk{financing}{$\sum_i p_i c_i^{h} = E^{h}$}
+& \lblk{labour market}{$L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$}{}
+  \fblk{financing}{$\sum_i p_i c_i^{h} = E^{h}$}
+& \lblk{labour market}{$w/\Pi(p) = \bar w = 1$, $L = \sum_i L_i$}{}
+  \fblk{financing}{$\sum_i p_i c_i^{h} = E^{h}$}
+& \lblk{labour market}{$w/\Pi(p) = 1$}{\pblk{production}{$(\theta, \epsilon, \sigma) \to 0^{+}$}}
+  \fblk{financing}{$\sum_i p_i c_i^{h} = E^{h}$} \\
 \midrule
-
 \textbf{F2}\newline \scriptsize refinancing via taxes
-& \textbf{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free \par
-  \textbf{financing:} $T(p) = \sum_i p_i g_i$
-& \textbf{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$ \par
-  \textbf{financing:} $T(p) = \sum_i p_i g_i$
-& \textbf{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$ \par
-  \textbf{financing:} $T(p) = \sum_i p_i g_i$
-& \textbf{labour market:} $w/\Pi(p) = \bar w = 1$, $L = \sum_i L_i$ \par
-  \textbf{financing:} $T(p) = \sum_i p_i g_i$
-& \textbf{labour market:} $w/\Pi(p) = 1$ \par
-  \textbf{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$ \par
-  \textbf{financing:} $T(p) = \sum_i p_i g_i$ \\
+& \lblk{labour market}{$\eta = 0$: $L_i = \bar L_i$, $w_i$ free}{}
+  \fblk{financing}{$T(p) = \sum_i p_i g_i$}
+& \lblk{labour market}{$L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$}{}
+  \fblk{financing}{$T(p) = \sum_i p_i g_i$}
+& \lblk{labour market}{$L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$}{}
+  \fblk{financing}{$T(p) = \sum_i p_i g_i$}
+& \lblk{labour market}{$w/\Pi(p) = \bar w = 1$, $L = \sum_i L_i$}{}
+  \fblk{financing}{$T(p) = \sum_i p_i g_i$}
+& \lblk{labour market}{$w/\Pi(p) = 1$}{\pblk{production}{$(\theta, \epsilon, \sigma) \to 0^{+}$}}
+  \fblk{financing}{$T(p) = \sum_i p_i g_i$} \\
 \midrule
-
 \textbf{F3}\newline \scriptsize external / debt finance
-& \textbf{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free \par
-  \textbf{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
-& \textbf{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$ \par
-  \textbf{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
-& \textbf{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$ \par
-  \textbf{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
-& \textbf{labour market:} $w/\Pi(p) = \bar w = 1$, $L = \sum_i L_i$ \par
-  \textbf{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
-& \textbf{labour market:} $w/\Pi(p) = 1$ \par
-  \textbf{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$ \par
-  \textbf{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
+& \lblk{labour market}{$\eta = 0$: $L_i = \bar L_i$, $w_i$ free}{}
+  \fblk{financing}{$B_{\mathrm{gov}} = \sum_i p_i g_i$}
+& \lblk{labour market}{$L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$}{}
+  \fblk{financing}{$B_{\mathrm{gov}} = \sum_i p_i g_i$}
+& \lblk{labour market}{$L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$}{}
+  \fblk{financing}{$B_{\mathrm{gov}} = \sum_i p_i g_i$}
+& \lblk{labour market}{$w/\Pi(p) = \bar w = 1$, $L = \sum_i L_i$}{}
+  \fblk{financing}{$B_{\mathrm{gov}} = \sum_i p_i g_i$}
+& \lblk{labour market}{$w/\Pi(p) = 1$}{\pblk{production}{$(\theta, \epsilon, \sigma) \to 0^{+}$}}
+  \fblk{financing}{$B_{\mathrm{gov}} = \sum_i p_i g_i$} \\
 \bottomrule
 \end{tabular}
-\caption{The closure matrix, transposed: the three financing closures
-(rows) crossed with the five labour-market closures (columns). Each cell
-states the two or three closure conditions that define that economy, tagged
-by block --- the labour-market condition (the column), any production-side
-condition (only the Leontief column pins substitution), and the financing
-condition (the row). The columns follow the figure's left-to-right reading,
-with the no-reallocation corner as the left anchor.}
+\caption{The expanded closure matrix: three financing closures
+(rows) crossed with five labour-market closures (columns). Each cell
+states the two or three closure conditions that differentiate the respective model setup.}
 \label{tab:closure-matrix-3x5}
 \end{table}

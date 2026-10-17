@@ -1,62 +1,82 @@
 % =====================================================================
-% Table 2 --- the simplified matrix: the closure conditions
+% Table 2 (PROPOSAL v2, 2026-10-17) --- the simplified matrix, block-tagged
 % ---------------------------------------------------------------------
-% Axes = the closures themselves: three financing closures (rows, as in
-% Table 1) crossed with the TWO standard short-run closures (columns).
-% Each cell carries the two equations that define that economy -- one from
-% the short-run block, one from the financing block.
-% Column names are the literature terms, which are also the paper's names
-% for the two closures (Section~\ref{sec:kernel}):
-%   standard CGE      = the standard CGE closure (one wage clears,
-%                       labour mobile, full employment)
-%   standard Leontief = the Leontief closure (fixed real wage + Leontief
-%                       limit, output absorbs)
-% See the caption note.
+% NOT \input anywhere. Proposal only; the live file is untouched.
+% ADOPTION: copy this over tables/table2_closure-conditions.tex
+%           (label tab:closure-conditions is unchanged, so no \ref breaks).
+%
+% Changes vs the live file:
+%   1. Block tags \textbf{labour market:} / \textbf{financing:} (Table 3c
+%      framing), placed ON THEIR OWN LINE. Reason: with the tag inline the
+%      first column's labour condition wraps to two lines while the second
+%      column's does not, so the two "financing:" labels land at different
+%      heights. Tag-on-own-line + indented condition makes every block
+%      exactly two lines, so both labels align by construction (verified by
+%      measuring the word boxes in the compiled shim: identical yMin).
+%   2. Row labels reduced to \textbf{F1}\newline \scriptsize <gloss>
+%      (Table 3c convention); the old "Financing: F1" prefix duplicated the
+%      corner cell.
+%   3. Corner cell names the axis ("Financing closure"), matching 3c.
+%   4. Geometry: 2.2 + 6.2 + 6.2 cm with \tabcolsep=4pt, so the condition
+%      lines fit on one line each (this is what makes point 1 work).
+%   5. The Leontief column's substitution pin stays on the labour line, as
+%      before; it is a production-side condition and carries no tag here
+%      (Table 3c is where the three-way tagging lives). The caption says so.
+%   6. Caption: "most importantyl" -> "most importantly", the stray "LABOR"
+%      removed, the L notation added, and "the two closure conditions" ->
+%      "the short-run and the financing condition".
 % =====================================================================
 \begin{table}[htbp]
 \centering
 \footnotesize
-\setlength{\tabcolsep}{6pt}
-\renewcommand{\arraystretch}{1.35}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.75cm}
-                  >{\raggedright\arraybackslash}p{5.15cm}
-                  >{\raggedright\arraybackslash}p{5.15cm}@{}}
+\setlength{\tabcolsep}{4pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\renewcommand{\arraystretch}{1.3}
+\newcommand{\tblk}[1]{\textbf{#1:}}
+\newcommand{\tcond}[1]{\par\hspace{1em}#1}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.2cm}
+                  >{\raggedright\arraybackslash}p{6.2cm}
+                  >{\raggedright\arraybackslash}p{6.2cm}@{}}
 \toprule
- & \textbf{Short run: standard CGE}
- & \textbf{Short run: standard Leontief} \\
- & {\scriptsize one flexible wage, labour mobile, full employment}
- & {\scriptsize fixed real wage, fixed coefficients, output absorbs} \\
+\textbf{Financing closure}
+& \textbf{Standard CGE}\newline \scriptsize one flexible wage, labour mobile, full employment
+& \textbf{Standard Leontief}\newline \scriptsize fixed real wage, fixed coefficients, output absorbs \\
 \midrule
-\textbf{Financing: F1}\newline repurposing of consumption
-& $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$,\quad $\sum_i L_i = \bar L$
-  \newline
-  $\sum_i p_i c_i^{h} = E^{h}$
-& $w/\Pi(p) = 1$,\quad $(\theta, \epsilon, \sigma) \to 0^{+}$
-  \newline
-  $\sum_i p_i c_i^{h} = E^{h}$ \\
+\textbf{F1}\newline \scriptsize repurposing of consumption
+& \tblk{labour market}\tcond{$L_{i} = L_{i}^{\mathrm{cm}}(p, y_{i}, w)$, \quad $\textstyle\sum_{i} L_{i} = \bar L$}\par
+  \vspace{6pt}
+  \tblk{financing}\tcond{$\textstyle\sum_{i} p_{i} c_{i}^{h} = E^{h}$}
+& \tblk{labour market}\tcond{$w/\Pi(p) = 1$, \quad $(\theta, \epsilon, \sigma) \to 0^{+}$}\par
+  \vspace{6pt}
+  \tblk{financing}\tcond{$\textstyle\sum_{i} p_{i} c_{i}^{h} = E^{h}$} \\
 \midrule
-\textbf{Financing: F2}\newline refinancing via taxes
-& $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$,\quad $\sum_i L_i = \bar L$
-  \newline
-  $T(p) = \sum_i p_i g_i$
-& $w/\Pi(p) = 1$,\quad $(\theta, \epsilon, \sigma) \to 0^{+}$
-  \newline
-  $T(p) = \sum_i p_i g_i$ \\
+\textbf{F2}\newline \scriptsize refinancing via taxes
+& \tblk{labour market}\tcond{$L_{i} = L_{i}^{\mathrm{cm}}(p, y_{i}, w)$, \quad $\textstyle\sum_{i} L_{i} = \bar L$}\par
+  \vspace{6pt}
+  \tblk{financing}\tcond{$T(p) = \textstyle\sum_{i} p_{i} g_{i}$}
+& \tblk{labour market}\tcond{$w/\Pi(p) = 1$, \quad $(\theta, \epsilon, \sigma) \to 0^{+}$}\par
+  \vspace{6pt}
+  \tblk{financing}\tcond{$T(p) = \textstyle\sum_{i} p_{i} g_{i}$} \\
 \midrule
-\textbf{Financing: F3}\newline external / debt finance
-& $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$,\quad $\sum_i L_i = \bar L$
-  \newline
-  $B_{\mathrm{gov}} = \sum_i p_i g_i$
-& $w/\Pi(p) = 1$,\quad $(\theta, \epsilon, \sigma) \to 0^{+}$
-  \newline
-  $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
+\textbf{F3}\newline \scriptsize external / debt finance
+& \tblk{labour market}\tcond{$L_{i} = L_{i}^{\mathrm{cm}}(p, y_{i}, w)$, \quad $\textstyle\sum_{i} L_{i} = \bar L$}\par
+  \vspace{6pt}
+  \tblk{financing}\tcond{$B_{\mathrm{gov}} = \textstyle\sum_{i} p_{i} g_{i}$}
+& \tblk{labour market}\tcond{$w/\Pi(p) = 1$, \quad $(\theta, \epsilon, \sigma) \to 0^{+}$}\par
+  \vspace{6pt}
+  \tblk{financing}\tcond{$B_{\mathrm{gov}} = \textstyle\sum_{i} p_{i} g_{i}$} \\
 \bottomrule
 \end{tabular}
 \caption{A matrix showing the two standard short-run closures crossed
-with the three financing closures. Each cell states the two closure
-conditions that define that economy. Notation follows
-Section~\ref{sec:kernel} and Appendix~\ref{app:model}; most importantyl, LABOR $\Pi(p)$ is the consumption price index, $E^{h}$
+with the three financing closures. Each cell states the short-run condition
+that defines the labour market of that economy and the financing condition
+that closes its budget; the Leontief column additionally pins the
+substitution elasticities. Notation: $L_{i}$ is sectoral employment,
+$L_{i}^{\mathrm{cm}}$ the cost-minimizing labour demand and $\bar L$ the
+labour endowment; $\Pi(p)$ is the consumption price index, $E^{h}$
 household consumption expenditure, $T(p)$ the programme tax and
-$B_{\mathrm{gov}}$ the externally booked programme cost.}
+$B_{\mathrm{gov}}$ the externally booked programme cost. All symbols are
+defined in Section~\ref{sec:kernel} and Appendix~\ref{app:model}.}
 \label{tab:closure-conditions}
 \end{table}

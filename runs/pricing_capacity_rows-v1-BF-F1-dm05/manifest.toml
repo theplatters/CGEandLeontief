@@ -1,0 +1,56 @@
+actor = "franzs"
+cell = "pricing_capacity_rows-v1-BF-F1-dm05"
+date = "2026-10-18"
+design = "pricing_capacity_rows_v1"
+run_id = "pricing_capacity_rows-v1-BF-F1-dm05"
+schema_version = 2
+status = "failed"
+
+[artifacts]
+log = "log.txt"
+solution = ""
+
+[error]
+message = "batch process stalled: no progress from 16:25:55 to 18:26 (2 h, ~780% CPU) and the batch was stopped by the operator; no solver error was raised. The same cell, re-solved in isolation on the same commit, completes in ~45 s with every gate passing (scratch diagnosis, 2026-10-18), so the stall is in the batch process, not the equilibrium. Rerun as pricing_capacity_rows-v1-BF-F1-dm05-v2 (ADR-0004)."
+type = "BatchStall"
+
+[gates]
+overall = "fail"
+
+[provenance]
+design_sha256 = "3bb2e9e01bf3e3d1b9dd43eb2c198ad30311aa7322d845e752f43be52d8d165f"
+git_commit = "66ae54924e43db2f8120012f00d5bb408341e5d8"
+git_dirty = true
+julia_version = "1.12.7"
+manifest_sha256 = "76cc9ccbe546bc8dbc80043b9b56c31ec0ea033cc34c6b12865ec9ccc9de119a"
+seed = 1234
+
+    [provenance.data_sha256]
+    "cbase2/data_raw/impulses.csv" = "5545c748d848ec121fa5aff21d0c46a55c8d00462518718d3d54374c7f0b8c5f"
+    "data/I-O_DE2019_formatiert.csv" = "e9c3299731940f7ce683f0e508495c62ad255f0a5536cf1da63c02478058914d"
+    "experiments/designs/pricing_capacity_rows_v1.toml" = "3bb2e9e01bf3e3d1b9dd43eb2c198ad30311aa7322d845e752f43be52d8d165f"
+
+    [provenance.opencge]
+    git_tree_sha1 = "5a19fa595d19eed8550a4edee8b886fdd8175c3c"
+    repo_rev = "v0.2.1"
+    repo_url = "https://github.com/theplatters/OpenCGE"
+    version = "0.2.1"
+
+[scenario]
+delta = -0.5
+epsilon = 0.5
+eta = 0.0
+eta_s = 0.0
+financing = "F1"
+labour = "BF"
+magnitude = 1.0
+pricing = "P1"
+pricing_kind = "capacity"
+shock = "impulses.csv"
+sigma = 0.9
+theta = 0.5
+
+[solver]
+algorithm = "kernel solve / solve_beta (Newton + residual-gated LM polish)"
+init = "warm:reference-final -> no-pricing twin -> continuation(4)"
+reference = "batch-continuation"

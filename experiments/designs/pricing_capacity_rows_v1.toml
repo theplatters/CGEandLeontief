@@ -644,3 +644,16 @@ delta_epsilon = 1e-4
 delta = -0.5
 delta_services = 0.0
 note = "P1 VA-scaled capacity door, delta = -0.5 on goods (CPA A-F), 0 on services (CPA G-T), the Kaldor-Verdoorn sign (uniqueness gate); DELTA corner (Leontief limit at eps = 1e-4), externally financed programme"
+
+# ── rerun (ADR-0004): the batch stalled on BF-F1-dm05 (2 h, no solver error)
+# and the cell was recorded failed; it solves in isolation in ~45 s.
+[cells.pricing_capacity_rows-v1-BF-F1-dm05-v2]
+labor = "BF"
+financing = "F1"
+eta = 0.0
+eta_s = 0.0
+theta = 0.5
+epsilon = 0.5
+sigma = 0.9
+delta = -0.5
+note = "rerun of pricing_capacity_rows-v1-BF-F1-dm05 (batch stall); P1 VA-scaled capacity door, delta = -0.5 homogeneous, the Kaldor-Verdoorn sign (uniqueness gate); sectoral-wage endpoint (eta = 0), compositional F1 shift"

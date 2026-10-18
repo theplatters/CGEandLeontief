@@ -85,8 +85,8 @@ actor = "franzs"
     pricing_multistart_tol = 1.0e-6
     pricing_s_pi = 1.0
     pricing_continuation_steps = 4
-    eta = 1.0
     pricing_kind = "markup"
+    eta = 1.0
     epsilon = 0.5
     pricing_kappa = 0.0
 
@@ -330,8 +330,8 @@ actor = "franzs"
     pricing_multistart_tol = 1.0e-6
     pricing_s_pi = 1.0
     pricing_continuation_steps = 4
-    eta = 1.0
     pricing_kind = "markup"
+    eta = 1.0
     epsilon = 0.5
     pricing_kappa = 0.0
 
@@ -369,8 +369,8 @@ actor = "franzs"
     pricing_multistart_tol = 1.0e-6
     pricing_s_pi = 1.0
     pricing_continuation_steps = 4
-    pricing_kind = "markup"
     eta = 1.0
+    pricing_kind = "markup"
     epsilon = 0.5
     pricing_kappa = 0.0
 
@@ -392,10 +392,10 @@ actor = "hermes-agent"
     programme_year = 2024
 
 [designs.pricing_capacity_rows_v1]
-git_commit = "cf414f19419f6fa40bc04d0352326807e7a226cc"
+git_commit = "66ae54924e43db2f8120012f00d5bb408341e5d8"
 note = "Phase 7 capacity door (P1, OpenCGE@ADR-0031) on the remaining labour rows (ADR-0032): BF (eta = 0), sectoral BETA (uniform eta_s = 0.5) and DELTA (Leontief corner) on all three financing columns, delta in {0, +0.5, -0.5}, homogeneous and services-zero, demand-only programme shock; plus the delta = 0 ALPHA canaries. delta = 0 nests the matrix_5x3-v10 twins."
-registered_at = "2026-10-18T16:22:57"
-design_sha256 = "3bb2e9e01bf3e3d1b9dd43eb2c198ad30311aa7322d845e752f43be52d8d165f"
+registered_at = "2026-10-18T16:30:25"
+design_sha256 = "a63af27604a5b85f2ea80eb9465c10607d28d5f803dfdfc8d3a06c95eb8038c7"
 actor = "franzs"
 
     [designs.pricing_capacity_rows_v1.pinned]
@@ -431,7 +431,7 @@ actor = "franzs"
     pricing_multistart_tol = 1.0e-6
     pricing_s_pi = 1.0
     pricing_continuation_steps = 4
-    pricing_kind = "markup"
     eta = 1.0
+    pricing_kind = "markup"
     epsilon = 0.5
     pricing_kappa = 0.0

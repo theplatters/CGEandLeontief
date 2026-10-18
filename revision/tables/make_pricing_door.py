@@ -62,12 +62,6 @@ def per_row(rows_of):
     return [(name, rows_of(row)) for row, name in ROWS]
 
 
-CAP_PANELS = per_row(lambda row: [
-    (r"$\delta = 0$ (no door)", cap_id(row, "d0")),
-    (r"$\delta = +0.5$", cap_id(row, "dp05-s0")),
-    (r"$\delta = -0.5$", cap_id(row, "dm05-s0")),
-])
-
 MK_PANELS = per_row(lambda row: [
     (r"retained, $\kappa = 0.25$", "pricing_markup-v2-" + row + "-{f}-k025"),
     (r"retained, $\kappa = 0.5$", "pricing_markup-v2-" + row + "-{f}-k05"),
@@ -154,9 +148,76 @@ def build_table(panels, cols, caption_lines, label, comment_lines, fit=False):
     return "\n".join(L) + "\n"
 
 
+FIN_NOTE = {"F1": "repurposing of consumption", "F2": "refinancing via taxes",
+            "F3": "external / debt finance"}
+
+
+def build_guided_table(panels, cols, stub, caption_lines, label, comment_lines):
+    """The pricing-door layout tuned for reading across many columns: financing
+    blocks named as in Table 4 and set apart by wider gaps, labour panels separated
+    by vertical space instead of rules, and the delta = 0 reference row of every
+    panel shaded as a guide line across the row (it is also the row that reproduces
+    Table 4); thin grey rules between the columns of a block keep each value
+    under its header (they stop at the panel headings and block gaps). The block gaps are empty spacer columns rather than @{} glue, and
+    the outer columns keep their padding, so the shading runs unbroken from rule
+    end to rule end."""
+    k = len(cols)
+    ncol = 1 + (k + 1) * len(FIN)
+    L = []
+    A = L.append
+    for line in comment_lines:
+        A(line)
+    A(r"\begin{table}[htbp]")
+    A(r"\centering")
+    A(r"\footnotesize")
+    A(r"\definecolor{tableguide}{gray}{0.92}")
+    A(r"\definecolor{tableline}{gray}{0.72}")
+    A(r"\setlength{\tabcolsep}{3pt}")
+    A(r"\renewcommand{\arraystretch}{1.2}")
+    guide = r"!{\color{tableline}\vrule width 0.3pt}"
+    A(r"\begin{tabular}{l" + "".join([r"@{\hspace{3pt}}p{2pt}@{\hspace{3pt}}" + guide.join("r" * k)
+                                      for _ in FIN]) + r"}")
+    A(r"\toprule")
+    A(" & " + " & ".join([r"& \multicolumn{%d}{c}{\textbf{%s}}" % (k, f) for f in FIN]) + r" \\")
+    A(" & " + " & ".join([r"& \multicolumn{%d}{c}{\scriptsize %s}" % (k, FIN_NOTE[f]) for f in FIN])
+      + r" \\")
+    A("".join([r"\cmidrule(lr){%d-%d}" % (3 + (k + 1) * i, 2 + (k + 1) * i + k)
+               for i in range(len(FIN))]))
+    sub = " & ".join(h for _, h, _ in cols)
+    A(stub + " & " + " & ".join(["& " + sub] * len(FIN)) + r" \\")
+    A(r"\midrule")
+    for i, (panel, rows) in enumerate(panels):
+        if i:
+            A(r"\addlinespace[6pt]")
+        A(r"\multicolumn{%d}{l}{\textbf{%s}} \\" % (ncol, panel))
+        for j, (rowlabel, tmpl) in enumerate(rows):
+            cells = []
+            for f in FIN:
+                v = values(tmpl.format(f=f, v2="-v2" if f == "F1" else ""))
+                cells += [""] + [num(v[key], signed) for key, _, signed in cols]
+            shade = r"\rowcolor{tableguide}" if j == 0 else ""
+            A(shade + r"\quad " + rowlabel + " & " + " & ".join(cells) + r" \\")
+    A(r"\bottomrule")
+    A(r"\end{tabular}")
+    A(r"\caption{" + caption_lines[0])
+    for line in caption_lines[1:-1]:
+        A(line)
+    A(caption_lines[-1] + "}")
+    A(label)
+    A(r"\end{table}")
+    return "\n".join(L) + "\n"
+
+
+CAP_GUIDED_PANELS = per_row(lambda row: [
+    (r"$0$ (no door)", cap_id(row, "d0")),
+    (r"$+0.5$", cap_id(row, "dp05-s0")),
+    (r"$-0.5$", cap_id(row, "dm05-s0")),
+])
+
+
 def build_cap_table():
-    return build_table(
-        CAP_PANELS, COLS_CAP,
+    return build_guided_table(
+        CAP_GUIDED_PANELS, COLS_CAP, r"$\delta$",
         [r"The capacity / Kaldor--Verdoorn door under the demand-only programme shock,",
          r"on every labour closure. Panels are the labour closures of",
          r"Table~\ref{tab:results-matrix}, rows the utilisation elasticity $\delta$ of",
@@ -164,8 +225,8 @@ def build_cap_table():
          r"columns the financing closures. Each block reports the change in the price level",
          r"($\Delta P$, the GDP deflator; signed), the largest sectoral price deviation",
          r"($\max|\Delta p|$), employment ($\Delta L$) and household consumption ($\Delta W$),",
-         r"all in percent against the reference continuation. The $\delta = 0$ rows reproduce",
-         r"Table~\ref{tab:results-matrix} (the elastic-supply panel at uniform",
+         r"all in percent against the reference continuation. The shaded $\delta = 0$ rows",
+         r"(no door) reproduce Table~\ref{tab:results-matrix} (the elastic-supply panel at uniform",
          r"$\eta_{s,i} = 0.5$); the door creates no rent. The all-sector profile is in",
          r"Appendix~\ref{app:variants}. Generated from the",
          r"\texttt{pricing\_capacity\_rows-v1-*}, \texttt{pricing\_capacity-v2-*} and",

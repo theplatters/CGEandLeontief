@@ -36,9 +36,10 @@ unchanged. Their product
 $p_i = \bigl(1 + \kappa(y_i/\lambda_i - 1)\bigr)\,c_i\bigl(A_i (y_i/\lambda_i)^{-\delta_i\alpha_i}\bigr)$
 is one family with two parameters; $\delta = \kappa = 0$ reproduces the
 kernel exactly (bit for bit, as the nesting cells
-\texttt{pricing\_capacity-v2-GAMMA-*-d0} and
-\texttt{pricing\_markup-v1-GAMMA-*-k0} confirm against
-\texttt{matrix\_5x3-v10-GAMMA-*}).
+\texttt{pricing\_capacity-v2-GAMMA-*-d0},
+\texttt{pricing\_capacity\_rows-v1-*-d0} and
+\texttt{pricing\_markup-v2-*-k0} confirm against their
+\texttt{matrix\_5x3-v10} twins on every labour closure).
 
 \subsection{First-order conditions at marginal cost}\label{app:pricing-foc}
 A firm with a markup buys at the purchaser prices but equates marginal revenue
@@ -90,8 +91,10 @@ starting points (the default initial point, the door-free solution, and the
 solution with all quantities scaled by $0.9$ and $1.1$), at least two must
 converge and every converged start must lie within $10^{-6}$ of the solution,
 and the Jacobian of the full residual must have full rank. The measured
-spreads are of order $10^{-9}$ at condition numbers of order $10^{7}$; a
-distinct equilibrium would sit about $10^{-2}$ away. All 42 priced cells pass.
+spreads are at most $6 \cdot 10^{-9}$ at condition numbers up to $10^{8}$
+(the no-reallocation closure, whose sectoral wages enlarge the system); a
+distinct equilibrium would sit about $10^{-2}$ away. All 180 priced cells pass,
+on every labour closure.
 
 \subsection{Accounting with the rent booked}\label{app:pricing-accounting}
 The rent is $\Xi = \sum_i (1 - 1/\mu_i)\,p_i y_i$. With retention rate

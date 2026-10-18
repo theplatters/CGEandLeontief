@@ -13,20 +13,22 @@
 % matrix + the 18 sectoral cells, all run ids.
 % ADDED (2026-10-18): the pricing-door profiles (tableE_pricing-profiles.tex),
 % moved here from Section 6.4 when the main text switched to the goods-only
-% profile.
+% profile. Re-cut the same day (ADR-0032): all five labour rows; the mobile
+% rows now sit in the main-text Tables 6 and 7.
 % TODO: the full 15-cell matrix (citing matrix_5x3_v10 run ids); the
 % gamma/beta variant tables; the ADR-0021 wage-structure axis as a
 % representation-robustness row; the 33-cell tally
 % (15 matrix + 12 ladder + 6 two-group).
 
-\subsection{The pricing-door profiles and the mobile robustness}\label{app:profiles}
+\subsection{The pricing-door profiles on every labour closure}\label{app:profiles}
 
 The main text carries the pricing door in the profile in which the utilisation
 elasticity is confined to the goods sectors, because the entire direct incidence
 of the programme falls there and because \textcite{Kaldor1966} reads Verdoorn's
 law as a law of manufacturing. Table~\ref{tab:pricing-profiles} prints the rows
-this leaves out: the counterfactual in which $\delta$ extends to every sector,
-and both doors under mobile labour with the CPI numeraire.
+this leaves out, on every labour closure: the counterfactual in which $\delta$
+extends to every sector, and the $\kappa = 0.25$ markup with its rent
+distributed.
 
 The all-sector profile is worth stating explicitly, because it is what makes the
 sign of the price response look like a property of the financing closure. With
@@ -37,11 +39,15 @@ $-0.82$ percent), against $-0.19$ to $-0.35$ percent in all three columns when
 the elasticity is confined to goods. The reversal is produced by the service
 sectors that lose demand, and with it productivity, as the programme reallocates
 activity towards construction and its suppliers --- not by the sectors the
-programme funds. It is a statement about where returns are assumed to live.
+programme funds. It is a statement about where returns are assumed to live,
+and it carries over to the Leontief closure ($+0.11$, $+0.01$, $-0.75$ percent;
+\texttt{pricing\_capacity\_rows-v1-DELTA-\{F1,F2,F3\}-dm05}), while the
+standard CGE closure lowers the deflator by 0.16 percent in every column.
 
-The mobile-labour rows repeat both doors under the CPI numeraire: employment is
-fixed there and prices move relative to the CPI, and F2 and F3 remain
-indistinguishable in every row, so the financing neutrality of
-Section~\ref{sec:gauge} survives the pricing door.
+The three CPI-gauge closures (no-reallocation, standard CGE, elastic supply)
+keep F2 and F3 indistinguishable in every row of both panels, so the financing
+neutrality of Section~\ref{sec:gauge} survives the pricing door; in panel B the
+distributed rent leaves them unchanged as well, because the net external
+transfer absorbs it (Section~\ref{subsec:pricing-markup}).
 
 \input{tables/tableE_pricing-profiles.tex}

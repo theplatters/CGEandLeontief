@@ -1,87 +1,103 @@
 #!/usr/bin/env python3
 """Regenerate the pricing-door tables and the price-response bracket figure
-from the Phase 7 run manifests (ADR-0029, ADR-0030, ADR-0031).
+from the Phase 7 run manifests (ADR-0029, ADR-0030, ADR-0031, ADR-0032).
 
 No number is hand-typed: every value is a manifest field. Run from anywhere:
     python3 make_pricing_door.py
-Sources (schema v2; the capacity door on OpenCGE v0.2.1 with the
-value-added-scaled exponent, ADR-0031; the markup door on v0.2.0, which
-v0.2.1 leaves unchanged):
-    runs/pricing_capacity-v2-GAMMA-<fin>-<d0|dp05|dm05|dp05-s0|dm05-s0>/manifest.toml
-    runs/pricing_markup-v1-GAMMA-<fin>-<k025|k05>/manifest.toml
-    runs/pricing_profit-v1-GAMMA-<fin>-<k025|k05>-<spi05|spis>/manifest.toml
-    runs/pricing_mobile-v2-ALPHA-<fin>-<dp05|dm05|dp05-s0|dm05-s0>/manifest.toml
-    runs/pricing_mobile-v1-ALPHA-<fin>-<k025|k05>/manifest.toml
+Sources (schema v2, all on OpenCGE v0.2.1):
+    capacity door (P1), by labour row:
+      BF, BETA, DELTA  runs/pricing_capacity_rows-v1-<row>-<fin>-<d0|dp05|dm05|dp05-s0|dm05-s0>
+      ALPHA            runs/pricing_capacity_rows-v1-ALPHA-<fin>-d0,
+                       runs/pricing_mobile-v2-ALPHA-<fin>-<dp05|dm05|dp05-s0|dm05-s0>
+      GAMMA            runs/pricing_capacity-v2-GAMMA-<fin>-<d0|dp05|dm05|dp05-s0|dm05-s0>
+    markup door (P2), every labour row:
+      runs/pricing_markup-v2-<row>-<fin>-<k025|k05>
+      runs/pricing_profit-v2-<row>-<fin>-<k025|k05>-<spi05|spis>
 Outputs:
-    revision/tables/table6_pricing-door.tex          (main text: goods profile)
-    revision/tables/tableE_pricing-profiles.tex      (appendix: all-sector + mobile)
-    revision/figures/fig_pricing-bracket.tex         (plain TikZ, no pgfplots)
+    revision/tables/table6_pricing-capacity.tex   (main text: capacity door, goods profile)
+    revision/tables/table7_pricing-markup.tex     (main text: markup door)
+    revision/tables/tableE_pricing-profiles.tex   (appendix: all-sector capacity, kappa = 0.25 distributed)
+    revision/figures/fig_pricing-bracket.tex      (plain TikZ, no pgfplots)
 
-Profile split (2026-10-18). The main-text table carries the goods-only profile
-(delta on CPA A--F, where the programme's entire direct incidence falls) and
-the bracket figure plots the same profile, so table and figure agree. The
-all-sector counterfactual and the mobile-labour rows moved to the appendix
-table. The sign-flip finding (all-sector: a deflator fall under external
-finance only) is stated in Section 6.4 and in the appendix caption; it is not
-a main-text table row any more.
+Split (2026-10-18, ADR-0032). The two doors get one table each, and each table
+carries all five labour rows, so the dissolution of the demand-only
+equivalences (fixed wage vs Leontief, standard CGE vs elastic supply) is
+read off the tables rather than stated. The capacity table carries the
+goods-only profile (delta on CPA A--F, where the programme's entire direct
+incidence falls); the all-sector counterfactual is in the appendix table. The
+bracket figure plots the fixed-wage row, as before.
 """
 import tomllib, os
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-OUT_TABLE = os.path.join(REPO, "revision/tables/table6_pricing-door.tex")
+OUT_CAP = os.path.join(REPO, "revision/tables/table6_pricing-capacity.tex")
+OUT_MK = os.path.join(REPO, "revision/tables/table7_pricing-markup.tex")
 OUT_TABLE_APP = os.path.join(REPO, "revision/tables/tableE_pricing-profiles.tex")
 OUT_FIG = os.path.join(REPO, "revision/figures/fig_pricing-bracket.tex")
 
 FIN = ["F1", "F2", "F3"]
 
-# ---- main text: the goods-only profile + the markup door -------------------
-MAIN_PANELS = [
-    ("A. Capacity / Kaldor--Verdoorn door ($P_1$), goods sectors, fixed real wage", [
-        (r"$\delta = 0$ (nesting)", "pricing_capacity-v2-GAMMA-{f}-d0"),
-        (r"$\delta = +0.5$", "pricing_capacity-v2-GAMMA-{f}-dp05-s0"),
-        (r"$\delta = -0.5$", "pricing_capacity-v2-GAMMA-{f}-dm05-s0"),
-    ]),
-    ("B. Markup door ($P_2$), rent retained, fixed real wage", [
-        (r"$\kappa = 0.25$", "pricing_markup-v1-GAMMA-{f}-k025"),
-        (r"$\kappa = 0.5$", "pricing_markup-v1-GAMMA-{f}-k05"),
-    ]),
-    ("C. Markup door ($P_2$), rent distributed, fixed real wage", [
-        (r"$\kappa = 0.25$, $s_\pi = 0.5$", "pricing_profit-v1-GAMMA-{f}-k025-spi05"),
-        (r"$\kappa = 0.25$, $s_\pi = s$", "pricing_profit-v1-GAMMA-{f}-k025-spis"),
-        (r"$\kappa = 0.5$, $s_\pi = 0.5$", "pricing_profit-v1-GAMMA-{f}-k05-spi05"),
-        (r"$\kappa = 0.5$, $s_\pi = s$", "pricing_profit-v1-GAMMA-{f}-k05-spis"),
-    ]),
+# Labour rows in the order and with the names of the results matrix.
+ROWS = [
+    ("BF", "No-reallocation"),
+    ("ALPHA", "Standard CGE"),
+    ("BETA", r"Elastic labour supply ($\eta_{s,i} = 0.5$)"),
+    ("GAMMA", "Fixed real wage"),
+    ("DELTA", "Leontief closure"),
 ]
 
-# ---- appendix: the all-sector counterfactual + the mobile robustness ------
-APP_PANELS = [
-    ("A. Capacity door ($P_1$), fixed wage: all-sector counterfactual", [
-        (r"$\delta = +0.5$", "pricing_capacity-v2-GAMMA-{f}-dp05"),
-        (r"$\delta = -0.5$", "pricing_capacity-v2-GAMMA-{f}-dm05"),
-    ]),
-    ("B. Mobile labour, capacity door, all sectors (CPI numeraire)", [
-        (r"$\delta = +0.5$", "pricing_mobile-v2-ALPHA-{f}-dp05"),
-        (r"$\delta = -0.5$", "pricing_mobile-v2-ALPHA-{f}-dm05"),
-    ]),
-    ("C. Mobile labour, capacity door, goods sectors (CPI numeraire)", [
-        (r"$\delta = +0.5$", "pricing_mobile-v2-ALPHA-{f}-dp05-s0"),
-        (r"$\delta = -0.5$", "pricing_mobile-v2-ALPHA-{f}-dm05-s0"),
-    ]),
-    ("D. Mobile labour, markup door, rent retained (CPI numeraire)", [
-        (r"$\kappa = 0.25$", "pricing_mobile-v1-ALPHA-{f}-k025"),
-        (r"$\kappa = 0.5$", "pricing_mobile-v1-ALPHA-{f}-k05"),
-    ]),
-]
+
+def cap_id(row, v):
+    """Run-id template of the capacity cell `v` (d0, dp05, ...) on a labour row."""
+    if row == "BF" and v == "dm05":
+        # BF-F1-dm05 failed on a batch stall and was rerun as -v2 (ADR-0004);
+        # F2/F3 ran clean under the original ids.
+        return "pricing_capacity_rows-v1-BF-{f}-dm05" + "{v2}"
+    if row == "GAMMA":
+        return "pricing_capacity-v2-GAMMA-{f}-" + v
+    if row == "ALPHA" and v != "d0":
+        return "pricing_mobile-v2-ALPHA-{f}-" + v
+    return "pricing_capacity_rows-v1-" + row + "-{f}-" + v
+
+
+def per_row(rows_of):
+    return [(name, rows_of(row)) for row, name in ROWS]
+
+
+CAP_PANELS = per_row(lambda row: [
+    (r"$\delta = 0$ (no door)", cap_id(row, "d0")),
+    (r"$\delta = +0.5$", cap_id(row, "dp05-s0")),
+    (r"$\delta = -0.5$", cap_id(row, "dm05-s0")),
+])
+
+MK_PANELS = per_row(lambda row: [
+    (r"retained, $\kappa = 0.25$", "pricing_markup-v2-" + row + "-{f}-k025"),
+    (r"retained, $\kappa = 0.5$", "pricing_markup-v2-" + row + "-{f}-k05"),
+    (r"distributed, $\kappa = 0.5$, $s_\pi = 0.5$", "pricing_profit-v2-" + row + "-{f}-k05-spi05"),
+    (r"distributed, $\kappa = 0.5$, $s_\pi = s$", "pricing_profit-v2-" + row + "-{f}-k05-spis"),
+])
+
+APP_PANELS = (
+    [("A. Capacity door, all sectors: " + name, [
+        (r"$\delta = +0.5$", cap_id(row, "dp05")),
+        (r"$\delta = -0.5$", cap_id(row, "dm05")),
+    ]) for row, name in ROWS]
+    + [("B. Markup door, rent distributed, $\\kappa = 0.25$: " + name, [
+        (r"$s_\pi = 0.5$", "pricing_profit-v2-" + row + "-{f}-k025-spi05"),
+        (r"$s_\pi = s$", "pricing_profit-v2-" + row + "-{f}-k025-spis"),
+    ]) for row, name in ROWS]
+)
 
 # Bracket figure series: (legend, run-id template, colour, TikZ marker).
 # Categorical slots 1-4 of the validated default palette (light surface);
 # marker shape is the secondary encoding (two hues sit below 3:1 contrast).
-# The capacity series carry the GOODS profile, matching the main-text table.
+# The capacity series carry the GOODS profile, matching the capacity table;
+# all four series are the fixed-wage row.
 SERIES = [
     (r"Kaldor--Verdoorn, $\delta = -0.5$ (goods)", "pricing_capacity-v2-GAMMA-{f}-dm05-s0", "2a78d6", "circle"),
     (r"capacity pressure, $\delta = +0.5$ (goods)", "pricing_capacity-v2-GAMMA-{f}-dp05-s0", "eb6834", "rectangle"),
-    (r"markup retained, $\kappa = 0.5$", "pricing_markup-v1-GAMMA-{f}-k05", "1baf7a", "triangle"),
-    (r"markup distributed, $\kappa = 0.5$, $s_\pi = s$", "pricing_profit-v1-GAMMA-{f}-k05-spis", "eda100", "diamond"),
+    (r"markup retained, $\kappa = 0.5$", "pricing_markup-v2-GAMMA-{f}-k05", "1baf7a", "triangle"),
+    (r"markup distributed, $\kappa = 0.5$, $s_\pi = s$", "pricing_profit-v2-GAMMA-{f}-k05-spis", "eda100", "diamond"),
 ]
 
 
@@ -107,8 +123,15 @@ def num(x, signed=True):
     return ("$+%.2f$" % x) if x > 0 else ("$%.2f$" % x)
 
 
-def build_table(panels, caption_lines, label, comment_lines, fit=False):
-    """One pricing-door table: identical geometry for both tables."""
+COLS_CAP = [("P", r"$\Delta P$", True), ("D", r"$\max|\Delta p|$", False),
+            ("L", r"$\Delta L$", True), ("W", r"$\Delta W$", True)]
+COLS_MK = COLS_CAP + [("S", r"$\Xi/Y$", False)]
+
+
+def build_table(panels, cols, caption_lines, label, comment_lines, fit=False):
+    """One pricing-door table: a panel per labour row, a block per financing column."""
+    k = len(cols)
+    ncol = 1 + k * len(FIN)
     L = []
     A = L.append
     for line in comment_lines:
@@ -120,20 +143,20 @@ def build_table(panels, caption_lines, label, comment_lines, fit=False):
     A(r"\renewcommand{\arraystretch}{1.15}")
     if fit:
         A(r"\resizebox{\textwidth}{!}{%")
-    A(r"\begin{tabular}{@{}l" + "".join([r"@{\hspace{6pt}}rrrrr" for _ in FIN]) + r"@{}}")
+    A(r"\begin{tabular}{@{}l" + "".join([r"@{\hspace{6pt}}" + "r" * k for _ in FIN]) + r"@{}}")
     A(r"\toprule")
-    A(" & " + " & ".join([r"\multicolumn{5}{c}{\textbf{%s}}" % f for f in FIN]) + r" \\")
-    A("".join([r"\cmidrule(lr){%d-%d}" % (2 + 5 * i, 6 + 5 * i) for i in range(len(FIN))]))
-    sub = r"$\Delta P$ & $\max|\Delta p|$ & $\Delta L$ & $\Delta W$ & $\Xi/Y$"
-    A(r"Door and parameter & " + " & ".join([sub] * len(FIN)) + r" \\")
+    A(" & " + " & ".join([r"\multicolumn{%d}{c}{\textbf{%s}}" % (k, f) for f in FIN]) + r" \\")
+    A("".join([r"\cmidrule(lr){%d-%d}" % (2 + k * i, 1 + k * (i + 1)) for i in range(len(FIN))]))
+    sub = " & ".join(h for _, h, _ in cols)
+    A(r"Labour closure and door & " + " & ".join([sub] * len(FIN)) + r" \\")
     for panel, rows in panels:
         A(r"\midrule")
-        A(r"\multicolumn{16}{@{}l}{\textit{" + panel + r"}} \\")
+        A(r"\multicolumn{%d}{@{}l}{\textit{%s}} \\" % (ncol, panel))
         for rowlabel, tmpl in rows:
             cells = []
             for f in FIN:
-                v = values(tmpl.format(f=f))
-                cells += [num(v["P"]), num(v["D"], False), num(v["L"]), num(v["W"]), num(v["S"], False)]
+                v = values(tmpl.format(f=f, v2="-v2" if f == "F1" else ""))
+                cells += [num(v[key], signed) for key, _, signed in cols]
             A(r"\quad " + rowlabel + " & " + " & ".join(cells) + r" \\")
     A(r"\bottomrule")
     A(r"\end{tabular}" + ("}" if fit else ""))
@@ -146,55 +169,73 @@ def build_table(panels, caption_lines, label, comment_lines, fit=False):
     return "\n".join(L) + "\n"
 
 
-def build_main_table():
+def build_cap_table():
     return build_table(
-        MAIN_PANELS,
-        [r"The pricing door under the demand-only programme shock. Rows are the door",
-         r"and its parameter, columns the financing closures; each block reports the change in",
-         r"the price level ($\Delta P$, the GDP deflator; signed), the largest sectoral price",
-         r"deviation ($\max|\Delta p|$), employment ($\Delta L$), household consumption",
-         r"($\Delta W$) and the markup rent's share of factor income ($\Xi/Y$), all in percent",
-         r"against the reference continuation. Panels A--C hold the real wage fixed (the",
-         r"\textsc{gamma} gauge). The $\delta = 0$ row reproduces the fixed-wage column of",
-         r"Table~\ref{tab:results-matrix} exactly ($\kappa = 0$ does too). $\delta$ is the",
-         r"value-added elasticity of equation~\eqref{eq:capacity-door}, carried by the goods",
-         r"sectors (CPA A--F); the all-sector counterfactual and the mobile-labour rows are in",
-         r"Appendix~\ref{app:variants}. $s$ is the household saving rate. Generated from the",
-         r"\texttt{pricing\_\{capacity,mobile\}-v2-*} (capacity door, OpenCGE v0.2.1) and",
-         r"\texttt{pricing\_\{markup,profit,mobile\}-v1-*} (markup door, v0.2.0) run",
-         r"manifests; no number is hand-typed."],
-        r"\label{tab:pricing-door}",
+        CAP_PANELS, COLS_CAP,
+        [r"The capacity / Kaldor--Verdoorn door under the demand-only programme shock,",
+         r"on every labour closure. Panels are the labour closures of",
+         r"Table~\ref{tab:results-matrix}, rows the utilisation elasticity $\delta$ of",
+         r"equation~\eqref{eq:capacity-door}, carried by the goods sectors (CPA A--F), and",
+         r"columns the financing closures. Each block reports the change in the price level",
+         r"($\Delta P$, the GDP deflator; signed), the largest sectoral price deviation",
+         r"($\max|\Delta p|$), employment ($\Delta L$) and household consumption ($\Delta W$),",
+         r"all in percent against the reference continuation. The $\delta = 0$ rows reproduce",
+         r"Table~\ref{tab:results-matrix} (the elastic-supply panel at uniform",
+         r"$\eta_{s,i} = 0.5$); the door creates no rent. The all-sector profile is in",
+         r"Appendix~\ref{app:variants}. Generated from the",
+         r"\texttt{pricing\_capacity\_rows-v1-*}, \texttt{pricing\_capacity-v2-*} and",
+         r"\texttt{pricing\_mobile-v2-*} run manifests (OpenCGE v0.2.1); no number is",
+         r"hand-typed."],
+        r"\label{tab:pricing-capacity}",
         [r"% =====================================================================",
-         r"% Table 6 --- the pricing door: price response by door and financing (GENERATED)",
+         r"% Table 6 --- the capacity door by labour closure and financing (GENERATED)",
          r"% ---------------------------------------------------------------------",
          r"% Do NOT edit by hand. Regenerate with:  make_pricing_door.py",
-         r"% Carries the GOODS-ONLY capacity profile (the main-text calibration) plus the",
-         r"% markup-door panels. The all-sector counterfactual and the mobile-labour rows",
-         r"% live in tableE_pricing-profiles.tex (Appendix E); the bracket figure plots the",
-         r"% same goods profile, so figure and table agree.",
+         r"% Goods-only profile (the main-text calibration), all five labour rows",
+         r"% (ADR-0032). The all-sector counterfactual lives in tableE_pricing-profiles.tex.",
          r"% ====================================================================="])
+
+
+def build_mk_table():
+    return build_table(
+        MK_PANELS, COLS_MK,
+        [r"The markup door under the demand-only programme shock, on every labour closure.",
+         r"Panels are the labour closures of Table~\ref{tab:results-matrix}, rows the markup",
+         r"slope $\kappa$ of equation~\eqref{eq:markup-door} and the routing of the rent",
+         r"(Table~\ref{tab:routing}): retained by firms, or distributed to the household,",
+         r"which saves the share $s_\pi$ of it ($s$ is the household saving rate). Columns and",
+         r"conventions as in Table~\ref{tab:pricing-capacity}; $\Xi/Y$ is the rent's share of",
+         r"factor income in percent. $\kappa = 0$ reproduces Table~\ref{tab:results-matrix};",
+         r"$\kappa = 0.25$ with distributed rent is in Appendix~\ref{app:variants}. Generated",
+         r"from the \texttt{pricing\_\{markup,profit\}-v2-*} run manifests (OpenCGE",
+         r"v0.2.1); no number is hand-typed."],
+        r"\label{tab:pricing-markup}",
+        [r"% =====================================================================",
+         r"% Table 7 --- the markup door by labour closure and financing (GENERATED)",
+         r"% ---------------------------------------------------------------------",
+         r"% Do NOT edit by hand. Regenerate with:  make_pricing_door.py",
+         r"% Retained (Stage A) and distributed (Stage B) rent, kappa in {0.25, 0.5},",
+         r"% all five labour rows (ADR-0032). kappa = 0.25 distributed: tableE.",
+         r"% ====================================================================="],
+        fit=True)
 
 
 def build_app_table():
     return build_table(
-        APP_PANELS,
-        [r"The pricing-door rows the main text does not carry: the capacity door with",
-         r"$\delta$ applied to every sector, and both doors under mobile labour with the CPI",
-         r"numeraire. Conventions as in Table~\ref{tab:pricing-door}. Under the all-sector",
-         r"profile the sign of the deflator response looks like a property of the financing",
-         r"closure --- a fall only under external finance ($-0.82$ percent,",
-         r"\texttt{pricing\_capacity-v2-GAMMA-F3-dm05}), against a fall in all three columns",
-         r"when $\delta$ is confined to the goods sectors --- because it is the service sectors,",
-         r"which receive none of the programme directly, that lose demand and productivity under",
-         r"reallocation. The sign is therefore a statement about where returns are assumed to",
-         r"live. Generated from the same run manifests; no number is hand-typed."],
+        APP_PANELS, COLS_MK,
+        [r"The pricing-door rows the main text does not carry, on every labour closure.",
+         r"Panel A extends the capacity door's $\delta$ to every sector (the all-sector",
+         r"counterfactual of Table~\ref{tab:pricing-capacity}); panel B distributes the",
+         r"rent of the $\kappa = 0.25$ markup (Table~\ref{tab:pricing-markup} carries",
+         r"$\kappa = 0.5$). Conventions as in Table~\ref{tab:pricing-markup}. Generated from",
+         r"the same run manifests; no number is hand-typed."],
         r"\label{tab:pricing-profiles}",
         [r"% =====================================================================",
          r"% Table E --- pricing-door profiles not carried in the main text (GENERATED)",
          r"% ---------------------------------------------------------------------",
          r"% Do NOT edit by hand. Regenerate with:  make_pricing_door.py",
-         r"% Panels: A = capacity door, all-sector counterfactual; B = mobile labour, CPI",
-         r"% numeraire (both doors). The main-text Table 6 carries the goods-only profile.",
+         r"% Panels: A = capacity door, all-sector counterfactual; B = markup door,",
+         r"% kappa = 0.25, rent distributed; each on all five labour rows.",
          r"% ====================================================================="],
         fit=True)
 
@@ -226,8 +267,8 @@ def build_figure():
     A(r"% Figure --- the price-response bracket (GENERATED)")
     A(r"% Do NOT edit by hand. Regenerate with:  revision/tables/make_pricing_door.py")
     A(r"% Source: pricing_capacity-v2-GAMMA-*-s0 (goods profile) and")
-    A(r"%   pricing_{markup,profit}-v1-GAMMA-* run manifests; y = 100 (gdp_deflator - 1).")
-    A(r"%   Matches the main-text Table 6 (goods-only capacity profile).")
+    A(r"%   pricing_{markup,profit}-v2-GAMMA-* run manifests; y = 100 (gdp_deflator - 1).")
+    A(r"%   Matches the fixed-wage panels of Tables 6 and 7 (goods-only capacity profile).")
     A(r"% Colours: validated categorical slots 1-4 (light); markers are the secondary encoding.")
     A(r"% =====================================================================")
     for i, (_, _, col, _) in enumerate(SERIES):
@@ -263,12 +304,8 @@ def build_figure():
 
 
 if __name__ == "__main__":
-    with open(OUT_TABLE, "w") as fh:
-        fh.write(build_main_table())
-    print("wrote", OUT_TABLE)
-    with open(OUT_TABLE_APP, "w") as fh:
-        fh.write(build_app_table())
-    print("wrote", OUT_TABLE_APP)
-    with open(OUT_FIG, "w") as fh:
-        fh.write(build_figure())
-    print("wrote", OUT_FIG)
+    for path, build in ((OUT_CAP, build_cap_table), (OUT_MK, build_mk_table),
+                        (OUT_TABLE_APP, build_app_table), (OUT_FIG, build_figure)):
+        with open(path, "w") as fh:
+            fh.write(build())
+        print("wrote", path)

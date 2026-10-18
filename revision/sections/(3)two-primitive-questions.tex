@@ -1,71 +1,11 @@
-% =====================================================================
-% REVIEW COMMENTS on this draft (agent; block refreshed 2026-10-10)
-% ---------------------------------------------------------------------
-% What works: the split is clean -- labour-market closures carry the vision
-% of the short run, financial closures carry the theory of money -- and the
-% money paragraph is still the sharpest statement of the R2.4 answer in the
-% draft. The paragraph added today is a real improvement: it shows that the
-% short-run axis is not one-dimensional, by putting a flexibility refinement
-% and a rigidity refinement side by side.
-%
-% Changes made today by the agent (all reversible):
-%   * typos fixed: modificaiton, aggreate, heoplessly, "from other sector",
-%     and the mangled quotes around "no-reallocation".
-%   * the footnote now opens with "the elastic labour supply closure"
-%     rather than with an internal id (see the naming note below).
-%
-% Open points on today's text:
-%  1. The paragraph covers two refinements (elastic supply, then
-%     no-reallocation) but not the Leontief corner. A transition is drafted
-%     in the block below the paragraph; it also supplies the "variety
-%     collapses at the parameter ends" line, properly scoped.
-%  2. "these different options on closure choices" is redundant; suggest
-%     "these closure options".
-%  3. "further established variation [of] closure setups exist" -- number
-%     agreement; suggest "further established variations ... exist".
-%  4. The table's column names ("standard CGE", "standard Leontief") are
-%     never introduced in the text. One sentence after the table does it;
-%     drafted in item E of the block below.
-%  5. US/UK spelling is mixed through the draft ("labor"/"labour",
-%     "modeling"/"modelling"). Metroeconomica accepts either, but not both.
-%  6. Still flagged: the money claim ("roughly emulate an endogenous concept
-%     of money") -- the must-not-appear list wants "an accounting analogue of
-%     external finance"; and the two "(AUSNAHMEN ZITIEREN??)" gaps.
-%
-% NAMING (2026-10-11, approved and executed): the paper no longer prints the
-% internal ids (ALPHA/BETA/GAMMA/DELTA/BF). The vocabulary of item E below
-% was swept through the draft, tables included. The ids survive only as
-% literal identifiers: run ids, registry keys, \label anchors and comments.
-%
-% See PROPOSED FOOTNOTE / NOTES / SOURCE SUGGESTIONS at the foot of this file.
-% =====================================================================
-% Section 3 --- Two primitive questions
-% ---------------------------------------------------------------------
-% Job: 3.1 vision of the short run (quantity adjustment vs. rationing vs.
-%      clearing, mapped via Taylor closures, FIDELIO, the neo-Keynesian
-%      rigidity catalogue). 3.2 theory of money (F1/F2/F3 as endogenous-
-%      money vs. balanced-budget vs. external-funds answers; F3 claimed as
-%      an *accounting* closure, not a monetary mechanism). A stated as the
-%      operational summary of 3.1 and 3.2.
-% Mindmap: N02B, N02C, N02A.
-% Status: STUB --- narrative outline v3 (2026-09-20).
-% =====================================================================
 \section{Two primitive questions, a simplified matrix and some complications}\label{sec:two-questions}
 
-As already indicated, key points of disjuncture in input-output modelling can be mapped onto classic cleavages separating different traditions of economic thought. Such traditions can often be characterized in terms of the basic analytical ideas -- or ``rivers'' in the history of economic thought (SCREPANIT/ZAMGANI with p.) -- they endorse. Where these basic ideas have a different emphasis or contradict outright, a paradigmatic cleavage is in sight \citep{Dobusch.2012}. Two such classic fields of tension in economic thinking also lie at the heart of different approaches to input-output modelling: the nature of the short run and the role of money and credit, as already captured by Table~\ref{tab:overview}.
+As already indicated, key points of disjuncture in input-output modeling can be mapped onto classic cleavages separating different traditions of economic thought. Such traditions can often be characterized in terms of the basic analytical ideas -- or ``rivers'' in the history of economic thought (SCREPANIT/ZAMGANI with p.) -- they endorse. Where these basic ideas have a different emphasis or contradict outright, a paradigmatic cleavage is in sight \citep{Dobusch.2012}. Two such classic fields of tension in economic thinking also lie at the heart of different approaches to input-output modeling: the nature of the short run and the role of money and credit, as already captured by Table~\ref{tab:overview}.
 
-%##AG: shal we wed in some closure terms already in this paragraph to prepare tbale 2 – probably yes?
+%NOTE: hier nochmal überlegen ob das mit den gleichungen gut ausschaut und richtig dosiert ist...(alte notiz: shal we wed in some closure terms already in this paragraph to prepare tbale 2?)
 When mapping the rough distinctions from our introductory table more specifically to the realm of input-output models, we find that different labour market closures are the key entry point for different understandings of the short run: if production factors are fully utilized, increased monetary demand will shift wages and prices as capacity constraints bind. While this view is traditionally associated with computable general equilibrium models (CGEs), the core intution does not hold for models with just one production factor. Here, relative scarcity does not kick in so that prices and wages stay constant and demand is simply reallocated to other sectors –– the underlying trade-off materializes in a change in the composition of output but does not affect prices. However, as shown below with the example of the ``no reallocation'' model, prices do respond even in a one factor model when capacity constraints bind on a sectoral, instead of aggregate, level.
 
 Conversely, if free factors of production are available, additional expenditures will lead to an expansion of employment and, correspondingly, output. This classic output adjustment closure \citep{Taylor1990} is what one gets from an application of the Leontief inverse. Both visions can be unified in one analytical apparatus (see \citealp{Robinson.2006} and Section~\ref{sec:kernel}), just differentiated by different assumptions on what is exogenous or endogenous when monetary expenditures increase. The two poles are the standard CGE closure, in which one flexible wage clears the labour market at full employment and additional demand is met by reallocation at given aggregate output, and the fixed real wage closure, in which the pegged wage pins prices so that employment and output absorb demand. Under demand-only shocks the latter reproduces the Type-II Leontief-inverse multiplier -- the inverse of the input-output matrix augmented by the induced round of household consumption -- exactly, and it does so at every value of the substitution elasticities; its fixed-coefficient corner, the Leontief closure, therefore yields the same result (Appendix~\ref{app:equivalences}). While the former is the obvious neoclassical standard model, the latter reflects the intuition of a multiplier and a notion of economic planning that shows greater resonance with (Post-)Keynesian, radical and evolutionary approaches \citep{Pollin.2015,Mazzucato.2018}.
-% FIXME: "increased monetary demand will increase wages and prices" is the
-% generic CGE intuition, not what our kernel does. With one primary factor and
-% constant returns the price block is demand-invariant (Lemma~\ref{lem:price},
-% Samuelson nonsubstitution), so the standard CGE closure moves NO prices
-% (Delta P = 0.00 in every row of Table~\ref{tab:results-matrix}): demand is
-% met by pure reallocation at fixed total employment. Either scope the sentence
-% to multi-factor CGEs or say that in our setting the pole adjusts by
-% reallocation only. --> JK @FRANZ: das sollte das jetzt passen, oder=?
 
 %TODO: haben wir die hinweise von hier unten drin?
 % --- LITERATURE ANCHORS: the two short-run poles (naming decision) -----
@@ -79,12 +19,12 @@ Financial closures on the other hand encode prior beliefs about the role of our 
 % FIXME: Hm macht unsere F3 nicht genau das: "additional expenditure cannot be externally financed in the conventional sense, but has to be repaid within the same period"
 % Ich glaub auch das "Hence, while a traditional, simplified application of a Leontief inverse would suggest some external stimulus, exactly such an external force is at odds with the internal consistency of the model" ist zu stark; Der externe Stimulus ist nur keiner Quelle zugewiesen.
 % Auch bei der exogenen Sicht auf Geld würd ich widersprechen und behaupten, Statische IO-Modelle haben gar keine Sicht auf Geld –– ABER AUF ZEIT UND DAMIT AUF GELD, WEIL GELD VERBINDET VERSCHIEDENE ENTSCHEIDUNGEN ÜBER DIE ZEIT ;-)
---> JK @FRANZ: das sollte das jetzt passen, oder=?
+% --> JK @FRANZ: das sollte das jetzt passen, oder=?
 
 %NOTE: hier nochmal überlegen ob das mit den gleichungen gut ausschaut und richtig dosiert ist... (alte notiz: shal we wed in some closure terms already in this paragraph to prepare tbale 2 – probably yes? – I meant real equations (not labels as found in the table) to better signify what these words actually mean?)
-Refinancing can then occur in three ways: by households -- the repurposing of consumption (F1) --, via the state -- refinancing through increased taxation (F2) --, or by someone willing to take on external debt to provide an external stimulus (F3). Such debt provides an accounting analogue that can be associated with diverse forms of external finance within an input--output framework without explicitly violating its internal consistency properties. Mapping these two dimensions onto specific modelling approaches allows for recasting Table~\ref{tab:overview} in terms of specific constellations of closure summarized by Table~\ref{tab:closure-conditions} below.
+Refinancing can then occur in three ways: by households -- the repurposing of consumption (F1) --, via the state -- refinancing through increased taxation (F2) --, or by someone willing to take on external debt to provide an external stimulus (F3). Such debt provides an accounting analogue that can be associated with diverse forms of external finance within an input--output framework without explicitly violating its internal consistency properties. Mapping these two dimensions onto specific modeling approaches allows for recasting Table~\ref{tab:overview} in terms of specific constellations of closure summarized by Table~\ref{tab:closure-conditions} below.
 
-
+%TODO quellen noch relevant einzubauen?
 % --- LITERATURE ANCHORS: the three financing regimes -------------------
 % anchors: Robinson (2006); \citep{Lavoi.BF2022, Blecker2019}.
 % OPEN: unify the F3 label -- Table~\ref{tab:overview} says ``External
@@ -93,43 +33,29 @@ Refinancing can then occur in three ways: by households -- the repurposing of co
 
 \input{tables/table2_closure-conditions.tex}
 
-While the crosswise recombination of these different options on closure choices already gives rise to some complexity, the underlying choice menu is nonetheless somewhat rough and -- in the case of the short-run -- simplistically dichotomous. Hence, it comes as no surprise that further established variations of closure setups exist that try to address this point. An obvious starting point from a mainstream perspective to introduce greater variety in labour market outcomes is by explicitly referring to a leisure-income trade-off, which leads to the canonical \textit{elastic labour supply model}: Assuming that the substitution effect dominates, higher wages will attract additional labour so that capacity constraints do not bite with full force. In the \emph{elastic labour supply} closure the fixed labour endowment is replaced by a sector-specific labour supply curve, $L_i^{s} = \bar L_i\,[\,(w_i/\Pi(p))/(w_i^{0}/\Pi^{0})\,]^{\eta_{s,i}}$, with the elasticities set to one common value, $\eta_{s,i} \equiv \eta_s$. Two changes of functional form follow: labour supply becomes \emph{behavioural} rather than a quantity restriction or a price pin, and the single aggregate labour market becomes $N$ sectoral markets with $N$ wages.\footnote{The latter assumption is not strictly necessary: a single-wage form, with one aggregate supply curve $\sum_i L_i = \bar L\,[\,(w/\Pi(p))/(w^{0}/\Pi^{0})\,]^{\eta_s}$, is also possible. Under demand-only shocks, however, this single-wage form coincides with the standard CGE closure for every $\eta_s$ (Appendix~\ref{app:equivalences}), so the sectoral form is what makes the elasticity matter in our case of application, which typically implies shocks with rather heterogeneous impact on sectors.}
+While the crosswise recombination of these different closure options already gives rise to some complexity, the underlying choice menu is nonetheless somewhat rough and -- in the case of the short-run -- simplistically dichotomous. Hence, it comes as no surprise that further established variations exist that try to address this point. An obvious starting point from a mainstream perspective to introduce greater variety in labor market outcomes is by explicitly referring to a leisure-income trade-off, which leads to the canonical \textit{elastic labor supply model}: Assuming that the substitution effect dominates, higher wages will attract additional labor so that capacity constraints do not bite with full force. In the \emph{elastic labor supply} closure the fixed labor endowment is replaced by a sector-specific labor supply curve, $L_i^{s} = \bar L_i\,[\,(w_i/\Pi(p))/(w_i^{0}/\Pi^{0})\,]^{\eta_{s,i}}$, with the elasticities set to one common value, $\eta_{s,i} \equiv \eta_s$. Two changes of functional form follow: labor supply becomes \emph{behavioural} rather than a quantity restriction or a price pin, and the single aggregate labor market becomes $N$ sectoral markets with $N$ wages.\footnote{The latter assumption is not strictly necessary: a single-wage form, with one aggregate supply curve $\sum_i L_i = \bar L\,[\,(w/\Pi(p))/(w^{0}/\Pi^{0})\,]^{\eta_s}$, is also possible. Under demand-only shocks, however, this single-wage form coincides with the standard CGE closure for every $\eta_s$ (Appendix~\ref{app:equivalences}), so the sectoral form is what makes the elasticity matter in our case of application, which typically implies shocks with rather heterogeneous impact on sectors.}
 
+%TODO quellen noch relevant einzubauen?
 % --- LITERATURE ANCHORS: the elastic / sectoral supply closure ----------
 % Roy (1951); Lagakos & Waugh (2013); Galle et al. (2015): the supply
 % elasticity to a sector is the ``Roy-type'' object. [NEW keys: Roy1951,
 % LagakosWaugh2013, Galle2015]
 
-%##AG: akin to our discussion of BETA we could wed in some closure terms in this paragraph?
-While this modification brings greater responsiveness on the side of employment other variations in the mainstream literature assume forms of rigidity that go even beyond the conventional CGE labour market closure. A prominent recent example is given by \citet{BF2019}, who introduce a ``no-reallocation'' case as a baseline scenario to articulate the view that sectoral productivity shocks might impact on aggregate outcomes in a non-linear way. Relative to Table~\ref{tab:closure-conditions} this is not a column but
-a more rigid, sectoral extension of the labour axis: it projects the standard CGE
-column's aggregate restriction on a sectoral level, i.e., $ L_i = \bar L_i$ (fixed employment levels for all sectors, so ``no-reallocation'') and correspondingly relies on sectorally flexible wages $w_i$. Formally, the transition from the standard CGE model to the no-reallocation model is governed on the production side, where $\eta$ represents the mobility of labour across sectors, with $\eta=0$ for the no-reallocation case.
+While this modification brings greater responsiveness on the side of employment other variations in the mainstream literature assume forms of rigidity that go even beyond the conventional CGE labor market closure. A prominent recent example is given by \citet{BF2019}, who introduce a ``no-reallocation'' case as a baseline scenario to articulate the view that sectoral productivity shocks might impact on aggregate outcomes in a non-linear way. Relative to Table~\ref{tab:closure-conditions} this is not a column but
+a more rigid, sectoral extension of the labor axis: it projects the standard CGE
+column's aggregate restriction on a sectoral level, i.e., $ L_i = \bar L_i$ (fixed employment levels for all sectors, so ``no-reallocation'') and correspondingly relies on sectorally flexible wages $w_i$. Formally, the transition from the standard CGE model to the no-reallocation model is governed by $\eta$, which represents the mobility of labor across sectors and admits two cases in our setup: $\eta=0$ for the no-reallocation case and $\eta=1$ for a full reallocation case that coincides with the standard CGE model.
 
-%JK: das erste verstehe ich und das zweite halt ich an dieser stelle für völlig irrelevant
-%FIXME: Rows oder Column
-% -> Columns: the labour closures are the columns of both
-%    Table~\ref{tab:closure-conditions} and Table~\ref{tab:closure-matrix-3x5};
-%    Table 2's caption (which said ``row'') is fixed. ``Not a column'' is true
-%    only relative to Table 2.
+%JK: ich denke das sollte jezte auch passen, oder FRANZ?
 % FIXME: do not imply that eta is a continuous mobility parameter. The kernel
 % admits only the endpoints eta in {0, 1} (OpenCGE@ADR-0019; the interpolated
 % eta* is retired), so ``the transition ... is governed by eta'' should read as
 % a switch between two closures, not a slider. Also ``on the production side''
-% is doubtful: eta selects the labour-allocation closure (sectoral wages and
-% frozen L_i vs. one wage and mobile labour), not a production parameter.
+% is doubtful: eta selects the labor-allocation closure (sectoral wages and
+% frozen L_i vs. one wage and mobile labor), not a production parameter.
 
 
-In the context of our case of application -- a socio-ecological transformation that is tied to sector-specific shifts or injections in final demand -- such a baseline setup is especially pessimistic as it assumes labour market rigidity across sectors. As an effect, sectors with strong demand shocks are then hopelessly overwhelmed as workers from other sectors cannot ``reallocate'' to where capacity is needed. This result, however, resonates with intuition that additional rigidities on labour markets will complicate transformation efforts building on exactly such a reallocation of labour.\footnote{In this case assumptions deviate from the neoclassical baseline, but strengthen the general laissez-faire policy stance associated with its standard closure. Also note that related work on rigidities in capital or financial markets also exists, but is beyond the scope of this paper (see, however, (SOME SOURCES))}
+In the context of our case of application -- a socio-ecological transformation that is tied to sector-specific shifts or injections in final demand -- such a baseline setup is most pessimistic for financial closures F1 and F2, as it assumes labor market rigidity across sectors, which implies that capacity constraints bite quickly and prices react accordingly. As an effect, sectors with strong demand shocks are then overwhelmed as workers from other sectors cannot ``reallocate'' to where capacity is needed. This result, however, resonates with intuition that additional rigidities on labor markets will complicate transformation efforts building on exactly such a reallocation of labor.\footnote{In this case assumptions deviate from the neoclassical baseline, but strengthen the general laissez-faire policy stance associated with its standard closure. Also note that related work on rigidities in capital or financial markets also exists, but is beyond the scope of this paper (see, however, (SOME SOURCES))}
 
-% NOTE: Table~\ref{tab:results-matrix} supports ``especially pessimistic'' only
-% partly. Under F2/F3 no-reallocation is the worst cell on welfare
-% (Delta W = -1.98 vs. -1.82 standard CGE, -1.53 fixed real wage), but under F1
-% its welfare effect is positive (+0.10) and the fixed-wage/Leontief columns do
-% worse on output (Delta Y = -0.10 vs. -0.01). And the output loss is tiny
-% everywhere (at most -0.02 %): the rigidity shows up in prices
-% (Delta P = +0.63 / +0.72), not in collapsing sectors -- ``hopelessly
-% overwhelmed'' overstates it. Suggest: pessimistic on prices and welfare under
-% tax or external financing, rather than on output.
 %NOTE: ich glaube das hier habe ichnmal ganz gut verarbeitet und kann eventuell weg?
 % --- LITERATURE ANCHORS: the no-reallocation closure -------------------
 % BF (2019); the specific-factors case. [BF2019 in bib]
@@ -142,7 +68,7 @@ In the context of our case of application -- a socio-ecological transformation t
 %    baseline employment, and it is the $N$ sectoral wages that absorb.''
 % OPTION B (relative to Table~\ref{tab:closure-conditions}):
 %   ``Relative to Table~\ref{tab:closure-conditions} this is not a column but
-%    the rigid endpoint of the labour axis: it shares the standard CGE
+%    the rigid endpoint of the labor axis: it shares the standard CGE
 %    column's aggregate restriction $\sum_i L_i = \bar L$ (full employment)
 %    while replacing its single flexible wage $w$ by $N$ sectoral wages $w_i$;
 %    its mirror image on that axis is the Leontief column, where prices rather
@@ -156,192 +82,38 @@ In the context of our case of application -- a socio-ecological transformation t
 %    The two differ in what the zero elasticity freezes --- the sectoral
 %    allocation or only the total --- not in the degree of wage rigidity.'' 
 
-%##AG: akin to our discussion of BETA we could wed in some closure terms in this paragraph? also: is it really correct what I wrote here?
+%NOTE: hier nochmal überlegen ob das mit den gleichungen gut ausschaut und richtig dosiert ist... (alte notiz: akin to our discussion of BETA we could wed in some closure terms in this paragraph? also: is it really correct what I wrote here?)
 
 Technically the \emph{Leontief closure} named here can be represented with the very same analytical apparatus as the conventional CGE model: with substitution elasticities taken to their Leontief limits, fully flexible production factors and the real wage pegged \eqref{eq:closure-delta}, prices then follow from constant costs and final demand determines output. This is the corner most applied transformation studies work with, usually without emphasis. Given this restrictive setup the \emph{Leontief closure} can itself be conceived as corner solution of a broader set of related approaches that retain the basic idea that ``quantities adjust'' without also committing to a Leontief production function -- although under demand-only shocks this corner is not distinct from the rest of the set: the fixed real wage closure yields the identical result at every value of the substitution elasticities, and the rigidity of production starts to matter only once supply shocks enter (Section~\ref{sec:beyond-demand-only}). In their basic form these \textit{fixed (real) wage} models assume constant real wages (AG: EQUATION HERE), which pins down prices and leaves the quantity margin free. They stand in the same tradition as the Leontief inverse: it is the (more general) closure through which the Keynesian multiplier intuition enters the kernel (see also section \ref{sec:kernel}).
 ibed: there the allocation is frozen sector by sector and the 
 
-Observing these additional models and corresponding closure variations moves our view on the short run from the Manichaean scenario formulated in table \ref{tab:closure-conditions} to a more nuanced exposition of different conceptions of the short run: the \textit{no-reallocation approach} imposes additional rigidity on labour markets, \textit{elastic labour supply models} allow for introducing behavioural responses and the \textit{fixed real wage models} try to generalize the scope of the output adjustment view. Moreover, the first two of these approaches are articulated on a sectoral level and the latter can be extended to one. In what follows we suggest to take the now resulting portfolio of closure choices as means to illustrate the consequences of different closure assumptions -- and, hence, paradigmatic perspectives -- on results when studying the impacts of a socio-ecological transformation by means of input-output models.
+Observing these additional models and corresponding closure variations moves our view on the short run from the Manichaean scenario formulated in table \ref{tab:closure-conditions} to a more nuanced exposition of different conceptions of the short run: the \textit{no-reallocation approach} imposes additional rigidity on labor markets, \textit{elastic labor supply models} allow for introducing behavioural responses and the \textit{fixed real wage models} try to generalize the scope of the output adjustment view. Moreover, the first two of these approaches are articulated on a sectoral level and the latter can be extended to one. In what follows we suggest to take the now resulting portfolio of closure choices as means to illustrate the consequences of different closure assumptions -- and, hence, paradigmatic perspectives -- on results when studying the impacts of a socio-ecological transformation by means of input-output models.
 
-Before we map these five closures in a monumental table \ref{tab:closure-matrix-3x5} further below, it makes sense to point out the sometimes surprising overlaps that arise for certain characteristic parameter values under demand-only shocks -- the case of our application -- as summarized by Figure \ref{fig:flexibility-map} below. For one, the no-reallocation model differs from the conventional CGE model only by exactly this ``no-reallocation'' assumption, whereas choosing a reallocation term $\eta=1$ instead of $\eta=0$ would lead to full convergence with the conventional case (as the sectoral level ceases to matter with ``full reallocation''). For another, the elastic labour supply model -- being a curve of solutions rather than a simple corner -- reproduces the no-reallocation model exactly when labour market participants lack any flexibility ($\eta_{s,i}=0$), and approaches the \textit{fixed real wage} model at the inverse position ($\eta_{s,i} \rightarrow \infty$). The latter is a limit rather than an attained case: the supply curves never become perfectly flat, and the elastic model keeps the net external transfer free, whereas the fixed real wage model pins it to zero; the elastic family therefore spans the two rigid closures without terminating in either. Hence, the elastic labour supply model can be said to sit at the centre of the interparadigmatic bridge between neoclassical interpretations based on factor scarcity and more Keynesian multiplier-style interpretations based on extrapolation via the Leontief inverse \citep{Robinson.2006, Taylor1990}.\footnote{Also, under demand-only shocks the elastic labour supply model collapses to the conventional CGE in its single-wage form, i.e.\ in the absence of sectoral wage heterogeneity, for every value of $\eta_s$.} Finally, as already indicated, under demand-only shocks the \textit{fixed real wage} closure is equivalent to the classic Leontief result whatever the substitution elasticities, so that the rigidity of production structures matters only once supply shocks enter. A more detailed exposition drawing on the basic framework as established in section \ref{sec:kernel} that rationalizes the overlaps between different closures is found in Appendix~\ref{app:equivalences}.
+Before we map these five closures in a monumental table \ref{tab:closure-matrix-3x5} further below, it makes sense to point out the sometimes surprising overlaps that arise for certain characteristic parameter values under demand-only shocks -- the case of our application -- as summarized by Figure \ref{fig:flexibility-map} below. For one, the no-reallocation model differs from the conventional CGE model only by exactly this ``no-reallocation'' assumption, whereas choosing a reallocation term $\eta=1$ instead of $\eta=0$ would lead to full convergence with the conventional case (as the sectoral level ceases to matter with ``full reallocation''). For another, the elastic labor supply model -- being a curve of solutions rather than a simple corner -- reproduces the no-reallocation model exactly when labor market participants lack any flexibility ($\eta_{s,i}=0$), and approaches the \textit{fixed real wage} model at the inverse position ($\eta_{s,i} \rightarrow \infty$). The latter is a limit rather than an attained case: the supply curves never become perfectly flat, and the elastic model keeps the net external transfer free, whereas the fixed real wage model pins it to zero; the elastic family therefore spans the two rigid closures without terminating in either. Hence, the elastic labor supply model can be said to sit at the centre of the interparadigmatic bridge between neoclassical interpretations based on factor scarcity and more Keynesian multiplier-style interpretations based on extrapolation via the Leontief inverse \citep{Robinson.2006, Taylor1990}.\footnote{Also, under demand-only shocks the elastic labor supply model collapses to the conventional CGE in its single-wage form, i.e.\ in the absence of sectoral wage heterogeneity, for every value of $\eta_s$.} Finally, as already indicated, under demand-only shocks the \textit{fixed real wage} closure is equivalent to the classic Leontief result whatever the substitution elasticities, so that the rigidity of production structures matters only once supply shocks enter. A more detailed exposition drawing on the basic framework as established in section \ref{sec:kernel} that rationalizes the overlaps between different closures is found in Appendix~\ref{app:equivalences}.
 
-%TODO: verweis auf equivalences einbauen.
-
+%NOTE: hätte her eher das gefühl die simplere variante hilft uns eher...
 \input{figures/tikz-closure-flexibility-map-v2.tex}
 
 % Alternative (redesigned) version of the figure, restored from the stash:
 \input{figures/tikz-closure-flexibility-map-v3.tex}
 
-Based on this core observation that a series of, partially overlapping, key axiomatic variations \citep{Kapeller.2013} exist when it comes to closure choice in input-output modelling we aim to map the basic framework as sketched in Figure \ref{fig:flexibility-map} to an applied level by asking: which of these assumptions will typically make what difference for estimating the economic effects of transformational policies. Moreover, as estimates for such economic effects often serve as a baseline for and precondition for estimating further ecological effects and also play a key role in informing political decision-making, the relevance of this question reaches far beyond the mere technical level. Following this agenda we combine the estimate of investment requirements introduced in section \ref{sec:io-bridge} across different model specifications to better reflect on how the conceptual distinctions introduced above matter for applied analysis and how different closure dimensions (here: labour markets and financing) interact in practice. For this purpose, we combine insights from Figure \ref{fig:flexibility-map} with the financial dimension to arrive at the following set of 15 different closure combinations that has already been tentatively anticipated by our introductory table \ref{tab:overview}.
+Based on this core observation that a series of, partially overlapping, key axiomatic variations \citep{Kapeller.2013} exist when it comes to closure choice in input-output modeling we aim to map the basic framework as sketched in Figure \ref{fig:flexibility-map} to an applied level by asking: which of these assumptions will typically make what difference for estimating the economic effects of transformational policies. Moreover, as estimates for such economic effects often serve as a baseline for and precondition for estimating further ecological effects and also play a key role in informing political decision-making, the relevance of this question reaches far beyond the mere technical level. Following this agenda we combine the estimate of investment requirements introduced in section \ref{sec:io-bridge} across different model specifications to better reflect on how the conceptual distinctions introduced above matter for applied analysis and how different closure dimensions (here: labor markets and financing) interact in practice. For this purpose, we combine insights from Figure \ref{fig:flexibility-map} with the financial dimension to arrive at the following set of 15 different closure combinations that has already been tentatively anticipated by our introductory table \ref{tab:overview}.
 
 \input{tables/table3c_closure-matrix-3x5.tex}
 
-
-% SOME OLD DRAFT FROM SECTION 1:
-% Taking our own argument on the importance of paradigmatic cleavages seriously, we aim to summarize some classic questions arising in the history of input-output modeling and indicate how they map onto current efforts in socio-ecological transformation research.
-% We show how the underlying closure choices reflect contextual arguments and can -- in terms of input as well as outcomes -- be mapped to certain paradigmatic perspectives. By doing so we also show that some combinations of assumptions lead modeling approaches, that are traditionally conceived as competing, to reach similar results. Furthermore, we illuminate which modifications or intermediate approaches might be of interest for researchers trying to credibly model the impact of socio-ecological transformation efforts. In this spirit, we also take some recent developments in mainstream economics into account that move beyond the traditional assumption of aggregate rigidity in terms of fully clearing factor markets, but assume additional rigidities on labor markets.\footnote{Related work on rigidities in capital or financial markets also exists, but is beyond the scope of this paper (see, however, (SOME SOURCES)) 
-%Just to note: This could be a away to wash awyay thw fact that BF acutally use 10 different closure choices in their paper, but only discuss one of them. I fear we will not have space and time and opportunity to expand on this here. However, if we get to it, we can delete the footnote again
-% .} Interestingly, we find that the studied modifications lead to a less optimistic view on the capacities of market adjustments; however, as we will see this leads to an even stronger laissez-faire bias in policy implications as the economic status quo becomes a relatively superior, but still fragile construct, that shall not be disturbed exogenously.\footnote{In this case assumptions deviate from the neoclassical baseline, but strengthen the general laissez-faire policy stance associated with its standard closure. A similar, although less pronounced pattern, can be observed for the assumption of a Leontief production function, which similarly decreases flexibility and adaptive capacities of markets.} 
-% %NOTE: ich denke aus den Absätzen hier drüber habe ich alles rausgeholt und würde die mal weglöschen?
-
-
-
-% =====================================================================
-% FRAMING: THE LEONTIEF CORNER, AND WHAT THE EQUIVALENCES ALREADY BUY US
-% (agent comments, 2026-10-10 -- no text changed; adopt, edit, or drop)
-% ---------------------------------------------------------------------
-% A. WHERE THE PARAGRAPH STANDS
-%    It moves from "the short run is dichotomous" through two mainstream
-%    refinements pointing in opposite directions: (i) elastic labour supply,
-%    more responsiveness at the wage margin; (ii) BF (2019)'s
-%    no-reallocation case, more rigidity at the allocation margin. That pair
-%    is valuable precisely because it shows the axis is not one-dimensional.
-%    Missing: the corner most applied IO work actually uses.
-%
-% B. SUGGESTED TRANSITION TO THE LEONTIEF CORNER  [draft, adopt or drop]
-%
-%    The two refinements just described move the labour market in opposite
-%    directions: one buys flexibility at the wage margin, the other removes
-%    it at the allocation margin. A third variation, and the oldest of the
-%    three, pulls a different lever: it removes flexibility from production
-%    itself. Replace CES substitution by fixed technical coefficients and
-%    peg the real wage, and the kernel collapses to the classical Leontief
-%    price-quantity system, in which prices follow from the cost identity
-%    alone and final demand determines output. This is the corner most
-%    applied transformation studies work with, usually without saying so.
-%    It is not a new mechanism but a limit of the fixed-wage case: take its
-%    substitution elasticities to zero and nothing is left to adjust on the
-%    price side. It is also the mirror image of the no-reallocation case --
-%    there quantities are frozen and prices absorb, here prices are frozen
-%    and quantities absorb demand. The two therefore close the short-run
-%    axis of Table~\ref{tab:closure-conditions}, and every further
-%    refinement travels between them.
-%
-%    Why this framing works: it (i) motivates a THIRD entry without letting
-%    the chapter become a list, (ii) connects to the BF sentence already in
-%    the text by symmetry (quantities vs. prices), and (iii) sets up the
-%    closing joke in C, which needs both ends established first.
-%
-% C. THE "FUNNY STATEMENT" -- THE VARIETY COLLAPSES AT THE PARAMETER ENDS
-%
-%    The honest version is unusually strong here, so it is worth saying
-%    plainly -- but it must be scoped, or it is a false claim.
-%
-%    What holds (demand-only shocks, the branch the numeraire selects):
-%      * The elastic-supply refinement adds a parameter, not an economy:
-%        with a SINGLE economy-wide wage the supply curve is anchored at
-%        the baseline real wage, so the anchor binds and the curve returns
-%        the baseline quantity whatever its elasticity. The extra
-%        flexibility is inert, and the closure coincides with the standard
-%        CGE case (Appendix~\ref{app:proofs}, Lemma~\ref{lem:price}).
-%      * Its rigid endpoint is the no-reallocation case: at eta_s = 0 the
-%        supply curve is vertical in every sector, the allocation is frozen
-%        and the N wages absorb -- exactly the case named just above. The
-%        nesting is proved analytically and measured at 0.00e+00.
-%      * Its elastic endpoint is the fixed-wage case: as eta_s -> infinity
-%        the curve flattens into a pinned real wage. That is a limit, not a
-%        cell -- the direct formulation stiffens and eventually fails.
-%      * The Leontief corner adds nothing on top of the fixed-wage case:
-%        under demand-only shocks a fixed wage already pins p = 1 exactly,
-%        so the two coincide.
-%    Hence: over its whole range the new parameter moves the economy ALONG
-%    the axis, and at both ends it lands on a case we already had.
-%
-%    Candidate closing lines (pick one, or none):
-%      (i)   "The menu of closures turns out to be longer than the list of
-%             economies."
-%      (ii)  "Every refinement we have introduced has an endpoint that is a
-%             cell of the table we started from."
-%      (iii) "Like a return ticket: an extra parameter carries the economy
-%             away from a pole and, at sufficiently extreme values, brings
-%             it back to one."
-%
-%    THE SCOPE CLAUSE IS NOT OPTIONAL -- with the joke, say:
-%      1. demand-only shocks;
-%      2. the single-wage form only: with N sectoral wages the elastic
-%         family DOES move prices, and that is exactly where this paper's
-%         variety lives (Section~\ref{sec:beyond-demand-only});
-%      3. "collapse" concerns the PRICE margin, not the labour market:
-%         employment still adjusts in the fixed-wage and Leontief cases.
-%    Without (2) the sentence is false; without (1) it is unlicensed.
-%
-% D. EQUIVALENCE INVENTORY -- WHAT CAN BE SAID HERE, AND WHAT WAITS
-%    (all "exact" entries are demand-only; Section 6 owns the proofs)
-%
-%      pair                                scope                status
-%      ------------------------------------------------------------------
-%      elastic supply = standard CGE        any eta_s, 1 wage    exact
-%      elastic supply (eta_s = 0) = the     every sector         exact
-%        no-reallocation case
-%      elastic supply (eta_s -> inf) =      limit                asymptotic,
-%        fixed real wage                                          never attained
-%      Leontief = fixed real wage           demand-only          exact
-%      F2 = F3 in the flexible-wage rows    demand-only          exact
-%      F2 =/= F3 in the fixed-wage rows     demand-only          measured
-%      ------------------------------------------------------------------
-%    Suggested use in THIS section: one forward-pointing sentence, in the
-%    neighbourhood of the joke -- "as Appendix~\ref{app:proofs} shows, and
-%    Section~\ref{sec:beyond-demand-only} exploits, several of these cells
-%    turn out to describe the same economy; the financing column is where
-%    the choice really bites." Everything else belongs in Section 6; do not
-%    unfold the propositions here.
-%TODO diese quellen hier sind gut; auch die wordings; sollte man oben genau einbauen.
-
-% E. NAMING: CONVENTIONAL VOCABULARY INSTEAD OF THE INTERNAL IDS
-%    [APPROVED and SWEPT THROUGH THE DRAFT 2026-10-11, tables included;
-%     see the NAMING note at the head of this file]
-%
-%      internal id   paper name (in use)            literature anchor
-%      ------------------------------------------------------------------
-%      ALPHA         standard CGE closure         Sen (1963); Taylor &
-%                    (neoclassical closure)      Lysy (1979); Robinson
-%                                                (2006); the most common
-%                                                factor-market closure
-%      BETA          elastic labour supply;       Roy (1951); Lagakos &
-%                    sectoral form: Roy-type     Waugh (2013); Galle et
-%                    sectoral labour supply      al. (2015) -- the supply
-%                                                elasticity to a sector
-%      GAMMA         fixed real wage closure     "fixed real wage" /
-%                                                neo-Keynesian closure II
-%      DELTA         Leontief closure            Leontief (1936, 1986);
-%                    (fixed coefficients)        Robinson (2006)
-%      BF            no-reallocation closure     BF (2019); the
-%                    (specific factors)          specific-factors case
-%      ------------------------------------------------------------------
-%    Note the asymmetry: DELTA is Leontief PLUS the fixed real wage, so its
-%    name should not promise more than the technology. The sweep removed the
-%    ids from the proofs and closures-mapping appendices as well; they survive only as run ids,
-%    registry keys and \label anchors. Your own sentence today ("beyond the
-%    conventional CGE labor market closure") already uses the vocabulary.
-%
-%    Column sentence for after the table (item 4 of the review block):
-%    SUPERSEDED 2026-10-10: the two poles are now named in the first labour
-%    paragraph of the section (AG1); the wording below is kept as fallback.
-%
-%    The two columns are the two standard short-run closures of the
-%    literature. The first is the neoclassical CGE closure, in which a
-%    flexible wage clears the labour market at full employment and only
-%    relative prices move. The second is the Leontief closure, in which
-%    fixed technical coefficients and a fixed real wage leave prices pinned
-%    and output to absorb demand. Applied transformation studies are built
-%    on one or the other, usually without saying which.
-% =====================================================================
-
-
-
-% TODO: quantity adjustment vs. rationing vs. clearing; Taylor (1990)
+% TODO: prüfen ob man das nochmal brauchen kann
+% quantity adjustment vs. rationing vs. clearing; Taylor (1990)
 % structuralist closures; the FIDELIO model (Rocchi et al.) as the applied
 % neo-Keynesian alternative; the rigidity catalogue; the no-go corollary
 % boundary (nominal wage rules cannot manufacture real variety --- forward
 % reference to Sec. 6 and App. A).
-
 
 % TODO: F1 preference reallocation (endogenous-money intuition, no net
 % injection), F2 tax-financed (balanced budget), F3 external/debt (external
 % funds; claim as an *accounting* closure, not a monetary mechanism).
 % Robinson (2006) central; Lavoie (2014), Blecker (2019).
 
-% TODO (closing): state the adjustment closure A as the operational summary
+% TODO QUELLEN? (closing): state the adjustment closure A as the operational summary
 % of B (short run) and C (money); flag that A is *measured* from Sec. 4 on.
 % =====================================================================
 % PROPOSED FOOTNOTE (for para. 1; accept, drop, or move)
@@ -356,24 +128,6 @@ Based on this core observation that a series of, partially overlapping, key axio
 % parameters of the programme itself.}
 % =====================================================================
 %
-% =====================================================================
-% NOTES on the three related questions
-% ---------------------------------------------------------------------
-% (2) Kaldor-Verdoorn. It is measured but it is NOT a closure: it is one of
-%     the seven fixed-wage (GAMMA) variants (probe17: the capacity channel
-%     delta = +0.5 vs the Kaldor-Verdoorn case delta = -0.5; a 3.6 pp
-%     deflator range from the sign alone). So it belongs in the GAMMA menu
-%     of Section 6 / Appendix E and in the "open doors" of Section 7 -- not
-%     here. Substitution elasticities: agreed, no need to dwell -- they are
-%     inert under demand-only shocks (same Lemma 1 argument as the footnote
-%     above) and matter only for the supply arm and the sectoral detail.
-% (3) Equivalence appendix. Yes -- one light, scoped forward reference. The
-%     sentence "Both visions can be unified in one analytical apparatus" IS
-%     Lemma 1 + Propositions 1-3; add "(Appendix~\ref{app:proofs})" there and
-%     keep the scope word "demand-only" next to it, since the unification
-%     fails for supply shocks (Section~\ref{sec:beyond-demand-only}). Do not
-%     unfold the equivalences here -- Section 6 owns them.
-% =====================================================================
 %
 % =====================================================================
 % SOURCE SUGGESTIONS for the bracketed placeholders
@@ -390,6 +144,16 @@ Based on this core observation that a series of, partially overlapping, key axio
 %     Leontief, Stone, Keynes, and CGE models", in de Janvry & Kanbur (eds),
 %     Poverty, Inequality and Development, Springer, 205-232. Already
 %     compile-ready alternatives: \citep{Taylor1990, Lavoi.2022, BF2022, Blecker2019}.
+% (e) "(see, however, (SOME SOURCES))" -- the footnote of the no-reallocation
+%     paragraph. PURPOSE: name the mechanism families that are OUT OF SCOPE here
+%     (rigidities in capital or financial markets), so the omission reads as a
+%     scope choice rather than an oversight.
+%     Compile-ready: \citep{BF2022, Baqaee.2021} (frictions and nonlinearity in
+%     production networks). NEW candidates for the other rigidity families:
+%     Calvo (1983) and Rotemberg (1982) for price rigidity; Bernanke, Gertler &
+%     Gilchrist (1999) for the financial accelerator.
+%     (Recovered 2026-10-18 from the SOURCE SUGGESTIONS block of an earlier
+%      draft of Section 1, which went with that file's comment cleanup.)
 % (d) "(AUSNAHMEN ZITIEREN??)"  (x2) -- the dynamic-IO exceptions:
 %     \citep{BlairMiller} for the standard static treatment;
 %     NEW candidates: Rocchi et al. (JRC FIDELIO manual) for the dynamic

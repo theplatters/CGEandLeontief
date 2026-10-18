@@ -54,6 +54,17 @@ SHARED_COLS = ("GAMMA", "DELTA")     # coincide in every financing row
 # merged width of the GAMMA+DELTA pair: 2.1 + 2*\tabcolsep(3pt) + 2.1
 MERGED_W = "4.35cm"
 
+# The row span of the shared F2/F3 block, in \multirow's own units.
+# \multirow does NOT take the number of table rows here: its vertical offset
+# moves ~5.9pt per unit while the block must travel half a row pitch per line,
+# so the logical span (2 rows x 5 outcomes = 10 lines) places the block a full
+# line too LOW -- the top gap came out 52.4pt against a bottom gap of 11.5pt.
+# Measured span sweep (shim, everything else fixed):
+#   n=4: -18.2pt (and overfull), n=6: -6.4pt, n=7: -0.5pt, n=8: +17.2pt,
+#   n=10: +40.9pt, n=12: +64.6pt   [difference = top gap - bottom gap]
+# n=7 centres the block; re-measure it if an outcome row or the font size
+# changes (build a shim with the table alone and compare the two gaps).
+
 # Set to False to emit the plain 15-cell matrix (no \multirow, no \multicolumn).
 # Use it on a TeX installation without multirow.sty -- and then also comment out
 # the \usepackage{multirow} line in main.tex, which is what would fail first.
@@ -125,12 +136,33 @@ def check_collapses():
         assert a == b, f"GAMMA != DELTA in row {f}: the column merge would print a wrong value"
 
 
+BLOCK_LINES = len(OUTCOMES)                       # lines in the shared block
+BAND_LINES  = len(OUTCOMES) * len(SHARED_ROWS)    # lines the block spans
+
+# The row span of the shared F2/F3 block, in \multirow's OWN units.
+# \multirow does not take the number of table rows here: its vertical offset
+# moves ~5.9pt per unit while the block travels half a row pitch per line, so
+# the logical span (BAND_LINES = 10) places the block a full line too LOW --
+# the top gap came out 52.4pt against a bottom gap of 11.5pt. Measured sweep
+# (shim with the table alone, everything else fixed), difference = top - bottom:
+#   n=4: -18.2pt (and overfull), n=6: -6.4pt, n=7: -0.5pt,
+#   n=8: +17.2pt, n=10: +40.9pt, n=12: +64.6pt
+# n=7 centres the block. Re-measure it if an outcome row or the font size
+# changes (build a shim with the table alone and compare the two gaps).
+SPAN = BAND_LINES - BLOCK_LINES + 2
+# \multirow's unit here is HALF a row pitch (it counts the stretched strut), and
+# it centres on the current row, which adds two units -- hence the +2 above and
+# the quarter-baselineskip nudge below, which takes the residual from +5.4pt to
+# the measured +0.7pt (d_top 32.3 vs d_bot 31.6).
+VMOVE = r"[\dimexpr\baselineskip/4\relax]"
+
+
 def multirow(n, w, content):
-    return r"\multirow{%d}{%s}{\centering %s}" % (n, w, content)
+    return r"\multirow{%d}{%s}%s{\centering %s}" % (n, w, VMOVE, content)
 
 
 def multicol(content):
-    return (r"\multicolumn{2}{>{\centering\arraybackslash}m{" + MERGED_W + r"}}{"
+    return (r"\multicolumn{2}{|>{\centering\arraybackslash}p{" + MERGED_W + r"}}{"
             + content + "}")
 
 
@@ -182,7 +214,8 @@ def build():
     A(r"\renewcommand{\arraystretch}{1.25}")
     width = {"BETA": "3.3cm"}
     A(r"\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.5cm}"
-      + "".join([r" >{\raggedright\arraybackslash}p{%s}" % width.get(c, "2.1cm") for c, _, _ in cols])
+      + "".join([r" >{\raggedright\arraybackslash}p{%s}" % width.get(c, "2.1cm") for c, _, _ in cols[:3]])
+      + r" |" + "".join([r" >{\raggedright\arraybackslash}p{%s}" % width.get(c, "2.1cm") for c, _, _ in cols[3:]])
       + r"@{}}")
     A(r"\toprule")
     A(r"\textbf{Financing closure}")
@@ -223,7 +256,9 @@ def build():
         A(s)
     A(r"& " + multicol(cellstr(SHARED_COLS[0], "F1")))
     A(r"\\")
-    A(r"\midrule")
+    # the rule separates the F1 row from the F2/F3 band in the left block and
+    # restarts over the GAMMA/DELTA pair, so it marks the block boundary
+    A(r"\cmidrule(lr){1-4}\cmidrule(lr){5-6}")
 
     # --- row F2: its first three cells are shared with F3 (\multirow), the
     #     GAMMA/DELTA pair is shared within the row (\multicolumn).
@@ -233,8 +268,7 @@ def build():
     #     overflow it by ~36pt and print nothing but an "Overfull \vbox".
     A(r"\textbf{F2}\newline \scriptsize " + fin[1][1])
     for c in FLEX_COLS:
-        A(r"& " + multirow(len(OUTCOMES) * len(SHARED_ROWS), width.get(c, "2.1cm"),
-                           cellstr(c, "F2")))
+        A(r"& " + multirow(SPAN, width.get(c, "2.1cm"), cellstr(c, "F2")))
     A(r"& " + multicol(cellstr(SHARED_COLS[0], "F2")))
     A(r"\\")
     # no full rule here: it would cut through the merged cells
@@ -250,16 +284,10 @@ def build():
     A(r"\caption{Estimated impacts of a transformational stimulus in the German residential")
     A(r"sector across the closure matrix. Each cell reports the change in real GDP")
     A(r"($\Delta Y$), employment ($\Delta L$), the price level ($\Delta P$, the GDP deflator),")
-    A(r"the net external position ($\Delta D = R + B_{\mathrm{gov}}$, positive = net external")
-    A(r"financing received, i.e.\ external debt) and household consumption welfare")
-    A(r"($\Delta W_C$), all in percent against the reference continuation. The")
-    A(r"elastic-supply column is bracketed: each entry is the interval over the executed")
-    A(r"$\eta_{s,i} \in \{" + r",\ ".join(e for e, _ in ETA_BRACKET) + r"\}$, with")
-    A(r"$\eta_{s,i} = " + ETA_LO + r"$ the headline point value. The fixed-wage and")
+    A(r"the net external position ($\Delta D$) and household consumption welfare")
+    A(r"($\Delta W_C$), all in percent against the reference continuation. The fixed-wage and")
     A(r"Leontief columns coincide, and F2 and F3 coincide in the three flexible-wage")
-    A(r"columns, so the fifteen cells describe nine distinct economies; a cell spanning")
-    A(r"two columns or two rows is one of these coincidences, the shared solution")
-    A(r"printed once and centred.}")
+    A(r"columns, so the fifteen cells describe nine distinct economies.}")
     A(r"\label{tab:results-matrix}")
     A(r"\end{table}")
     return "\n".join(L) + "\n"

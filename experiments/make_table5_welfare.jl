@@ -1,8 +1,8 @@
 # =====================================================================
-# Table 4 (ALT) --- the WELFARE-COMPARISON table (GENERATED)
+# Table 5 --- the WELFARE-COMPARISON table (GENERATED)
 # ---------------------------------------------------------------------
 # Do NOT edit by hand. Regenerate with:
-#   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table4_alt.jl.jl
+#   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table5_welfare.jl
 #
 #   NOT `--project=.`: this script calls kernel functions added in OpenCGE
 #   09e2b83 (diag(WELFARE)), which the paper repo's Manifest does not yet pin.
@@ -132,7 +132,7 @@ function main()
             cell_id(lab, fin), okall ? "ok" : "FAIL", got[1].wc, got[1][:d],
             got[1][:cesleak], got[1][:starleak], got[1][:starlleak], got[1][:starldef])
     end
-    path = joinpath(root, "revision", "tables", "table4_results-5x3-ALT.tex")
+    path = joinpath(root, "revision", "tables", "table5_welfare-comparison.tex")
     open(path, "w") do io
         render(io, rows)
     end
@@ -193,7 +193,7 @@ function render(io, rows)
     println(io, "% Table 4 (ALT) --- welfare comparison across the closure matrix (GENERATED)")
     println(io, "% ---------------------------------------------------------------------")
     println(io, "% Do NOT edit by hand. Regenerate with:")
-    println(io, "%   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table4_alt.jl")
+    println(io, "%   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table5_welfare.jl")
     println(io, "% Layout mirrors table4_results-5x3.tex exactly --- same axes, same matrix")
     println(io, "%   grammar --- with the welfare variables in place of the macro outcomes.")
     println(io, "% W_C is the manifest field; W_D, W_CES and W_CES* are computed here and")
@@ -235,27 +235,15 @@ function render(io, rows)
     end
     println(io, "\\bottomrule")
     println(io, "\\end{tabular}")
-    println(io, "\\caption{Welfare comparison across the closure matrix. The layout mirrors")
-    println(io, "Table~\\ref{tab:results-matrix} exactly --- the same three financing closures")
-    println(io, "(rows) crossed with the same five labour-market closures (columns), with the")
-    println(io, "elastic-supply column bracketed the same way --- but the variables reported in")
-    println(io, "each cell are welfare reads of the identical allocation rather than macro")
-    println(io, "outcomes, all in percent against the reference continuation. \$W_C\$ is the")
+    println(io, "\\caption{Welfare comparison across different closures in the closure matrix.")
+    println(io, "The variables reported in each cell are welfare estimates of an identical")
+    println(io, "allocation, all in percent against the reference continuation. \$W_C\$ is the")
     println(io, "household-consumption index of Table~\\ref{tab:results-matrix}; \$W_D\$ the")
     println(io, "quantity index of demand, i.e.\\ the own-weights aggregate over \$c+g\$;")
     println(io, "\$W_{CES}\$ the CES evaluation of that bundle at the \\emph{baseline}")
-    println(io, "preference weights, which is what prices the composition shift the programme")
-    println(io, "imposes; \$W_{CES^*}\$ the same bundle evaluated at the \\emph{adopted} weights,")
-    println(io, "read off the counterfactual bundle itself with \$g\$ subsumed into the private")
-    println(io, "part; and \$W^{L}\$ the first-order leisure-augmented form, which also")
-    println(io, "charges the household for the additional work a programme requires.")
-    println(io, "It is expressed on the household's resources rather than on a consumption basket,")
-    println(io, "so the treatment of saving has to be stated; the conservative reading, in which")
-    println(io, "saving is a leak that never returns, is the one tabulated here, and the deferred")
-    println(io, "alternative is discussed in the text.")
-    println(io, "\$\\eta_{s,i}\\in\\{" * ETAS_LO * ",1," * ETAS_HI * "\\}\$, as in")
-    println(io, "Table~\\ref{tab:results-matrix}.")
-    println(io, "}")
+    println(io, "preference weights; \$W_{CES^*}\$ the same bundle evaluated at the")
+    println(io, "\\emph{adopted} weights; and \$W^{L}\$ the first-order leisure-augmented form,")
+    println(io, "which also charges the household for the additional work a programme requires.}")
     println(io, "\\label{tab:welfare-comparison}")
     println(io, "\\end{table}")
 end

@@ -1,8 +1,8 @@
 % =====================================================================
-% Table 4 (ALT) --- welfare comparison across the closure matrix (GENERATED)
+% Table 5 --- welfare comparison across the closure matrix (GENERATED)
 % ---------------------------------------------------------------------
 % Do NOT edit by hand. Regenerate with:
-%   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table4_alt.jl
+%   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table5_welfare.jl
 % Layout mirrors table4_results-5x3.tex exactly --- same axes, same matrix
 %   grammar --- with the welfare variables in place of the macro outcomes.
 % W_C is the manifest field; W_D, W_CES and W_CES* are computed here and
@@ -127,26 +127,14 @@ $W^{L}$ & $+1.59$ \\
 \end{tabular}\\
 \bottomrule
 \end{tabular}
-\caption{Welfare comparison across the closure matrix. The layout mirrors
-Table~\ref{tab:results-matrix} exactly --- the same three financing closures
-(rows) crossed with the same five labour-market closures (columns), with the
-elastic-supply column bracketed the same way --- but the variables reported in
-each cell are welfare reads of the identical allocation rather than macro
-outcomes, all in percent against the reference continuation. $W_C$ is the
+\caption{Welfare comparison across different closures in the closure matrix.
+The variables reported in each cell are welfare estimates of an identical
+allocation, all in percent against the reference continuation. $W_C$ is the
 household-consumption index of Table~\ref{tab:results-matrix}; $W_D$ the
 quantity index of demand, i.e.\ the own-weights aggregate over $c+g$;
 $W_{CES}$ the CES evaluation of that bundle at the \emph{baseline}
-preference weights, which is what prices the composition shift the programme
-imposes; $W_{CES^*}$ the same bundle evaluated at the \emph{adopted} weights,
-read off the counterfactual bundle itself with $g$ subsumed into the private
-part; and $W^{L}$ the first-order leisure-augmented form, which also
-charges the household for the additional work a programme requires.
-It is expressed on the household's resources rather than on a consumption basket,
-so the treatment of saving has to be stated; the conservative reading, in which
-saving is a leak that never returns, is the one tabulated here, and the deferred
-alternative is discussed in the text.
-$\eta_{s,i}\in\{0.5,1,2\}$, as in
-Table~\ref{tab:results-matrix}.
-}
+preference weights; $W_{CES^*}$ the same bundle evaluated at the
+\emph{adopted} weights; and $W^{L}$ the first-order leisure-augmented form,
+which also charges the household for the additional work a programme requires.}
 \label{tab:welfare-comparison}
 \end{table}

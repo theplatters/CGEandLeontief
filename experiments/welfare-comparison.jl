@@ -3,7 +3,7 @@
 # This script predates the operator's ADOPTED-PREFERENCES decision (2026-10-16):
 # it assigns the public part its baseline share (w_new ∝ c_0*(alpha/omega) + g_0)
 # and therefore collapses W_CES* onto W_CES under F2/F3. The table generator
-# experiments/make_table4_alt.jl now SUBSUMES g into the private part, so W_CES*
+# experiments/make_table5_welfare.jl now SUBSUMES g into the private part, so W_CES*
 # differs from W_CES in every financing. Numbers here differ from the table by
 # construction; do not cite them.
 #

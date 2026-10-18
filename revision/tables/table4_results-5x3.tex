@@ -23,7 +23,7 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2pt}
 \renewcommand{\arraystretch}{1.25}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.5cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{2.1cm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.5cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{3.3cm} | >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{2.1cm}@{}}
 \toprule
 \textbf{Financing closure}
 & \textbf{No-reallocation}\newline \scriptsize immobile labour, sectoral wages
@@ -53,34 +53,34 @@ $\Delta L$ & $+0.12$--$+0.19$ \\
 $\Delta P$ & $+0.10$--$+0.27$ \\
 $\Delta D$ & $-0.09$--$+0.14$ \\
 $\Delta W_C$ & $+0.42$--$+0.58$\end{tabular}
-& \multicolumn{2}{>{\centering\arraybackslash}m{4.35cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+& \multicolumn{2}{|>{\centering\arraybackslash}p{4.35cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $-0.10$ \\
 $\Delta L$ & $-0.10$ \\
 $\Delta P$ & $0.00$ \\
 $\Delta D$ & $0.00$ \\
 $\Delta W_C$ & $-0.08$\end{tabular}}
 \\
-\midrule
+\cmidrule(lr){1-4}\cmidrule(lr){5-6}
 \textbf{F2}\newline \scriptsize refinancing via taxes
-& \multirow{10}{2.1cm}{\centering \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+& \multirow{7}{2.1cm}[\dimexpr\baselineskip/4\relax]{\centering \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $-0.02$ \\
 $\Delta L$ & $0.00$ \\
 $\Delta P$ & $+0.72$ \\
 $\Delta D$ & $-0.85$ \\
 $\Delta W_C$ & $-1.98$\end{tabular}}
-& \multirow{10}{2.1cm}{\centering \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+& \multirow{7}{2.1cm}[\dimexpr\baselineskip/4\relax]{\centering \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $0.00$ \\
 $\Delta L$ & $0.00$ \\
 $\Delta P$ & $0.00$ \\
 $\Delta D$ & $-0.10$ \\
 $\Delta W_C$ & $-1.82$\end{tabular}}
-& \multirow{10}{3.3cm}{\centering \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.85cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
+& \multirow{7}{3.3cm}[\dimexpr\baselineskip/4\relax]{\centering \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.85cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
 $\Delta Y$ & $+0.13$--$+0.19$ \\
 $\Delta L$ & $+0.13$--$+0.19$ \\
 $\Delta P$ & $+0.10$--$+0.29$ \\
 $\Delta D$ & $-0.28$--$-0.05$ \\
 $\Delta W_C$ & $-1.57$--$-1.39$\end{tabular}}
-& \multicolumn{2}{>{\centering\arraybackslash}m{4.35cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+& \multicolumn{2}{|>{\centering\arraybackslash}p{4.35cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $+0.13$ \\
 $\Delta L$ & $+0.13$ \\
 $\Delta P$ & $0.00$ \\
@@ -89,7 +89,7 @@ $\Delta W_C$ & $-1.53$\end{tabular}}
 \\
 \cmidrule(lr){5-6}
 \textbf{F3}\newline \scriptsize external / debt finance
-& & & & \multicolumn{2}{>{\centering\arraybackslash}m{4.35cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+& & & & \multicolumn{2}{|>{\centering\arraybackslash}p{4.35cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $\Delta Y$ & $+1.78$ \\
 $\Delta L$ & $+1.78$ \\
 $\Delta P$ & $0.00$ \\
@@ -101,15 +101,9 @@ $\Delta W_C$ & $+2.26$\end{tabular}}
 \caption{Estimated impacts of a transformational stimulus in the German residential
 sector across the closure matrix. Each cell reports the change in real GDP
 ($\Delta Y$), employment ($\Delta L$), the price level ($\Delta P$, the GDP deflator),
-the net external position ($\Delta D = R + B_{\mathrm{gov}}$, positive = net external
-financing received, i.e.\ external debt) and household consumption welfare
-($\Delta W_C$), all in percent against the reference continuation. The
-elastic-supply column is bracketed: each entry is the interval over the executed
-$\eta_{s,i} \in \{0.5,\ 1,\ 2\}$, with
-$\eta_{s,i} = 0.5$ the headline point value. The fixed-wage and
+the net external position ($\Delta D$) and household consumption welfare
+($\Delta W_C$), all in percent against the reference continuation. The fixed-wage and
 Leontief columns coincide, and F2 and F3 coincide in the three flexible-wage
-columns, so the fifteen cells describe nine distinct economies; a cell spanning
-two columns or two rows is one of these coincidences, the shared solution
-printed once and centred.}
+columns, so the fifteen cells describe nine distinct economies.}
 \label{tab:results-matrix}
 \end{table}

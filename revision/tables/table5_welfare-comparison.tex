@@ -3,8 +3,14 @@
 % ---------------------------------------------------------------------
 % Do NOT edit by hand. Regenerate with:
 %   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table5_welfare.jl
-% Layout mirrors table4_results-5x3.tex exactly --- same axes, same matrix
-%   grammar --- with the welfare variables in place of the macro outcomes.
+% Layout adopts the COLLAPSING ROUTINE of table4_results-5x3.tex: the two
+%   coincidences the table states are PRINTED ONCE -- F2/F3 share one cell in
+%   the three flexible-wage columns (\multirow, centred across the two rows,
+%   the rule between them a \cmidrule over the GAMMA/DELTA pair only) and the
+%   fixed-real-wage and Leontief columns share one \multicolumn{2} cell per
+%   row. check_collapses() asserts both on the PRINTED strings, so a broken
+%   equivalence aborts the run. Column widths and the cell contents are Table
+%   5's own; only the collapse/centre/rule grammar is Table 4's.
 % W_C is the manifest field; W_D, W_CES and W_CES* are computed here and
 %   gated against runs/<id>/manifest.toml (consumption_rel, tol 1e-6). No run
 %   directory is created or modified, and no number is hand-typed.
@@ -16,7 +22,7 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2pt}
 \renewcommand{\arraystretch}{1.25}
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.5cm} >{\raggedright\arraybackslash}p{1.95cm} >{\raggedright\arraybackslash}p{1.95cm} >{\raggedright\arraybackslash}p{3.5cm} >{\raggedright\arraybackslash}p{1.95cm} >{\raggedright\arraybackslash}p{1.95cm}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.6cm} >{\raggedright\arraybackslash}p{2.0cm} >{\raggedright\arraybackslash}p{2.0cm} >{\raggedright\arraybackslash}p{3.5cm} | >{\raggedright\arraybackslash}p{2.0cm} >{\raggedright\arraybackslash}p{2.0cm}@{}}
 \toprule
 \textbf{Financing closure}
 & \textbf{No-reallocation}\newline \scriptsize immobile labour, sectoral wages
@@ -33,98 +39,53 @@ $W_C$ & $+0.10$ \\
 $W_D$ & $-0.01$ \\
 $W_{CES}$ & $-0.25$ \\
 $W_{CES^*}$ & $+0.33$ \\
-$W^{L}$ & $+0.33$ \\
-\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W^{L}$ & $+0.33$ \\\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $W_C$ & $+0.14$ \\
 $W_D$ & $+0.08$ \\
 $W_{CES}$ & $-0.28$ \\
 $W_{CES^*}$ & $+0.42$ \\
-$W^{L}$ & $+0.42$ \\
-\end{tabular}& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.05cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
+$W^{L}$ & $+0.42$ \\\end{tabular}& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.05cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
 $W_C$ & $+0.42$--$+0.58$ \\
 $W_D$ & $+0.26$--$+0.40$ \\
 $W_{CES}$ & $-0.04$--$+0.06$ \\
 $W_{CES^*}$ & $+0.61$--$+0.75$ \\
-$W^{L}$ & $+0.48$--$+0.54$ \\
-\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W^{L}$ & $+0.48$--$+0.54$ \\\end{tabular}& \multicolumn{2}{|>{\centering\arraybackslash}p{4.05cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $W_C$ & $-0.08$ \\
 $W_D$ & $-0.09$ \\
 $W_{CES}$ & $-0.45$ \\
 $W_{CES^*}$ & $+0.25$ \\
-$W^{L}$ & $+0.36$ \\
-\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$W_C$ & $-0.08$ \\
-$W_D$ & $-0.09$ \\
-$W_{CES}$ & $-0.45$ \\
-$W_{CES^*}$ & $+0.25$ \\
-$W^{L}$ & $+0.36$ \\
-\end{tabular}\\
-\midrule
+$W^{L}$ & $+0.36$ \\\end{tabular}}\\
+\cmidrule(lr){1-4}\cmidrule(lr){5-6}
 \textbf{F2}\newline \scriptsize refinancing via taxes
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+& \multirow{7}{2.0cm}[\dimexpr\baselineskip/4\relax]{\centering \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $W_C$ & $-1.98$ \\
 $W_D$ & $-0.03$ \\
 $W_{CES}$ & $-0.32$ \\
 $W_{CES^*}$ & $+0.40$ \\
-$W^{L}$ & $+0.40$ \\
-\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W^{L}$ & $+0.40$ \\\end{tabular}}& \multirow{7}{2.0cm}[\dimexpr\baselineskip/4\relax]{\centering \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $W_C$ & $-1.82$ \\
 $W_D$ & $+0.08$ \\
 $W_{CES}$ & $-0.29$ \\
 $W_{CES^*}$ & $+0.43$ \\
-$W^{L}$ & $+0.43$ \\
-\end{tabular}& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.05cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
+$W^{L}$ & $+0.43$ \\\end{tabular}}& \multirow{7}{3.5cm}[\dimexpr\baselineskip/4\relax]{\centering \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.05cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
 $W_C$ & $-1.57$--$-1.39$ \\
 $W_D$ & $+0.27$--$+0.41$ \\
 $W_{CES}$ & $-0.06$--$+0.05$ \\
 $W_{CES^*}$ & $+0.66$--$+0.78$ \\
-$W^{L}$ & $+0.52$--$+0.56$ \\
-\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+$W^{L}$ & $+0.52$--$+0.56$ \\\end{tabular}}& \multicolumn{2}{|>{\centering\arraybackslash}p{4.05cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $W_C$ & $-1.53$ \\
 $W_D$ & $+0.30$ \\
 $W_{CES}$ & $-0.07$ \\
 $W_{CES^*}$ & $+0.65$ \\
-$W^{L}$ & $+0.51$ \\
-\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$W_C$ & $-1.53$ \\
-$W_D$ & $+0.30$ \\
-$W_{CES}$ & $-0.07$ \\
-$W_{CES^*}$ & $+0.65$ \\
-$W^{L}$ & $+0.51$ \\
-\end{tabular}\\
-\midrule
+$W^{L}$ & $+0.51$ \\\end{tabular}}\\
+\cmidrule(lr){5-6}
 \textbf{F3}\newline \scriptsize external / debt finance
-& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$W_C$ & $-1.98$ \\
-$W_D$ & $-0.03$ \\
-$W_{CES}$ & $-0.32$ \\
-$W_{CES^*}$ & $+0.40$ \\
-$W^{L}$ & $+0.40$ \\
-\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$W_C$ & $-1.82$ \\
-$W_D$ & $+0.08$ \\
-$W_{CES}$ & $-0.29$ \\
-$W_{CES^*}$ & $+0.43$ \\
-$W^{L}$ & $+0.43$ \\
-\end{tabular}& \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.05cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
-$W_C$ & $-1.57$--$-1.39$ \\
-$W_D$ & $+0.27$--$+0.41$ \\
-$W_{CES}$ & $-0.06$--$+0.05$ \\
-$W_{CES^*}$ & $+0.66$--$+0.78$ \\
-$W^{L}$ & $+0.52$--$+0.56$ \\
-\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
+& & & & \multicolumn{2}{|>{\centering\arraybackslash}p{4.05cm}}{\begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
 $W_C$ & $+2.26$ \\
 $W_D$ & $+3.20$ \\
 $W_{CES}$ & $+2.83$ \\
 $W_{CES^*}$ & $+3.56$ \\
-$W^{L}$ & $+1.59$ \\
-\end{tabular}& \begin{tabular}{@{}l@{\hspace{3pt}}r@{}}
-$W_C$ & $+2.26$ \\
-$W_D$ & $+3.20$ \\
-$W_{CES}$ & $+2.83$ \\
-$W_{CES^*}$ & $+3.56$ \\
-$W^{L}$ & $+1.59$ \\
-\end{tabular}\\
+$W^{L}$ & $+1.59$ \\\end{tabular}}\\
 \bottomrule
 \end{tabular}
 \caption{Welfare comparison across different closures in the closure matrix.

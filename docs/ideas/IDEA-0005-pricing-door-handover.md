@@ -81,7 +81,7 @@ slice "A $\equiv$ 1 AND price-invariant technology".
 | Preregistration | 42 scenario rows | **all `planned`; none executed** |
 | Kernel tests | `OpenCGE@tests/test_pricing_closure.jl` | pass (full suite 454 tests, 58 testsets) |
 | Paper tests | `tests/test_pricing_design.jl` | asserts the external account on the REAL table |
-| Manuscript | App. B `closure-focs`, appendices relettered, `revision/proposals/` | in progress (author's pass) |
+| Manuscript | App. B `model-closures-proofs` (merged), appendices relettered A--H, `revision/proposals/` | done (merged 2026-10-18) |
 
 Kernel commits that make up v0.2.0, oldest first, all in `../opencge`:
 `1be5809` hooks + `Model.pricing` (no behaviour change); `c40cc4d` `P1`

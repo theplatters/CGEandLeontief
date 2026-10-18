@@ -2,7 +2,10 @@
 """Regenerate the pricing-door tables from the Phase 7 run manifests
 (ADR-0029, ADR-0030, ADR-0031, ADR-0032).
 
-No number is hand-typed: every value is a manifest field. Run from anywhere:
+No number is hand-typed: every value is a manifest field, except Table 6's
+W_D, which no manifest records; it is read from table6_wd.csv, written by
+experiments/make_table6_wd.jl from manifest-gated re-solves (as Table 5's W_D).
+Run from anywhere:
     python3 make_pricing_door.py
 Sources (schema v2, all on OpenCGE v0.2.1):
     capacity door (P1), by labour row:
@@ -26,9 +29,10 @@ goods-only profile (delta on CPA A--F, where the programme's entire direct
 incidence falls); the all-sector counterfactual is in the appendix table. The
 price-response bracket figure was removed from the manuscript the same day.
 """
-import tomllib, os
+import csv, tomllib, os
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+WD_CSV = os.path.join(REPO, "revision/tables/table6_wd.csv")
 OUT_CAP = os.path.join(REPO, "revision/tables/table6_pricing-capacity.tex")
 OUT_MK = os.path.join(REPO, "revision/tables/table7_pricing-markup.tex")
 OUT_TABLE_APP = os.path.join(REPO, "revision/tables/tableE_pricing-profiles.tex")
@@ -87,14 +91,24 @@ def manifest(rid):
     return d
 
 
+def load_wd():
+    """W_D per run id (percent), from the manifest-gated sidecar of make_table6_wd.jl."""
+    with open(WD_CSV, newline="") as fh:
+        return {r["run_id"]: float(r["w_d"]) for r in csv.DictReader(fh)}
+
+
+WD = load_wd()
+
+
 def values(rid):
     m = manifest(rid)["metrics"]
     return dict(P=100 * (m["gdp_deflator"] - 1.0), D=100 * m["max_abs_price_dev"],
                 L=100 * (m["employment"] - 1.0), W=100 * m["consumption_rel"],
-                S=100 * m.get("profit_share", 0.0))
+                WD=WD.get(rid, float("nan")), S=100 * m.get("profit_share", 0.0))
 
 
 def num(x, signed=True):
+    assert x == x, "missing value (rerun experiments/make_table6_wd.jl?)"
     if abs(x) < 5e-3:
         return r"$0.00$"
     if not signed:
@@ -103,8 +117,9 @@ def num(x, signed=True):
 
 
 COLS_CAP = [("P", r"$\Delta P$", True), ("D", r"$\max|\Delta p|$", False),
-            ("L", r"$\Delta L$", True), ("W", r"$\Delta W$", True)]
-COLS_MK = COLS_CAP + [("S", r"$\Xi/Y$", False)]
+            ("L", r"$\Delta L$", True), ("WD", r"$\Delta W_D$", True)]
+COLS_MK = [("P", r"$\Delta P$", True), ("D", r"$\max|\Delta p|$", False),
+           ("L", r"$\Delta L$", True), ("W", r"$\Delta W$", True), ("S", r"$\Xi/Y$", False)]
 
 
 def build_table(panels, cols, caption_lines, label, comment_lines, fit=False):
@@ -224,14 +239,15 @@ def build_cap_table():
          r"equation~\eqref{eq:capacity-door}, carried by the goods sectors (CPA A--F), and",
          r"columns the financing closures. Each block reports the change in the price level",
          r"($\Delta P$, the GDP deflator; signed), the largest sectoral price deviation",
-         r"($\max|\Delta p|$), employment ($\Delta L$) and household consumption ($\Delta W$),",
-         r"all in percent against the reference continuation. The shaded $\delta = 0$ rows",
-         r"(no door) reproduce Table~\ref{tab:results-matrix} (the elastic-supply panel at uniform",
-         r"$\eta_{s,i} = 0.5$); the door creates no rent. The all-sector profile is in",
-         r"Appendix~\ref{app:variants}. Generated from the",
+         r"($\max|\Delta p|$), employment ($\Delta L$) and the quantity index of demand over",
+         r"$c+g$ ($\Delta W_D$, the $W_D$ of Table~\ref{tab:welfare-comparison}), all in percent",
+         r"against the reference continuation. The shaded $\delta = 0$ rows (no door) reproduce",
+         r"Tables~\ref{tab:results-matrix} and~\ref{tab:welfare-comparison} (the elastic-supply",
+         r"panel at uniform $\eta_{s,i} = 0.5$); the door creates no rent. The all-sector profile",
+         r"is in Appendix~\ref{app:variants}. Generated from the",
          r"\texttt{pricing\_capacity\_rows-v1-*}, \texttt{pricing\_capacity-v2-*} and",
-         r"\texttt{pricing\_mobile-v2-*} run manifests (OpenCGE v0.2.1); no number is",
-         r"hand-typed."],
+         r"\texttt{pricing\_mobile-v2-*} run manifests (OpenCGE v0.2.1; $W_D$ from re-solves",
+         r"gated against them); no number is hand-typed."],
         r"\label{tab:pricing-capacity}",
         [r"% =====================================================================",
          r"% Table 6 --- the capacity door by labour closure and financing (GENERATED)",
@@ -250,7 +266,8 @@ def build_mk_table():
          r"slope $\kappa$ of equation~\eqref{eq:markup-door} and the routing of the rent",
          r"(Table~\ref{tab:routing}): retained by firms, or distributed to the household,",
          r"which saves the share $s_\pi$ of it ($s$ is the household saving rate). Columns and",
-         r"conventions as in Table~\ref{tab:pricing-capacity}; $\Xi/Y$ is the rent's share of",
+         r"conventions as in Table~\ref{tab:pricing-capacity}, except that $\Delta W$ is household",
+         r"consumption ($W_C$ of Table~\ref{tab:results-matrix}); $\Xi/Y$ is the rent's share of",
          r"factor income in percent. $\kappa = 0$ reproduces Table~\ref{tab:results-matrix};",
          r"$\kappa = 0.25$ with distributed rent is in Appendix~\ref{app:variants}. Generated",
          r"from the \texttt{pricing\_\{markup,profit\}-v2-*} run manifests (OpenCGE",

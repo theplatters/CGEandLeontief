@@ -22,7 +22,7 @@ Sector $i$ produces with the CES unit cost
 where $P_i$ is the intermediate price index (CES in $\theta$ over the
 purchaser prices $p_j$) and $\alpha_i$ the factor share. The two doors act on
 this one line. The capacity door replaces $A_i$ by
-$A^{\mathrm{eff}}_i = A_i (y_i/\lambda_i)^{-\delta_i \alpha_i}$ and keeps zero profit,
+$A^{\mathrm{eff}}_i = A_i (y_i/\lambda_i)^{-\delta_i \alpha_i}$ ($\lambda_i$ the sector's baseline gross output) and keeps zero profit,
 $p_i = c_i$. The factor share in the exponent converts the value-added
 elasticity $\delta_i$ into a gross-output one: at fixed input prices a
 Hicks-neutral change $d\ln A^{\mathrm{eff}}_i$ raises value added per worker by
@@ -94,16 +94,16 @@ spreads are of order $10^{-9}$ at condition numbers of order $10^{7}$; a
 distinct equilibrium would sit about $10^{-2}$ away. All 42 priced cells pass.
 
 \subsection{Accounting with the rent booked}\label{app:pricing-accounting}
-The rent is $\Pi = \sum_i (1 - 1/\mu_i)\,p_i y_i$. With retention rate
+The rent is $\Xi = \sum_i (1 - 1/\mu_i)\,p_i y_i$. With retention rate
 $s_\pi$ the household spends
-$E = (1-\tau)\,w\textstyle\sum_i L_i + F + (1-s_\pi)\Pi$, and the
+$E = (1-\tau)\,w\textstyle\sum_i L_i + F + (1-s_\pi)\Xi$, and the
 external-account identity of the kernel becomes
 \begin{equation}\label{eq:app-account}
-  sE + s_\pi \Pi + T^{\mathrm{int}} + M - (I + X) \;=\; R + B_{\mathrm{gov}},
+  sE + s_\pi \Xi + T^{\mathrm{int}} + M - (I + X) \;=\; R + B_{\mathrm{gov}},
 \end{equation}
-which every priced run satisfies to $10^{-11}$; dropping the $s_\pi\Pi$ term
+which every priced run satisfies to $10^{-11}$; dropping the $s_\pi\Xi$ term
 leaves it short by exactly the retained rent. On the income side GDP is factor
-income $w\sum_i L_i + \Pi$, so the companion identity between the GDP wedge and
+income $w\sum_i L_i + \Xi$, so the companion identity between the GDP wedge and
 the account gap holds unchanged. Retention ($s_\pi = 1$) needs injections in
 the fixed-wage gauge: summing over sectors,
 $(\mu - 1)\,c\,y + (s + m - s m)\,w L = p\,(1-m)(g^G + \mathit{exo}) + pX$, so an

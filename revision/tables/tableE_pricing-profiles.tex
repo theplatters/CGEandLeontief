@@ -1,0 +1,48 @@
+% =====================================================================
+% Table E --- pricing-door profiles not carried in the main text (GENERATED)
+% ---------------------------------------------------------------------
+% Do NOT edit by hand. Regenerate with:  make_pricing_door.py
+% Panels: A = capacity door, all-sector counterfactual; B = mobile labour, CPI
+% numeraire (both doors). The main-text Table 6 carries the goods-only profile.
+% =====================================================================
+\begin{table}[htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{1.6pt}
+\renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}l@{\hspace{6pt}}rrrrr@{\hspace{6pt}}rrrrr@{\hspace{6pt}}rrrrr@{}}
+\toprule
+ & \multicolumn{5}{c}{\textbf{F1}} & \multicolumn{5}{c}{\textbf{F2}} & \multicolumn{5}{c}{\textbf{F3}} \\
+\cmidrule(lr){2-6}\cmidrule(lr){7-11}\cmidrule(lr){12-16}
+Door and parameter & $\Delta P$ & $\max|\Delta p|$ & $\Delta L$ & $\Delta W$ & $\Xi/Y$ & $\Delta P$ & $\max|\Delta p|$ & $\Delta L$ & $\Delta W$ & $\Xi/Y$ & $\Delta P$ & $\max|\Delta p|$ & $\Delta L$ & $\Delta W$ & $\Xi/Y$ \\
+\midrule
+\multicolumn{16}{@{}l}{\textit{A. Capacity door ($P_1$), fixed wage: all-sector counterfactual}} \\
+\quad $\delta = +0.5$ & $+0.02$ & $3.95$ & $+0.04$ & $+0.21$ & $0.00$ & $+0.12$ & $4.25$ & $+0.35$ & $-1.30$ & $0.00$ & $+0.90$ & $4.94$ & $+2.61$ & $+2.14$ & $0.00$ \\
+\quad $\delta = -0.5$ & $+0.14$ & $4.27$ & $-0.15$ & $-0.53$ & $0.00$ & $+0.03$ & $4.29$ & $-0.01$ & $-1.89$ & $0.00$ & $-0.82$ & $4.93$ & $+1.05$ & $+2.43$ & $0.00$ \\
+\midrule
+\multicolumn{16}{@{}l}{\textit{B. Mobile labour, capacity door, all sectors (CPI numeraire)}} \\
+\quad $\delta = +0.5$ & $+0.12$ & $4.06$ & $0.00$ & $+0.15$ & $0.00$ & $+0.13$ & $4.27$ & $0.00$ & $-1.83$ & $0.00$ & $+0.13$ & $4.27$ & $0.00$ & $-1.83$ & $0.00$ \\
+\quad $\delta = -0.5$ & $-0.16$ & $4.56$ & $0.00$ & $+0.07$ & $0.00$ & $-0.16$ & $4.47$ & $0.00$ & $-1.87$ & $0.00$ & $-0.16$ & $4.47$ & $0.00$ & $-1.87$ & $0.00$ \\
+\midrule
+\multicolumn{16}{@{}l}{\textit{C. Mobile labour, capacity door, goods sectors (CPI numeraire)}} \\
+\quad $\delta = +0.5$ & $+0.05$ & $3.84$ & $0.00$ & $-0.22$ & $0.00$ & $+0.05$ & $4.05$ & $0.00$ & $-2.22$ & $0.00$ & $+0.05$ & $4.05$ & $0.00$ & $-2.22$ & $0.00$ \\
+\quad $\delta = -0.5$ & $-0.06$ & $4.33$ & $0.00$ & $+0.61$ & $0.00$ & $-0.06$ & $4.23$ & $0.00$ & $-1.34$ & $0.00$ & $-0.06$ & $4.23$ & $0.00$ & $-1.34$ & $0.00$ \\
+\midrule
+\multicolumn{16}{@{}l}{\textit{D. Mobile labour, markup door, rent retained (CPI numeraire)}} \\
+\quad $\kappa = 0.25$ & $+0.16$ & $5.32$ & $0.00$ & $+0.12$ & $0.07$ & $+0.17$ & $5.68$ & $0.00$ & $-1.86$ & $0.07$ & $+0.17$ & $5.68$ & $0.00$ & $-1.86$ & $0.07$ \\
+\quad $\kappa = 0.5$ & $+0.28$ & $9.49$ & $0.00$ & $+0.11$ & $0.10$ & $+0.30$ & $10.50$ & $0.00$ & $-1.90$ & $0.11$ & $+0.30$ & $10.50$ & $0.00$ & $-1.90$ & $0.11$ \\
+\bottomrule
+\end{tabular}}
+\caption{The pricing-door rows the main text does not carry: the capacity door with
+$\delta$ applied to every sector, and both doors under mobile labour with the CPI
+numeraire. Conventions as in Table~\ref{tab:pricing-door}. Under the all-sector
+profile the sign of the deflator response looks like a property of the financing
+closure --- a fall only under external finance ($-0.82$ percent,
+\texttt{pricing\_capacity-v2-GAMMA-F3-dm05}), against a fall in all three columns
+when $\delta$ is confined to the goods sectors --- because it is the service sectors,
+which receive none of the programme directly, that lose demand and productivity under
+reallocation. The sign is therefore a statement about where returns are assumed to
+live. Generated from the same run manifests; no number is hand-typed.}
+\label{tab:pricing-profiles}
+\end{table}

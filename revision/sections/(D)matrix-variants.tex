@@ -1,0 +1,47 @@
+% =====================================================================
+% Appendix E --- Matrix variants and gamma/beta representation robustness
+% ---------------------------------------------------------------------
+% Job: where the presentation-decision variants live; all tables cite run
+%      ids. Tally: fifteen matrix cells + twelve ladder cells + six
+%      two-group cells = 33.
+% Mindmap: N11, N12.
+% Status: STUB --- narrative outline v3 (2026-09-20).
+% =====================================================================
+\section{Matrix variants and gamma/beta representation robustness}\label{app:variants}
+
+% TABLE (linked, revision/tables/matrix_5x3_v10_flows.md): the full 15-cell
+% matrix + the 18 sectoral cells, all run ids.
+% ADDED (2026-10-18): the pricing-door profiles (tableE_pricing-profiles.tex),
+% moved here from Section 6.4 when the main text switched to the goods-only
+% profile.
+% TODO: the full 15-cell matrix (citing matrix_5x3_v10 run ids); the
+% gamma/beta variant tables; the ADR-0021 wage-structure axis as a
+% representation-robustness row; the 33-cell tally
+% (15 matrix + 12 ladder + 6 two-group).
+
+\subsection{The pricing-door profiles and the mobile robustness}\label{app:profiles}
+
+The main text carries the pricing door in the profile in which the utilisation
+elasticity is confined to the goods sectors, because the entire direct incidence
+of the programme falls there and because \textcite{Kaldor1966} reads Verdoorn's
+law as a law of manufacturing. Table~\ref{tab:pricing-profiles} prints the rows
+this leaves out: the counterfactual in which $\delta$ extends to every sector,
+and both doors under mobile labour with the CPI numeraire.
+
+The all-sector profile is worth stating explicitly, because it is what makes the
+sign of the price response look like a property of the financing closure. With
+$\delta$ on 36 service sectors, which receive none of the programme directly,
+Kaldor--Verdoorn lowers the GDP deflator only under external finance
+(\texttt{pricing\_capacity-v2-GAMMA-\{F1,F2,F3\}-dm05}: $+0.14$, $+0.03$,
+$-0.82$ percent), against $-0.19$ to $-0.35$ percent in all three columns when
+the elasticity is confined to goods. The reversal is produced by the service
+sectors that lose demand, and with it productivity, as the programme reallocates
+activity towards construction and its suppliers --- not by the sectors the
+programme funds. It is a statement about where returns are assumed to live.
+
+The mobile-labour rows repeat both doors under the CPI numeraire: employment is
+fixed there and prices move relative to the CPI, and F2 and F3 remain
+indistinguishable in every row, so the financing neutrality of
+Section~\ref{sec:gauge} survives the pricing door.
+
+\input{tables/tableE_pricing-profiles.tex}

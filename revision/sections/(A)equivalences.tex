@@ -1,83 +1,168 @@
 % =====================================================================
-% Appendix A --- Equivalences and overlaps of the closure matrix
+% Appendix A --- Equivalences, overlaps and scope of the closure matrix
 % ---------------------------------------------------------------------
-% ADOPTED (2026-10-15) as Appendix A, replacing the earlier short prose
-% companion, whose two strongest fragments it absorbs: the pair-wise-overlap
-% prose (old App. A, app:eqpairs) and the classification table (old App. B,
-% cor:class). Companion to Section 3 and to the "why only N economies" box
-% of Section 4. States each coincidence, its mechanism, its status, and what
-% it leaves unidentified; the classification table is the centrepiece.
-% Proofs live in Appendix C (app:proofs) and are referenced BY \ref ONLY ---
-% no label is duplicated here, so that appendix stays the single source.
+% REWRITTEN 2026-10-18, v2 (proposal, not yet adopted). Order inverted on
+% request: the three scope conditions of the previous version's A.3 open the
+% appendix, the coincidences follow, and the algebra that produces them
+% closes it. Register rule: no ADR numbers, no run ids, no file, registry or
+% generator paths, no \texttt{}. Retains the label app:equivalences, which
+% Section 3 cites three times.
+% v2 changes vs v1: scope conditions moved to the front; the full-reallocation
+% coincidence added as its own row (Section 3 states it as eta = 1).
 % =====================================================================
-%TODO: machen die verweise hier denn wirklich sinn? vom bauchgefühl her hätte ich mir die eine oder andere gleichung erwartet... so habe ich das gefühl es wieder holt sich so manche bescheibeung
 
-\section{Equivalences and overlaps of the closure matrix}\label{app:equivalences}
+\section{Equivalences, overlaps and scope of the closure matrix}\label{app:equivalences}
 
 \noindent
-Section~\ref{sec:two-questions} observes that several of the five
-labour-market closures coincide at characteristic parameter values and
-that, under the demand-only shock of our application. Correspondinly,
-of several cells of the evaluation matrix (\ref{tab:results-matrix} in section \ref{sec:application}) describe the same economy. This appendix states the
-formal reasons for the observed coincidences and names the mechanism behind 
-each (an exact identity, a limit, or a definitional inclusion). Moreover, it covers those overlaps that are mentioned in description of our conceptual setup in section \ref{sec:two-questions}. More exact derivations that provide further details to the exposition here are collected in Appendix~\ref{app:proofs}.
+The evaluation matrix of Section~\ref{sec:application} crosses five
+labour-market closures with three financing closures, and several of its
+cells turn out to describe one and the same economy. This appendix states the
+conditions under which that happens, lists the coincidences with the
+mechanism behind each, and closes with the algebra that produces them. The
+derivations are in Appendix~\ref{app:proofs}; the model changes that break
+the coincidences and restore variety across the matrix are in
+Section~\ref{sec:beyond-demand-only}.
 
-\subsection{Key coincidences on the closure matrix}\label{app:eqpairs}
+\subsection*{Scope: three conditions}
 
-\paragraph{Fixed real wage $\equiv$ Leontief.}
-With the real wage pegged, $(p,y)=(\one,y^{\ast})$ solves the system at
-every elasticity triple, and the Leontief corner selects the same candidate
-(Proposition~\ref{prop:gd}). The equivalence is exact because under a demand-only shock a fixed wage already pins prices: the substitution elasticities $(\theta,\epsilon,
-\sigma)$ have nothing left to move. In the fixed-wage gauge they are
-unidentified. The coincidence is definitional in \emph{form} (the Leontief
-corner is the fixed-wage closure evaluated at the zero-substitution limit)
-but substantive in mechanism leading to a synchronized response of the fixed wage models.
+\paragraph{A demand-only shock.} The programme enters final demand at
+baseline technology, so the exercise touches neither the price nor the
+technology margin. This is the slice on which the whole matrix is evaluated,
+and it is the case of our application.
 
-%TODO: ist das verständlich? und richtig? und wird R vorbe überhaupt beschrieben?
-\paragraph{The financing column.} In the flexible-wage rows the external transfer
-$R$ is exactly the instrument that keeps the labour at place, and the
-two additive financings differ by a shift in $R$ that leaves the real
-allocation untouched: $R_{F3}=R_{F2}-B_{\mathrm{gov}}$. Hence, so F2 and F3
-coincide and the financing label is unidentified (Section~\ref{sec:gauge}). The fixed-wage rows are the exception: there $R$ is pinned at zero and the labour pin is absent, so financing \emph{does} bite --- the F2/F3 spread in the fixed-wage row is the one difference the financing column carries.
-
-\subsection{Key overlaps outside the closure matrix}\label{app:eqpairs}
-
-\paragraph{Standard CGE $\equiv$ single-wage elastic supply $\equiv$ Full rellocation.}
-The supply equation $\sum_i L_i=\Lbar\,(w/\Pi)^{\eta_s}$ and full
-employment $\sum_i L_i=\Lbar$ are the same equation once the real-wage
-anchor binds: for \emph{every} $\eta_s$, and under every financing closure,
-the two systems coincide equation by equation (Proposition~\ref{prop:ab}).
-The single-wage supply elasticity $\eta_s$ is therefore unidentified on the
-demand-only slice. The coincidence is \emph{derivable} from the anchor; it
-is not definitional. Similarly, the only difference between the no-reallocation model and the standard CGE is the assumption of labor market rigidity across sectors.
-
-\paragraph{No reallocation $\equiv$ the rigid corner of the sectoral
-family.} A frozen allocation of workers across sectors ($\eta=0$ in the no-reallocation model) and an infinitely inelastic supply curve lead to the same practical implications.
-In term of algebra this implies that setting $\eta_{s,i}=0$ for all $i$ reproduces the
-$\eta=0$ endpoint (Proposition~\ref{prop:nest}). This one is exact by
-construction; again it equates two \emph{closures} rather than two executed cells, and it is why no separate rigid sectoral cell is reported.
-
-\subsection{Scope}\label{app:eqscope}
-
-Three features of the kernel are relevant for contextualizing the coincidences and overlaps described above.
-
-\paragraph{A demand-only shock.} The programme enters final demand at baseline
-technology ($A\equiv\one$), so the shock touches neither the price nor the
-technology margin. This is the demand-only slice on which the whole matrix
-is evaluated; it is the case of our application.
-
-\paragraph{A price block that cannot see demand.} The zero-profit conditions are
-homogeneous of degree one in $(p,w)$ and contain no demand variable, so
-relative prices are pinned by technology alone (Lemma~\ref{lem:price}).
-Under the consumption-price numeraire the real wage then sits at its
-baseline anchor $w/\Pi(p)=1$ for every demand vector, every financing
-closure and every shock size (Corollary~\ref{cor:realwage}). A closure
-whose only task is to move the \emph{wage} margin is thus inert: the margin
-it is meant to clear is already at rest.
+\paragraph{A price block that cannot see demand.} The zero-profit conditions
+contain no demand variable and are homogeneous of degree one in prices and
+the wage, so relative prices are pinned by technology alone
+(Lemma~\ref{lem:price}). Under the consumption price index as numeraire the
+real wage then sits at its baseline anchor for every demand vector, every
+financing closure and every shock size (Corollary~\ref{cor:realwage}). A
+closure whose only task is to move the \emph{real} wage margin is therefore
+inert: the margin it is meant to clear is already at rest.
 
 \paragraph{A quantity block that is elasticity-free.} At those prices the
-clearing system is exactly affine and independent of $(\theta,\epsilon,
-\sigma)$ (Lemma~\ref{lem:affine}) --- the production side of the Samuelson
-nonsubstitution theorem (Remark~\ref{rem:samuelson}). Every closure that
-pegs the real wage therefore solves one and the same linear system,
-whatever the technology.
+clearing system is exactly affine and independent of the substitution
+elasticities $(\theta,\epsilon,\sigma)$ (Lemma~\ref{lem:affine}) --- the
+production side of the classical nonsubstitution result
+(Remark~\ref{rem:samuelson}). Every closure that pegs the real wage therefore
+solves one and the same linear system, whatever the technology.
+
+The third condition is also what locates the boundary of the exercise: all
+three hold \emph{on a single common wage}, and Section~\ref{sec:two-questions}
+names the single-wage branch and the sectoral family as the matrix's two
+labour-market families. Where the wage is common, the conditions above apply
+as stated; where it is not, they lapse, and that is where the matrix regains
+variety.
+
+\subsection*{The coincidences}
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.3cm}
+                  >{\raggedright\arraybackslash}p{5.5cm}
+                  >{\raggedright\arraybackslash}p{2.1cm}
+                  >{\raggedright\arraybackslash}p{2.8cm}@{}}
+\toprule
+Coincidence & Mechanism & Status & Left unidentified \\
+\midrule
+Fixed real wage $\equiv$ Leontief
+& the Leontief corner \emph{is} the fixed-wage closure at the
+  zero-substitution limit; a pegged real wage already pins prices, so the
+  substitution elasticities have nothing left to move
+& exact
+& $(\theta,\epsilon,\sigma)$ under a pegged wage \\[3pt]
+F2 $\equiv$ F3, mobile rows
+& the external transfer is the instrument that holds employment at its pin;
+  the two financings differ by exactly the programme cost in that transfer,
+  which leaves the real allocation untouched
+& exact
+& the financing label \\[3pt]
+Full reallocation $\equiv$ standard CGE
+& at $\eta = 1$ labour is allocated to its cost-minimizing use at a single
+  wage, which is precisely the allocation rule the standard CGE closure
+  imposes
+& definitional
+& --- two names for one allocation rule \\[3pt]
+Standard CGE $\equiv$ single-wage elastic supply
+& with the real wage at its anchor, the supply curve and the full-employment
+  pin are the same equation at every supply elasticity and under every
+  financing rule
+& derivable
+& the single-wage supply elasticity \\[3pt]
+No reallocation $\equiv$ the rigid corner of the sectoral family
+& an infinitely inelastic supply curve reproduces the frozen baseline
+  allocation
+& exact by construction
+& --- it is why no separate rigid sectoral cell is reported \\
+\bottomrule
+\end{tabular}
+\caption{Coincidences within the closure matrix, the mechanism behind each,
+their logical status, and the parameter each leaves unidentified.}
+\label{tab:equiv-class}
+\end{table}
+
+Two qualifications belong with the table. The financing column is the
+exception in the fixed-wage rows: there the external transfer is pinned at
+zero, so financing \emph{does} bite, and the spread between the tax-financed
+and the externally financed variants in those rows is the whole difference
+the financing axis carries. And the no-reallocation closure is not a
+coincidence but the matrix's one genuinely distinct labour-market regime: it
+shares the aggregate employment pin with the standard CGE closure while
+freezing the allocation that the latter is free to move, and it is the
+endpoint in which the sectoral family terminates.
+
+\subsection*{The algebra behind the coincidences}
+
+\paragraph{The price block.} Unit cost depends on prices and the wage alone,
+\begin{equation}
+c_i(p,w;A) = \Big( A_i^{\,\epsilon-1}\big( \alpha_i\, w^{1-\epsilon}
++ (1-\alpha_i)\, P_i(p)^{1-\epsilon} \big) \Big)^{\frac{1}{1-\epsilon}},
+\qquad
+P_i(p) = \Big( \textstyle\sum_u \Omega_{iu}\, p_u^{\,1-\theta} \Big)^{\frac{1}{1-\theta}},
+\label{eq:appA-cost}
+\end{equation}
+and zero profit imposes $p_i = c_i(p,w;A)$ sector by sector. No demand
+variable appears in that system, so it is homogeneous of degree one in
+$(p,w)$: for any technology, every solution has the form $p = w\,\pi(A)$, and
+\emph{relative} prices are functions of technology alone. With the
+consumption price index $\Pi(p)$ as numeraire the real wage is therefore a
+function of technology alone as well; at baseline technology it sits exactly
+at its anchor $w/\Pi(p) = 1$. This is the first scope condition read as
+algebra.
+
+\paragraph{The quantity block.} Evaluated at those prices, goods-market
+clearing is exactly affine in gross output,
+\begin{equation}
+y = G\,y + b(R), \qquad
+G = \Omega^{\!\top}\mathrm{diag}(a)
+  + (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega\,\alpha^{\!\top},
+\label{eq:appA-affine}
+\end{equation}
+and none of the substitution elasticities $(\theta,\epsilon,\sigma)$ enters
+$G$ or $b(R)$, where $R$ is the net external transfer to households --- the
+variable that clears the external account, and the one the mobile closures
+solve for. The technique, and with it relative prices, is independent of the
+composition of demand, which allocates quantities only. This is the third
+scope condition read as algebra, and it is what makes the matrix a partition
+of a few scalar regimes rather than fifteen separate models.
+
+\paragraph{What the algebra does not cover.} Both properties rest on a single
+common wage: with a per-sector wage vector the price block is no longer
+homogeneous sector by sector, prices become demand-sensitive and both
+arguments lapse. Neither property survives a rule that writes the
+\emph{nominal} wage as a function of endogenous aggregates --- an aggregate
+wage curve, nominal indexation or a re-anchored numeraire --- because such a
+rule only re-labels the nominal scale and, under either gauge, is either
+vacuous or over-determines the system. A rule on the \emph{real} wage is the
+elastic-supply condition already present in the model, and quantity-side
+levers such as endogenous saving or endogenous exports move the financing
+columns rather than the closures.
+
+What the appendix does not establish is that the matrix is rigid in general.
+It is rigid \emph{on the demand-only slice}, and every channel that lets
+demand back into the price block --- sectoral labour markets,
+demand-sensitive markups, capacity constraints, endogenous import prices,
+supply shocks --- restores identification and creates the variety that
+Section~\ref{sec:beyond-demand-only} takes up.

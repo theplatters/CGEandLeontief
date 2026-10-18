@@ -199,7 +199,12 @@ visible (ADR-0004).
   door is re-minted on OpenCGE `v0.2.1` (ADR-0031, value-added-scaled
   exponent, homogeneous and services-zero δ profiles): `pricing_capacity_v2`
   and `pricing_mobile_v2` (27 cells, all executed; they supersede the v1
-  capacity cells for citation). Resolved since: the BETA row is
+  capacity cells for citation). Both doors run on every labour row
+  (ADR-0032; DELTA wired in the harness, BETA in its sectoral form):
+  `pricing_capacity_rows_v1` (BF, BETA, DELTA + ALPHA canaries, 48 cells
+  plus one recorded batch-stall failure) and the markup door re-minted on
+  `v0.2.1` as `pricing_markup_v2` / `pricing_profit_v2` (105 cells, all
+  executed; they supersede the v1 markup cells for citation). Resolved since: the BETA row is
   identified under a supply shock and by the ADR-0022 sectoral form, and the
   η = 0 endpoint carries sectoral wages (ADR-0020 option C). Open items, in
   `registry/closures.toml`, `docs/DOCS_ASSESSMENT.md` §4.2 and the ADRs: the

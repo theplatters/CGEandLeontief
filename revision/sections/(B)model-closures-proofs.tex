@@ -69,8 +69,11 @@ household budget of~\eqref{eq:utility-max}, held fixed while F1 tilts its
 composition; $W=\sum_i w_i L_i$ is the wage bill, $T_G(p)=\sum_i p_i g_i^G$
 the baseline tax cost of government purchases, and $g_i$ the programme
 bundle (real public investment in sector $i$) with current-price cost
-$\sum_i p_i g_i$. Under F2 that cost is raised as the programme tax $T(p)$;
-under F3 it is booked as external programme financing $B_{\mathrm{gov}}$.
+$\sum_i p_i g_i$. Under F2 that cost is raised by the wage-income tax at the
+endogenous rate $\tau$ defined in~\eqref{eq:cons}; under F3 it is booked as
+external programme financing $B_{\mathrm{gov}}$. The net external transfer $R$
+closes the external account; it is the kernel's $F$, endogenous in the mobile
+regime and identically zero in the fixed-wage regime.
 
 \subsection{The kernel}\label{app:model-kernel}
 
@@ -281,9 +284,11 @@ T(p) = \sum_{i=1}^N p_i g_i,
 Total domestic tax revenue $T_G(p)+T(p)$ therefore balances the purchases
 $g^G+g$, priced at current rather than baseline prices. The tax is
 implemented as the endogenous wage-income rate
-$\tau=[T_G(p)+T(p)]/W$; with one representative household its burden is
-effectively lump-sum. The programme has an explicit domestic budget
-counterparty and reduces household resources directly by $T(p)$.
+$\tau=[T_G(p)+T(p)]/W$. The tax base moves with the wage bill $W$, so it is a
+proportional wage-income tax, not a fixed-amount lump-sum tax; with one
+representative household the aggregate budget is the same under both. The
+programme has an explicit domestic budget counterparty and reduces household
+resources through $\tau$.
 
 \paragraph{F3: externally financed public investment.}
 F3 adds the same real bundle but imposes no additional domestic programme
@@ -413,7 +418,7 @@ c_i = (1-s)(1-m_i)\,\omega_i\, ds_i\; E\; p_i^{-\sigma} \Big/
 E = (1-\tau)\, w \textstyle\sum_i L_i + R,
 \label{eq:cons}
 \end{equation}
-with the lump-sum tax rate $\tau = p\!\cdot\! g^G / (w \sum_i L_i)$ under
+with the wage-income tax rate $\tau = p\!\cdot\! g^G / (w \sum_i L_i)$ under
 F1/F3 and $\tau = p\!\cdot\!(g^G + g)/(w \sum_i L_i)$ under F2, and $R$ the
 net external transfer entering expenditure after tax.
 At $\eta = 0$ the wage bill is
@@ -878,7 +883,7 @@ R^{\ast} = \frac{\Lbar - \alpha^{\!\top}(I-G)^{-1} b_0}
 \label{eq:finstrument}
 \end{equation}
 This instrument is why the mobile F2 and F3 columns are real-neutral: F2
-charges the programme through the lump-sum tax ($E = \alpha^{\!\top}y -
+charges the programme through the wage-income tax ($E = \alpha^{\!\top}y -
 \sum g^G - \sum g$), F3 through the external account ($E = \alpha^{\!\top}y
 - \sum g^G + R$), and the two $b$-vectors differ by exactly
 $f\,\sum g$. The pin \eqref{eq:finstrument} therefore yields

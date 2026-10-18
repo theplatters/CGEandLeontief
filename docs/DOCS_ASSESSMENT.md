@@ -7,6 +7,7 @@ tags: [assessment, docs-audit, revision, beyondhulten, metroeconomica]
 last-updated: October 2026
 ---
 
+**Version 10** \textcolor{revisionV9}{(October 2026)}
 **Version 9** \textcolor{revisionV8}{(October 2026)}
 **Version 8** \textcolor{revisionV7}{(September 2026)}
 **Version 7** \textcolor{revisionV6}{(September 2026)}
@@ -26,6 +27,13 @@ lives in \texttt{docs/archive/document\_review\_leftovers.md}.
 Governing documents: \texttt{ROADMAP.md} and
 \texttt{docs/archive/vertdict.md}; active references:
 \texttt{docs/reviews/}.}
+\textcolor{revisionV9}{Version 10: the financing formulations name their
+balancing variables (ADR-0033, proposed). The tax is a proportional
+wage-income rate tau that finances the baseline government purchases, plus the
+programme under F2; F is the net external transfer, endogenous on the mobile
+labour rows and zero on the fixed-wage rows; B_gov is the programme cost booked
+externally under F3. The model section, Tables 2, 3b and 3c and the closure
+registry are aligned to this.}
 \textcolor{revisionV8}{Version 9: \texttt{definitive\_guide.md} is retired
 and moved to \texttt{docs/archive/} (ADR-0026) --- its +19.3 pp sweep, its
 variance shares and its nine-section restructure are superseded, so it drops
@@ -288,7 +296,7 @@ principal, external debt as the third variant.}
 
 | **Tax-financed public investment** | *Autonomous green investment with an explicit tax counterparty* |
 |---|---|
-| **Budget identity** | $\sum_i p_i g_i = T$ with a lump-sum or specified tax rule; separate government/investment vector $g_i$ |
+| **Budget identity** | \textcolor{revisionV9}{wage-income tax rate tau: tau w sum L_i = sum p_i g_i (ADR-0033)}; separate government/investment vector $g_i$ |
 | **Economic interpretation** | Autonomous green investment financed by taxation |
 | **Cost / status** | Medium: new $g_i$ vector plus budget equation; not started |
 | **Recommended role** | **Principal** (recommendation) |
@@ -298,7 +306,7 @@ principal, external debt as the third variant.}
 
 | **Debt/foreign-financed net expenditure** | *Demand expansion with an intertemporal or external counterpart* |
 |---|---|
-| **Budget identity** | $\sum_i p_i g_i = B + F$ with a defined saving--investment or current-account rule |
+| **Budget identity** | \textcolor{revisionV9}{B_gov = sum p_i g_i booked externally; external account S + T_int + M - (I+X) = F + B_gov} |
 | **Economic interpretation** | Net new expenditure against borrowing or the external balance. Static-horizon nuance: debt finance ($B$) is resource-equivalent to the lump-sum tax (the household's current consumption gives up the same resources; the distinction becomes real only in a dynamic setting), while foreign finance ($F$) is genuinely distinct -- resources arrive via the external balance (imports serve the investment) |
 | **Cost / status** | Medium--high: additional institutional balance |
 | **Recommended role** | Third variant (external debt); $B$ collapses into the tax variant at this horizon |
@@ -340,7 +348,7 @@ tax-financed variants, so the principal experiments are a bracket of the
 two; external debt is added as the third selected variant. Deduction
 routes recap: preference reallocation deducts from the household's
 consumption composition, expenditure switching from old government
-expenditure, tax financing from household income via the lump-sum tax.
+expenditure, tax financing from household income via \textcolor{revisionV9}{the wage-income tax}.
 Imports feedback: at the current pipeline the imported content of the
 $g_i$ vector is fixed by sector import shares, so the external variant
 absorbs the demand through net imports mechanically; a behavioral
@@ -707,8 +715,7 @@ labour closures, then the guards:}
 
 1. **Financing core**: the shared final-demand and institutional-budget
    core; the government/investment vector $g_i$ with the tax rule
-   $\sum_i p_i g_i = T$ (F2); the external-account closure with
-   $\sum_i p_i g_i = F$ and import content at fixed sector shares (F3);
+   \textcolor{revisionV9}{wage-income tax rate tau balancing the programme} (F2); the external-account closure with \textcolor{revisionV9}{B_gov booked externally and F from the external account} and import content at fixed sector shares (F3);
    the explicit preference-reallocation experiment with renormalized
    weights $\tilde\beta_i$ (F1); retire the unfinanced autonomous
    shock (![](pictures/emoji/1f525.png){width=9pt}).
@@ -1107,4 +1114,12 @@ evaluation matrix, and the workplan only.}
   vertdict.md, the open-item list) or retired with it (the +19.3 pp sweep, the
   pre-registry variance shares) --- and it drops out of the active-references
   line above. \texttt{revisionV8} = #FF9933.}
+- **Version 10** \textcolor{revisionV9}{(October 2026)} --- \textcolor{revisionV9}{Financing
+  wording aligned to the kernel (ADR-0033, proposed): the tax is a proportional
+  wage-income rate, not a lump-sum tax; it finances the baseline government
+  purchases in every closure; F is the net external transfer (endogenous on the
+  mobile rows, zero on the fixed-wage rows); B_gov is the programme cost booked
+  externally under F3. Changed in the model section, Tables 2, 3b and 3c, the
+  financing note and the closure registry. \texttt{revisionV9} is the palette
+  entry for this version; its hex value is not yet recorded in this document.}
 

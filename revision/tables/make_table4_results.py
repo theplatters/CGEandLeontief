@@ -87,10 +87,13 @@ def num(x):
 
 
 def num_range(lo, hi):
-    """min--max interval; collapses to a point if the outcome is flat."""
+    """[min, max] interval; collapses to a point if the outcome is flat.
+
+    Interval brackets rather than an en-dash: the bounds carry their own signs,
+    so "$-0.09$--$+0.14$" read as one number or a subtraction."""
     if abs(hi - lo) < 5e-5:
         return num(lo)
-    return num(lo) + r"--" + num(hi)
+    return r"$[" + num(lo)[1:-1] + r",\ " + num(hi)[1:-1] + r"]$"
 
 
 def cell(v):

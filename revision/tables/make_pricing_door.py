@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Regenerate the pricing-door tables and the price-response bracket figure
-from the Phase 7 run manifests (ADR-0029, ADR-0030, ADR-0031, ADR-0032).
+"""Regenerate the pricing-door tables from the Phase 7 run manifests
+(ADR-0029, ADR-0030, ADR-0031, ADR-0032).
 
 No number is hand-typed: every value is a manifest field. Run from anywhere:
     python3 make_pricing_door.py
@@ -17,7 +17,6 @@ Outputs:
     revision/tables/table6_pricing-capacity.tex   (main text: capacity door, goods profile)
     revision/tables/table7_pricing-markup.tex     (main text: markup door)
     revision/tables/tableE_pricing-profiles.tex   (appendix: all-sector capacity, kappa = 0.25 distributed)
-    revision/figures/fig_pricing-bracket.tex      (plain TikZ, no pgfplots)
 
 Split (2026-10-18, ADR-0032). The two doors get one table each, and each table
 carries all five labour rows, so the dissolution of the demand-only
@@ -25,7 +24,7 @@ equivalences (fixed wage vs Leontief, standard CGE vs elastic supply) is
 read off the tables rather than stated. The capacity table carries the
 goods-only profile (delta on CPA A--F, where the programme's entire direct
 incidence falls); the all-sector counterfactual is in the appendix table. The
-bracket figure plots the fixed-wage row, as before.
+price-response bracket figure was removed from the manuscript the same day.
 """
 import tomllib, os
 
@@ -33,7 +32,6 @@ REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT_CAP = os.path.join(REPO, "revision/tables/table6_pricing-capacity.tex")
 OUT_MK = os.path.join(REPO, "revision/tables/table7_pricing-markup.tex")
 OUT_TABLE_APP = os.path.join(REPO, "revision/tables/tableE_pricing-profiles.tex")
-OUT_FIG = os.path.join(REPO, "revision/figures/fig_pricing-bracket.tex")
 
 FIN = ["F1", "F2", "F3"]
 
@@ -87,19 +85,6 @@ APP_PANELS = (
         (r"$s_\pi = s$", "pricing_profit-v2-" + row + "-{f}-k025-spis"),
     ]) for row, name in ROWS]
 )
-
-# Bracket figure series: (legend, run-id template, colour, TikZ marker).
-# Categorical slots 1-4 of the validated default palette (light surface);
-# marker shape is the secondary encoding (two hues sit below 3:1 contrast).
-# The capacity series carry the GOODS profile, matching the capacity table;
-# all four series are the fixed-wage row.
-SERIES = [
-    (r"Kaldor--Verdoorn, $\delta = -0.5$ (goods)", "pricing_capacity-v2-GAMMA-{f}-dm05-s0", "2a78d6", "circle"),
-    (r"capacity pressure, $\delta = +0.5$ (goods)", "pricing_capacity-v2-GAMMA-{f}-dp05-s0", "eb6834", "rectangle"),
-    (r"markup retained, $\kappa = 0.5$", "pricing_markup-v2-GAMMA-{f}-k05", "1baf7a", "triangle"),
-    (r"markup distributed, $\kappa = 0.5$, $s_\pi = s$", "pricing_profit-v2-GAMMA-{f}-k05-spis", "eda100", "diamond"),
-]
-
 
 def manifest(rid):
     with open(f"{REPO}/runs/{rid}/manifest.toml", "rb") as fh:
@@ -240,72 +225,9 @@ def build_app_table():
         fit=True)
 
 
-def marker(mk, size):
-    """TikZ node style for a marker; regular polygons size by their
-    circumcircle, so the triangle and diamond get a larger box to match the
-    circle's visual weight."""
-    shape = {"triangle": "regular polygon, regular polygon sides=3",
-             "diamond": "diamond"}.get(mk, mk)
-    scale = {"triangle": 1.45, "diamond": 1.3}.get(mk, 1.0)
-    return "%s, minimum size=%.2fmm" % (shape, size * scale)
-
-
-def build_figure():
-    # Dot plot: x = financing column, y = GDP-deflator change in percent.
-    data = [[values(t.format(f=f))["P"] for f in FIN] for _, t, _, _ in SERIES]
-    lo = min(min(r) for r in data)
-    hi = max(max(r) for r in data)
-    ymin, ymax = (int(lo // 0.5) * 0.5) - 0.5, (int(hi // 0.5) + 1) * 0.5
-    H = 6.0                      # plot height in cm
-    sy = H / (ymax - ymin)
-    y = lambda v: (v - ymin) * sy
-    xs = [1.5, 4.5, 7.5]         # column centres in cm
-    dx = [-0.6, -0.2, 0.2, 0.6]  # per-series offsets
-    L = []
-    A = L.append
-    A(r"% =====================================================================")
-    A(r"% Figure --- the price-response bracket (GENERATED)")
-    A(r"% Do NOT edit by hand. Regenerate with:  revision/tables/make_pricing_door.py")
-    A(r"% Source: pricing_capacity-v2-GAMMA-*-s0 (goods profile) and")
-    A(r"%   pricing_{markup,profit}-v2-GAMMA-* run manifests; y = 100 (gdp_deflator - 1).")
-    A(r"%   Matches the fixed-wage panels of Tables 6 and 7 (goods-only capacity profile).")
-    A(r"% Colours: validated categorical slots 1-4 (light); markers are the secondary encoding.")
-    A(r"% =====================================================================")
-    for i, (_, _, col, _) in enumerate(SERIES):
-        A(r"\definecolor{pd%d}{HTML}{%s}" % (i + 1, col))
-    A(r"\begin{tikzpicture}[font=\footnotesize]")
-    # recessive grid and axis
-    t = ymin
-    while t <= ymax + 1e-9:
-        A(r"\draw[black!12, line width=0.4pt] (0,%.3f) -- (9,%.3f);" % (y(t), y(t)))
-        A(r"\node[anchor=east, text=black!60] at (0,%.3f) {$%+.1f$};" % (y(t), t) if abs(t) > 1e-9
-          else r"\node[anchor=east, text=black!60] at (0,%.3f) {$0.0$};" % y(t))
-        t += 0.5
-    A(r"\draw[black!55, line width=0.6pt] (0,%.3f) -- (9,%.3f);" % (y(0), y(0)))
-    A(r"\node[rotate=90, anchor=south, text=black!70] at (-0.9,%.3f) {GDP deflator, \%% change};" % (H / 2))
-    for j, f in enumerate(FIN):
-        A(r"\node[anchor=north, text=black!70] at (%.2f,-0.1) {%s};" % (xs[j], f))
-        col_vals = [data[i][j] for i in range(len(SERIES))]
-        # the bracket: the span of the four doors in this financing column
-        A(r"\draw[black!35, line width=1.2pt] (%.2f,%.3f) -- (%.2f,%.3f);"
-          % (xs[j] - 0.95, y(min(col_vals)), xs[j] - 0.95, y(max(col_vals))))
-        for i, (_, _, _, mk) in enumerate(SERIES):
-            A(r"\node[draw=white, line width=0.6pt, fill=pd%d, %s, inner sep=0pt] at (%.2f,%.3f) {};"
-              % (i + 1, marker(mk, 2.4), xs[j] + dx[i], y(data[i][j])))
-    # legend (always present: four series, identity never colour alone)
-    for i, (lab, _, _, mk) in enumerate(SERIES):
-        yy = H - 0.05 - 0.42 * i
-        A(r"\node[draw=white, line width=0.6pt, fill=pd%d, %s, inner sep=0pt] at (9.5,%.3f) {};"
-          % (i + 1, marker(mk, 2.2), yy))
-        A(r"\node[anchor=west, text=black!80] at (9.7,%.3f) {%s};" % (yy, lab))
-    A(r"\node[anchor=west, text=black!60] at (9.4,%.3f) {grey bar: the bracket across doors};" % (H - 0.05 - 0.42 * 4))
-    A(r"\end{tikzpicture}")
-    return "\n".join(L) + "\n"
-
-
 if __name__ == "__main__":
     for path, build in ((OUT_CAP, build_cap_table), (OUT_MK, build_mk_table),
-                        (OUT_TABLE_APP, build_app_table), (OUT_FIG, build_figure)):
+                        (OUT_TABLE_APP, build_app_table)):
         with open(path, "w") as fh:
             fh.write(build())
         print("wrote", path)

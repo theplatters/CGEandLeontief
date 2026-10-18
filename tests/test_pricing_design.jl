@@ -90,8 +90,11 @@ end
     kinds = Dict("pricing_capacity_v1" => CapacityPricing, "pricing_markup_v1" => MarkupPricing,
         "pricing_profit_v1" => MarkupPricing)
     kinds["pricing_capacity_v2"] = kinds["pricing_mobile_v2"] = CapacityPricing
+    kinds["pricing_capacity_rows_v1"] = CapacityPricing
+    kinds["pricing_markup_v2"] = kinds["pricing_profit_v2"] = MarkupPricing
     for design in ("pricing_capacity_v1", "pricing_markup_v1", "pricing_profit_v1", "pricing_mobile_v1",
-            "pricing_capacity_v2", "pricing_mobile_v2")
+            "pricing_capacity_v2", "pricing_mobile_v2", "pricing_capacity_rows_v1",
+            "pricing_markup_v2", "pricing_profit_v2")
         d = load_design(design; root = root)
         cells = cell_order(design; root = root)
         @test !isempty(cells)
@@ -206,5 +209,34 @@ end
             c.base.model, c.base, c.base)
         @test !haskey(ev0.gates, "uniqueness")
         @test !haskey(ev0.metrics, "profit")
+    end
+end
+
+@testset "pricing design: DELTA takes the door through build_cell_model (ADR-0032)" begin
+    data = ext_test_data()
+    if data === nothing || ext_matrix_programme(data) === nothing
+        @test_skip "real IO table or impulse file absent"
+    else
+        g, ψ = ext_matrix_programme(data)
+        N = length(data.factor_share)
+        design_d = Dict{String,Any}("programme" => Dict{String,Any}("f1_shift" => "tilt_g0_over_c0"),
+            "pricing" => Dict{String,Any}("kind" => "capacity", "delta" => -0.5))
+        cell = Dict{String,Any}("labor" => "DELTA", "financing" => "F3", "eta" => 1.0, "eta_s" => 0.0,
+            "theta" => 1e-4, "epsilon" => 1e-4, "sigma" => 1e-4, "delta_epsilon" => 1e-4)
+        # NoPricing: the spelled-out model is `delta_model` bit for bit.
+        m0 = build_cell_model(cell, design_d, data, ψ, g; pricing = NoPricing())
+        fin = cell_financing("F3", ψ, g, "tilt_g0_over_c0", data)
+        md = delta_model(data, Shocks(ones(N), ones(N), zeros(N)); ε = 1e-4, financing = fin)
+        @test solve(m0).quantities == solve(md).quantities
+        # The door reaches DELTA's cost line and moves prices.
+        m = build_cell_model(cell, design_d, data, ψ, g)
+        @test m.pricing isa CapacityPricing
+        sol = solve_cell(cell, design_d, data, ψ, g, OpenCGE._solution_vector(m0, solve(m0)))
+        @test maximum(abs, equilibrium_residuals(sol.model, OpenCGE._solution_vector(sol.model, sol))) < 1e-9
+        @test maximum(abs.(sol.prices_raw .- 1)) > 1e-2
+        # Scalar BETA still refuses a door; the sectoral form carries the row.
+        cb = Dict{String,Any}("labor" => "BETA", "financing" => "F3", "eta" => 1.0, "eta_s" => 0.5,
+            "theta" => 0.5, "epsilon" => 0.5, "sigma" => 0.9)
+        @test_throws ArgumentError build_cell_model(cb, design_d, data, ψ, g)
     end
 end

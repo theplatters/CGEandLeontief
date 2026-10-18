@@ -68,6 +68,28 @@ actor = "hermes-agent"
     eta = 1.0
     programme_year = 2024
 
+[designs.pricing_profit_v2]
+git_commit = "cf414f19419f6fa40bc04d0352326807e7a226cc"
+note = "Phase 7 Route 2 Stage B re-minted on OpenCGE v0.2.1 (ADR-0030, ADR-0032): distributed markup rent, E = (1 - tau) w L + F + (1 - s_pi) Pi, on all five labour rows (BF, ALPHA, sectoral BETA, GAMMA, DELTA) and all three financing columns, kappa in {0.25, 0.5} x s_pi in {0.5, s = 0.1199}. GAMMA reproduces pricing_profit_v1."
+registered_at = "2026-10-18T16:23:27"
+design_sha256 = "12709395570a92da0a9d8a1784e01bd61f4ce8d2f25c6edef0f66eccfcf7c657"
+actor = "franzs"
+
+    [designs.pricing_profit_v2.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_s_pi = 1.0
+    pricing_continuation_steps = 4
+    eta = 1.0
+    pricing_kind = "markup"
+    epsilon = 0.5
+    pricing_kappa = 0.0
+
 [designs.pricing_mobile_v2]
 git_commit = "29a90993471495ca48f1074996ab9ee6e19c05c2"
 note = "Phase 7 robustness row on OpenCGE v0.2.1 (OpenCGE@ADR-0031): the value-added-scaled capacity door (P1) in the mobile gauge (ALPHA, eta = 1, CPI = 1) on all three financing columns, delta in {+0.5, -0.5}, homogeneous and services-zero (delta_services = 0 on CPA G-T)."
@@ -308,8 +330,8 @@ actor = "franzs"
     pricing_multistart_tol = 1.0e-6
     pricing_s_pi = 1.0
     pricing_continuation_steps = 4
-    pricing_kind = "markup"
     eta = 1.0
+    pricing_kind = "markup"
     epsilon = 0.5
     pricing_kappa = 0.0
 
@@ -347,8 +369,8 @@ actor = "franzs"
     pricing_multistart_tol = 1.0e-6
     pricing_s_pi = 1.0
     pricing_continuation_steps = 4
-    eta = 1.0
     pricing_kind = "markup"
+    eta = 1.0
     epsilon = 0.5
     pricing_kappa = 0.0
 
@@ -368,3 +390,48 @@ actor = "hermes-agent"
     exo_scale_steps = 6
     eta = 1.0
     programme_year = 2024
+
+[designs.pricing_capacity_rows_v1]
+git_commit = "cf414f19419f6fa40bc04d0352326807e7a226cc"
+note = "Phase 7 capacity door (P1, OpenCGE@ADR-0031) on the remaining labour rows (ADR-0032): BF (eta = 0), sectoral BETA (uniform eta_s = 0.5) and DELTA (Leontief corner) on all three financing columns, delta in {0, +0.5, -0.5}, homogeneous and services-zero, demand-only programme shock; plus the delta = 0 ALPHA canaries. delta = 0 nests the matrix_5x3-v10 twins."
+registered_at = "2026-10-18T16:22:57"
+design_sha256 = "3bb2e9e01bf3e3d1b9dd43eb2c198ad30311aa7322d845e752f43be52d8d165f"
+actor = "franzs"
+
+    [designs.pricing_capacity_rows_v1.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    pricing_n_sectors = 71
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_delta = 0.0
+    pricing_continuation_steps = 4
+    eta = 1.0
+    pricing_kind = "capacity"
+    pricing_services = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]
+    epsilon = 0.5
+
+[designs.pricing_markup_v2]
+git_commit = "cf414f19419f6fa40bc04d0352326807e7a226cc"
+note = "Phase 7 Route 2 Stage A re-minted on OpenCGE v0.2.1 (ADR-0029, ADR-0032): retained markup p = mu c, mu = 1 + kappa (y/lambda - 1), s_pi = 1, on all five labour rows (BF, ALPHA, sectoral BETA, GAMMA, DELTA) and all three financing columns, kappa in {0, 0.25, 0.5}. kappa = 0 nests the matrix_5x3-v10 twins; GAMMA/ALPHA reproduce the v1 markup cells."
+registered_at = "2026-10-18T16:23:12"
+design_sha256 = "0d411319028ec20462adf3ed5cfb26033ca80f5fff8dec1300839f09078c2fe6"
+actor = "franzs"
+
+    [designs.pricing_markup_v2.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_s_pi = 1.0
+    pricing_continuation_steps = 4
+    pricing_kind = "markup"
+    eta = 1.0
+    epsilon = 0.5
+    pricing_kappa = 0.0

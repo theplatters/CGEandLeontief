@@ -629,9 +629,10 @@ sectoral 3N+1 system when the cell pins an elasticity vector, ADR-0022);
 GAMMA: `:fixed`; DELTA: `delta_model` at `delta_epsilon`. Shocks are always
 `Shocks(ones(N), ones(N), zeros(N))`. The pricing closure comes from
 `cell_pricing` (ADR-0029); `pricing` overrides it (the continuation path of
-`solve_cell`). Pricing doors are supported on the `mobile_labor_model`
-closures (BF, ALPHA, sectoral BETA, GAMMA); scalar BETA (`solve_beta`) and
-DELTA reject them.
+`solve_cell`). Pricing doors are supported on every closure built by
+`mobile_labor_model` (BF, ALPHA, sectoral BETA, GAMMA, DELTA, ADR-0032);
+scalar BETA (`solve_beta`) rejects them, and the sectoral form carries the
+BETA row of the pricing designs.
 """
 function build_cell_model(cell::Dict{String,Any}, design_d::Dict{String,Any},
         data::Data, ψ::Vector{Float64}, g::Vector{Float64};
@@ -662,8 +663,11 @@ function build_cell_model(cell::Dict{String,Any}, design_d::Dict{String,Any},
             Float64(cell["epsilon"]), Float64(cell["sigma"]), Float64(cell["eta"]);
             closure = :fixed, financing = fin, pricing = pr)
     elseif labor == "DELTA"
-        pr isa NoPricing || throw(ArgumentError("pricing doors are not wired into DELTA"))
-        return delta_model(data, shocks; ε = Float64(cell["delta_epsilon"]), financing = fin)
+        # `delta_model` spelled out so the door reaches the cost line (ADR-0032);
+        # with NoPricing this is the `delta_model` call bit for bit.
+        el = delta_elasticities(Float64(cell["delta_epsilon"]))
+        return mobile_labor_model(data, shocks, el.θ, el.ϵ, el.σ, el.η;
+            closure = :fixed, financing = fin, pricing = pr)
     end
     throw(ArgumentError("unknown labor id $labor"))
 end

@@ -8,9 +8,30 @@ and renders on `docs/status.md` (ADR-0003); this page carries no status.
 
 ## Formulations (ADR-0002)
 
-- F1: `β̃ᵢ = βᵢdᵢ / Σⱼβⱼdⱼ`; `Σ pᵢcᵢʰ = Eʰ`; budget-neutral composition shift.
-- F2: `Σ pᵢgᵢ = T(p)`; lump-sum / balanced-budget tax.
-- F3: `Σ pᵢgᵢ = F`; external balance.
+- All closures: `τ·w·ΣᵢLᵢ = Σᵢpᵢgᵢ^G` — a proportional wage-income tax at the
+  endogenous rate `τ` finances the baseline government purchases `g^G`
+  (kernel `tau_rate`).
+- F1: `β̃ᵢ = βᵢdᵢ / Σⱼβⱼdⱼ`; budget-neutral composition shift; `B_gov = 0`.
+- F2: `τ·w·ΣᵢLᵢ = Σᵢpᵢ(gᵢ^G + gᵢ)`; the programme `g` is added to the
+  tax base (`B_gov = 0`).
+- F3: the programme is booked externally, `B_gov = Σᵢpᵢgᵢ`, with
+  `τ·w·ΣᵢLᵢ = Σᵢpᵢgᵢ^G` as in all closures. The external account is
+  `S + T_int + M − (I+X) = F + B_gov`, with `F` the net external transfer
+  (ADR-0019).
+
+Household expenditure is `Eʰ = (1−τ)·w·ΣL + F` in every closure. `F` is
+endogenous on the mobile labour rows (ALPHA, BF including η = 0, sectoral
+BETA) and identically zero on the fixed-wage rows (GAMMA, DELTA), where the
+solver has no external-transfer unknown (`_solve_fixed`, `F ≡ 0`).
+
+"Lump-sum" versus "wage-rate": the implemented tax is the wage-rate form,
+`τ = Σpg / (w·ΣL)`, a proportional tax on the wage bill whose base moves with
+employment and the wage. With one household and no labour-leisure choice in the
+closure equations, the aggregate budget `E = wΣL − Σpg` is the same as under a
+lump-sum tax. The kernel comments still say "lump-sum" for that budget effect
+only. A true lump-sum tax would be a fixed amount independent of `L` and `w`,
+which would change the incentive to supply labour under the elastic labour
+supply (BETA).
 
 F1 is demand composition, never an autonomous investment multiplier; F2 needs
 a balanced-budget counterparty; F3 is an accounting open-economy closure, not
@@ -29,10 +50,12 @@ model units (1 model income unit = GDP at basic prices).
   household baseline and `ψ` restricted to positive-baseline sectors and
   renormalised; the retired `1 .+ ψ` stand-in was a non-reference tilt
   (ψ added directly instead of `G0 .* ψ1 ./ c0`).
-- F2 `TaxFinanced(g)`: additive real demand with endogenous lump-sum tax
-  `T(p) = Σ p_i g_i`; household expenditure `E = w·ΣL − T`.
-- F3 `ExternalDebt(g)`: identical additive demand, household untaxed; the
-  external balance `F = Σ p_i g_i` is recorded post-solve.
+- F2 `TaxFinanced(g)`: additive real demand; the endogenous wage-income tax
+  `τ = Σ p_i (g^G_i + g_i) / (w·ΣL)`; household expenditure
+  `E = (1−τ)·w·ΣL + F`.
+- F3 `ExternalDebt(g)`: identical additive demand, but the programme is not
+  taxed: `τ = Σ p_i g^G_i / (w·ΣL)`; `B_gov = Σ p_i g_i` is recorded
+  post-solve, and `F` is solved from the external account.
 
 Hooks: `preference_weights`, `tau_rate` (homogeneous budget: real purchases
 financed at CURRENT prices), `household_expenditure` (`E = (1−τ)wΣL`),

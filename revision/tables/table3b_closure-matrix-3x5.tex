@@ -1,19 +1,16 @@
 % =====================================================================
-% Table 3b --- the closure matrix, TRANSPOSED (DRAFT, v2)
+% Table 3b --- the closure matrix, TRANSPOSED (DRAFT, v3)
 % ---------------------------------------------------------------------
-% Same content as table3_closure-matrix-5x3.tex, axes inverted: the three
-% financing closures are the ROWS and the five labour closures the COLUMNS,
-% so the orientation now matches Table~\ref{tab:closure-conditions}
-% (financing = rows, short-run closure = columns). The two-equations-per-
-% cell logic is unchanged.
+% Revised 2026-10-18 (ADR-0033) to the same conditions as Table 3c: the
+% financing conditions name tau (wage-income tax financing g^G in every
+% closure, plus g under F2), B_gov (F3) and the net external transfer F; BETA and the
+% fixed-wage columns state their demand side. Column order as before.
 %
 % Block labels: each cell tags its conditions by block --
 %   labour market: the labour-market closure condition (the column, varies)
 %   production:    a production-side condition, where one is added
 %                  (only the Leontief column pins substitution)
 %   financing:     the financing condition (the row, varies)
-% The tag is repeated in every cell for the same reason Table 2 repeats
-% both equations; drop the \textit{...:} prefixes to get the plain version.
 % =====================================================================
 \begin{table}[htbp]
 \centering
@@ -37,48 +34,58 @@
 
 \textbf{F1}\newline \scriptsize repurposing of consumption
 & \textit{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$
-  \newline \textit{financing:} $\sum_i p_i c_i^{h} = E^{h}$
-& \textit{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$
-  \newline \textit{financing:} $\sum_i p_i c_i^{h} = E^{h}$
-& \textit{labour market:} $w/P = \bar w = 1$, $L = \sum_i L_i$
-  \newline \textit{financing:} $\sum_i p_i c_i^{h} = E^{h}$
-& \textit{labour market:} $w/P = 1$; \textit{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$
-  \newline \textit{financing:} $\sum_i p_i c_i^{h} = E^{h}$
-& \textit{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free
-  \newline \textit{financing:} $\sum_i p_i c_i^{h} = E^{h}$ \\
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $\tilde\beta_i \propto \beta_i d_i$
+& \textit{labour market:} $L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i \allowbreak \bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $\tilde\beta_i \propto \beta_i d_i$
+& \textit{labour market:} $w/\Pi(p) = \bar w = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $\tilde\beta_i \propto \beta_i d_i$
+& \textit{labour market:} $w/\Pi(p) = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$; \textit{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $\tilde\beta_i \propto \beta_i d_i$
+& \textit{labour market:} $\eta = 0$: $L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i$, sectoral $w_i$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $\tilde\beta_i \propto \beta_i d_i$ \\
 \midrule
 
 \textbf{F2}\newline \scriptsize refinancing via taxes
 & \textit{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$
-  \newline \textit{financing:} $T(p) = \sum_i p_i g_i$
-& \textit{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$
-  \newline \textit{financing:} $T(p) = \sum_i p_i g_i$
-& \textit{labour market:} $w/P = \bar w = 1$, $L = \sum_i L_i$
-  \newline \textit{financing:} $T(p) = \sum_i p_i g_i$
-& \textit{labour market:} $w/P = 1$; \textit{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$
-  \newline \textit{financing:} $T(p) = \sum_i p_i g_i$
-& \textit{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free
-  \newline \textit{financing:} $T(p) = \sum_i p_i g_i$ \\
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i (g^{G}_i + g_i)$
+& \textit{labour market:} $L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i \allowbreak \bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i (g^{G}_i + g_i)$
+& \textit{labour market:} $w/\Pi(p) = \bar w = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i (g^{G}_i + g_i)$
+& \textit{labour market:} $w/\Pi(p) = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$; \textit{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i (g^{G}_i + g_i)$
+& \textit{labour market:} $\eta = 0$: $L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i$, sectoral $w_i$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i (g^{G}_i + g_i)$ \\
 \midrule
 
 \textbf{F3}\newline \scriptsize external finance
 & \textit{labour market:} $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$
-  \newline \textit{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
-& \textit{labour market:} $L_i = \bar L_i$ \allowbreak $\bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$
-  \newline \textit{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
-& \textit{labour market:} $w/P = \bar w = 1$, $L = \sum_i L_i$
-  \newline \textit{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
-& \textit{labour market:} $w/P = 1$; \textit{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$
-  \newline \textit{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$
-& \textit{labour market:} $\eta = 0$: $L_i = \bar L_i$, $w_i$ free
-  \newline \textit{financing:} $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textit{labour market:} $L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i \allowbreak \bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textit{labour market:} $w/\Pi(p) = \bar w = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textit{labour market:} $w/\Pi(p) = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$; \textit{production:} $(\theta, \epsilon, \sigma) \to 0^{+}$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $B_{\mathrm{gov}} = \sum_i p_i g_i$
+& \textit{labour market:} $\eta = 0$: $L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i$, sectoral $w_i$
+  \newline \textit{financing:} $\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $B_{\mathrm{gov}} = \sum_i p_i g_i$ \\
 \bottomrule
 \end{tabular}
 \caption{The closure matrix, transposed: the three financing closures
 (rows) crossed with the five labour-market closures (columns). Each cell
-states the two or three closure conditions that define that economy, tagged
-by block --- the labour-market condition (the column), any production-side
+states the labour-market condition (the column), any production-side
 condition (only the Leontief column pins substitution), and the financing
-condition (the row). The orientation matches Table~\ref{tab:closure-conditions}.}
+condition (the row). Common to all cells: household expenditure is
+$E^{h} = (1-\tau)\,w\sum_i L_i + F$, where $\tau$ is the wage-income tax rate
+that finances the baseline government purchases $g^{G}_i$ in every closure
+(and the programme $g_i$ under F2), $F$ is the net external transfer closing
+$S + T_{\mathrm{int}} + M - (I+X) = F + B_{\mathrm{gov}}$, endogenous on the
+mobile labour rows and identically zero on the fixed-wage rows, and
+$B_{\mathrm{gov}} = \sum_i p_i g_i$ is the programme booked externally (F3 only;
+zero otherwise). The programme enters final demand as additive real demand
+$g_i$ under F2 and F3; under F1 it is a reallocation of the household preference
+weights $\tilde\beta_i \propto \beta_i d_i$. $\theta$, $\epsilon$ and $\sigma$ are
+the substitution elasticities whose limit $0^{+}$ gives fixed coefficients.
+The orientation matches Table~\ref{tab:closure-conditions}.}
 \label{tab:closure-matrix-3x5}
 \end{table}

@@ -1,30 +1,13 @@
 % =====================================================================
-% Table 2 (PROPOSAL v2, 2026-10-17) --- the simplified matrix, block-tagged
+% Table 2 --- the simplified matrix, block-tagged
 % ---------------------------------------------------------------------
-% NOT \input anywhere. Proposal only; the live file is untouched.
-% ADOPTION: copy this over tables/table2_closure-conditions.tex
-%           (label tab:closure-conditions is unchanged, so no \ref breaks).
-%
-% Changes vs the live file:
-%   1. Block tags \textbf{labour market:} / \textbf{financing:} (Table 3c
-%      framing), placed ON THEIR OWN LINE. Reason: with the tag inline the
-%      first column's labour condition wraps to two lines while the second
-%      column's does not, so the two "financing:" labels land at different
-%      heights. Tag-on-own-line + indented condition makes every block
-%      exactly two lines, so both labels align by construction (verified by
-%      measuring the word boxes in the compiled shim: identical yMin).
-%   2. Row labels reduced to \textbf{F1}\newline \scriptsize <gloss>
-%      (Table 3c convention); the old "Financing: F1" prefix duplicated the
-%      corner cell.
-%   3. Corner cell names the axis ("Financing closure"), matching 3c.
-%   4. Geometry: 2.2 + 6.2 + 6.2 cm with \tabcolsep=4pt, so the condition
-%      lines fit on one line each (this is what makes point 1 work).
-%   5. The Leontief column's substitution pin stays on the labour line, as
-%      before; it is a production-side condition and carries no tag here
-%      (Table 3c is where the three-way tagging lives). The caption says so.
-%   6. Caption: "most importantyl" -> "most importantly", the stray "LABOR"
-%      removed, the L notation added, and "the two closure conditions" ->
-%      "the short-run and the financing condition".
+% Revised 2026-10-18 (ADR-0033): the financing conditions name the
+% balancing variable. tau is the wage-income tax rate that finances the
+% baseline government purchases g^G in every closure (kernel tau_rate);
+% under F2 the programme g is added to that base. F is the net
+% external transfer; B_gov = sum p g is the programme booked externally (F3).
+% Block tags \textbf{labour market:} / \textbf{financing:} sit on their own
+% line, so the two "financing:" labels align by construction.
 % =====================================================================
 \begin{table}[htbp]
 \centering
@@ -46,26 +29,26 @@
 \textbf{F1}\newline \scriptsize repurposing of consumption
 & \tblk{labour market}\tcond{$L_{i} = L_{i}^{\mathrm{cm}}(p, y_{i}, w)$, \quad $\textstyle\sum_{i} L_{i} = \bar L$}\par
   \vspace{6pt}
-  \tblk{financing}\tcond{$\textstyle\sum_{i} p_{i} c_{i}^{h} = E^{h}$}
-& \tblk{labour market}\tcond{$w/\Pi(p) = 1$, \quad $(\theta, \epsilon, \sigma) \to 0^{+}$}\par
+  \tblk{financing}\tcond{$\tau\, w\sum_{i} L_{i} = \textstyle\sum_{i} p_{i} g^{G}_{i}$, \quad $\tilde\beta_{i} \propto \beta_{i} d_{i}$}
+& \tblk{labour market}\tcond{$w/\Pi(p) = 1$, \quad $L_{i} = L_{i}^{\mathrm{cm}}(p, y_{i}, w)$, \quad $(\theta, \epsilon, \sigma) \to 0^{+}$}\par
   \vspace{6pt}
-  \tblk{financing}\tcond{$\textstyle\sum_{i} p_{i} c_{i}^{h} = E^{h}$} \\
+  \tblk{financing}\tcond{$\tau\, w\sum_{i} L_{i} = \textstyle\sum_{i} p_{i} g^{G}_{i}$, \quad $\tilde\beta_{i} \propto \beta_{i} d_{i}$} \\
 \midrule
 \textbf{F2}\newline \scriptsize refinancing via taxes
 & \tblk{labour market}\tcond{$L_{i} = L_{i}^{\mathrm{cm}}(p, y_{i}, w)$, \quad $\textstyle\sum_{i} L_{i} = \bar L$}\par
   \vspace{6pt}
-  \tblk{financing}\tcond{$T(p) = \textstyle\sum_{i} p_{i} g_{i}$}
-& \tblk{labour market}\tcond{$w/\Pi(p) = 1$, \quad $(\theta, \epsilon, \sigma) \to 0^{+}$}\par
+  \tblk{financing}\tcond{$\tau\, w\sum_{i} L_{i} = \textstyle\sum_{i} p_{i}(g^{G}_{i} + g_{i})$}
+& \tblk{labour market}\tcond{$w/\Pi(p) = 1$, \quad $L_{i} = L_{i}^{\mathrm{cm}}(p, y_{i}, w)$, \quad $(\theta, \epsilon, \sigma) \to 0^{+}$}\par
   \vspace{6pt}
-  \tblk{financing}\tcond{$T(p) = \textstyle\sum_{i} p_{i} g_{i}$} \\
+  \tblk{financing}\tcond{$\tau\, w\sum_{i} L_{i} = \textstyle\sum_{i} p_{i}(g^{G}_{i} + g_{i})$} \\
 \midrule
 \textbf{F3}\newline \scriptsize external finance
 & \tblk{labour market}\tcond{$L_{i} = L_{i}^{\mathrm{cm}}(p, y_{i}, w)$, \quad $\textstyle\sum_{i} L_{i} = \bar L$}\par
   \vspace{6pt}
-  \tblk{financing}\tcond{$B_{\mathrm{gov}} = \textstyle\sum_{i} p_{i} g_{i}$}
-& \tblk{labour market}\tcond{$w/\Pi(p) = 1$, \quad $(\theta, \epsilon, \sigma) \to 0^{+}$}\par
+  \tblk{financing}\tcond{$\tau\, w\sum_{i} L_{i} = \textstyle\sum_{i} p_{i} g^{G}_{i}$, \quad $B_{\mathrm{gov}} = \textstyle\sum_{i} p_{i} g_{i}$}
+& \tblk{labour market}\tcond{$w/\Pi(p) = 1$, \quad $L_{i} = L_{i}^{\mathrm{cm}}(p, y_{i}, w)$, \quad $(\theta, \epsilon, \sigma) \to 0^{+}$}\par
   \vspace{6pt}
-  \tblk{financing}\tcond{$B_{\mathrm{gov}} = \textstyle\sum_{i} p_{i} g_{i}$} \\
+  \tblk{financing}\tcond{$\tau\, w\sum_{i} L_{i} = \textstyle\sum_{i} p_{i} g^{G}_{i}$, \quad $B_{\mathrm{gov}} = \textstyle\sum_{i} p_{i} g_{i}$} \\
 \bottomrule
 \end{tabular}
 \caption{A matrix showing the two standard short-run closures crossed
@@ -74,9 +57,15 @@ that defines the labour market of that economy and the financing condition
 that closes its budget; the Leontief column additionally pins the
 substitution elasticities. Notation: $L_{i}$ is sectoral employment,
 $L_{i}^{\mathrm{cm}}$ the cost-minimizing labour demand and $\bar L$ the
-labour endowment; $\Pi(p)$ is the consumption price index, $E^{h}$
-household consumption expenditure, $T(p)$ the programme tax and
-$B_{\mathrm{gov}}$ the externally booked programme cost. All symbols are
-defined in Section~\ref{sec:kernel} and Appendix~\ref{app:model}.}
+labour endowment; $\Pi(p)$ is the consumption price index. Household
+expenditure is $E^{h} = (1-\tau)\,w\sum_{i} L_{i} + F$, where $\tau$ is the
+wage-income tax rate that finances the baseline government purchases
+$g^{G}_{i}$ in every closure and the programme $g_{i}$ under F2, $F$ is the
+net external transfer closing the external account
+$S + T_{\mathrm{int}} + M - (I+X) = F + B_{\mathrm{gov}}$ (endogenous on the
+mobile labour rows, identically zero on the fixed-wage rows), and
+$B_{\mathrm{gov}}$ is the programme cost booked externally (F3 only; zero
+otherwise). All symbols are defined in Section~\ref{sec:kernel} and
+Appendix~\ref{app:model}.}
 \label{tab:closure-conditions}
 \end{table}

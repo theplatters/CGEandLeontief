@@ -1,10 +1,12 @@
 % =====================================================================
 % Table 3c --- the closure matrix, transposed
 % ---------------------------------------------------------------------
-% Revised 2026-10-18: financing conditions now name the balancing variable
-% (tau, B_gov, F); F is the endogenous net external transfer (ADR-0019) and
-% the programme is booked as B_gov (F3 only). Household expenditure and the
-% wage-income tax are defined once, in the caption.
+% Revised 2026-10-18 (ADR-0033): the financing conditions name the
+% balancing variables. tau is the wage-income tax rate financing the
+% baseline government purchases g^G in every closure (plus g under F2);
+% B_gov (F3 only) is the programme booked externally; F is the net external
+% transfer (ADR-0019), endogenous on the mobile rows and zero on the fixed-wage rows. Household expenditure and the common
+% definitions are stated once, in the caption.
 % LAYOUT (2026-10-17, Table 2 convention):
 %   * every block carries its signifier on its OWN line, with the condition
 %     indented beneath it: \lblk (labour block), \fblk (financing block),
@@ -55,39 +57,39 @@
 \midrule
 \textbf{F1}\newline \scriptsize repurposing of consumption
 & \lblk{labour market}{$\eta = 0$: $L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i$, sectoral $w_i$}{}
-  \fblk{financing}{$B_{\mathrm{gov}} = 0$, $\tau = 0$, $\tilde\beta_i \propto \beta_i d_i$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $\tilde\beta_i \propto \beta_i d_i$}
 & \lblk{labour market}{$L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$, one wage $w$}{}
-  \fblk{financing}{$B_{\mathrm{gov}} = 0$, $\tau = 0$, $\tilde\beta_i \propto \beta_i d_i$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $\tilde\beta_i \propto \beta_i d_i$}
 & \lblk{labour market}{$L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i \allowbreak \bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$}{}
-  \fblk{financing}{$B_{\mathrm{gov}} = 0$, $\tau = 0$, $\tilde\beta_i \propto \beta_i d_i$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $\tilde\beta_i \propto \beta_i d_i$}
 & \lblk{labour market}{$w/\Pi(p) = \bar w = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$}{}
-  \fblk{financing}{$B_{\mathrm{gov}} = 0$, $\tau = 0$, $\tilde\beta_i \propto \beta_i d_i$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $\tilde\beta_i \propto \beta_i d_i$}
 & \lblk{labour market}{$w/\Pi(p) = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$}{\pblk{production}{$(\theta, \epsilon, \sigma) \to 0^{+}$}}
-  \fblk{financing}{$B_{\mathrm{gov}} = 0$, $\tau = 0$, $\tilde\beta_i \propto \beta_i d_i$} \\
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $\tilde\beta_i \propto \beta_i d_i$} \\
 \midrule
 \textbf{F2}\newline \scriptsize refinancing via taxes
 & \lblk{labour market}{$\eta = 0$: $L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i$, sectoral $w_i$}{}
-  \fblk{financing}{$\tau\, w \sum_i L_i = \sum_i p_i g_i$, $B_{\mathrm{gov}} = 0$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i (g^{G}_i + g_i)$}
 & \lblk{labour market}{$L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$, one wage $w$}{}
-  \fblk{financing}{$\tau\, w \sum_i L_i = \sum_i p_i g_i$, $B_{\mathrm{gov}} = 0$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i (g^{G}_i + g_i)$}
 & \lblk{labour market}{$L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i \allowbreak \bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$}{}
-  \fblk{financing}{$\tau\, w \sum_i L_i = \sum_i p_i g_i$, $B_{\mathrm{gov}} = 0$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i (g^{G}_i + g_i)$}
 & \lblk{labour market}{$w/\Pi(p) = \bar w = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$}{}
-  \fblk{financing}{$\tau\, w \sum_i L_i = \sum_i p_i g_i$, $B_{\mathrm{gov}} = 0$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i (g^{G}_i + g_i)$}
 & \lblk{labour market}{$w/\Pi(p) = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$}{\pblk{production}{$(\theta, \epsilon, \sigma) \to 0^{+}$}}
-  \fblk{financing}{$\tau\, w \sum_i L_i = \sum_i p_i g_i$, $B_{\mathrm{gov}} = 0$} \\
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i (g^{G}_i + g_i)$} \\
 \midrule
 \textbf{F3}\newline \scriptsize external finance
 & \lblk{labour market}{$\eta = 0$: $L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i$, sectoral $w_i$}{}
-  \fblk{financing}{$B_{\mathrm{gov}} = \sum_i p_i g_i$, $\tau = 0$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $B_{\mathrm{gov}} = \sum_i p_i g_i$}
 & \lblk{labour market}{$L_i = L_i^{\mathrm{cm}}(p, y_i, w)$, $\sum_i L_i = \bar L$, one wage $w$}{}
-  \fblk{financing}{$B_{\mathrm{gov}} = \sum_i p_i g_i$, $\tau = 0$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $B_{\mathrm{gov}} = \sum_i p_i g_i$}
 & \lblk{labour market}{$L_i^{\mathrm{cm}}(p, y_i, w_i) = \bar L_i \allowbreak \bigl(\tfrac{w_i/\Pi(p)}{w_i^{0}/\Pi^{0}}\bigr)^{\eta_{s,i}}$}{}
-  \fblk{financing}{$B_{\mathrm{gov}} = \sum_i p_i g_i$, $\tau = 0$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $B_{\mathrm{gov}} = \sum_i p_i g_i$}
 & \lblk{labour market}{$w/\Pi(p) = \bar w = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$}{}
-  \fblk{financing}{$B_{\mathrm{gov}} = \sum_i p_i g_i$, $\tau = 0$}
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $B_{\mathrm{gov}} = \sum_i p_i g_i$}
 & \lblk{labour market}{$w/\Pi(p) = 1$, $L_i = L_i^{\mathrm{cm}}(p, y_i, w)$}{\pblk{production}{$(\theta, \epsilon, \sigma) \to 0^{+}$}}
-  \fblk{financing}{$B_{\mathrm{gov}} = \sum_i p_i g_i$, $\tau = 0$} \\
+  \fblk{financing}{$\tau w \sum_i L_i = \sum_i p_i g^{G}_i$, $B_{\mathrm{gov}} = \sum_i p_i g_i$} \\
 \bottomrule
 \end{tabular}
 \caption{The expanded closure matrix: three financing closures
@@ -95,18 +97,18 @@
 states the labour-market condition (the column), the production pin where
 one applies (the Leontief column only), and the financing condition (the
 row). Common to all cells: household expenditure is
-$E^{h} = (1-\tau)\,w\sum_i L_i + F$, where $\tau$ is a proportional
-wage-income tax (nonzero only under F2) and $F$ is the endogenous net
-external transfer that closes the external account,
-$S + T_{\mathrm{int}} + M - (I+X) = F + B_{\mathrm{gov}}$. The programme
-cost $B_{\mathrm{gov}}$ is booked externally (F3 only); $\sum_i p_i g_i$ is
-valued at each cell's equilibrium prices. Under F2 the tax $\tau$ balances
-the programme at each cell's wage bill; with one household this equals a
-lump-sum transfer of $\sum_i p_i g_i$ out of household income. Under F2 and F3
-the programme enters final demand as additive real demand $g_i$; under F1 it
-is a reallocation of the household preference weights, $\tilde\beta_i \propto
-\beta_i d_i$, with no additive demand. $\theta$, $\epsilon$ and $\sigma$ are the
-substitution elasticities whose limit $0^{+}$ gives fixed coefficients.
-Notation as in Table~\ref{tab:closure-conditions}.}
+$E^{h} = (1-\tau)\,w\sum_i L_i + F$, where $\tau$ is the wage-income tax rate
+that finances the baseline government purchases $g^{G}_i$ in every closure
+(and the programme $g_i$ under F2); $F$ is the net external transfer
+closing $S + T_{\mathrm{int}} + M - (I+X) = F + B_{\mathrm{gov}}$, endogenous
+on the mobile labour rows and identically zero on the fixed-wage rows (GAMMA,
+DELTA).
+$B_{\mathrm{gov}} = \sum_i p_i g_i$ is the programme cost booked externally
+(F3 only; zero otherwise), valued at each cell's equilibrium prices. The
+programme enters final demand as additive real demand $g_i$ under F2 and F3;
+under F1 it is a reallocation of the household preference weights,
+$\tilde\beta_i \propto \beta_i d_i$, with no additive demand. $\theta$,
+$\epsilon$ and $\sigma$ are the substitution elasticities whose limit $0^{+}$
+gives fixed coefficients. Notation as in Table~\ref{tab:closure-conditions}.}
 \label{tab:closure-matrix-3x5}
 \end{table}

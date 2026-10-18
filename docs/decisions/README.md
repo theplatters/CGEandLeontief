@@ -57,6 +57,7 @@ settled question.
 | ADR-0030 | Distributed profit income: Stage B of the markup door | accepted |
 | ADR-0031 | Value-added-scaled capacity door (OpenCGE v0.2.1) and the services-zero δ profile | accepted |
 | ADR-0032 | The pricing doors on every labour row (DELTA wired in the harness, sectoral BETA) | accepted |
+| ADR-0033 | Financing formulations name the balancing variable (wage-rate tax, endogenous F, B_gov) | proposed |
 
 **Migrated to OpenCGE DECISIONS.md** (2026-10-12, ADR-0028): ADR-0001,
 ADR-0005, ADR-0010, ADR-0011, ADR-0014, ADR-0015, ADR-0016, ADR-0017,

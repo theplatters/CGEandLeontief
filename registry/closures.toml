@@ -177,7 +177,7 @@ notes = "A demand-composition shifter, not a financing closure in the CGE taxono
 [financing.F2]
 id = "F2"
 name = "Tax-financed public investment"
-formulation = "sum_i p_i g_i = T(p); lump-sum / balanced-budget tax"
+formulation = "tau * w * sum_i L_i = sum_i p_i (g^G_i + g_i) (B_gov = 0); proportional wage-income tax at endogenous rate tau balances the programme"
 interpretation = "Autonomous public investment financed by an explicit tax counterparty (balanced government budget)."
 status = "tested"
 symbols = ["TaxFinanced"]
@@ -198,7 +198,7 @@ notes = "public_budget prices at sum(gov_demand) while taxes are dot(p, gov_dema
 [financing.F3]
 id = "F3"
 name = "External / debt-financed programme"
-formulation = "sum_i p_i g_i = F; external balance F"
+formulation = "B_gov = sum_i p_i g_i (booked externally; tau finances the baseline g^G only); external account S + T_int + M - (I+X) = F + B_gov with F the net external transfer (ADR-0019; endogenous on the mobile labour rows, identically zero on the fixed-wage rows)"
 interpretation = "Net new expenditure with an external counterpart; resources arrive via the external balance (imports serve the investment). It is an accounting open-economy closure, not a monetary mechanism."
 status = "tested"
 symbols = ["ExternalDebt"]

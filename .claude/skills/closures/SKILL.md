@@ -18,8 +18,8 @@ Full taxonomy: `docs/decisions/ADR-0002-closure-taxonomy.md`. Never reuse an id 
 | Labour | `DELTA` | `GAMMA` + Leontief limit (`θ, ϵ, σ → 0⁺`) at `η = 1` | a **corner** reached as GAMMA + Leontief technology; the endpoint row of the 5×3 matrix, not an independent mechanism |
 | Labour | `ZETA` | `0 ≤ L̄ − L ⊥ w/P − ω̄ ≥ 0` | future (`idea`); needs an MPEC/smoothing formulation — plain square solvers cannot express it |
 | Financing | `F1` | `β̃ᵢ = βᵢdᵢ / Σⱼβⱼdⱼ`; `Σ pᵢcᵢʰ = Eʰ`; budget-neutral | demand composition, never an autonomous investment multiplier |
-| Financing | `F2` | `Σ pᵢgᵢ = T(p)`; lump-sum/balanced-budget tax | needs a balanced-budget counterparty |
-| Financing | `F3` | `Σ pᵢgᵢ = F`; external balance | accounting open-economy closure, not a monetary mechanism |
+| Financing | `F2` | `τ·w·ΣLᵢ = Σpᵢ(gᵢ^G + gᵢ)`; proportional wage-income tax at endogenous `τ` (B_gov = 0) | needs a balanced-budget counterparty |
+| Financing | `F3` | `B_gov = Σpᵢgᵢ` booked externally; `S + T_int + M − (I+X) = F + B_gov`, F endogenous on mobile rows, 0 on fixed-wage rows | accounting open-economy closure, not a monetary mechanism |
 
 Symbol discipline: `η` is always the BF reallocation parameter, `η_s` is always the BETA supply elasticity. They never appear unqualified as "the elasticity".
 

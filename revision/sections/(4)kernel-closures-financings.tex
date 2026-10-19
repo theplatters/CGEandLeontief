@@ -49,7 +49,7 @@ from Shephard's lemma, $L_i = y_i\,\partial c_i/\partial w_i$ and
 $x_{ui} = y_i\,\partial c_i/\partial p_u$. 
 We take $\Phi_i$ to be a nested CES (elasticity $\epsilon$ between labour and
 the intermediate composite, $\theta$ among intermediates). We choose this functional form because it sits comfortably between two paradigmatic conceptions of production -- the inflexible, recipe-based Leontief production and the more adaptive Cobb-Douglas production function where substituiton is governed by marginal productivity. Formally, it can reproduce the respective outcomes at corners solutions (SOURCE).
-% TODO können wir da smit den parameters angeben; betrifft dann theta und epsilon, oder?
+We set $\epsilon = 0.5$ for the elasticity between labour and the intermediate composite and $\theta = 0.5$ for the elasticity among intermediates, so both nests are gross complements.
 
 On the consumption side, a representative household
 maximizes utility given its consumption expenditure $E^h$:
@@ -58,15 +58,19 @@ maximizes utility given its consumption expenditure $E^h$:
 \qquad \text{s.t.} \qquad \sum_{i=1}^N p_i c_i^h \leq E^h.
 \label{eq:utility-max}
 \end{equation}
-We again represent $U$ by a CES function with elasticity $\sigma$. 
+We again represent $U$ by a CES function with elasticity $\sigma = 0.9$.
 
 %TODO das hier drunter ist komisch selbstreferentiell – weißt du was hier gemeint ist?
-The shares of the table are its weights, so at
-baseline prices the solutions to~\eqref{eq:cost-min}
-and~\eqref{eq:utility-max} reproduce the table exactly. Equilibrium
-requires that output satisfies intermediate and final demand in every
-sector, the row identity~\eqref{eq:io-row} read as a market-clearing
-condition.
+% SO vielleicht besser
+We calibrate the weights of the CES functions to the shares of the table
+($\alpha_i$, $\Omega_{iu}$, $\omega_i$). With baseline prices normalised to
+one, the solutions to~\eqref{eq:cost-min} and~\eqref{eq:utility-max} then
+reproduce the table exactly, whatever the elasticities; $\epsilon$, $\theta$
+and $\sigma$ matter only once prices move away from the baseline.
+In equilibrium, output must meet intermediate and final demand in every
+sector: the row identity~\eqref{eq:io-row}, which holds in the table by
+construction, becomes a market-clearing condition that prices must restore
+after a shock.
 
 These conditions determine prices and quantities only once wages,
 employment and household resources are pinned down. The table and the

@@ -10,24 +10,34 @@ a utility-maximizing household. This kernel is held fixed by design as it provid
 
 \subsection{The input--output table}\label{subsec:io-table}
 
-An input--output table records, for $N$ sectors, the deliveries $x_{ui}$ of
-good $u$ to sector $i$, final use $z_u$ of good $u$ (household consumption,
-government purchases, investment, exports) and the value added $v_i$ of
-each sector. Two accounting identities hold for every sector. Along a row,
-output equals intermediate and final use; down a column, revenue equals
-the cost of intermediate inputs plus value added:
+An input--output table records, for $N$ sectors, the domestic deliveries
+$x_{ui}$ of good $u$ to sector $i$, final use $z_u$ of domestic good $u$
+(household consumption, government purchases, investment, exports) and the
+value added $v_i$ of each sector. Each sector's purchases of intermediates
+also contain two components that are not domestic deliveries: imported
+intermediates $m_i$ and product taxes (net of subsidies) on intermediate
+use $t_i$. Two accounting identities hold for every sector. Along a row,
+domestic output equals intermediate and final use; down a column, revenue
+equals the cost of intermediate inputs (domestic, imported and taxes) plus
+value added:
 \begin{align}
 p_u y_u &= \sum_{i=1}^N p_u x_{ui} + p_u z_u,
 \label{eq:io-row}\\
-p_i y_i &= \sum_{u=1}^N p_u x_{ui} + v_i.
+p_i y_i &= \sum_{u=1}^N p_u x_{ui} + m_i + t_i + v_i.
 \label{eq:io-column}
 \end{align}
 Dividing a column by sector revenue turns the table into cost shares: the
-factor share $\alpha_i = v_i/(p_i y_i)$ and the input shares
-$\Omega_{iu} = p_u x_{ui}/\sum_{u'} p_{u'}x_{u'i}$ of the intermediate
-bundle, with $\sum_u \Omega_{iu} = 1$. Household consumption shares
-$\omega_i$ follow in the same way from the final-use columns. Imports and
-product taxes on intermediate use are booked as separate leaks
+factor share $\alpha_i = v_i/(p_i y_i)$, so that $1-\alpha_i$ is the share
+of the full intermediate bill, and the input shares
+$\Omega_{iu} = p_u x_{ui}/\sum_{u'} p_{u'}x_{u'i}$ of the domestic
+intermediate bundle, with $\sum_u \Omega_{iu} = 1$.\footnote{The source
+table reports imported intermediates only by using sector, not by
+supplier, so the domestic deliveries $x_{ui}$ are obtained by allocating
+each user's imports proportionally across its suppliers
+(Appendix~\ref{app:pipeline}).} Household consumption shares
+$\omega_i$ follow in the same way from the final-use columns. In the
+model only the domestic part of the bill, $\sum_u p_u x_{ui}$, is demand
+for domestic goods; $m_i$ and $t_i$ are booked as explicit leaks
 (Appendix~\ref{app:kernel}). The step from the source table to these shares is
 documented in Appendix~\ref{app:pipeline}.
 %TODO: die notation mit dem strich checke ich gerade nicht. auch bei den indices bin ich unsicher: wenn z_u final use ist, warum ist dann der share omega_i (und nicht u)?
@@ -36,7 +46,7 @@ The table is a static snapshot of the underlying economy: it fixes shares at one
 
 \subsection{The optimization problems}\label{subsec:optimization}
 
-On the production side each sector is represented as a single competitive firm with a constant-returns technology $\Phi_i$ in labour and intermediate inputs. Given prices $p$, its wage $w_i$ and output $y_i$, these firms aim to minimize cost:
+On the production side each sector is represented as a single competitive firm with a constant-returns technology $\Phi_i$ in labour and intermediate inputs. Labour is the only primary factor: $L_i$ stands for the composite of all primary inputs, so the whole of value added $v_i$ --- compensation of employees, but also depreciation, the operating surplus and other net taxes on production --- accrues to it, and $\alpha_i$ is the full value-added share rather than the labour share in the national-accounts sense. Given prices $p$, its wage $w_i$ and output $y_i$, these firms aim to minimize cost:
 \begin{equation}
 \min_{L_i,\,x_{1i},\ldots,x_{Ni}} \; w_i L_i + \sum_{u=1}^N p_u x_{ui}
 \qquad \text{s.t.} \qquad \Phi_i(L_i, x_{1i},\ldots,x_{Ni}; A_i) \geq y_i,
@@ -80,7 +90,7 @@ optimization problems are silent on both: a closure supplies them.
 \subsection{The welfare measure}\label{subsec:welfare}
 
 The approach above gives an estimate for \emph{Real GDP} based on inspecting
-the wage bill $\sum_i w_i L_i$. For scenarios with price changes the wage bill
+the wage bill $\sum_i w_i L_i$, which equals aggregate value added because labour is the only primary factor (Section~\ref{subsec:optimization}). For scenarios with price changes the wage bill
 is deflated to reflect changes in purchasing power\footnote{Specifcally, we use a seven-component T\"ornqvist price index of final demand (consumption, government purchases and the programme, investment, exports, and the three import and tax leaks booked in Appendix~\ref{app:kernel})}. However, under a demand-only shock every price is pinned at its baseline value in the majority of the scenarios captured by table \ref{tab:closure-matrix-3x5}. In these cases the deflator is exactly one and real GDP moves
 with the employment index $w\sum_i L_i$ alone. Hence, in our setup deflation is only required for the no-reallocation and the elastic labor supply closures. 
 
@@ -88,9 +98,9 @@ However, real GDP measures how much is produced, not how well the household fare
 
 A conventional approach for our problem would be to employ a \emph{T\"ornqvist welfare index}, that compares household consumption bundle against its baseline.  In practical terms this measure of welfare will be rather sensitive to the financial closure applied. Specifically, any closure that reallocates spending from the private to the public sector -- i.e., closures F2 and F3 for the scenarios with constrained factor supply and closure F2 for scenarios with flexible quantities -- will mechanically show a negative impact on consumption as expenditures in the public sector do not contribute to welfare per definition. While internally consistent, this feature challenges the validity of the \emph{T\"ornqvist welfare index} for the case of a transformational stimulus, as we would take no harm to assume that public and private spending would supply a quite similar and comparable bundle of goods. Against the backdrop that both types of spending are assumed to lead to the same outcome it is difficult to sustain the assumption that these very same goods and services do not contribute to welfare in case they are booked as public expenditures.
 
-Alternatively, and because the representative household has homothetic CES preferences, the welfare assessemnt could directly honor this assumption by employing an \emph{exact} money-metric assessment of welfare change: with the expenditure function $e(p,u)=u\,\Pi(p)$, the change in real consumption expenditure $E^h/\Pi(p)$ is the consumption-equivalent (equivalent variation) of the shock. Under the consumption-price numeraire $\Pi(p)=1$ --- the CES price index of household consumption, which is always normalized to one --- this measure is simply the change in after-tax, post-saving household resources $E^h$.  It differs from a pure quantity index by taking the imposed utility function seriously.\footnote{A fixed-weight index equals this measure only where the valued bundle grows proportionally, and the size of the gap is set by the distance of the substitution elasticity from one. The two therefore diverge even at pinned prices and unchanged preference weights, as long as the composition of the bundle moves.} While it can be justified as a alternative baseline choice for the valuation algorithm on this basis, it also comes with a built-in status quo bias as the current composition of final consumption is deemed optimal. Also, in its standard form this valuation is still only focused on private expenditure only.
+Alternatively, and because the representative household has homothetic CES preferences, the welfare assessemnt could directly honor this assumption by employing an \emph{exact} money-metric assessment of welfare change: with the expenditure function $e(p,u)=u\,\Pi(p)$, the change in real consumption expenditure $E^h/\Pi(p)$ is the consumption-equivalent (equivalent variation) of the shock. Under the consumption-price numeraire $\Pi(p)=1$ --- the CES price index of household consumption, which is always normalized to one --- this measure is simply the change in after-tax, post-saving household resources $E^h$.  It differs from a pure quantity index by taking the imposed utility function seriously.\footnote{A fixed-weight index equals this measure only where the valued bundle grows proportionally, and the size of the gap is set by the distance of the substitution elasticity from one. For the household's own bundle this requires relative prices to move: at pinned prices and unchanged preference weights the homothetic household scales its consumption proportionally, and the two measures coincide. The composition of the valued bundle moves at pinned prices only if the bundle is not the household's own choice, as when the programme is added to it (see below).} While it can be justified as a alternative baseline choice for the valuation algorithm on this basis, it also comes with a built-in status quo bias as the current composition of final consumption is deemed optimal. Also, in its standard form this valuation is still only focused on private expenditure only. Finally, the measure is not defined for the preference-reallocation closure F1. F1 changes the preference weights themselves, so baseline and post-shock bundles are not ranked by one common utility function, and there is no single equivalent variation. Any welfare number for the F1 rows is conditional on the weights used to evaluate it, baseline or adopted; Table~\ref{tab:welfare-comparison} therefore reports both.
 
-Important variations of these base approaches can be obtained when shifting the definition of what, exactly, is valued by the welfare index. One obvious take here is to introduce a final demand index that captures not only net household consumption but also the spending programme as such, which then undergoes further valuation.\footnote{Public demand is exogenous in this kernel rather than chosen by an optimizing agent, so valuing it at all is a stance and not an implication of the model. We make the stance explicit by letting the valued bundle be $c+\lambda^{G}\,(g^G+g)$, with $\lambda^{G}$ the weight on public relative to private absorption. Throughout we set $\lambda^{G}=1$ --- public spending is valued at cost, as in the national accounts --- and $\lambda^{G}=0$ would return the pure consumption measure as a check.} A second option is to include leisure as a standalone variabel that determines social welfare jointly with economic output. And, indeed, the options above are not only silent on public expenditure but also on the the disutility of the additional work, which matters for all closures where employment absorbs the shock.
+Important variations of these base approaches can be obtained when shifting the definition of what, exactly, is valued by the welfare index. One obvious take here is to introduce a final demand index that captures not only net household consumption but also the spending programme as such, which then undergoes further valuation.\footnote{Public demand is exogenous in this kernel rather than chosen by an optimizing agent, so valuing it at all is a stance and not an implication of the model. We make the stance explicit by letting the valued bundle be $c+\lambda^{G}\,(g^G+g)$, with $\lambda^{G}$ the weight on public relative to private absorption. Throughout we set $\lambda^{G}=1$ --- public spending is valued at cost, as in the national accounts --- and $\lambda^{G}=0$ would return the pure consumption measure as a check. Since the programme is not chosen by the household, adding it changes the composition of the valued bundle even at pinned prices. A CES evaluation of this bundle therefore departs from a fixed-weight index by an amount set by the distance of $\sigma$ from one.} A second option is to include leisure as a standalone variabel that determines social welfare jointly with economic output. And, indeed, the options above are not only silent on public expenditure but also on the the disutility of the additional work, which matters for all closures where employment absorbs the shock.
 
 Based on these considerations we now turn to presenting the core results of our key application -- a demand shock on the Germany economy focused on renovation of residential housing -- to illustrate the variety of results to be obtained from the closure scenarios introduced in table \ref{tab:closure-matrix-3x5}. When doing so we take the peculiar role of different measure of economic welfare into account to show, how the estimated economic impacts can be translated into, partially competing, welfare assessements.
 

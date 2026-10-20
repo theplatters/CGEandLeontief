@@ -1,42 +1,4 @@
-% =====================================================================
-% Section 6 --- Beyond demand-only shocks
-% ---------------------------------------------------------------------
-% Job: what simplifies and where variety lives --- the equivalences and
-%      their scope (demand-only, the A = 1 branch the numeraire selects);
-%      the sectoral family and its exact nesting (the rigid corner IS the
-%      eta = 0 endpoint); the executed ladder and rigid-group cells; the
-%      supply-shock arm as identification vehicle; the no-go corollary; the
-%      no-reallocation closure repositioned here as the frictionless pole.
-% Mindmap: N03, N13, N02D.
-% Status: STUB --- narrative outline v3 (2026-09-20).
-% =====================================================================
-\section{Beyond demand-only shocks}\label{sec:beyond-demand-only}
-
-% TODO: scope the equivalences airtight; give a clean supply-shock
-% counterexample and use it to motivate this section rather than hide the
-% boundary. Reference paper/framing_gamma.tex.
-
-\subsection{The equivalences and their scope}\label{subsec:equivalences}
-% TODO: Lemma 1 (price-block demand-invariance), Lemma 2 (nonsubstitution,
-% Samuelson 1951), Propositions 1-3; financing neutrality; full proofs in
-% App. C.
-
-\subsection{The sectoral family}\label{subsec:sectoral-family}
-% TODO: L^cm_i = Lbar_i (w_i/Pi)^{eta_s,i}; the rigid corner is exactly the
-% eta = 0 endpoint (Prop. 3); the executed ladder (BETA-F2-etas{025,05,1,2} =
-% 0.152897 / 0.105666 / 0.065422 / 0.037171) and the rigid-group cells.
-
-\subsection{The supply-shock arm}\label{subsec:supply-arm}
-% TABLE (linked, revision/tables/supply_etas_flows.md): the s1 identification
-% vehicle; supply_etas_prog_flows.md / supply_etas_unif_flows.md for the other
-% two designs (189 cells total).
-% TODO: the identification vehicle (supply_etas_s1); 189 cells across three
-% designs; separates the ladder rungs that demand-only shocks cannot.
-
-% maybe for an introductory para:
-% % Such concerns --- the question of where an economy sits on its cost curve --- bear on prices, and unit cost is exactly what a demand-only shock cannot move: the cost line has three arguments a demand shock could reach --- technology, sectoral wages and intermediate prices --- of which Section~\ref{subsec:sectoral-family} opened the second and this section opens the first.
-% The capacity door is the first of two hooks on this same cost line. The second, taken up in Section~\ref{subsec:pricing-markup}, leaves technology at $A_i$ and wedges the price above marginal cost instead --- and unlike this one it creates a rent, which then has to be booked somewhere.
-
+\section{Complexifying demand-only shocks}\label{sec:beyond-demand-only}
 
 \subsection{The pricing door I: capacity and Kaldor--Verdoorn}\label{subsec:pricing-capacity}
 % Provenance: ADR-0029, ADR-0031, ADR-0032; runs pricing_capacity-v2-GAMMA-*,
@@ -53,11 +15,6 @@ effective technology respond to utilisation,
 \end{equation}
 with $\lambda_i$ as the sector's baseline gross output and $\alpha_i$ the factor (value-added) share, so that $\delta = 0$ reproduces the model of the preceding sections exactly.
 The elasticity $\delta_i$ is a reduced-form utilisation elasticity of \emph{value-added} productivity, not a rental rate: no factor is added and no income block is created, because the productivity change passes into unit cost under zero profit, weighted by the factor share. A Hicks-neutral gain $d\ln A^{\mathrm{eff}}_i$ then raises value added per worker by $d\ln A^{\mathrm{eff}}_i/\alpha_i$ (Appendix~\ref{app:pricing-hooks}), so $-\delta_i$ is directly comparable with an estimated Verdoorn coefficient.\footnote{Applied to gross output without the factor share, the same bracket would overstate the value-added response by $1/\alpha_i$: factor shares below one half turn $\delta = 0.5$ into an elasticity above one, and into $11.6$ for coke and refined petroleum ($v \approx 0.04$).}
-%NOTE: do we really need the footnote?
-%AG (2026-10-18): keep. One sentence, and it is the only place a reader learns WHY the exponent
-%  carries the factor share. Appendix~\ref{app:pricing-hooks} derives the relation; the footnote's
-%  unique content is the magnitude (shares below 0.5 push delta = 0.5 above one; 11.6 for coke).
-%  Drop it only if the pointer alone should carry that.
 
 The two signs of $\delta$ again carry two traditions, underpinned by two distinct visions of the typical operating mode of an economy. With $\delta > 0$ scarcity gains an additional bite: unit costs rise with own output --- capacity pressure, tight supply chains, higher risk and, hence, eventually higher costs and prices (even if, as here, market power considerations are bracketed out). With $\delta < 0$, on the other hand, unit cost falls with output --- the dynamic increasing returns articulated early by \textcite{Verdoorn1949} (see also \citealp{Kaldor1966} and \citealp{SylosLabini1995}). 
 The door is solved inside the equilibrium residual rather than adjusted around it: $\delta$ enters the kernel's cost line, so every priced cell is an equilibrium in which the door is active (Appendix~\ref{app:pricing-door}).%
@@ -66,60 +23,37 @@ The door is solved inside the equilibrium residual rather than adjusted around i
 %AG (2026-10-18): keep, halved (done). The prose says WHERE the door enters; the footnote says the
 %  solution is well defined. A reader who knows delta < 0 will otherwise expect multiple equilibria
 %  in a cell whose number we report. Gate detail stays in Appendix~\ref{app:pricing-guard}.
+%TODO: this should be explained in clearer language
 
-%AG (2026-10-18): profiles resolved --- the main text carries the goods-only profile (the programme's
-%  direct incidence is entirely in CPA A--F: specialised construction works alone take 63.4 percent of
-%  it, and Kaldor reads Verdoorn's law as a manufacturing law); the all-sector counterfactual and the
-%  mobile-labour rows moved to Appendix~\ref{app:variants} (tableE_pricing-profiles.tex).
-%  RESOLVED (2026-10-18): the markup panels are now Table~\ref{tab:pricing-markup} inside 6.5
-%  (ADR-0032), and the price-response bracket figure is removed.
 We run scenario with $\delta = \pm 0.5$ for manufacturing to illustrate the impact of the Verdoorn coefficients on estimated outcomes. These effects are confined to the
 goods sectors (CPA sections A--F: agriculture, mining, manufacturing, utilities
 and construction), following \textcite{Kaldor1966}, who reads Verdoorn's law
 as a law of manufacturing, not of services. Moreover, this setup matches the incidence of the programme, whose direct demand falls entirely on goods sectors. The counterfactual that extends the elasticity to the services sectors as well is reported in Appendix~\ref{app:variants}.
 %TODO gibt es diesen appendix wiklich?
 
-Table~\ref{tab:pricing-capacity} reports the door under the programme of
-Section~\ref{sec:application} on every labour closure; we read the fixed-wage
-panel first. Its first result is
-that the door works: with $\delta = \pm 0.5$ the largest sectoral price
-deviation lies between 4.0 and 4.7 percent in every financing column, where the
-fixed-wage column of Table~\ref{tab:results-matrix} reports none. Its second
-result is that Kaldor--Verdoorn for manufacturing lowers the GDP deflator under
-every financing closure, by 0.19 to 0.35 percent
-(\texttt{pricing\_capacity-v2-GAMMA-F1-dm05-s0}, \texttt{-F2-dm05-s0},
-\texttt{-F3-dm05-s0}), while capacity pressure raises it. The sign is
-nevertheless not a property of the door alone: extending the elasticity to the
-services sectors, which receive none of the programme directly, reverses the
-result under preference reallocation and tax finance ($+0.14$, $+0.03$,
-$-0.82$ percent against $-0.19$, $-0.21$, $-0.35$;
-\texttt{pricing\_capacity-v2-GAMMA-\{F1,F2,F3\}-dm05}), so that the sign
-depends on which sectors carry increasing returns rather than on the financing
-closure alone (Appendix~\ref{app:variants}). Under the CPI numeraire the same
-door moves relative prices and the real wage instead: in the standard-CGE panel
-Kaldor--Verdoorn lowers the deflator by 0.06 percent with employment fixed
-(\texttt{pricing\_mobile-v2-ALPHA-\{F1,F2,F3\}-dm05-s0}), and in all three
-CPI-gauge panels F2 and F3 remain indistinguishable: financing neutrality in
-the mobile gauge survives the door.
+Table~\ref{tab:pricing-kaldor} reports the results for such scenarios by building on the outcomes already shown in Section~\ref{sec:application} to cover the full matrix of approaches discussed for scenarios with endogenously increasing ($\delta = –0.5$) and decreasing ($\delta = 0.5$) productivity effects. For these values we observe small changes in the aggregate price level across all scenarios relative to the baseline applications. Deviations from baselines values thereby follow a similar pattern: all outcomes show the same sign as well as similar magnitudes imposing net changes of the price level ranging from $0.05\%$ to about $0.4\%$ with the large majority of estimates lying below $0.2\%$.
 
-Two consequences follow, and Table~\ref{tab:pricing-capacity} measures both.
-The fixed-wage and Leontief columns coincide in Table~\ref{tab:results-matrix}
-because both hold prices at the baseline, and their $\delta = 0$ rows coincide
-here too. Once the door moves prices, substitution elasticities matter again and
-the coincidence dissolves. Under external finance Kaldor--Verdoorn lowers the
-deflator by 0.35 percent at the fixed wage and by 0.30 percent in the Leontief
-closure, and raises employment by 1.35 and 1.48 percent respectively; the runs
-are \texttt{pricing\_capacity-v2-GAMMA-F3-dm05-s0} and
-\texttt{pricing\_capacity\_rows-v1-DELTA-F3-dm05-s0}. Likewise, elastic labour
-supply differs from the standard CGE closure through the real wage, which the
-door moves: Kaldor--Verdoorn raises employment in the elastic-supply panel from
-0.12 to 0.16 percent under preference reallocation and capacity pressure lowers
-it to 0.09 (\texttt{pricing\_capacity\_rows-v1-BETA-F1-\{d0,dm05-s0,dp05-s0\}}),
-while the standard CGE closure holds employment fixed by construction. The
-equivalences of
-Section~\ref{subsec:equivalences} therefore hold on the slice ``$A \equiv 1$
-\emph{and} price-invariant technology'', and every claim built on them carries
-that clause.
+These price changes reflect efficiency gains and losses du to the additional demand that have different implications for production and employment across different model specifications. For labor market closures where scarcity governs economic reactions -- that is, the first three closure specifications in our matrix -- increasing technological capabilities ease these scarcity constraints so that production can expand. For the output adjustment closures with fixed wages on the other hand, output is fixed so that increasing efficiency leads to lower employment effects and, correspondingly, (slightly) lower impacts on net welfare.
+%NOTE: what is max |p|? vermutlich der maximale price change? wie ist der genau skaliert, wie verhält sich das zu den anderen spalten?
+
+Notably, we observe that the different financial closures have close to no impact on how the economy responds to introduction of Kaldo-Verdoorn effects for the models based on constrained factor supply, whereas it has, as in the preceeding seciton, a stronger influence on the outcome of the quantity adjustment model based on fixed wages. Moreover, we observe that the perfect correspondence between the fixed-wage and Leontief columns observed for the baseline case, breaks for any $\delta != 0$: in such a case, where prices move, substitution elasticities matter again and
+the coincidence dissolves. In general, the fixed wage model thereby shows greater responsiveness to technological change as compared to the Leontief closure: Under external finance the Kaldor--Verdoorn term lowers the deflator by 0.35 percent at the fixed wage and by 0.30 percent in the Leontief closure, and raises employment by 1.35 and 1.48 percent respectively.
+
+%TODO: klären ob wir das hier (noch) brauchen...
+% Under the CPI numeraire the same
+% door moves relative prices and the real wage instead: in the standard-CGE panel
+% Kaldor--Verdoorn lowers the deflator by 0.06 percent with employment fixed
+% (\texttt{pricing\_mobile-v2-ALPHA-\{F1,F2,F3\}-dm05-s0}), and in all three
+% CPI-gauge panels F2 and F3 remain indistinguishable: financing neutrality in
+% the mobile gauge survives the door.
+
+%TODO Fußnote zur anderen Version mit allen sektoren machen? Sollten wir klären ob wir das wollen? (und ich denk der text hier is ggf. auch stale von den zahlen her...)
+%  The sign is nevertheless not a property of the door alone: extending the elasticity to the services sectors, which receive none of the programme directly, reverses the
+% result under preference reallocation and tax finance ($+0.14$, $+0.03$,
+% $-0.82$ percent against $-0.19$, $-0.21$, $-0.35$;
+% \texttt{pricing\_capacity-v2-GAMMA-\{F1,F2,F3\}-dm05}), so that the sign
+% depends on which sectors carry increasing returns rather than on the financing
+% closure alone (Appendix~\ref{app:variants}). 
 
 \input{tables/table6_pricing-capacity.tex}
 

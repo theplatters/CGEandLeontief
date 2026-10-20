@@ -122,6 +122,15 @@ COLS_MK = [("P", r"$\Delta P$", True), ("D", r"$\max|\Delta p|$", False),
            ("L", r"$\Delta L$", True), ("W", r"$\Delta W$", True), ("S", r"$\Xi/Y$", False)]
 
 
+def hdr_cell(h):
+    """One column-header cell: centred (the data columns are r-aligned) and, for
+    max |dp|, split over two lines so the header stays narrow and each value
+    sits under a short label. \\shortstack is base LaTeX (no package needed)."""
+    if r"\max|\Delta p|" in h:
+        return r"\multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}}"
+    return r"\multicolumn{1}{c}{" + h + "}"
+
+
 def build_table(panels, cols, caption_lines, label, comment_lines, fit=False):
     """One pricing-door table: a panel per labour row, a block per financing column."""
     k = len(cols)
@@ -141,8 +150,8 @@ def build_table(panels, cols, caption_lines, label, comment_lines, fit=False):
     A(r"\toprule")
     A(" & " + " & ".join([r"\multicolumn{%d}{c}{\textbf{%s}}" % (k, f) for f in FIN]) + r" \\")
     A("".join([r"\cmidrule(lr){%d-%d}" % (2 + k * i, 1 + k * (i + 1)) for i in range(len(FIN))]))
-    sub = " & ".join(h for _, h, _ in cols)
-    A(r"Labour closure and door & " + " & ".join([sub] * len(FIN)) + r" \\")
+    sub = " & ".join(hdr_cell(h) for _, h, _ in cols)
+    A(r"\multicolumn{1}{c}{Labour closure and door} & " + " & ".join([sub] * len(FIN)) + r" \\")
     for panel, rows in panels:
         A(r"\midrule")
         A(r"\multicolumn{%d}{@{}l}{\textit{%s}} \\" % (ncol, panel))
@@ -198,8 +207,8 @@ def build_guided_table(panels, cols, stub, caption_lines, label, comment_lines):
       + r" \\")
     A("".join([r"\cmidrule(lr){%d-%d}" % (3 + (k + 1) * i, 2 + (k + 1) * i + k)
                for i in range(len(FIN))]))
-    sub = " & ".join(h for _, h, _ in cols)
-    A(stub + " & " + " & ".join(["& " + sub] * len(FIN)) + r" \\")
+    sub = " & ".join(hdr_cell(h) for _, h, _ in cols)
+    A(r"\multicolumn{1}{c}{" + stub + "} & " + " & ".join(["& " + sub] * len(FIN)) + r" \\")
     A(r"\midrule")
     for i, (panel, rows) in enumerate(panels):
         if i:

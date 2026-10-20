@@ -17,7 +17,7 @@
  & & \multicolumn{4}{c}{\textbf{F1}} & & \multicolumn{4}{c}{\textbf{F2}} & & \multicolumn{4}{c}{\textbf{F3}} \\
  & & \multicolumn{4}{c}{\scriptsize repurposing of consumption} & & \multicolumn{4}{c}{\scriptsize refinancing via taxes} & & \multicolumn{4}{c}{\scriptsize external / debt finance} \\
 \cmidrule(lr){3-6}\cmidrule(lr){8-11}\cmidrule(lr){13-16}
-$\delta$ & & $\Delta P$ & $\max|\Delta p|$ & $\Delta L$ & $\Delta W_D$ & & $\Delta P$ & $\max|\Delta p|$ & $\Delta L$ & $\Delta W_D$ & & $\Delta P$ & $\max|\Delta p|$ & $\Delta L$ & $\Delta W_D$ \\
+\multicolumn{1}{c}{$\delta$} & & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W_D$} & & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W_D$} & & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W_D$} \\
 \midrule
 \multicolumn{16}{l}{\textbf{No-reallocation}} \\
 \rowcolor{tableguide}\quad $0$ (no door) &  & $+0.63$ & $22.14$ & $0.00$ & $-0.01$ &  & $+0.72$ & $27.90$ & $0.00$ & $-0.03$ &  & $+0.72$ & $27.90$ & $0.00$ & $-0.03$ \\
@@ -45,20 +45,6 @@ $\delta$ & & $\Delta P$ & $\max|\Delta p|$ & $\Delta L$ & $\Delta W_D$ & & $\Del
 \quad $-0.5$ &  & $-0.16$ & $3.97$ & $-0.26$ & $-0.12$ &  & $-0.18$ & $4.09$ & $-0.06$ & $+0.27$ &  & $-0.30$ & $4.36$ & $+1.48$ & $+3.15$ \\
 \bottomrule
 \end{tabular}
-\caption{The capacity / Kaldor--Verdoorn door under the demand-only programme shock,
-on every labour closure. Panels are the labour closures of
-Table~\ref{tab:results-matrix}, rows the utilisation elasticity $\delta$ of
-equation~\eqref{eq:capacity-door}, carried by the goods sectors (CPA A--F), and
-columns the financing closures. Each block reports the change in the price level
-($\Delta P$, the GDP deflator; signed), the largest sectoral price deviation
-($\max|\Delta p|$), employment ($\Delta L$) and the quantity index of demand over
-$c+g$ ($\Delta W_D$, the $W_D$ of Table~\ref{tab:welfare-comparison}), all in percent
-against the reference continuation. The shaded $\delta = 0$ rows (no door) reproduce
-Tables~\ref{tab:results-matrix} and~\ref{tab:welfare-comparison} (the elastic-supply
-panel at uniform $\eta_{s,i} = 0.5$); the door creates no rent. The all-sector profile
-is in Appendix~\ref{app:variants}. Generated from the
-\texttt{pricing\_capacity\_rows-v1-*}, \texttt{pricing\_capacity-v2-*} and
-\texttt{pricing\_mobile-v2-*} run manifests (OpenCGE v0.2.1; $W_D$ from re-solves
-gated against them); no number is hand-typed.}
-\label{tab:pricing-capacity}
+\caption{Integrating a Kaldor--Verdoorn term in the general closure matrix. Each block reports the change in the price level($\Delta P$, the GDP deflator; signed), the largest sectoral price deviation($\max|\Delta p|$), employment ($\Delta L$) and the quantity index of demand over $c+g$ ($\Delta W_D$, see also Table~\ref{tab:welfare-comparison}), all in percent against the reference continuation. The shaded $\delta = 0$ rows (no door) reproduce Tables~\ref{tab:results-matrix} and~\ref{tab:welfare-comparison}.}
+\label{tab:pricing-kaldor}
 \end{table}

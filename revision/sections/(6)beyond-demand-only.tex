@@ -1,6 +1,6 @@
 \section{Complexifying demand-only shocks}\label{sec:beyond-demand-only}
 
-\subsection{The pricing door I: capacity and Kaldor--Verdoorn}\label{subsec:pricing-capacity}
+\subsection{Kaldor--Verdoorn dynamics}\label{subsec:pricing-capacity}
 % Provenance: ADR-0029, ADR-0031, ADR-0032; runs pricing_capacity-v2-GAMMA-*,
 % pricing_mobile-v2-ALPHA-* and pricing_capacity_rows-v1-{BF,ALPHA,BETA,DELTA}-*
 % (OpenCGE v0.2.1, value-added-scaled exponent; supersede the v1 capacity
@@ -40,20 +40,21 @@ the coincidence dissolves. In general, the fixed wage model thereby shows greate
 
 \input{tables/table6_pricing-capacity.tex}
 
-\subsection{The pricing door II: the distribution markup}\label{subsec:pricing-markup}
+\subsection{Markup-Pricing and distributional assumptions}\label{subsec:pricing-markup}
 % Provenance: ADR-0029 (Stage A), ADR-0030 (Stage B), ADR-0032; runs
 % pricing_markup-v2-* and pricing_profit-v2-* (all five labour rows,
 % OpenCGE v0.2.1; supersede the v1 markup runs); Table~\ref{tab:pricing-markup}.
-The capacity door creates no rent. The second door does: a markup that rises
-with utilisation,
+While Kaldor-Verdoorn dyamics capture the idea that firms become successively more efficient when supplying greater quantities, such an increase in firm size can also lead to a corresponding increase in market power. Similarly, effective markups are said to rise with utilisation, which  points to the relevance of distributional considerations in input-output models with multiple production factors. All this eventually resonates with the observation that pricing power that moves with demand has a long pedigree in economics \citep{Kalecki1954,Bils1987}. Taking the latter formualtion -- markups rising with capacity utilization -- and projecting it unto a sectoral level in line the basic setup from section \ref{sec:kernel}, we arrive the the following formulation for prices 
+
 \begin{equation}\label{eq:markup-door}
   p_i \;=\; \mu_i\,c_i, \qquad \mu_i \;=\; 1 + \kappa\Bigl(\frac{y_i}{\lambda_i} - 1\Bigr),
 \end{equation}
-nested at $\kappa = 0$. Pricing power that moves with demand has a long
-pedigree, from the degree of monopoly of \textcite{Kalecki1954} to the
-procyclical marginal cost of \textcite{Bils1987}, and once the rent is paid
-out it opens the wage-led versus profit-led question of
-\textcite{BhaduriMarglin1990}. This section uses it only as a pricing
+which is nested at $\kappa = 0$. Introducing such a pricing equation gives profits an explicit role which is why this section departs from the hitherto used benchmark case of a one factor model, but introduces capital as a second factor of production. This feature ???
+
+%NOTE: wir haben hier wieder mal ein lamlbda eingeführt?
+
+
+This section uses it only as a pricing
 closure, not as a theory of distribution. Two modelling choices make
 it a closure. First, firms still hire labour and inputs at \emph{marginal
 cost} $c_i = p_i/\mu_i$, while households and other firms buy at $p_i$; the

@@ -20,7 +20,7 @@
 % and why it matters --- every closure in the paper is calibrated on the
 % same objects, so differences in results cannot come from the data step.
 % Possibly a small flow diagram (TikZ): raw table -> cleaned table ->
-% Z, Z_dom -> Omega / alpha / lambda / omega -> kernel.
+% Z, Z_dom -> Omega / alpha / lambda / beta -> kernel.
 
 \subsection{Source data}\label{app:pipeline-source}
 % TODO: the Destatis input--output table for Germany 2019 (revision 2019),
@@ -67,12 +67,12 @@
 % TODO: Domar weights lambda_i = gross output / GDP and the labour-share
 % weights lambda_i * alpha_i (summing to one).
 
-\subsection{Final demand and household shares $\omega$}\label{app:pipeline-fd}
+\subsection{Final demand and household shares $\beta$}\label{app:pipeline-fd}
 % TODO: the final-demand categories (household consumption, government,
 % investment, exports); purchaser-price categories split proportionally into
 % domestic, imported and product-tax components (final_demand_split; source
 % limitation: imports and taxes on final use are reported by category).
-% TODO: consumption shares omega calibrated so the model clears at y =
+% TODO: consumption shares beta calibrated so the model clears at y =
 % lambda (from (I - diag(1 - alpha) Omega)' y); negative entries clamped to
 % zero and renormalized --- report how many and how large.
 % TODO: government, investment and export blocks and the implied saving rate

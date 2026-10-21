@@ -35,12 +35,12 @@ table reports imported intermediates only by using sector, not by
 supplier, so the domestic deliveries $x_{ui}$ are obtained by allocating
 each user's imports proportionally across its suppliers
 (Appendix~\ref{app:pipeline}).} Household consumption shares
-$\omega_i$ follow in the same way from the final-use columns. In the
+$\beta_i$ follow in the same way from the final-use columns. In the
 model only the domestic part of the bill, $\sum_u p_u x_{ui}$, is demand
 for domestic goods; $m_i$ and $t_i$ are booked as explicit leaks
 (Appendix~\ref{app:kernel}). The step from the source table to these shares is
 documented in Appendix~\ref{app:pipeline}.
-%TODO: die notation mit dem strich checke ich gerade nicht. auch bei den indices bin ich unsicher: wenn z_u final use ist, warum ist dann der share omega_i (und nicht u)?
+%TODO: die notation mit dem strich checke ich gerade nicht. auch bei den indices bin ich unsicher: wenn z_u final use ist, warum ist dann der share beta_i (und nicht u)?
 
 The table is a static snapshot of the underlying economy: it fixes shares at one point, is silent about how they respond when prices or demand change. That is the job of the optimization problems discussed below.
 
@@ -73,7 +73,7 @@ We again represent $U$ by a CES function with elasticity $\sigma = 0.9$.
 %TODO das hier drunter ist komisch selbstreferentiell – weißt du was hier gemeint ist?
 % SO vielleicht besser
 We calibrate the weights of the CES functions to the shares of the table
-($\alpha_i$, $\Omega_{iu}$, $\omega_i$). With baseline prices normalised to
+($\alpha_i$, $\Omega_{iu}$, $\beta_i$). With baseline prices normalised to
 one, the solutions to~\eqref{eq:cost-min} and~\eqref{eq:utility-max} then
 reproduce the table exactly, whatever the elasticities; $\epsilon$, $\theta$
 and $\sigma$ matter only once prices move away from the baseline.
@@ -113,7 +113,7 @@ Based on these considerations we now turn to presenting the core results of our 
 % =================================================================
 % Eventually, the question emerges how to link such a setup with the Input-Output tables introduced in the beginning of section \ref{sec:IO_models}. In practice, such a link necessitates that $\Omega$ plays a role in the exact specification of the production function and/or consumption function. For a Cobb-Douglas function, as the most widely used specification, the cost shares contained in $\Omega$ are interpreted as output elasticities and, correspondingly, used to specify the relative contribution of factors and intermediates to net output of a given sector, which translates into
 % and choose the CES consumer price index as the numeraire:$$
-% \text{CPI} = \left( \sum_{u=1}^n \omega_{0u} p_u^{\theta  -1} \right)^{\frac{1}{\theta - 1}}.
+% \text{CPI} = \left( \sum_{u=1}^n \beta_{0u} p_u^{\theta  -1} \right)^{\frac{1}{\theta - 1}}.
 % $$
 % Calculating GDP directly using these post-shock prices would yield a nominal GDP measure. To obtain real GDP, one typically employs a price index such as the Laspeyres or Paasche index. We use the Laspeyres index, so that GDP is computed as
 % $$

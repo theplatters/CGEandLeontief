@@ -71,9 +71,9 @@ the baseline tax cost of government purchases, and $g_i$ the programme
 bundle (real public investment in sector $i$) with current-price cost
 $\sum_i p_i g_i$. Under F2 that cost is raised by the wage-income tax at the
 endogenous rate $\tau$ defined in~\eqref{eq:cons}; under F3 it is booked as
-external programme financing $B_{\mathrm{gov}}$. The net external transfer $R$
-closes the external account; it is the kernel's $F$, endogenous in the mobile
-regime and identically zero in the fixed-wage regime.
+external programme financing $B_{\mathrm{gov}}$. The net external transfer $F$
+closes the external account; it is endogenous in the mobile regime and
+identically zero in the fixed-wage regime.
 
 \subsection{The kernel}\label{app:model-kernel}
 
@@ -110,17 +110,17 @@ composite~\eqref{eq:model-ip} and is charged with the domestic bill
 (Appendix~\ref{app:kernel}; explicit form in~\eqref{eq:int}).
 
 The household has CES preferences with elasticity $\sigma$ and calibrated
-weights $\omega_i$. The consumption price index, which is also the
+weights $\beta_i$. The consumption price index, which is also the
 numeraire, is
 \begin{equation}
-  \Pi(p) = \left(\sum_{i=1}^N \omega_i p_i^{1-\sigma}\right)^{1/(1-\sigma)},
-  \qquad \sum_{i=1}^N \omega_i = 1,
+  \Pi(p) = \left(\sum_{i=1}^N \beta_i p_i^{1-\sigma}\right)^{1/(1-\sigma)},
+  \qquad \sum_{i=1}^N \beta_i = 1,
   \label{eq:labour-cpi}
 \end{equation}
 with the Cobb--Douglas limit at $\sigma = 1$. Given household consumption
 expenditure $E^h$, utility maximization gives
 \begin{equation}
-c_i^h = E^h\frac{\omega_i p_i^{-\sigma}}{\sum_j\omega_j p_j^{1-\sigma}}.
+c_i^h = E^h\frac{\beta_i p_i^{-\sigma}}{\sum_j\beta_j p_j^{1-\sigma}}.
 \label{eq:model-household}
 \end{equation}
 Goods-market clearing for each of the $N$ sectors reads
@@ -233,8 +233,8 @@ W = \sum_{i=1}^N w_i L_i,
 \label{eq:financing-baseline-budget}
 \end{equation}
 With a common wage, $W = w\sum_i L_i$. Let $E$ denote after-tax household
-resources, including the net external transfer $R$ from the rest of the
-world,\footnote{$R$ is the variable that clears the external account; the
+resources, including the net external transfer $F$ from the rest of the
+world,\footnote{$F$ is the variable that clears the external account; the
 labels F1--F3 name financing closures, not a variable.} and let $s$ be the
 calibrated saving rate. Household consumption expenditure is
 $E^h = (1-s)E$. Gross household purchases $c_i^h$ exhaust this budget:
@@ -252,14 +252,14 @@ F1 changes the household's CES weights without adding a public-demand
 bundle. For positive preference shifters $d_i$, the weights and gross
 household demand become
 \begin{align}
-\widetilde{\omega}_i
- &= \frac{\omega_i d_i}{\sum_j\omega_j d_j},
-\qquad \sum_i\widetilde{\omega}_i = 1,
+\widetilde{\beta}_i
+ &= \frac{\beta_i d_i}{\sum_j\beta_j d_j},
+\qquad \sum_i\widetilde{\beta}_i = 1,
 \label{eq:closure-f1-weights}\\
 c_i^h
- &= E^h\frac{\widetilde{\omega}_i p_i^{-\sigma}}
- {\sum_j\widetilde{\omega}_j p_j^{1-\sigma}},
-\qquad E = W-T_G(p)+R.
+ &= E^h\frac{\widetilde{\beta}_i p_i^{-\sigma}}
+ {\sum_j\widetilde{\beta}_j p_j^{1-\sigma}},
+\qquad E = W-T_G(p)+F.
 \label{eq:closure-f1}
 \end{align}
 The programme-scale tilt is $d_i = 1+kG_0\psi_i^+/c_{i0}^h$ in sectors
@@ -277,7 +277,7 @@ F2 adds the real programme bundle $g$ and levies an additional household
 tax equal to its value at equilibrium prices:
 \begin{equation}
 T(p) = \sum_{i=1}^N p_i g_i,
-\qquad E = W-T_G(p)-T(p)+R,
+\qquad E = W-T_G(p)-T(p)+F,
 \qquad B_{\mathrm{gov}}=0.
 \label{eq:closure-f2}
 \end{equation}
@@ -295,18 +295,18 @@ F3 adds the same real bundle but imposes no additional domestic programme
 tax. Its current-price cost is booked as external programme financing:
 \begin{equation}
 B_{\mathrm{gov}} = \sum_{i=1}^N p_i g_i,
-\qquad E = W-T_G(p)+R.
+\qquad E = W-T_G(p)+F.
 \label{eq:closure-f3}
 \end{equation}
 The booking $B_{\mathrm{gov}}$ is distinct from the net external transfer
-$R$ entering household resources after tax. The latter is solved
+$F$ entering household resources after tax. The latter is solved
 endogenously in the no-reallocation, the standard CGE and both
 elastic-supply forms, but is fixed at zero in the two fixed-wage closures,
 the fixed real wage closure and its Leontief corner. With no unfinanced
 demand injection, all closures clear
 all $N$ goods markets and satisfy the external-account identity
 \begin{equation}
-S + T_{\mathrm{int}} + M - (I+X) = R+B_{\mathrm{gov}},
+S + T_{\mathrm{int}} + M - (I+X) = F+B_{\mathrm{gov}},
 \qquad S=sE,
 \label{eq:financing-external-account}
 \end{equation}
@@ -314,7 +314,7 @@ where $I$ is non-programme investment, $X$ exports, $M$ total imports
 (including intermediate and programme imports), and $T_{\mathrm{int}}$
 the separately booked product-tax leak on intermediate use; all are
 current-price values. Here $B_{\mathrm{gov}}=0$ under F1 and F2, so the net
-external position is $R+B_{\mathrm{gov}}$, not the programme cost alone.
+external position is $F+B_{\mathrm{gov}}$, not the programme cost alone.
 F3 is an accounting open-economy closure, not a monetary mechanism: the
 static model cannot distinguish external borrowing from a transfer and
 does not model interest payments, repayment or exchange-rate adjustment.
@@ -379,7 +379,7 @@ Let $N$ be the number of sectors. Prices $p_i$, wage $w$, gross output
 $y_i$, employment $L_i$. Data-calibrated objects: factor shares $\alpha_i$
 (labour), domestic bill coefficients $a_u = A^{bill}_u/\lambda_u$ with
 input-share matrix $\Omega$ ($\Omega_{iu}$ = the share of input
-$u$ in sector $i$'s input bundle; rows sum to one), CPI weights $\omega_i$ ($\sum_i \omega_i = 1$),
+$u$ in sector $i$'s input bundle; rows sum to one), CPI weights $\beta_i$ ($\sum_i \beta_i = 1$),
 sector import margins $m_i$, saving rate $s$, exogenous government demand
 $g^G$, investment $inv$, exports $X$ (no margin), the programme bundle $g$,
 and the labour bar $\Lbar = \sum_i \bar{L}_i = 1$ (baseline income units,
@@ -412,14 +412,14 @@ int_i = p_i^{-\theta} \sum_u \Omega_{ui}\,
 Household demand is CES with CPI deflation and the financing weights
 $ds$ ($ds = 1$ except under F1, where $ds = d$, the preference tilt):
 \begin{equation}
-c_i = (1-s)(1-m_i)\,\omega_i\, ds_i\; E\; p_i^{-\sigma} \Big/
-      \textstyle\sum_j \omega_j ds_j\, p_j^{1-\sigma},
+c_i = (1-s)(1-m_i)\,\beta_i\, ds_i\; E\; p_i^{-\sigma} \Big/
+      \textstyle\sum_j \beta_j ds_j\, p_j^{1-\sigma},
 \qquad
-E = (1-\tau)\, w \textstyle\sum_i L_i + R,
+E = (1-\tau)\, w \textstyle\sum_i L_i + F,
 \label{eq:cons}
 \end{equation}
 with the wage-income tax rate $\tau = p\!\cdot\! g^G / (w \sum_i L_i)$ under
-F1/F3 and $\tau = p\!\cdot\!(g^G + g)/(w \sum_i L_i)$ under F2, and $R$ the
+F1/F3 and $\tau = p\!\cdot\!(g^G + g)/(w \sum_i L_i)$ under F2, and $F$ the
 net external transfer entering expenditure after tax.
 At $\eta = 0$ the wage bill is
 $\sum_i w_i \bar{L}_i$ in \eqref{eq:cons}. Saving
@@ -428,12 +428,12 @@ clearing is \eqref{eq:model-clearing}, with $g_i$ present only under the
 additive financings F2/F3 ($g_i = 0$ under F1).
 
 \paragraph{The four regimes.} The mobile systems solve for
-$X = (p, y, w, R) \in \mathbb{R}^{2N+2}$ with the consumption price index
+$X = (p, y, w, F) \in \mathbb{R}^{2N+2}$ with the consumption price index
 \eqref{eq:labour-cpi} as numeraire, and close with the labour equation
 \eqref{eq:closure-alpha} in the standard CGE closure and
 \eqref{eq:closure-beta} in the elastic-supply closure (where
 $w_0/\Pi_0 = 1$). The fixed-wage systems solve for $X = (p, y) \in \mathbb{R}^{2N}$ with the
-wage pinned $w \equiv 1$ and $R \equiv 0$; employment is a post-solve
+wage pinned $w \equiv 1$ and $F \equiv 0$; employment is a post-solve
 outcome. The fixed real wage closure runs them at the baseline elasticities,
 the Leontief closure at the Leontief
 corner $(\theta_\delta,\epsilon_\delta,\sigma_\delta) = (10^{-4},10^{-4},
@@ -442,7 +442,7 @@ $\eta = 0$: the
 allocation stays frozen at the baseline, $L_i = \bar{L}_i$, and $N$ sectoral
 wages $w_i$ are solved from each sector's own first-order condition
 $L^{cm}_i(p, y_i, w_i) = \bar{L}_i$ jointly with zero profit, with unknowns
-$[\,p;\; y;\; w(1{:}N);\; R\,]$ and the external transfer $R$ free. All rows
+$[\,p;\; y;\; w(1{:}N);\; F\,]$ and the external transfer $F$ free. All rows
 in the matrix use $\eta = 1$ except the no-reallocation closure.
 
 \subsection{The demand-only reduction}\label{sec:reduction}
@@ -481,7 +481,7 @@ CPI \eqref{eq:labour-cpi} is homogeneous of degree one in $p$, so
 $\Pi(w\,\pi) = w\,\Pi(\pi)$; the numeraire $\Pi = 1$ or the pin $w = 1$
 selects the scale. At $A \equiv \one$, $\pi = \one$ solves
 \eqref{eq:zp} at $w = 1$ because $c_i(\one,1;\one) = 1$ (the calibration
-identity), and $\Pi(\one) = 1$ because $\sum_i \omega_i = 1$.
+identity), and $\Pi(\one) = 1$ because $\sum_i \beta_i = 1$.
 \end{proof}
 
 \begin{corollary}[Real-wage invariance]\label{cor:realwage}
@@ -507,29 +507,29 @@ int &= \Omega^{\!\top}\mathrm{diag}(a)\, y, &
 L &= \mathrm{diag}(\alpha)\, y, &
 \sum_i L_i &= \alpha^{\!\top} y,
 \label{eq:leontiefblocks}\\
-c &= (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)\; E, &
-E &= \alpha^{\!\top} y - \textstyle\sum g^G + R
+c &= (1-s)\,\mathrm{diag}(1-m)\,\tilde\beta(ds)\; E, &
+E &= \alpha^{\!\top} y - \textstyle\sum g^G + F
    \;\; (\text{F1/F3}), \nonumber
 \end{align}
-where $\tilde\omega(ds) = (\omega \odot ds)\,/\, \one^{\!\top}(\omega \odot
-ds)$ and $E = \alpha^{\!\top} y - \sum g^G - \sum g$ under F2. Hence the
+where $\tilde\beta(ds) = (\beta \odot ds)\,/\, \one^{\!\top}(\beta \odot
+ds)$ and $E = \alpha^{\!\top} y - \sum g^G - \sum g + F$ under F2. Hence the
 clearing system \eqref{eq:model-clearing} is exactly affine,
 \begin{equation}
-y = G\, y + b(R),
+y = G\, y + b(F),
 \qquad
 G = \Omega^{\!\top}\mathrm{diag}(a)
-  + (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)\,\alpha^{\!\top},
+  + (1-s)\,\mathrm{diag}(1-m)\,\tilde\beta(ds)\,\alpha^{\!\top},
 \label{eq:affine}
 \end{equation}
 \begin{equation}
-b(R) = (1-m)\odot\big( g^G + inv + g \big) + X
-     + (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)
-       \big( R - \textstyle\sum g^G - \mathbf{1}_{F2}\textstyle\sum g \big),
+b(F) = (1-m)\odot\big( g^G + inv + g \big) + X
+     + (1-s)\,\mathrm{diag}(1-m)\,\tilde\beta(ds)
+       \big( F - \textstyle\sum g^G - \mathbf{1}_{F2}\textstyle\sum g \big),
 \label{eq:bvec}
 \end{equation}
 with $g$ present only under the additive financings
 F2/F3 and $\mathbf{1}_{F2}$ selecting the tax-financed column (the bracket is
-$R-\sum g^G$ under F1/F3 and $R-\sum g^G-\sum g$ under F2).
+$F-\sum g^G$ under F1/F3 and $F-\sum g^G-\sum g$ under F2).
 No elasticity parameter enters $G$ or $b$. At
 $\eta = 0$ the aggregate is still pinned, $\sum_i L_i = \Lbar$, but the
 unit-price reduction below describes only the \emph{retired} common-wage
@@ -547,13 +547,13 @@ factors $p^{\epsilon}$, $P^{\theta-\epsilon}$, $p^{-\theta}$ equal $1$ and
 $\sum_u \Omega_{ui} a_u y_u$; \eqref{eq:closure-labour-demand} reduces to
 $L_i = \alpha_i y_i$ since every exponent collapses at unit prices; in
 \eqref{eq:cons} the terms $p_i^{-\sigma}$ and the normalizer reduce to
-$1$ and $\sum_j \omega_j ds_j$, giving the fixed spending weights
-$\tilde\omega(ds)$; and the tax rate $\tau = \sum g^G / \alpha^{\!\top}y$
+$1$ and $\sum_j \beta_j ds_j$, giving the fixed spending weights
+$\tilde\beta(ds)$; and the tax rate $\tau = \sum g^G / \alpha^{\!\top}y$
 turns $E$ into the affine form shown. Collecting terms in
 \eqref{eq:model-clearing} gives \eqref{eq:affine}--\eqref{eq:bvec}: the
 intermediate round contributes the columns
 $\sum_i \Omega_{ui} a_u = a_u$ (row sums of $\Omega$ equal $1$) and the
-household round contributes $(1-s)\sum_i (1-m_i)\tilde\omega_i(ds)\,
+household round contributes $(1-s)\sum_i (1-m_i)\tilde\beta_i(ds)\,
 \alpha_u$ per unit of $y_u$.
 \end{proof}
 
@@ -599,12 +599,12 @@ equivalent, equation by equation.
 
 \begin{proposition}[The fixed real wage closure $\equiv$ the Leontief
 closure]\label{prop:gd}
-Let $A \equiv \one$, $\eta = 1$, $R \equiv 0$, $w \equiv 1$. Then
+Let $A \equiv \one$, $\eta = 1$, $F \equiv 0$, $w \equiv 1$. Then
 $(p,y) = (\one,\, y^{\ast})$ with
 $y^{\ast} = (I - G)^{-1} b(0)$ solves the fixed-wage system at
 \emph{every} elasticity triple $(\theta,\epsilon,\sigma)$; the employment
 outcome is $L^{\ast} = \alpha^{\!\top} y^{\ast}$, the consumption block is
-$c^{\ast} = (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)\,
+$c^{\ast} = (1-s)\,\mathrm{diag}(1-m)\,\tilde\beta(ds)\,
 (L^{\ast} - \sum g^G - \sum g\,\mathbf{1}_{F2})$, where
 $\mathbf{1}_{F2}$ selects the tax-financed column, and the block
 decomposition \eqref{eq:leontiefblocks} holds verbatim. In particular the
@@ -702,8 +702,8 @@ L^{cm}_i(p, y_i, w_i) \;=\; \bar{L}_i\,
 \label{eq:etas}
 \end{equation}
 solved jointly with zero profit \eqref{eq:zp}, clearing \eqref{eq:model-clearing},
-the numeraire $\Pi(p) = 1$ and a free transfer $R$, in the unknowns
-$X = (p, y, w(1{:}N), R) \in \mathbb{R}^{3N+1}$. The scalar closure
+the numeraire $\Pi(p) = 1$ and a free transfer $F$, in the unknowns
+$X = (p, y, w(1{:}N), F) \in \mathbb{R}^{3N+1}$. The scalar closure
 \eqref{eq:closure-beta} is the member of this family with one common wage and
 $\eta_{s,i} \equiv \eta_s$; it is retained only as a single-wage benchmark.
 The matrix's elastic-supply row is the sectoral member of the family at
@@ -729,7 +729,7 @@ and the $\eta = 0$ endpoint of the sectoral family have the same solution set.
 \end{proposition}
 
 \begin{proof}
-Write both systems in the unknowns $X = (p, y, w, R)$ as four row blocks:
+Write both systems in the unknowns $X = (p, y, w, F)$ as four row blocks:
 \begin{align*}
 \text{(P)} \quad & p_i = c_i(p, w_i; A), & & i = 1,\dots,N,
    & & \text{\eqref{eq:zp}} \\
@@ -775,8 +775,8 @@ closure (real wage pinned,
 allocation free) at the elastic one. Two qualifications are exact and matter
 for reading the table below. First, the elastic end is a \emph{limit}, not a
 cell: the supply slope diverges and the direct solve eventually fails
-($\eta_s = 10^6$). Second, the family keeps the transfer $R$ free,
-whereas the fixed-wage system pins $R \equiv 0$; the family therefore
+($\eta_s = 10^6$). Second, the family keeps the transfer $F$ free,
+whereas the fixed-wage system pins $F \equiv 0$; the family therefore
 \emph{spans} the two rigidity rows without terminating in either.
 \end{remark}
 
@@ -832,7 +832,7 @@ Fixed real wage & $0.000000$ & $0.000000$ & $1.001260$ & $-0.015333$ \\
 \end{table}
 
 \emph{The corner is the endpoint, numerically.} Solving the sectoral system at
-$\eta_{s,i} = 0$ from the $\eta = 0$ solution reproduces $(p, y, w, R)$ exactly
+$\eta_{s,i} = 0$ from the $\eta = 0$ solution reproduces $(p, y, w, F)$ exactly
 --- $\max|\Delta| = 0.00 \times 10^0$ in all four blocks, and below $10^{-10}$
 from a cold start --- as Proposition~\ref{prop:nest} requires. No separate
 rigid sectoral cell is therefore reported: the corner \emph{is} the
@@ -863,39 +863,39 @@ regime (the sectoral-wage system):
 {\small
 \begin{tabular}{lccc}
 \toprule
-Rows & $R$ & Employment & Household round in $G$ \\
+Rows & $F$ & Employment & Household round in $G$ \\
 \midrule
 Standard CGE, elastic supply ($\eta = 1$) & free (instrument) & pinned, $L = \Lbar$ & active \\
-Fixed real wage, Leontief corner ($\eta = 1$) & $R \equiv 0$ & endogenous, $L = \alpha^{\!\top}y$ & active \\
+Fixed real wage, Leontief corner ($\eta = 1$) & $F \equiv 0$ & endogenous, $L = \alpha^{\!\top}y$ & active \\
 No reallocation ($\eta = 0$) & free (solved) & pinned via allocation & active (wage bill) \\
 \bottomrule
 \end{tabular}
 }
 \end{center}
 
-\paragraph{The $R$-instrument.} In the mobile regime the labour pin selects
-the transfer. Writing $y(R) = (I-G)^{-1}(b_0 + f\,R)$ with
-$f = (1-s)\,\mathrm{diag}(1-m)\,\tilde\omega(ds)$, the pin
+\paragraph{The $F$-instrument.} In the mobile regime the labour pin selects
+the transfer. Writing $y(F) = (I-G)^{-1}(b_0 + f\,F)$ with
+$f = (1-s)\,\mathrm{diag}(1-m)\,\tilde\beta(ds)$, the pin
 $\alpha^{\!\top}y = \Lbar$ gives
 \begin{equation}
-R^{\ast} = \frac{\Lbar - \alpha^{\!\top}(I-G)^{-1} b_0}
+F^{\ast} = \frac{\Lbar - \alpha^{\!\top}(I-G)^{-1} b_0}
                {\alpha^{\!\top}(I-G)^{-1} f}.
 \label{eq:finstrument}
 \end{equation}
 This instrument is why the mobile F2 and F3 columns are real-neutral: F2
 charges the programme through the wage-income tax ($E = \alpha^{\!\top}y -
-\sum g^G - \sum g$), F3 through the external account ($E = \alpha^{\!\top}y
-- \sum g^G + R$), and the two $b$-vectors differ by exactly
+\sum g^G - \sum g + F$), F3 through the external account ($E = \alpha^{\!\top}y
+- \sum g^G + F$), and the two $b$-vectors differ by exactly
 $f\,\sum g$. The pin \eqref{eq:finstrument} therefore yields
-$R^{\ast}_{F3} = R^{\ast}_{F2} - \sum g$, identical real allocations, and
-an identical net external position $R + B_{gov}$. Measured: $R_{F3} - R_{F2} = -0.01330991 = -G_0$ to eight
-decimals in every mobile row (the $R$ values reproduce to all printed
+$F^{\ast}_{F3} = F^{\ast}_{F2} - \sum g$, identical real allocations, and
+an identical net external position $F + B_{gov}$. Measured: $F_{F3} - F_{F2} = -0.01330991 = -G_0$ to eight
+decimals in every mobile row (the $F$ values reproduce to all printed
 decimals; $G_0 = \sum_i g_i = 0.013310$).
 
 \paragraph{Who pays.} The economically meaningful difference between the
 two paradigms is which margin absorbs the programme. In the mobile rows the
 labour pin forces the household to pay (consumption $-1.82\%$ under F2/F3;
-the $R$ instrument crowds it out exactly), while real GDP is flat by
+the $F$ instrument crowds it out exactly), while real GDP is flat by
 construction ($w\,\Lbar$ deflated). In the fixed-wage rows
 employment is the margin: F3 expands employment by $1.78\%$ and consumption
 by $2.26\%$ (the Keynesian case), F2 leaves GDP nearly neutral
@@ -911,12 +911,12 @@ differences were carried by the pin, not by the frozen allocation
 (replacing the pin by the labour equation reproduced the standard CGE cells
 to
 $2.8\times10^{-17}$), and the $\eta = 0$ external position was not
-identified (every pin value $R = c$ an exact root that moved the booked
+identified (every pin value $F = c$ an exact root that moved the booked
 position one-for-one). The sectoral-wage closure resolves both: the account
 closes to
-$\le 1.04\times10^{-11}$ at the no-reallocation closure, $R$ is a solved
+$\le 1.04\times10^{-11}$ at the no-reallocation closure, $F$ is a solved
 equilibrium object,
-financing neutrality extends to $\eta = 0$ ($R_{F3} = R_{F2} - B_{gov}$ to
+financing neutrality extends to $\eta = 0$ ($F_{F3} = F_{F2} - B_{gov}$ to
 $3.5\times10^{-14}$), and no entry of that row need be withheld.
 
 \paragraph{Admissibility.} All fifteen cells execute. In particular the F1

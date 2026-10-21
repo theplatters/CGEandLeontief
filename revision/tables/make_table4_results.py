@@ -175,7 +175,7 @@ def plain_caption():
     return (r"\caption{Estimated impacts of a transformational stimulus in the German residential" "\n"
             r"sector across the closure matrix. Each cell reports the change in real GDP" "\n"
             r"($\Delta Y$), employment ($\Delta L$), the price level ($\Delta P$, the GDP deflator)," "\n"
-            r"the net external position ($\Delta D = R + B_{\mathrm{gov}}$, positive = net external" "\n"
+            r"the net external position ($\Delta D = F + B_{\mathrm{gov}}$, positive = net external" "\n"
             r"financing received, i.e.\ external debt) and household consumption welfare" "\n"
             r"($\Delta W_C$), all in percent against the reference continuation. The" "\n"
             r"elastic-supply column is bracketed: each entry is the interval over the executed" "\n"
@@ -199,7 +199,7 @@ def build():
     A(r"%   matrix_5x3-v10-BETA-<fin>-etas{05,1,2}, reported as a min--max bracket.")
     A(r"% Columns in table3c order (no-reallocation leftmost). Five outcomes per cell:")
     A(r"%   \Delta Y real GDP, \Delta L employment, \Delta P price level (GDP deflator),")
-    A(r"%   \Delta D net external position (= R + B_gov, 'external debt'),")
+    A(r"%   \Delta D net external position (= F + B_gov, 'external debt'),")
     A(r"%   \Delta W_C household consumption welfare.")
     A(r"% All in percent vs. the reference continuation; GDP at basic prices = 1.")
     A(r"% COLLAPSED CELLS: F2/F3 share one cell in the three flexible-wage columns")

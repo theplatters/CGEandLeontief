@@ -176,15 +176,16 @@ FIN_NOTE = {"F1": "repurposing of consumption", "F2": "refinancing via taxes",
             "F3": "external / debt finance"}
 
 
-def build_guided_table(panels, cols, stub, caption_lines, label, comment_lines):
+def build_guided_table(panels, cols, stub, caption_lines, label, comment_lines, fit=False):
     """The pricing-door layout tuned for reading across many columns: financing
     blocks named as in Table 4 and set apart by wider gaps, labour panels separated
-    by vertical space instead of rules, and the delta = 0 reference row of every
-    panel shaded as a guide line across the row (it is also the row that reproduces
-    Table 4); thin grey rules between the columns of a block keep each value
-    under its header (they stop at the panel headings and block gaps). The block gaps are empty spacer columns rather than @{} glue, and
-    the outer columns keep their padding, so the shading runs unbroken from rule
-    end to rule end."""
+    by vertical space instead of rules, and the first row of every panel shaded
+    as a guide line across the row (the delta = 0 reference in Table 6 and the
+    retained kappa = 0.25 case in Table 7); thin grey rules between the columns
+    of a block keep each value under its header (they stop at the panel headings
+    and block gaps). The block gaps are empty spacer columns rather than @{}
+    glue, and the outer columns keep their padding, so the shading runs unbroken
+    from rule end to rule end."""
     k = len(cols)
     ncol = 1 + (k + 1) * len(FIN)
     L = []
@@ -198,6 +199,8 @@ def build_guided_table(panels, cols, stub, caption_lines, label, comment_lines):
     A(r"\definecolor{tableline}{gray}{0.72}")
     A(r"\setlength{\tabcolsep}{3pt}")
     A(r"\renewcommand{\arraystretch}{1.2}")
+    if fit:
+        A(r"\resizebox{\textwidth}{!}{%")
     guide = r"!{\color{tableline}\vrule width 0.3pt}"
     A(r"\begin{tabular}{l" + "".join([r"@{\hspace{3pt}}p{2pt}@{\hspace{3pt}}" + guide.join("r" * k)
                                       for _ in FIN]) + r"}")
@@ -222,7 +225,7 @@ def build_guided_table(panels, cols, stub, caption_lines, label, comment_lines):
             shade = r"\rowcolor{tableguide}" if j == 0 else ""
             A(shade + r"\quad " + rowlabel + " & " + " & ".join(cells) + r" \\")
     A(r"\bottomrule")
-    A(r"\end{tabular}")
+    A(r"\end{tabular}" + ("}" if fit else ""))
     A(r"\caption{" + caption_lines[0])
     for line in caption_lines[1:-1]:
         A(line)
@@ -259,8 +262,8 @@ def build_cap_table():
 
 
 def build_mk_table():
-    return build_table(
-        MK_PANELS, COLS_MK,
+    return build_guided_table(
+        MK_PANELS, COLS_MK, "Markup and rent routing",
         [r"The markup door under the demand-only programme shock, on every labour closure.",
          r"Panels are the labour closures of Table~\ref{tab:results-matrix}, rows the markup",
          r"slope $\kappa$ of equation~\eqref{eq:markup-door} and the routing of the rent",

@@ -49,7 +49,7 @@
 
   % ---- cells: row 2 = sectoral ---------------------------------------
   \node[box]         (r2c1) at (0,-\rowy) {no\\reallocation};
-  \node[widebox]     (ELS)  at (1.5*\dx,-\rowy) {elastic labour\\supply models};
+  \node[widebox]     (ELS)  at (1.5*\dx,-\rowy) {elastic labor\\supply models};
   \node[placeholder] (r2c4) at (3*\dx,-\rowy) {};
 
   % ---- connector line through the left aggregate pair (left-right) ----
@@ -62,9 +62,14 @@
   %      up first, then right (one 90-degree corner)
   \draw[flexarrow] (r2c1.north) -- (0,0) -- (r1c2.west);
 
-  % ---- short double arrows of the elastic-labour-supply box -----------
+  % ---- short double arrows of the elastic-labor-supply box -----------
   \draw[flexarrow] (ELS.west)     -- (r2c1.east);        % to no reallocation
   \draw[flexarrow] (2*\dx,-1.35)  -- (r1c3.south);       % up to fixed real wage
+
+  % ---- double arrow: single-wage elastic supply <-> conventional CGE --
+  %      (the missing link: with ONE common wage the supply equation
+  %      coincides with full employment for every elasticity)
+  \draw[flexarrow] (2.6,-1.35) -- (2.6,-0.55);
 
   % ---- outer axes -----------------------------------------------------
   % y-axis with the two row labels (rotated to avoid overlap)
@@ -79,12 +84,14 @@
   \node[axlabel, below] at (4.58,-3.25) {flexibility};
 
 \end{tikzpicture}
-\caption{A map of closure choices along the short-run (labour-market)
+\caption{A map of closure choices along the short-run (labor-market)
   axis. Columns order the closures by increasing flexibility; the
   aggregate row collects the single-wage closures, the sectoral row the
-  sector-level ones. The double-width box holds the elastic-labour-supply
+  sector-level ones. The double-width box holds the elastic-labor-supply
   family, tied by short double arrows to the no-reallocation and
-  fixed-real-wage corners it interpolates between; the right-angled double
+  fixed-real-wage corners it interpolates between, and in its single-wage
+  form coinciding with the conventional CGE closure (the left-hand vertical
+  double arrow); the right-angled double
   arrow marks the reallocation margin from no reallocation up to the
   conventional CGE closure, and the arrow between the fixed real wage and
   the Leontief corner marks their equivalence under demand-only shocks,

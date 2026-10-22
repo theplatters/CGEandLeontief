@@ -11,6 +11,16 @@
 \usepackage[T1]{fontenc}
 \usepackage{parskip}
 \usepackage{amsmath, amssymb}
+\usepackage[
+backend=biber,
+style=authoryear,
+isbn=false, url=false, doi=false, eprint=false,
+natbib=true,
+giveninits=true,
+uniquelist=false
+]{biblatex}
+\addbibresource{references.bib}
+
 \usepackage[hidelinks]{hyperref}
 \usepackage{enumitem}
 \usepackage{framed}
@@ -41,5 +51,7 @@ response together with the location of the change in the revised manuscript.
 \input{response/editor}
 \input{response/reviewer1}
 \input{response/reviewer2}
+
+\printbibliography[title={References}]
 
 \end{document}

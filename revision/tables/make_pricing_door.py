@@ -2,9 +2,10 @@
 """Regenerate the pricing-door tables from the Phase 7 run manifests
 (ADR-0029, ADR-0030, ADR-0031, ADR-0032).
 
-No number is hand-typed: every value is a manifest field, except Table 6's
-W_D, which no manifest records; it is read from table6_wd.csv, written by
-experiments/make_table6_wd.jl from manifest-gated re-solves (as Table 5's W_D).
+No number is hand-typed: every value is a manifest field, except W_D, which no
+manifest records; it is read from table6_wd.csv and table7_wd.csv, written by
+experiments/make_table6_wd.jl and experiments/make_table7_wd.jl from
+manifest-gated re-solves (as Table 5's W_D). Both tables carry the same measure.
 Run from anywhere:
     python3 make_pricing_door.py
 Sources (schema v2, all on OpenCGE v0.2.1):
@@ -14,6 +15,7 @@ Sources (schema v2, all on OpenCGE v0.2.1):
                        runs/pricing_mobile-v2-ALPHA-<fin>-<dp05|dm05|dp05-s0|dm05-s0>
       GAMMA            runs/pricing_capacity-v2-GAMMA-<fin>-<d0|dp05|dm05|dp05-s0|dm05-s0>
     markup door (P2), every labour row:
+      runs/matrix_5x3-v10-<row>-<fin>              (kappa = 0 reference row, no door)
       runs/pricing_markup-v2-<row>-<fin>-<k025|k05>
       runs/pricing_profit-v2-<row>-<fin>-<k025|k05>-<spi05|spis>
 Outputs:
@@ -32,7 +34,8 @@ price-response bracket figure was removed from the manuscript the same day.
 import csv, tomllib, os
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-WD_CSV = os.path.join(REPO, "revision/tables/table6_wd.csv")
+WD_CSVS = [os.path.join(REPO, "revision/tables/table6_wd.csv"),
+           os.path.join(REPO, "revision/tables/table7_wd.csv")]
 OUT_CAP = os.path.join(REPO, "revision/tables/table6_pricing-capacity.tex")
 OUT_MK = os.path.join(REPO, "revision/tables/table7_pricing-markup.tex")
 OUT_TABLE_APP = os.path.join(REPO, "revision/tables/tableE_pricing-profiles.tex")
@@ -67,6 +70,12 @@ def per_row(rows_of):
 
 
 MK_PANELS = per_row(lambda row: [
+    # The no-door reference row: the same closure with a zero profit bill, i.e. the
+    # Table 4 cell. It makes the markup's own contribution readable (the smallest
+    # sectoral price deviation is 0 in four of the five panels but 22--28 percent
+    # in the no-reallocation panel, where it comes from the wage vector) and it
+    # restores the shading convention of the earlier tables (baseline shaded).
+    (r"$\kappa = 0$ (no door)", "matrix_5x3-v10-" + row + "-{f}" + ("-etas05" if row == "BETA" else "")),
     (r"retained, $\kappa = 0.25$", "pricing_markup-v2-" + row + "-{f}-k025"),
     (r"retained, $\kappa = 0.5$", "pricing_markup-v2-" + row + "-{f}-k05"),
     (r"distributed, $\kappa = 0.5$, $s_\pi = 0.5$", "pricing_profit-v2-" + row + "-{f}-k05-spi05"),
@@ -92,9 +101,12 @@ def manifest(rid):
 
 
 def load_wd():
-    """W_D per run id (percent), from the manifest-gated sidecar of make_table6_wd.jl."""
-    with open(WD_CSV, newline="") as fh:
-        return {r["run_id"]: float(r["w_d"]) for r in csv.DictReader(fh)}
+    """W_D per run id (percent), from the manifest-gated sidecars."""
+    out = {}
+    for path in WD_CSVS:
+        with open(path, newline="") as fh:
+            out.update({r["run_id"]: float(r["w_d"]) for r in csv.DictReader(fh)})
+    return out
 
 
 WD = load_wd()
@@ -119,7 +131,12 @@ def num(x, signed=True):
 COLS_CAP = [("P", r"$\Delta P$", True), ("D", r"$\max|\Delta p|$", False),
             ("L", r"$\Delta L$", True), ("WD", r"$\Delta W_D$", True)]
 COLS_MK = [("P", r"$\Delta P$", True), ("D", r"$\max|\Delta p|$", False),
-           ("L", r"$\Delta L$", True), ("W", r"$\Delta W$", True), ("S", r"$\Delta\Pi/Y$", False)]
+           ("L", r"$\Delta L$", True), ("WD", r"$\Delta W_D$", True), ("S", r"$\Delta\Pi/Y$", False)]
+# The appendix table keeps the consumption measure (W_C) and says so: its cells are
+# the all-sector capacity counterfactual and the kappa = 0.25 distributed runs, which
+# have no W_D sidecar. Convert both if the appendix should match Table 7.
+COLS_MK_APP = [("P", r"$\Delta P$", True), ("D", r"$\max|\Delta p|$", False),
+               ("L", r"$\Delta L$", True), ("W", r"$\Delta W_C$", True), ("S", r"$\Delta\Pi/Y$", False)]
 
 
 def hdr_cell(h):
@@ -265,31 +282,37 @@ def build_mk_table():
     return build_guided_table(
         MK_PANELS, COLS_MK, "Routing of profits",
         [r"Introducing markup pricing in the context of a demand-only programme for all closure scenarios.",
-         r"Columns and conventions as in Table~\ref{tab:pricing-kaldor}, except that",
-         r"$\Delta W$ is household consumption ($W_C$ of Table~\ref{tab:results-matrix});",
-         r"$\Delta\Pi/Y$ is the profit share of factor income in percent. As indicated,",
-         r"$\kappa = 0$ reproduces Table~\ref{tab:results-matrix}."],
+         r"Columns and conventions as in Table~\ref{tab:pricing-kaldor}, including the welfare",
+         r"measure ($\Delta W_D$, the quantity index of demand over $c+g$); $\Delta\Pi/Y$ is the",
+         r"profit share of factor income in percent. As indicated, the shaded $\kappa = 0$ rows",
+         r"reproduce the price and employment cells of Table~\ref{tab:results-matrix} together with",
+         r"the $\Delta W_D$ column of Table~\ref{tab:pricing-kaldor}."],
         r"\label{tab:pricing-markup}",
         [r"% =====================================================================",
          r"% Table 7 --- the markup door by labour closure and financing (GENERATED)",
          r"% ---------------------------------------------------------------------",
          r"% Do NOT edit by hand. Regenerate with:  make_pricing_door.py",
-         r"% Retained and distributed profit, kappa in {0.25, 0.5}, all five labour rows",
-         r"% (ADR-0032). kappa = 0.25 distributed: tableE.",
-         r"% NOTE (JK): why is the welfare measure again W_C here?",
+         r"% No-door kappa = 0 reference row, then retained and distributed profit,",
+         r"% kappa in {0.25, 0.5}, all five labour rows (ADR-0032). kappa = 0.25",
+         r"% distributed: tableE.",
+         r"% NOTE (JK, resolved): the shading now marks the kappa = 0 baseline row, which",
+         r"% restores the convention of Tables 4 and 6 (the baseline row is shaded).",
+         r"% NOTE (JK, open): the welfare measure is still W_C here; the companion and",
+         r"% label change is pending (see the note in section 6.2).",
          r"% ====================================================================="],
         fit=True)
 
 
 def build_app_table():
     return build_table(
-        APP_PANELS, COLS_MK,
+        APP_PANELS, COLS_MK_APP,
         [r"The pricing-door rows the main text does not carry, on every labour closure.",
          r"Panel A extends the capacity door's $\delta$ to every sector (the all-sector",
          r"counterfactual of Table~\ref{tab:pricing-kaldor}); panel B distributes the",
          r"profit of the $\kappa = 0.25$ markup (Table~\ref{tab:pricing-markup} carries",
-         r"$\kappa = 0.5$). Conventions as in Table~\ref{tab:pricing-markup}. Generated from",
-         r"the same run manifests; no number is hand-typed."],
+         r"$\kappa = 0.5$). Conventions as in Table~\ref{tab:pricing-markup}, except that the",
+         r"welfare column is household consumption ($\Delta W_C$ of Table~\ref{tab:results-matrix}).",
+         r"Generated from the same run manifests; no number is hand-typed."],
         r"\label{tab:pricing-profiles}",
         [r"% =====================================================================",
          r"% Table E --- pricing-door profiles not carried in the main text (GENERATED)",

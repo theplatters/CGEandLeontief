@@ -30,19 +30,18 @@ Dividing a column by sector revenue turns the table into cost shares: the
 factor share $\alpha_i = v_i/(p_i y_i)$, so that $1-\alpha_i$ is the share
 of the full intermediate bill, and the input shares
 $\Omega_{iu} = p_u x_{ui}/\sum_{u'} p_{u'}x_{u'i}$ of the domestic
-intermediate bundle, with $\sum_u \Omega_{iu} = 1$.\footnote{The source
-table reports imported intermediates only by using sector, not by
-supplier, so the domestic deliveries $x_{ui}$ are obtained by allocating
-each user's imports proportionally across its suppliers
-(Appendix~\ref{app:pipeline}).} 
+intermediate bundle, with $\sum_u \Omega_{iu} = 1$.
 %NOTE: bei der fußnote frage ich micn generell watrum das relevant ist. falls es relavtn ist würde ich die formulierug nochmal nachschärfen.
+% Habs gelöscht
 Household consumption shares
 $\beta_i$ follow in the same way from the final-use columns. In the
 model only the domestic part of the bill, $\sum_u p_u x_{ui}$, is demand
 for domestic goods; $m_i$ and $t_i$ are booked as explicit leaks
 (Appendix~\ref{app:kernel}). The step from the source table to these shares is
 documented in Appendix~\ref{app:pipeline}.
-%TODO: die notation mit dem strich checke ich gerade nicht. auch bei den indices bin ich unsicher: wenn z_u final use ist, warum ist dann der share beta_i (und nicht u)?
+%TODO: die notation mit dem strich checke ich gerade nicht. auch bei den indices bin ich unsicher: wenn z_u final use ist, warum ist dann der share beta_i (und nicht u)? 
+% u' einfach um von u zu unterscheiden
+% β ist der consumption share
 
 The table is a static snapshot of the underlying economy: it fixes shares at one point, is silent about how they respond when prices or demand change. That is the job of the optimization problems discussed below.
 
@@ -102,11 +101,15 @@ A conventional approach for our problem would be to employ a \emph{T\"ornqvist w
 
 Alternatively, and because the representative household has homothetic CES preferences, the welfare assessemnt could directly honor this assumption by employing an \emph{exact} money-metric assessment of welfare change: with the expenditure function $e(p,u)=u\,\Pi(p)$, the change in real consumption expenditure $E^h/\Pi(p)$ is the consumption-equivalent (equivalent variation) of the shock. Under the consumption-price numeraire $\Pi(p)=1$ --- the CES price index of household consumption, which is always normalized to one --- this measure is simply the change in after-tax, post-saving household resources $E^h$.  It differs from a pure quantity index by taking the imposed utility function seriously.\footnote{A fixed-weight index equals this measure only where the valued bundle grows proportionally, and the size of the gap is set by the distance of the substitution elasticity from one. For the household's own bundle this requires relative prices to move: at pinned prices and unchanged preference weights the homothetic household scales its consumption proportionally, and the two measures coincide. The composition of the valued bundle moves at pinned prices only if the bundle is not the household's own choice, as when the programme is added to it (see below).} 
 %NOTE: die fußnote erscheint mir doppelt so lang wie vorher, nicht mehr zu sagen, aber dafür komplizierter zu sein ;-) Übersehe ich was?
-While it can be justified as a alternative baseline choice for the valuation algorithm on this basis, it also comes with a built-in status quo bias as the current composition of final consumption is deemed optimal. Also, in its standard form this valuation is still only focused on private expenditure only. Finally, the measure is not defined for the preference-reallocation closure F1. F1 changes the preference weights themselves, so baseline and post-shock bundles are not ranked by one common utility function, and there is no single equivalent variation. Any welfare number for the F1 rows is conditional on the weights used to evaluate it, baseline or adopted; Table~\ref{tab:welfare-comparison} therefore reports both.
+% FS: Nein das hat schon inhaltlich einen Grund: Die alte Version hat gesagt, dass Festgewichtsindex und exaktes Maß auch bei fixen Preisen auseinanderlaufen, sobald sich die Zusammensetzung des Bündels ändert. Für den Konsum des Haushalts selbst geht das aber nicht: bei fixen Preisen und homothetischen Präferenzen skaliert der Haushalt sein Bündel proportional, die beiden Maße fallen zusammen. Bei fixen Preisen ändert sich die Zusammensetzung nur, wenn das Programm mitbewertet wird (daher "see below" auf die lambda^G-Fußnote). Das ist relevant, weil die meisten Demand-only-Zellen fixe Preise haben.
+% Kürzer ginge z.B.: "A fixed-weight index equals this measure only where the valued bundle grows proportionally. For the household's own bundle this fails only when relative prices move; at pinned prices it fails only if the programme is added to the bundle (see below)."
+While it can be justified as a alternative baseline choice for the valuation algorithm on this basis, it also comes with a built-in status quo bias as the current composition of final consumption is deemed optimal. Also, in its standard form this valuation is still only focused on private expenditure only.
 %TODO: das letzte hier mit "finally" scheint mir self-defeating. würde ich rausnehmen.
+% Done
 
 Important variations of these base approaches can be obtained when shifting the definition of what, exactly, is valued by the welfare index. One obvious take here is to introduce a final demand index that captures not only net household consumption but also the spending programme as such, which then undergoes further valuation.\footnote{Public demand is exogenous in this kernel rather than chosen by an optimizing agent, so valuing it at all is a stance and not an implication of the model. We make the stance explicit by letting the valued bundle be $c+\lambda^{G}\,(g^G+g)$, with $\lambda^{G}$ the weight on public relative to private absorption. Throughout we set $\lambda^{G}=1$ --- public spending is valued at cost, as in the national accounts --- and $\lambda^{G}=0$ would return the pure consumption measure as a check. Since the programme is not chosen by the household, adding it changes the composition of the valued bundle even at pinned prices. A CES evaluation of this bundle therefore departs from a fixed-weight index by an amount set by the distance of $\sigma$ from one.} 
 %NOTE: auch hier bin ich mir nicht sicher. wir schreiben das eh oben ("taking utility function serious"), wenn dann dort konkreter werden?
+% FS: Die ersten Sätze (lambda^G als explizite Gewichtung, lambda^G = 1 = Bewertung zu Kosten wie in der VGR, lambda^G = 0 als Check) sind die eigentliche Definition des Maßes und gehören hierher. Die zwei neuen Sätze am Ende sind das Gegenstück zur Fußnote oben: nur hier, wo das Programm mitbewertet wird, weichen CES-Bewertung und Festgewichtsindex auch bei fixen Preisen voneinander ab. Einverstanden, dass das konkreter oben stehen kann: dann die zwei Sätze hier streichen, die obere Fußnote mit dem Programm-Fall abschließen und das "see below" durch einen Verweis auf diesen Absatz ersetzen. Zur Notation: lambda^G kollidiert mit lambda_i (Bruttoproduktion im Basisjahr, Abschnitt 6 und Anhang H), und Tabelle X schreibt nur lambda. Vorschlag: anderes Symbol (z.B. psi^G) und in der Tabelle angleichen.
 A second option is to include leisure as a standalone variabel that determines social welfare jointly with economic output. And, indeed, the options above are not only silent on public expenditure but also on the the disutility of the additional work, which matters for all closures where employment absorbs the shock.
 
 Based on these considerations we now turn to presenting the core results of our key application -- a demand shock on the Germany economy focused on renovation of residential housing -- to illustrate the variety of results to be obtained from the closure scenarios introduced in table \ref{tab:closure-matrix-3x5}. When doing so we take the peculiar role of different measure of economic welfare into account to show, how the estimated economic impacts can be translated into, partially competing, welfare assessements.

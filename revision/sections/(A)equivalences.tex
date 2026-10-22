@@ -14,32 +14,29 @@
 \section{Equivalences, overlaps and scope of the closure matrix}\label{app:equivalences}
 
 \noindent
-The evaluation matrix of Section~\ref{sec:application} crosses five
+The matrix of closures presented in Section~\ref{sec:application} crosses five
 labour-market closures with three financing closures, and several of its
 cells turn out to describe one and the same economy. This appendix states the
 conditions under which that happens, lists the coincidences with the
 mechanism behind each, and closes with the algebra that produces them. The
-derivations are in Appendix~\ref{app:proofs}; the model changes that break
-the coincidences and restore variety across the matrix are in
-Section~\ref{sec:beyond-demand-only}.
+exact derivations are in Appendix~\ref{app:proofs}. In addition this appendix clarifies what additiona overlaps between closure scenarios exist, that are not directly visible in, e.g., table \ref{tab:results-matrix}.\footnote{In addition, model changes that break
+the coincidences and restore variety across the matrix can be found in
+Section~\ref{sec:beyond-demand-only} -- considerations from this appendix, hence, do not necessarily apply there.}.
 
 \subsection*{Scope: three conditions}
 
 \paragraph{A demand-only shock.} The programme enters final demand at
-baseline technology, so the exercise touches neither the price nor the
-technology margin. This is the slice on which the whole matrix is evaluated,
-and it is the case of our application.
+baseline technology, so it touches neither the price nor the technology margin. This assumption underpins our main case of our application.
 
-\paragraph{A price block that cannot see demand.} The zero-profit conditions
+\paragraph{Prices cannot see demand.} The zero-profit conditions
 contain no demand variable and are homogeneous of degree one in prices and
 the wage, so relative prices are pinned by technology alone
-(Lemma~\ref{lem:price}). Under the consumption price index as numeraire the
-real wage then sits at its baseline anchor for every demand vector, every
-financing closure and every shock size (Corollary~\ref{cor:realwage}). A
-closure whose only task is to move the \emph{real} wage margin is therefore
+(Lemma~\ref{lem:price}). Under the consumption price index $\Pi(p)$ as numeraire the real wage then sits at its baseline anchor for every demand vector, every financing closure and every shock size (Corollary~\ref{cor:realwage}). 
+%##AG: do we really need the next sentence?
+A closure whose only task is to move the \emph{real} wage margin is therefore
 inert: the margin it is meant to clear is already at rest.
 
-\paragraph{A quantity block that is elasticity-free.} At those prices the
+\paragraph{A quantity block that is elasticity-free.} At such prices the
 clearing system is exactly affine and independent of the substitution
 elasticities $(\theta,\epsilon,\sigma)$ (Lemma~\ref{lem:affine}) --- the
 production side of the classical nonsubstitution result
@@ -48,12 +45,14 @@ solves one and the same linear system, whatever the technology.
 
 The third condition is also what locates the boundary of the exercise: all
 three hold \emph{on a single common wage}, and Section~\ref{sec:two-questions}
-names the single-wage branch and the sectoral family as the matrix's two
-labour-market families. Where the wage is common, the conditions above apply
-as stated; where it is not, they lapse, and that is where the matrix regains
+introduces the single-wage branch and sectoral wages as the matrix's two
+key approaches to labour-market dynamics. Where the wage is common, the conditions above apply as stated; where it is not, they lapse, and that is where the matrix regains
 variety.
 
 \subsection*{The coincidences}
+
+%##AG: Separate this: Do one table on the first two (visible in results matrix) and another on the other three (sketched in Figure 1). Maybe postion the latter first as this appears more early in the paper? Also do the table in separate files as we did elsewhere...
+
 
 \begin{table}[htbp]
 \centering
@@ -67,35 +66,31 @@ variety.
 \toprule
 Coincidence & Mechanism & Status & Left unidentified \\
 \midrule
-Fixed real wage $\equiv$ Leontief
-& the Leontief corner \emph{is} the fixed-wage closure at the
-  zero-substitution limit; a pegged real wage already pins prices, so the
-  substitution elasticities have nothing left to move
+Fixed real wage $\Leftrightarrow$ Leontief
+& The Leontief corner \emph{is} the fixed-wage closure at the
+  zero-substitution limit -- a pegged real wage already pins prices, so the
+  substitution elasticities have nothing left to move.
 & exact
 & $(\theta,\epsilon,\sigma)$ under a pegged wage \\[3pt]
-F2 $\equiv$ F3, mobile rows
-& the external transfer is the instrument that holds employment at its pin;
+F2 $\Leftrightarrow$ F3, for flexible wage closures
+& In these scenariosthe external transfer hold employment at its pin –
   the two financings differ by exactly the programme cost in that transfer,
-  which leaves the real allocation untouched
+  which leaves the real allocation untouched.
 & exact
 & the financing label \\[3pt]
 Full reallocation $\equiv$ standard CGE
-& at $\eta = 1$ labour is allocated to its cost-minimizing use at a single
-  wage, which is precisely the allocation rule the standard CGE closure
-  imposes
+& The converse case of no-reallocation with $\eta = 1$ exactly represents the allocation rule the standard CGE closure imposes.
 & definitional
-& --- two names for one allocation rule \\[3pt]
-Standard CGE $\equiv$ single-wage elastic supply
-& with the real wage at its anchor, the supply curve and the full-employment
-  pin are the same equation at every supply elasticity and under every
-  financing rule
-& derivable
+& ---  \\[3pt]
+Standard CGE $\Leftrightarrow$ single-wage elastic supply
+& With the real wage at its anchor, the elastic labor supply curve and the full-employment solution give the same equation at every supply elasticity and under every financing rule.
+& derivable (see below)
 & the single-wage supply elasticity \\[3pt]
-No reallocation $\equiv$ the rigid corner of the sectoral family
-& an infinitely inelastic supply curve reproduces the frozen baseline
+No reallocation $\Leftrightarrow$ the rigid corner of the sectoral family
+& An infinitely inelastic supply curve ($\eta_s=0$) with sectoral wages gives the same results as a assuming sectorally frozen labor qunatities ($\eta=0$), albeit with a different rationale.
   allocation
 & exact by construction
-& --- it is why no separate rigid sectoral cell is reported \\
+& ---  \\
 \bottomrule
 \end{tabular}
 \caption{Coincidences within the closure matrix, the mechanism behind each,
@@ -103,15 +98,8 @@ their logical status, and the parameter each leaves unidentified.}
 \label{tab:equiv-class}
 \end{table}
 
-Two qualifications belong with the table. The financing column is the
-exception in the fixed-wage rows: there the external transfer is pinned at
-zero, so financing \emph{does} bite, and the spread between the tax-financed
-and the externally financed variants in those rows is the whole difference
-the financing axis carries. And the no-reallocation closure is not a
-coincidence but the matrix's one genuinely distinct labour-market regime: it
-shares the aggregate employment pin with the standard CGE closure while
-freezing the allocation that the latter is free to move, and it is the
-endpoint in which the sectoral family terminates.
+The two tables below summarize coincidences across specifications.
+
 
 \subsection*{The algebra behind the coincidences}
 
@@ -142,7 +130,7 @@ G = \Omega^{\!\top}\mathrm{diag}(a)
 \end{equation}
 and none of the substitution elasticities $(\theta,\epsilon,\sigma)$ enters
 $G$ or $b(F)$, where $F$ is the net external transfer to households --- the
-variable that clears the external account, and the one the mobile closures
+variable that clears the external account, and the one the flexible wage closures
 solve for. The technique, and with it relative prices, is independent of the
 composition of demand, which allocates quantities only. This is the third
 scope condition read as algebra, and it is what makes the matrix a partition

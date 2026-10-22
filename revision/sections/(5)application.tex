@@ -32,8 +32,71 @@ In sum, while a focus on GDP seems apt and adequate for many purposes in researc
 
 %NOTE: man könnte sich natürlich noch die AI ideen unten für pics hier anschauen, aber ich bin nicht so sicher...
 
-%\subsection{Sectoral results}\label{subsec:sectoral}
-% TODO: sectoral detail; the ladder and rigid-group cells.
+\subsection{Sectoral results}\label{subsec:sectoral}
+
+The aggregate figures in Table~\ref{tab:results-matrix} hide a strongly concentrated impulse. The programme lands on only seven of the 71 sectors, and within these it is very unevenly distributed: it amounts to almost a quarter of baseline gross output in \emph{glass and glassware}, to about a tenth in \emph{specialised construction works} and in \emph{ceramic products, processed stone and clay}, to about five percent in \emph{rubber and plastics}, and to less than two percent in \emph{chemicals}, \emph{machinery} and \emph{electrical equipment}. Figures~\ref{fig:sectoral-flex-f23} to \ref{fig:sectoral-fixed} show what the nine distinct economies of the matrix make of this impulse at the level of the sector. Each panel refers to one cell (the collapsed cells of Table~\ref{tab:results-matrix} share a panel). The left half compares, for each of the seven programme sectors (numbered 1 to 7), the size of the impulse with the resulting change in gross output, in household consumption and in the sectoral price; the error bars span the consumption elasticity $\sigma\in\{0.6,0.99\}$ with everything else fixed. The right half places all 71 sectors in the output--price plane, with the programme sectors marked by their numbers, or, where no price moves, ranks them by their output response.
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.9\textwidth}
+\includegraphics[width=\textwidth]{images/panel_5x3_BF_F2.png}
+\caption{No-reallocation, F2/F3}\label{fig:sectoral-bf-f23}
+\end{subfigure}
+\begin{subfigure}{0.9\textwidth}
+\includegraphics[width=\textwidth]{images/panel_5x3_ALPHA_F2.png}
+\caption{Standard CGE, F2/F3}\label{fig:sectoral-alpha-f23}
+\end{subfigure}
+\begin{subfigure}{0.9\textwidth}
+\includegraphics[width=\textwidth]{images/panel_5x3_BETA_F2.png}
+\caption{Elastic labor supply ($\eta_{s,i}=0.5$), F2/F3}\label{fig:sectoral-beta-f23}
+\end{subfigure}
+\caption{Sectoral responses in the flexible-wage columns under tax and external financing (F2 and F3 coincide in these columns). Left: the seven programme sectors (numbered 1--7); programme demand in percent of baseline gross output and changes in output, consumption and prices relative to the no-programme baseline; error bars span $\sigma\in\{0.6,0.99\}$. Right: all 71 sectors, change in output against change in price, with programme sectors marked by their numbers; where prices stay at baseline, sectors are instead ranked by their output response and the price series is omitted.}
+\label{fig:sectoral-flex-f23}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.9\textwidth}
+\includegraphics[width=\textwidth]{images/panel_5x3_BF_F1.png}
+\caption{No-reallocation, F1}\label{fig:sectoral-bf-f1}
+\end{subfigure}
+\begin{subfigure}{0.9\textwidth}
+\includegraphics[width=\textwidth]{images/panel_5x3_ALPHA_F1.png}
+\caption{Standard CGE, F1}\label{fig:sectoral-alpha-f1}
+\end{subfigure}
+\begin{subfigure}{0.9\textwidth}
+\includegraphics[width=\textwidth]{images/panel_5x3_BETA_F1.png}
+\caption{Elastic labor supply ($\eta_{s,i}=0.5$), F1}\label{fig:sectoral-beta-f1}
+\end{subfigure}
+\caption{Sectoral responses in the flexible-wage columns under the repurposing of consumption (F1). Layout as in Figure~\ref{fig:sectoral-flex-f23}.}
+\label{fig:sectoral-flex-f1}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}{0.9\textwidth}
+\includegraphics[width=\textwidth]{images/panel_5x3_GAMMA_F1.png}
+\caption{Fixed real wage / Leontief, F1}\label{fig:sectoral-fixed-f1}
+\end{subfigure}
+\begin{subfigure}{0.9\textwidth}
+\includegraphics[width=\textwidth]{images/panel_5x3_GAMMA_F2.png}
+\caption{Fixed real wage / Leontief, F2}\label{fig:sectoral-fixed-f2}
+\end{subfigure}
+\begin{subfigure}{0.9\textwidth}
+\includegraphics[width=\textwidth]{images/panel_5x3_GAMMA_F3.png}
+\caption{Fixed real wage / Leontief, F3}\label{fig:sectoral-fixed-f3}
+\end{subfigure}
+\caption{Sectoral responses in the fixed-wage columns (the fixed-real-wage and Leontief closures coincide sector by sector). Layout as in Figure~\ref{fig:sectoral-flex-f23}; prices stay at baseline in all three cells, so the right half ranks sectors by their quantity response.}
+\label{fig:sectoral-fixed}
+\end{figure}
+
+A first observation is that the \emph{ranking} of the programme sectors is the same in every cell: glass expands most, followed by ceramics and specialised construction, while machinery and electrical equipment barely move. What the closure decides is how much of the impulse is passed through to quantities and how much is absorbed by prices. Where labor is free to move at a given wage --- the standard CGE and the two fixed-wage columns --- prices stay at the baseline and the output response comes close to the impulse itself: glass expands by about 21\% on an impulse of about 23\%, and ceramics expands by more than its own impulse (about $+10.5\%$), because it also supplies the expanding construction sector with intermediates. Where the wage is sectoral, a part of the impulse is turned into prices instead. In the no-reallocation column the glass sector expands by only $+11.7\%$ (F1) to $+14.3\%$ (F2/F3), while its price rises by 22\% to 28\% and its wage by more than half; elastic labor supply lies in between, with glass output up by 17\% to 18\% and its price by about 10\%. The scatter plots in the right halves of Figures~\ref{fig:sectoral-flex-f23} and \ref{fig:sectoral-flex-f1} show that this is a systematic pattern rather than a feature of a single sector: with sectoral wages, quantities and prices move together along upward-sloping sectoral supply curves, and the programme sectors sit in the upper right corner, far away from the cloud formed by the other 64 sectors. Outside the programme sectors, price changes remain small (within $\pm 1.7\%$ under elastic supply and $\pm 4.4\%$ under no-reallocation).
+
+The second observation concerns the sectors that are \emph{not} targeted by the programme. In eight of the nine economies the large majority of them contracts: between 51 and 56 of the 64 non-programme sectors lose output, with a median change between $-0.3\%$ and $-0.6\%$. The losers are predominantly consumer-facing services --- \emph{travel agencies}, \emph{accommodation and food services} and \emph{other personal services} --- whose demand is squeezed by the reallocation of spending towards the programme goods (F1) or by the taxes that finance it (F2). The few winners are upstream suppliers of the programme sectors, most notably \emph{metal ores and other mining} ($+2.1\%$ to $+3.2\%$), \emph{wood products} and \emph{metal products}. In the no-reallocation column, \emph{building construction} and \emph{civil engineering} are among the strongest losers (about $-1\%$): with immobile labor they cannot share in the boom of their neighbour, specialised construction, but face its higher input prices. The exception is the externally financed fixed-wage economy (Figure~\ref{fig:sectoral-fixed-f3}): here all 64 non-programme sectors expand, with a median of $+1.4\%$, because the programme adds income instead of displacing other spending and employment is not capped. This is the sectoral face of the multiplier observed in Table~\ref{tab:results-matrix}, and it is the only cell in which the programme is not, sector by sector, a reallocation from the rest of the economy to the seven programme sectors.
+
+Third, the consumption bars show how strongly the sectoral pattern of consumption depends on the financing closure. Under F1 the programme is booked as repurposed private spending, so household final demand for the programme goods rises dramatically (by 30\% to 130\% in five of the seven sectors). Under F2 and F3 the programme is a separate demand component, and consumption of the programme goods \emph{falls}. Where prices stay at the baseline, this fall is uniform across sectors and simply mirrors the change in aggregate consumption ($-1.8\%$ in the standard CGE column, $-1.5\%$ and $+2.3\%$ in the fixed-wage columns under F2 and F3), because with unchanged relative prices households scale their basket proportionally. With sectoral wages, by contrast, households substitute away from the goods whose prices rise: consumption of glass falls by 21\% under no-reallocation and by 10\% under elastic supply. It is also only here that the consumption elasticity matters visibly; across all other series and cells the error bars for $\sigma\in\{0.6,0.99\}$ are barely visible.
+
+Finally, the figures underline the two collapses discussed above at the sectoral level. The standard CGE column and the fixed-wage columns produce almost the same sectoral quantity pattern under F1 and F2 (compare Figures~\ref{fig:sectoral-alpha-f1} and \ref{fig:sectoral-fixed-f1}); the small aggregate differences in Table~\ref{tab:results-matrix} stem from the level of employment, not from a different allocation across sectors. And the fixed-real-wage and Leontief closures coincide not only in the aggregate but sector by sector. In sum, which sectors gain and which lose is largely fixed by the input--output structure and the composition of the programme, and it is robust across closures; how much the programme sectors expand, whether this expansion shows up in quantities or in prices and wages, and whether the rest of the economy contracts or expands with it, is decided by the closure.
 
 %\subsection{The financing wedge}\label{subsec:financing-wedge}
 % TODO: bracket results (F1/F2/F3); the fixed-wage row is where financing

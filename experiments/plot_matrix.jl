@@ -128,6 +128,30 @@ function plot_default_cell_ids(design_d::Dict{String,Any},
 end
 
 """
+Curated short sector names for the manuscript panels, read from
+`data/sector_short_names.csv` (columns `label,short`) and matched to
+`labels` (the dotted names from `plot_sector_labels`). Returns `nothing`,
+with a warning naming the first unmatched label, when the file is missing or
+does not cover every label; the kernel then falls back to its cleaned names.
+"""
+function plot_short_sector_labels(labels::AbstractVector{<:AbstractString};
+        root::AbstractString = default_root())::Union{Nothing,Vector{String}}
+    path = joinpath(root, "data", "sector_short_names.csv")
+    if !isfile(path)
+        @warn "no curated sector names at $path; panels use fallback names"
+        return nothing
+    end
+    df = CSV.read(path, DataFrame; types = String)
+    table = Dict(zip(df.label, df.short))
+    for l in labels
+        haskey(table, l) && continue
+        @warn "no curated short name for sector \"$l\" in $path; panels use fallback names"
+        return nothing
+    end
+    return [table[l] for l in labels]
+end
+
+"""
 `true` when the GLMakie package is installed (findable), without loading it.
 The figure path `@eval using GLMakie` only after this check passes.
 """
@@ -469,11 +493,14 @@ function plot_main(args::Vector{String} = ARGS;
         # `using GLMakie` time. Qualified access avoids relying on the
         # extension's exports; `programme = g` is the per-sector additive
         # programme demand in model units from step 3, `variants` the
-        # σ-variant cells from step 5-6 for the error bars.
+        # σ-variant cells from step 5-6 for the error bars; `:manuscript` is
+        # the print layout (no title, footnotes or run id; legends explain),
+        # with the curated short sector names.
         written = try
             Base.invokelatest(OpenCGE.save_matrix_panels, ds;
                 outdir = opts.panel_dir, prefix = "panel_5x3", programme = g,
-                variants = variants)
+                variants = variants, style = :manuscript,
+                sector_labels = plot_short_sector_labels(labels; root = root))
         catch e
             println(stderr,
                 "save_matrix_panels failed: $(sprint(showerror, e))")

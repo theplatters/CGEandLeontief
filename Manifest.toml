@@ -2,7 +2,7 @@
 
 julia_version = "1.12.7"
 manifest_format = "2.0"
-project_hash = "db6eb372b48865f8983e8e5a96c09dc69a76823e"
+project_hash = "0c558405c1813398a3e9c8cca26a14e977b907df"
 
 [[deps.ADTypes]]
 deps = ["PrecompileTools"]
@@ -906,11 +906,11 @@ version = "0.3.29+0"
 
 [[deps.OpenCGE]]
 deps = ["CSV", "DataFrames", "LinearAlgebra", "NonlinearSolve", "Printf", "ProgressMeter", "Statistics", "ThreadsX"]
-git-tree-sha1 = "5a19fa595d19eed8550a4edee8b886fdd8175c3c"
-repo-rev = "v0.2.1"
+git-tree-sha1 = "60610e189b0069a9eeb617e40e49f4b8d72967e8"
+repo-rev = "v0.3.2"
 repo-url = "https://github.com/theplatters/OpenCGE"
 uuid = "ce182077-ed3b-4f5d-9409-09ef275840d9"
-version = "0.2.1"
+version = "0.3.2"
 
     [deps.OpenCGE.extensions]
     OpenCGEGLMakieExt = "GLMakie"

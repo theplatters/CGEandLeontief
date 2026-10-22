@@ -241,7 +241,12 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
 - `--panel-dir DIR` writes the manuscript panel figures: one
   `panel_5x3_<labour>_<financing>.png` per matrix cell (fifteen files:
   `BF/ALPHA/BETA/GAMMA/DELTA` x `F1/F2/F3`)
-  via `save_matrix_panels(ds; outdir = DIR, prefix = "panel_5x3", programme = g, variants = variants)`.
+  via `save_matrix_panels(ds; outdir = DIR, prefix = "panel_5x3", programme = g, variants = variants, style = :manuscript, sector_labels = …)`
+  (OpenCGE ≥ `v0.3.2`), the print layout for about 14 cm width. The
+  curated short sector names come from `data/sector_short_names.csv`
+  (`label,short`, keyed by the dotted labels of `data/sector_names.txt`);
+  when the file is missing or does not cover every sector the driver warns
+  and the kernel falls back to its cleaned, truncated names.
   Each file pairs grouped bars over the programme sectors for that cell
   (programme demand in % of baseline gross output, change in output, change
   in consumption, price deviation from the numeraire) with a
@@ -252,7 +257,9 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   `right = :auto` checks actual prices, not the labour-closure label;
   `right = :bars` / `:scatter` force either path in the plotting API.
   Each file is standalone with
-  per-cell axis limits and a source footnote citing its `run_id`.
+  per-cell axis limits; it carries no title, footnotes or `run_id` (the
+  legends below the axes state the baseline and the σ range, and the
+  driver's validation report ties each file to its `run_id`).
   Error bars on the last three bar series span the
   consumption-elasticity range: the min/max over the central cell and its
   two σ variants (σ ∈ {0.6, 0.99}, the cell's θ, ε, η, financing and shock

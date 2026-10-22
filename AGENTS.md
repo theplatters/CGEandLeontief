@@ -177,6 +177,11 @@ visible (ADR-0004).
 - Failed and provisional runs stay visible with their caveats; never drop
   them.
 - Paper tables and figures cite `run_id`s (ADR-0004).
+- Pricing tables 6, 7 and E use consumption units on every row (ADR-0037):
+  regenerate `revision/tables/pricing_prices.csv` with
+  `julia --project=. experiments/make_pricing_prices.jl`, then run
+  `python3 revision/tables/make_pricing_door.py`. Raw run manifests retain
+  their original solver units.
 - **Generation rule:** an `OpenCGE` rev bump invalidates the provenance of
   existing runs (as a `src/` change used to): batch such changes and re-run as
   a new generation (`-v2`, `-v3`, …) rather than mixing generations in one

@@ -1,6 +1,6 @@
 # ADR-0032 — The pricing doors on every labour row
 
-- **Status:** accepted
+- **Status:** superseded in part by ADR-0037 (price reporting units)
 - **Date:** 2026-10-18
 - **Supersedes:** for citation, `pricing_markup_v1`, `pricing_profit_v1` and
   the markup cells of `pricing_mobile_v1` (OpenCGE v0.2.0), which stay on

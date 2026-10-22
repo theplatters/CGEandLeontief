@@ -128,6 +128,28 @@ budget gate's `E` includes the distributed rent `(1 − s_pi)·Π`.
 
 ## Manifest schema (`runs/<run_id>/manifest.toml`)
 
+### Pricing-table reporting (ADR-0037)
+
+Raw price metrics retain the solver's units in the immutable manifests.
+Tables 6, 7 and E use consumption units on every labour row. Regenerate:
+
+```bash
+julia --project=. experiments/make_pricing_prices.jl
+python3 revision/tables/make_pricing_door.py
+```
+
+`make_pricing_prices.jl` reads saved pricing solutions and writes the
+derived, run-id-keyed `revision/tables/pricing_prices.csv`. It reconstructs
+the reference continuation and verifies raw-price agreement, data and
+cell parameters, GDP-deflator homogeneity and real-GDP invariance on the
+GAMMA/DELTA rows; no priced cell is re-solved. `--check` verifies that
+the sidecar is current. The Python table builder checks source hashes and
+rejects stale derived prices. A clean clone can use the committed sidecar
+without machine-local solutions. The existing `table6_wd.csv` and
+`table7_wd.csv` supply the unchanged quantity-of-demand welfare columns.
+
+### Run records
+
 Written `running` at cell start, `executed` (all gates pass) or `failed`
 otherwise at the end. An existing run dir is never overwritten (register a
 `-v2` variant). Any per-cell failure — solve, gates, metrics, or writes —

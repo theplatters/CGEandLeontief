@@ -2,10 +2,11 @@
 """Regenerate the pricing-door tables from the Phase 7 run manifests
 (ADR-0029, ADR-0030, ADR-0031, ADR-0032).
 
-No number is hand-typed: every value is a manifest field, except W_D, which no
-manifest records; it is read from table6_wd.csv and table7_wd.csv, written by
-experiments/make_table6_wd.jl and experiments/make_table7_wd.jl from
-manifest-gated re-solves (as Table 5's W_D). Both tables carry the same measure.
+No number is hand-typed. Real-outcome columns are manifest fields, except
+W_D, read from table6_wd.csv and table7_wd.csv (experiments/make_table6_wd.jl
+and experiments/make_table7_wd.jl).
+Price columns use pricing_prices.csv, written from the saved solutions by
+experiments/make_pricing_prices.jl in consumption units (ADR-0037).
 Run from anywhere:
     python3 make_pricing_door.py
 Sources (schema v2, all on OpenCGE v0.2.1):
@@ -31,11 +32,13 @@ goods-only profile (delta on CPA A--F, where the programme's entire direct
 incidence falls); the all-sector counterfactual is in the appendix table. The
 price-response bracket figure was removed from the manuscript the same day.
 """
-import csv, tomllib, os
+import csv, tomllib, os, hashlib
+from functools import lru_cache
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 WD_CSVS = [os.path.join(REPO, "revision/tables/table6_wd.csv"),
            os.path.join(REPO, "revision/tables/table7_wd.csv")]
+PRICES_CSV = os.path.join(REPO, "revision/tables/pricing_prices.csv")
 OUT_CAP = os.path.join(REPO, "revision/tables/table6_pricing-capacity.tex")
 OUT_MK = os.path.join(REPO, "revision/tables/table7_pricing-markup.tex")
 OUT_TABLE_APP = os.path.join(REPO, "revision/tables/tableE_pricing-profiles.tex")
@@ -93,6 +96,7 @@ APP_PANELS = (
     ]) for row, name in ROWS]
 )
 
+@lru_cache(maxsize=None)
 def manifest(rid):
     with open(f"{REPO}/runs/{rid}/manifest.toml", "rb") as fh:
         d = tomllib.load(fh)
@@ -110,11 +114,49 @@ def load_wd():
 
 
 WD = load_wd()
+with open(PRICES_CSV, newline="") as fh:
+    PRICES = {r["run_id"]: r for r in csv.DictReader(fh)}
+
+
+def sha256(path):
+    with open(path, "rb") as fh:
+        return hashlib.sha256(fh.read()).hexdigest()
+
+
+@lru_cache(maxsize=None)
+def reported_prices(rid):
+    """Checked, derived reporting prices; original manifests keep their raw units."""
+    if rid.startswith("matrix_5x3-v10-"):
+        # The new no-door rows use matrix W_D, with prices checked against
+        # their recorded kappa=0 twins in the pricing sidecar.
+        baseline = manifest(rid)
+        scenario = baseline["scenario"]
+        twin = f"pricing_markup-v2-{scenario['labour']}-{scenario['financing']}-k0"
+        for key in ("gdp_deflator", "max_abs_price_dev"):
+            assert abs(baseline["metrics"][key] - manifest(twin)["metrics"][key]) < 1e-8, rid
+        return reported_prices(twin)
+    assert rid in PRICES, f"missing prices for {rid}; run experiments/make_pricing_prices.jl"
+    r = PRICES[rid]
+    man = manifest(rid)
+    for path, key in ((f"runs/{rid}/manifest.toml", "manifest_sha256"),
+                      (f"experiments/designs/{man['design']}.toml", "design_sha256")):
+        assert sha256(os.path.join(REPO, path)) == r[key], f"stale prices: {path}"
+    # Solutions and the IO table are machine-local. Verify when available;
+    # the committed sidecar also supports table builds in a clean clone.
+    for path, key in ((f"runs/{rid}/solution.csv", "solution_sha256"),
+                      ("data/I-O_DE2019_formatiert.csv", "io_sha256")):
+        full = os.path.join(REPO, path)
+        if os.path.isfile(full):
+            assert sha256(full) == r[key], f"stale prices: {path}"
+    assert r["io_sha256"] == man["provenance"]["data_sha256"]["data/I-O_DE2019_formatiert.csv"]
+    return r
 
 
 def values(rid):
     m = manifest(rid)["metrics"]
-    return dict(P=100 * (m["gdp_deflator"] - 1.0), D=100 * m["max_abs_price_dev"],
+    prices = reported_prices(rid)
+    return dict(P=100 * (float(prices["gdp_deflator_cpi"]) - 1.0),
+                D=100 * float(prices["max_abs_price_dev_cpi"]),
                 L=100 * (m["employment"] - 1.0), W=100 * m["consumption_rel"],
                 WD=WD.get(rid, float("nan")), S=100 * m.get("profit_share", 0.0))
 
@@ -263,7 +305,7 @@ def build_cap_table():
     return build_guided_table(
         CAP_GUIDED_PANELS, COLS_CAP, r"$\delta$",
         [r"Integrating a Kaldor--Verdoorn term in the general closure matrix. Each block reports",
-         r"the change in the price level ($\Delta P$, the GDP deflator; signed), the largest sectoral",
+         r"the change in the price level ($\Delta P$, the GDP deflator in consumption units; signed), the largest sectoral",
          r"price deviation ($\max|\Delta p|$), employment ($\Delta L$) and the quantity index of demand",
          r"over $c+g$ ($\Delta W_D$, see also Table~\ref{tab:welfare-comparison}), all in percent against",
          r"the reference continuation. The shaded $\delta = 0$ rows (no door) reproduce",
@@ -298,8 +340,6 @@ def build_mk_table():
          r"% distributed: tableE.",
          r"% NOTE (JK, resolved): the shading now marks the kappa = 0 baseline row, which",
          r"% restores the convention of Tables 4 and 6 (the baseline row is shaded).",
-         r"% NOTE (JK, open): the welfare measure is still W_C here; the companion and",
-         r"% label change is pending (see the note in section 6.2).",
          r"% ====================================================================="],
         fit=True)
 

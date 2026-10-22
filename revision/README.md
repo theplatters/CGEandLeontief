@@ -2,7 +2,7 @@
 title: "Revision draft --- BeyondHulten / Metroeconomica"
 project: "BFRep/(3)BeyondHulten"
 created: 2026-10-04
-status: "appendices A+B inserted 2026-10-15, appendices re-lettered A-I; compiles in-container (52 pp)"
+status: "compiles via build.sh (main.pdf 66 pp, refresponse.pdf 12 pp, 0 undefined refs); build script added 2026-10-22"
 tags: [revision, manuscript, latex, reviewer-response]
 ---
 
@@ -53,7 +53,21 @@ Two title suggestions sit as a comment above `\papertitle` in `main.tex`.
 | H | The model: kernel and closure formulations | was App. G |
 | I | From the input--output table to Omega | was App. H |
 
-# Compile (in-container, verified 2026-10-04)
+# Compile (in-container and on the Mac, verified 2026-10-22)
+
+`build.sh` builds both roots, strips stale aux files first, and prints a
+verification line for each PDF:
+
+```{.bash}
+cd revision
+bash build.sh                 # both PDFs
+bash build.sh main            # manuscript only
+bash build.sh refresponse     # response letter only
+```
+
+Both roots need `biber` on PATH: the manuscript and the response letter each
+carry a biblatex bibliography over `references.bib`. Building happens in place,
+so `main.synctex.gz` keeps matching `main.pdf`. Equivalent by hand:
 
 ```{.bash}
 cd revision
@@ -61,8 +75,27 @@ nix shell nixpkgs#biber -c latexmk -pdf -interaction=nonstopmode main.tex
 nix shell nixpkgs#biber -c latexmk -pdf -interaction=nonstopmode refresponse.tex
 ```
 
-Produces `main.pdf` (26 pp, no errors, 0 undefined references) and
-`refresponse.pdf` (5 pp).
+Last verified 2026-10-22: `main.pdf` 66 pp (0 errors, 0 undefined references,
+3 overfull boxes) and `refresponse.pdf` 12 pp (0 errors, 0 undefined
+references, 0 overfull). `build.sh` exits non-zero on any unresolved
+reference, and on the response letter's own canary: a broken `Location.` line,
+which an unbraced `\loc` call produces.
+
+# The response letter
+
+`refresponse.tex` inputs one file per addressee (`response/editor.tex`,
+`response/reviewer1.tex`, `response/reviewer2.tex`). Each numbered point is one
+cell, in this order:
+
+- `\subsection*{R<n>.<m> --- Title}` for the point;
+- `\refcom{...}` quoting the referee verbatim and in full: one joint block per
+  point, whole paragraphs, nothing elided;
+- `\response ...` for our answer;
+- `\loc{...}` naming the location of the change. The braces are required: an
+  unbraced `\loc Sec. 1;` swallows the first character into the bold label.
+
+Citations use the shared `references.bib` and the manuscript's biblatex
+options. Location lines are provisional until the manuscript is frozen.
 
 # Toolchain (container)
 

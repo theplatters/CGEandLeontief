@@ -64,50 +64,18 @@ $\kappa = 0$ and positive exactly where prices exceed marginal cost.
 % the notation is genuinely ambiguous -- do not submit this way.
 
 Regarding the question how profit income is used we rely on a simple formulation that captures the share of profit income retained with $s_\pi$, which allows for representing different scenarios. Taking $s_\pi = 1$, for instance, would allow to represent cases where profits are fully retained by firms or foreign asset holders and do not feed back into the economy. In addition to such a scenario of ``full retention'', which is shown for $\kappa=0.25$ and $\kappa=0.5$, we also derive two additional scenarios where profits are treated as normal income. For these scenarios we show two different runs that set the savings rate on profits $s_\pi$ to $0.5$ and to the overall savings rate $s \approx 0.12$, respectively.\footnote{The augmented household budget is $E = (1-\tau)\,w\sum_i L_i + F + (1-s_\pi)\Pi$: the distributed share of the surplus is added to after-tax labour income and the external transfer $F$, and the household saves the share $s$ of the resulting total as before, so $s_\pi = 1$ returns the kernel's budget exactly. Section~\ref{sec:kernel} leaves household resources deliberately open --- its household problem takes $E^h$ as given, because what pins it down is a closure --- which is why the augmented budget is stated here rather than earlier. Appendix~\ref{app:pricing-accounting} re-derives the external-account identity with the retained part $s_\pi\Pi$ booked as a leak.}
+%TODO not sure whether this footnote is really needed; it is safe to say that it too long
 
 \input{tables/table7_pricing-markup.tex}
 %NOTE: das shading hier ist verwirrend, weil vorher das baseline sceanrio geshaded war
 
-Both doors move sectoral prices by the same order of magnitude.
+A first, observation associated with these rules is that markup pricing unsurprisingly increases prices under all scenarios observed. The mild average across centers shown in the first column thereby has to contrasted by the maximum price change across sectors shown in the second column, where strong price changes are mostly associated with the sector affected from the demand shock. At $\kappa = 0.5$ the markup's largest sectoral deviation lies between $10\%$ to $35\%$ for the flexible wage models and between $11\%$ to $24\%$ for the models with a pinned real wage.
 
-Run against the capacity door, the markup door turns a robustness check into a
-result. At the fixed real wage, with the capacity door confined to the goods sectors,
-every door raises the price level in every financing column except
-Kaldor--Verdoorn, which lowers it in all three (the fixed-wage panels of
-Tables~\ref{tab:pricing-kaldor} and~\ref{tab:pricing-markup}).
- At
-$\kappa = 0.5$ the markup's largest sectoral deviation (9 to 12 percent) is
-two to two and a half times the capacity door's. The doors part company in the quantity block,
-where profits show up as a leak (retention) or as additional household
-demand (distribution). Whether a demand-led transformation raises or lowers
-prices therefore depends on which pricing door is modelled, on which sectors
-it acts and on how the programme is financed. Under external finance the
-bracket runs from a 0.35 percent fall (Kaldor--Verdoorn in goods;
-\texttt{pricing\_capacity-v2-GAMMA-F3-dm05-s0}) to a 1.83 percent rise
-(distributed markup; \texttt{pricing\_profit-v2-GAMMA-F3-k05-spis}). Capacity
-pressure (0.34 percent) and the retained markup (1.01 percent) lie in between;
-the all-sector profile widens the fall to 0.82 percent
-(Appendix~\ref{app:variants}). The profit share stays small --- below two
-percent of factor income in every cell --- and rises with the financing
-closure's demand impulse.\footnote{In the fixed-wage and Leontief panels
-$\Delta P$ and $\Pi/Y$ coincide to the second decimal in most cells (median gap
-0.02 and 0.005 percentage points across the priced runs, up to 2.1 points at the
-extreme in the fixed-wage panel). That is not an identity but close to
-arithmetic: with the nominal wage fixed and full pass-through, value added at
-baseline prices is pinned, so the deflator is approximately
-$1 + \Pi/(w\sum_i L_i)$, and the residual reflects the deflator being a
-seven-component T\"ornqvist index rather than the ratio of nominal to real GDP
---- in the Leontief cells the two agree to $6\cdot10^{-4}$.}
-Distributing profits raises consumption and
-employment relative to retention in every financing column of the fixed-wage
-and Leontief panels, most under external finance. In the three CPI-gauge
-panels of Table~\ref{tab:pricing-markup} it changes nothing: the distributed
-rows repeat the retained rows exactly, because the net external transfer $F$
-falls by precisely the distributed profits (\texttt{pricing\_markup-v2-ALPHA-F2-k05} against
-\texttt{pricing\_profit-v2-ALPHA-F2-k05-\{spi05,spis\}}), the same mechanism
-that makes tax and external finance indistinguishable there, so the routing of
-profits matters only where the real wage is pegged. The welfare measure
-changes meaning accordingly: with distributed
+The second obvious structural feature of the so obtained results is that the results shown for the three flexible wage models are only influenced by the intensity of markups ($\kappa$), but not by how these markups are used. This is because the net external transfer $F$ adjusts flexibly and falls when the share of distributed profits increases, and vice versa. The same mechanism also produces the well-known equivalence between F2 and F3 observed for these models. In contrast, distributing profits raises consumption and employment relative to retention in every financing column of the fixed-wage and Leontief panels, most so under external finance. The reason here is soimplly that if for money is spent effective multuipliers associated with the original stimulus become correspondingly larger.
+% ##AG: why does it not coincide with the baseline result when using teh baseline savgin rates? 
+
+%TODO which welfare measure? also make that clear in the table
+The welfare measure changes meaning accordingly: with distributed
 profit, $\Delta W$ is the consumption of a household that also owns the
 firms, and each manifest carries a real-income companion (labour plus
 distributed profit, deflated by the CPI) beside it. Two caveats bound the

@@ -18,7 +18,7 @@
  & & \multicolumn{5}{c}{\textbf{F1}} & & \multicolumn{5}{c}{\textbf{F2}} & & \multicolumn{5}{c}{\textbf{F3}} \\
  & & \multicolumn{5}{c}{\scriptsize repurposing of consumption} & & \multicolumn{5}{c}{\scriptsize refinancing via taxes} & & \multicolumn{5}{c}{\scriptsize external / debt finance} \\
 \cmidrule(lr){3-7}\cmidrule(lr){9-13}\cmidrule(lr){15-19}
-\multicolumn{1}{c}{Markup and rent routing} & & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W$} & \multicolumn{1}{c}{$\Xi/Y$} & & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W$} & \multicolumn{1}{c}{$\Xi/Y$} & & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W$} & \multicolumn{1}{c}{$\Xi/Y$} \\
+\multicolumn{1}{c}{Routing of profits} & & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W$} & \multicolumn{1}{c}{$\Xi/Y$} & & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W$} & \multicolumn{1}{c}{$\Xi/Y$} & & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W$} & \multicolumn{1}{c}{$\Xi/Y$} \\
 \midrule
 \multicolumn{19}{l}{\textbf{No-reallocation}} \\
 \rowcolor{tableguide}\quad retained, $\kappa = 0.25$ &  & $+0.70$ & $24.43$ & $0.00$ & $+0.09$ & $0.04$ &  & $+0.80$ & $31.46$ & $0.00$ & $-2.00$ & $0.04$ &  & $+0.80$ & $31.46$ & $0.00$ & $-2.00$ & $0.04$ \\
@@ -51,16 +51,7 @@
 \quad distributed, $\kappa = 0.5$, $s_\pi = s$ &  & $+0.37$ & $12.49$ & $+0.17$ & $+0.61$ & $0.37$ &  & $+0.56$ & $12.86$ & $+0.36$ & $-0.99$ & $0.56$ &  & $+1.92$ & $14.29$ & $+1.72$ & $+2.14$ & $1.88$ \\
 \bottomrule
 \end{tabular}}
-\caption{The markup door under the demand-only programme shock, on every labour closure.
-Panels are the labour closures of Table~\ref{tab:results-matrix}, rows the markup
-slope $\kappa$ of equation~\eqref{eq:markup-door} and the routing of the rent
-(Table~\ref{tab:routing}): retained by firms, or distributed to the household,
-which saves the share $s_\pi$ of it ($s$ is the household saving rate). Columns and
-conventions as in Table~\ref{tab:pricing-kaldor}, except that $\Delta W$ is household
-consumption ($W_C$ of Table~\ref{tab:results-matrix}); $\Xi/Y$ is the rent's share of
-factor income in percent. $\kappa = 0$ reproduces Table~\ref{tab:results-matrix};
-$\kappa = 0.25$ with distributed rent is in Appendix~\ref{app:variants}. Generated
-from the \texttt{pricing\_\{markup,profit\}-v2-*} run manifests (OpenCGE
-v0.2.1); no number is hand-typed.}
+\caption{Introducing markup pricing in the context of a demand-only programme for all closure scenarios. Columns and conventions as in Table~\ref{tab:pricing-kaldor}, except that $\Delta W$ is household consumption ($W_C$ of Table~\ref{tab:results-matrix}); $\Xi/Y$ is the rent's share of factor income in percent. As indicated, $\kappa = 0$ reproduces Table~\ref{tab:results-matrix}.}
 \label{tab:pricing-markup}
 \end{table}
+%TODO: das wohlfahrtsmaß hier ist warum wieder W_C?

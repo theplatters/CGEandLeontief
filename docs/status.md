@@ -1,7 +1,7 @@
 # Status Board
 
 <!-- volatile:start -->
-Generated 2026-10-21 by `scripts/status.jl` · branch `reorg` · HEAD `a9ae25e` (dirty)
+Generated 2026-10-22 by `scripts/status.jl` · branch `reorg` · HEAD `1072f63` (dirty)
 <!-- volatile:end -->
 
 > Single source of truth: `registry/` (closures.toml, scenarios.csv, freeze.toml).
@@ -888,6 +888,7 @@ Scenarios: **640** rows — executed: 595, provisional: 3, failed: 42. Designs: 
 - [ADR-0031 — Value-added-scaled capacity door and the services-zero profile](decisions/ADR-0031-value-added-scaled-capacity-door.md)
 - [ADR-0032 — The pricing doors on every labour row](decisions/ADR-0032-pricing-doors-on-every-labour-row.md)
 - [ADR-0033 — Financing formulations name the balancing variable](decisions/ADR-0033-financing-balancing-variables.md)
+- [ADR-0036 — Print-ready matrix panels (OpenCGE v0.3.2) without a new generation](decisions/ADR-0036-print-ready-matrix-panels.md)
 
 ## Warnings
 

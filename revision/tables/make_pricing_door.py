@@ -78,7 +78,7 @@ APP_PANELS = (
         (r"$\delta = +0.5$", cap_id(row, "dp05")),
         (r"$\delta = -0.5$", cap_id(row, "dm05")),
     ]) for row, name in ROWS]
-    + [("B. Markup door, rent distributed, $\\kappa = 0.25$: " + name, [
+    + [("B. Markup door, profit distributed, $\\kappa = 0.25$: " + name, [
         (r"$s_\pi = 0.5$", "pricing_profit-v2-" + row + "-{f}-k025-spi05"),
         (r"$s_\pi = s$", "pricing_profit-v2-" + row + "-{f}-k025-spis"),
     ]) for row, name in ROWS]
@@ -119,7 +119,7 @@ def num(x, signed=True):
 COLS_CAP = [("P", r"$\Delta P$", True), ("D", r"$\max|\Delta p|$", False),
             ("L", r"$\Delta L$", True), ("WD", r"$\Delta W_D$", True)]
 COLS_MK = [("P", r"$\Delta P$", True), ("D", r"$\max|\Delta p|$", False),
-           ("L", r"$\Delta L$", True), ("W", r"$\Delta W$", True), ("S", r"$\Xi/Y$", False)]
+           ("L", r"$\Delta L$", True), ("W", r"$\Delta W$", True), ("S", r"$\Delta\Pi/Y$", False)]
 
 
 def hdr_cell(h):
@@ -263,25 +263,20 @@ def build_cap_table():
 
 def build_mk_table():
     return build_guided_table(
-        MK_PANELS, COLS_MK, "Markup and rent routing",
-        [r"The markup door under the demand-only programme shock, on every labour closure.",
-         r"Panels are the labour closures of Table~\ref{tab:results-matrix}, rows the markup",
-         r"slope $\kappa$ of equation~\eqref{eq:markup-door} and the routing of the rent",
-         r"(Table~\ref{tab:routing}): retained by firms, or distributed to the household,",
-         r"which saves the share $s_\pi$ of it ($s$ is the household saving rate). Columns and",
-         r"conventions as in Table~\ref{tab:pricing-kaldor}, except that $\Delta W$ is household",
-         r"consumption ($W_C$ of Table~\ref{tab:results-matrix}); $\Xi/Y$ is the rent's share of",
-         r"factor income in percent. $\kappa = 0$ reproduces Table~\ref{tab:results-matrix};",
-         r"$\kappa = 0.25$ with distributed rent is in Appendix~\ref{app:variants}. Generated",
-         r"from the \texttt{pricing\_\{markup,profit\}-v2-*} run manifests (OpenCGE",
-         r"v0.2.1); no number is hand-typed."],
+        MK_PANELS, COLS_MK, "Routing of profits",
+        [r"Introducing markup pricing in the context of a demand-only programme for all closure scenarios.",
+         r"Columns and conventions as in Table~\ref{tab:pricing-kaldor}, except that",
+         r"$\Delta W$ is household consumption ($W_C$ of Table~\ref{tab:results-matrix});",
+         r"$\Delta\Pi/Y$ is the profit share of factor income in percent. As indicated,",
+         r"$\kappa = 0$ reproduces Table~\ref{tab:results-matrix}."],
         r"\label{tab:pricing-markup}",
         [r"% =====================================================================",
          r"% Table 7 --- the markup door by labour closure and financing (GENERATED)",
          r"% ---------------------------------------------------------------------",
          r"% Do NOT edit by hand. Regenerate with:  make_pricing_door.py",
-         r"% Retained (Stage A) and distributed (Stage B) rent, kappa in {0.25, 0.5},",
-         r"% all five labour rows (ADR-0032). kappa = 0.25 distributed: tableE.",
+         r"% Retained and distributed profit, kappa in {0.25, 0.5}, all five labour rows",
+         r"% (ADR-0032). kappa = 0.25 distributed: tableE.",
+         r"% NOTE (JK): why is the welfare measure again W_C here?",
          r"% ====================================================================="],
         fit=True)
 
@@ -292,7 +287,7 @@ def build_app_table():
         [r"The pricing-door rows the main text does not carry, on every labour closure.",
          r"Panel A extends the capacity door's $\delta$ to every sector (the all-sector",
          r"counterfactual of Table~\ref{tab:pricing-kaldor}); panel B distributes the",
-         r"rent of the $\kappa = 0.25$ markup (Table~\ref{tab:pricing-markup} carries",
+         r"profit of the $\kappa = 0.25$ markup (Table~\ref{tab:pricing-markup} carries",
          r"$\kappa = 0.5$). Conventions as in Table~\ref{tab:pricing-markup}. Generated from",
          r"the same run manifests; no number is hand-typed."],
         r"\label{tab:pricing-profiles}",
@@ -301,7 +296,7 @@ def build_app_table():
          r"% ---------------------------------------------------------------------",
          r"% Do NOT edit by hand. Regenerate with:  make_pricing_door.py",
          r"% Panels: A = capacity door, all-sector counterfactual; B = markup door,",
-         r"% kappa = 0.25, rent distributed; each on all five labour rows.",
+         r"% kappa = 0.25, profit distributed; each on all five labour rows.",
          r"% ====================================================================="],
         fit=True)
 

@@ -5,7 +5,7 @@
 %      subsec:pricing-markup): the effective-technology and markup hooks,
 %      the first-order conditions at marginal cost, the uniqueness guard,
 %      the Cobb-Douglas price identity, and the external-account and GDP
-%      accounting with the rent booked.
+%      accounting with the profit booked.
 % Code: OpenCGE@src/closures/pricing/pricing.jl, OpenCGE@src/core/equilibrium.jl
 %      (_mobile_market_demand, _cost_minimizing_labor), OpenCGE@src/core/
 %      diagnostics.jl (gdp_components, retained_profit); the gate lives in
@@ -96,19 +96,22 @@ spreads are at most $6 \cdot 10^{-9}$ at condition numbers up to $10^{8}$
 distinct equilibrium would sit about $10^{-2}$ away. All 180 priced cells pass,
 on every labour closure.
 
-\subsection{Accounting with the rent booked}\label{app:pricing-accounting}
-The rent is $\Xi = \sum_i (1 - 1/\mu_i)\,p_i y_i$. With retention rate
-$s_\pi$ the household spends
-$E = (1-\tau)\,w\textstyle\sum_i L_i + F + (1-s_\pi)\Xi$, and the
+\subsection{Accounting with the profit booked}\label{app:pricing-accounting}
+The profit bill is $\Pi$ of equation~\eqref{eq:profit-bill}. With retention
+rate $s_\pi$ the household spends
+$E = (1-\tau)\,w\textstyle\sum_i L_i + F + (1-s_\pi)\Pi$, and the
 external-account identity of the kernel becomes
 \begin{equation}\label{eq:app-account}
-  sE + s_\pi \Xi + T^{\mathrm{int}} + M - (I + X) \;=\; F + B_{\mathrm{gov}},
+  sE + s_\pi \Pi + T^{\mathrm{int}} + M - (I + X) \;=\; F + B_{\mathrm{gov}},
 \end{equation}
-which every priced run satisfies to $10^{-11}$; dropping the $s_\pi\Xi$ term
-leaves it short by exactly the retained rent. On the income side GDP is factor
-income $w\sum_i L_i + \Xi$, so the companion identity between the GDP wedge and
+which every priced run satisfies to $10^{-11}$; dropping the $s_\pi\Pi$ term
+leaves it short by exactly the retained profit. On the income side GDP is factor
+income $w\sum_i L_i + \Pi$, so the companion identity between the GDP wedge and
 the account gap holds unchanged. Retention ($s_\pi = 1$) needs injections in
 the fixed-wage gauge: summing over sectors,
 $(\mu - 1)\,c\,y + (s + m - s m)\,w L = p\,(1-m)(g^G + \mathit{exo}) + pX$, so an
 economy without government demand, investment or exports has no positive
-retained-rent equilibrium. The application carries all three.
+retained-profit equilibrium. The application carries all three.
+%TODO (relabel): Pi collides with the consumption price index Pi(p) of Sections
+% 4-5 and Appendices A-B; the price index is to be relabelled before submission
+% (see the note in Section 6.2 at eq. profit-bill).

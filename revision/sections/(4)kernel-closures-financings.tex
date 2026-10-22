@@ -46,8 +46,9 @@ equates price and unit cost, $p_i = c_i(p,w_i;A_i)$. Input demands follow
 from Shephard's lemma, $L_i = y_i\,\partial c_i/\partial w_i$ and
 $x_{ui} = y_i\,\partial c_i/\partial p_u$. 
 We take $\Phi_i$ to be a nested CES (elasticity $\epsilon$ between labor and
-the intermediate composite, $\theta$ among intermediates). We choose this functional form because it sits comfortably between two paradigmatic conceptions of production -- the inflexible, recipe-based Leontief production and the more adaptive Cobb-Douglas production function where substitution is governed by marginal productivity. Formally, it can reproduce the respective outcomes as corner solutions (Leontief for ${\epsilon, \theta} \rightarrow 0$ and Cobb-Douglas for $\epsilon = \theta = 1$). In our application, we set $\epsilon = 0.5$ for the elasticity between labor and the intermediate composite and $\theta = 0.5$ for the elasticity among intermediates, so both nests are gross complements.
-%TODO: FRANZ schaut sich diese Notation nochmal an: (Leontief for ${\epsilon, \theta} \rightarrow 0$ and Cobb-Douglas for $\epsilon = \theta = 1$).
+the intermediate composite, $\theta$ among intermediates). We choose this functional form because it sits comfortably between two paradigmatic conceptions of production -- the inflexible, recipe-based Leontief production and the more adaptive Cobb-Douglas production function where substitution is governed by marginal productivity. Formally, the nested CES technology approaches Leontief as $(\epsilon,\theta)\to(0,0)$ from above, and Cobb--Douglas as $(\epsilon,\theta)\to(1,1)$.  In our application, we set $\epsilon = 0.5$ for the elasticity between labor and the intermediate composite and $\theta = 0.5$ for the elasticity among intermediates, so both nests are gross complements.
+% TODO: FRANZ schaut sich diese Notation nochmal an: (Leontief for ${\epsilon, \theta} \rightarrow 0$ and Cobb-Douglas for $\epsilon = \theta = 1$).
+% DOne 
 
 On the consumption side, a representative household maximizes utility given its consumption expenditure $E^h$:
 \begin{equation}
@@ -56,6 +57,8 @@ On the consumption side, a representative household maximizes utility given its 
 \label{eq:utility-max}
 \end{equation}
 We again represent $U$ by a CES function with elasticity $\sigma = 0.9$.
+The corresponding consumer price index (CPI), $\mathcal{P}(p) = (\sum_i \beta_i p_i^{1-\sigma})^{1/(1-\sigma)}$, measures the expenditure required to purchase one unit of the household's consumption composite. We use it to express wages and household expenditure in consumption units and choose it as the numeraire,$\mathcal{P}(p)=1$ in the flexible wage closures.  In the fixed-wage and Leontief closures, we instead express prices in wage units, normalizing the common wage to $w=1$.
+%TODO: This has to be adjusted once we use the real wage I thnk
 
 In line with standard reasoning, we calibrate the CES functions by equating the measured consumption ($\beta_u$) and income shares ($\alpha_i$, $\Omega_{ui}$) with the imposed weights so that the current allocation represents an optimum. In other words, with baseline prices normalized to one, the solutions to~\eqref{eq:cost-min} and~\eqref{eq:utility-max} then reproduce the measurements, which also sectoral gross outputs $\lambda_i$, the so-called Domar weights. This result holds regardless of the chosen production elasticities ($\epsilon$, $\theta$) and will move with $\sigma$ only once prices move away from the baseline. In equilibrium, output must meet intermediate and final demand in every sector: the row identity~\eqref{eq:io-row}, which holds in the table by construction, becomes a market-clearing condition that prices must restore after a shock.
 

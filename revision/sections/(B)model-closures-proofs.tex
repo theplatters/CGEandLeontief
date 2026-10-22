@@ -1,6 +1,23 @@
 % =====================================================================
 % Appendix B --- The model, its closures and the formal results
 % ---------------------------------------------------------------------
+% STRUCTURE (2026-10-22): notation folded into "Production and consumption";
+% the "Purpose and summary" subsection removed (its measured witnesses are
+% discharged by the propositions and by "Numerical evidence"); the second
+% block renamed "The closure systems"; all subsection labels standardised to
+% app:* (was: sec:reduction, sec:equiv, sec:sectoral, sec:gauge, sec:scope).
+% Later edits must keep the label family app:* inside appendices.
+% MERGED 2026-10-18 from three appendices that overlapped: the closure FOCs,
+% the model formulation, and the proofs. One equation label set only; the
+% proofs refer back to the formulation's labels, and proof-specific equations
+% (eq:int, eq:cons, eq:leontiefblocks, eq:affine, eq:bvec, eq:finstrument)
+% remain where first used. Equations run in one series.
+% REGISTER: no ADR numbers, run ids, generation tags, probe names, file or
+% registry paths remain; measured values are stated as values. Keep it that
+% way when editing.
+% =====================================================================
+% Appendix B --- The model, its closures and the formal results
+% ---------------------------------------------------------------------
 % MERGED 2026-10-18 from three appendices that overlapped:
 %   (B)closure-focs.tex  -> the Notation subsection; its duplicate condition
 %                           lists were dropped (the conditions are stated in
@@ -31,21 +48,21 @@
 
 \noindent
 This appendix collects the formal apparatus behind the closure matrix: the
-notation the matrix tables read their symbols off
-(Section~\ref{app:foc-notation}); the functional forms that solve the
-producer and household problems of Section~\ref{subsec:optimization}
+notation and the functional forms that solve the producer and household
+problems of Section~\ref{subsec:optimization}
 (Section~\ref{app:model-kernel}); the five labor-market closures and the
 three financing closures (Sections~\ref{app:labour-closures}
-and~\ref{app:financing-closures}); and the formal results --- the common
-kernel, the demand-only reduction, the equivalence propositions, the scope
+and~\ref{app:financing-closures}); and the formal results --- the closure
+systems, the demand-only reduction, the equivalence propositions, the scope
 conditions and the numerical evidence
-(Sections~\ref{app:eqkernel}--\ref{app:eqnumevidence}). The intermediate-bill
-and external-account accounting is in Appendix~\ref{app:kernel}.
+(Sections~\ref{app:closure-systems}--\ref{app:eqnumevidence}). The
+intermediate-bill and external-account accounting is in
+Appendix~\ref{app:kernel}.
 
 
-\subsection{Notation}\label{app:foc-notation}
+\subsection{Production and consumption}\label{app:model-kernel}
 
-$L_i$ is employment in sector $i$ and $L=\sum_i L_i$ total employment; a bar
+\paragraph{Notation.} $L_i$ is employment in sector $i$ and $L=\sum_i L_i$ total employment; a bar
 marks the baseline, so $\bar L_i$ is baseline sectoral and $\Lbar$ baseline
 total employment. $w$ is the common wage of the mobile closures, $w_i$ the
 sector-specific wage where labor markets are sectoral, and $\bar w$ the
@@ -75,7 +92,7 @@ external program financing $B_{\mathrm{gov}}$. The net external transfer $F$
 closes the external account; it is endogenous in the mobile regime and
 identically zero in the fixed-wage regime.
 
-\subsection{The kernel}\label{app:model-kernel}
+
 
 Subscript $0$ denotes the baseline. Each sector's technology is a nested CES
 with constant returns: labor and an intermediate composite substitute with
@@ -318,75 +335,15 @@ external position is $F+B_{\mathrm{gov}}$, not the program cost alone.
 F3 is an accounting open-economy closure, not a monetary mechanism: the
 static model cannot distinguish external borrowing from a transfer and
 does not model interest payments, repayment or exchange-rate adjustment.
-\subsection{Purpose and summary}
+\subsection{The closure systems}\label{app:closure-systems}
 
-This part of the appendix states and proves the exact conditions under which
-the closure rows of the evaluation matrix are or are not equivalent, and
-records the measured evidence for each coincidence.
-
-\begin{itemize}
-\item \textbf{The standard CGE closure $\equiv$ the single-wage elastic
-      supply closure (a benchmark, not the headline row).} The
-      \emph{single-wage} elastic-supply cell at $\eta_s = 0.5$ reports
-      every metric of the full-employment row identically: real GDP, the
-      welfare index, employment and the external account agree to all eight
-      printed decimals, with the identity wedge at $\sim 10^{-16}$ and a
-      direct comparison of the stored solutions at
-      $\max|\Delta y| = 6.2\times 10^{-17}$. A second, independently
-      implemented solution of the same cells reproduces them to
-      $6.7\times 10^{-16}$, so the coincidence is not an artefact of one
-      code path.
-\item \textbf{The elastic labor-supply closure (sectoral)
-      $\not\equiv$ the standard CGE closure.} The headline
-      elastic-supply row is the sectoral form of Section~\ref{sec:sectoral}
-      at
-      $\eta_s = 0.5$. With
-      $N$ sectoral wages the price block is not homogeneous, prices move
-      ($\max|p-1| = 0.1057$ in F2/F3), and the row is a distinct economy;
-      only its rigid corner $\eta_{s,i}=0$ coincides with another row (the
-      no-reallocation closure).
-\item \textbf{The fixed real wage closure $\equiv$ the Leontief closure.}
-      The Leontief-corner row
-      ($( \theta_\delta, \epsilon_\delta, \sigma_\delta ) = (10^{-4},
-      10^{-4}, 10^{-4})$) reports every metric of the fixed-wage row at the
-      baseline CES elasticities $(\theta,\epsilon,\sigma) = (0.5,0.5,0.9)$
-      identically, in all three financing columns; the flow-table wedges
-      agree at the residual level ($\sim 10^{-12}$). An independent
-      Leontief-multiplier computation reproduces the nonlinear corner
-      solution with relative error $0.0$.
-\end{itemize}
-
-Sections~\ref{app:eqkernel}--\ref{sec:reduction} set up the common kernel and
-derive the demand-only reduction. Section~\ref{sec:equiv} states and proves
-the two equivalences and classifies them.
-Section~\ref{sec:sectoral} records a third exact
-equivalence, of a different kind: the rigid corner of the sectoral-labor-market
-family is the $\eta = 0$ endpoint itself, and the family interpolates between the
-matrix's two rigidity rows. Section~\ref{sec:gauge} isolates
-what \emph{does} differ across the rows (the scalar closure regimes).
-Section~\ref{sec:scope} derives the scope conditions: which model changes
-break the equivalences --- the menu behind the demand-sensitive-price program
---- and which cannot.
-
-Throughout, ``demand-only shock'' means the matrix design: a program bundle
-$g = G_0\,\psi$ ($\sum_i \psi_i = 1$; $G_0 = 40\,300$
-EUR m) entering final demand under one of the three financing
-closures, with the supply shock at $A \equiv 1$ (unit productivity).
-
-\subsection{The common kernel}\label{app:eqkernel}
-
-Let $N$ be the number of sectors. Prices $p_i$, wage $w$, gross output
-$y_i$, employment $L_i$. Data-calibrated objects: factor shares $\alpha_i$
-(labor), domestic bill coefficients $a_u = A^{bill}_u/\lambda_u$ with
-input-share matrix $\Omega$ ($\Omega_{iu}$ = the share of input
-$u$ in sector $i$'s input bundle; rows sum to one), CPI weights $\beta_i$ ($\sum_i \beta_i = 1$),
-sector import margins $m_i$, saving rate $s$, exogenous government demand
-$g^G$, investment $inv$, exports $X$ (no margin), the program bundle $g$,
-and the labor bar $\Lbar = \sum_i \bar{L}_i = 1$ (baseline income units,
-GDP $=1$). Elasticities: intermediate substitution $\theta$,
-labor--intermediate substitution $\epsilon$, consumption substitution
-$\sigma$, allocation $\eta \in \{0,1\}$, supply elasticity
-$\eta_s \geq 0$ (elastic-supply closure only).
+We keep the notation above and record the data-calibrated objects the
+systems below use: domestic bill coefficients $a_u = A^{\mathrm{bill}}_u/\lambda_u$
+with the input-share matrix $\Omega$ ($\Omega_{iu}$ the share of input $u$ in
+sector $i$'s bundle, rows summing to one), sector import margins $m_i$, the
+saving rate $s$, baseline government demand $g^G$, non-program investment
+$inv$, exports $X$, and the labor bar $\Lbar = \sum_i \bar L_i = 1$ in
+baseline income units (GDP $=1$).
 
 \paragraph{Price block.} Prices and technique are those of the formulation
 above: the intermediate price index is \eqref{eq:model-ip}, the unit cost
@@ -445,7 +402,7 @@ $L^{cm}_i(p, y_i, w_i) = \bar{L}_i$ jointly with zero profit, with unknowns
 $[\,p;\; y;\; w(1{:}N);\; F\,]$ and the external transfer $F$ free. All rows
 in the matrix use $\eta = 1$ except the no-reallocation closure.
 
-\subsection{The demand-only reduction}\label{sec:reduction}
+\subsection{The demand-only reduction}\label{app:reduction}
 
 \begin{lemma}[Price block demand-invariance]\label{lem:price}
 The zero-profit system \eqref{eq:zp} is homogeneous of degree one in
@@ -493,7 +450,7 @@ a function of technology alone. At $A \equiv \one$ this equals $1 =
 w_0/\mathcal{P}_0$: the equilibrium real wage sits at its anchor for every demand
 vector, every financing closure and every shock magnitude. (Measured in the
 matrix: the GDP deflator reads $1.000000$ in the
-twelve $\eta = 1$ cells, and a demand
+nine $\eta = 1$ cells of the single-wage closures, and a demand
 shock of ten times the program size moves $\max|p-\one|$ by
 $2.7\times10^{-15}$.)
 \end{corollary}
@@ -573,7 +530,7 @@ solves the fixed-wage system at every elasticity triple in the fixed-wage
 gauge.
 \end{remark}
 
-\subsection{The two equivalences}\label{sec:equiv}
+\subsection{The two equivalences}\label{app:equiv}
 
 \begin{proposition}[The standard CGE closure $\equiv$ the single-wage
 elastic-supply closure]\label{prop:ab}
@@ -646,7 +603,7 @@ collected in
 Tables~\ref{tab:equiv-links} and~\ref{tab:equiv-matrix} (Appendix~\ref{app:equivalences}); the
 statuses follow from Lemma~\ref{lem:affine} (fixed real wage $\equiv$
 Leontief corner), Corollary~\ref{cor:realwage} (standard CGE $\equiv$
-single-wage supply), Section~\ref{sec:gauge} (F2 $\equiv$ F3 in the mobile
+single-wage supply), Section~\ref{app:gauge} (F2 $\equiv$ F3 in the mobile
 rows) and Proposition~\ref{prop:nest} (sectoral corner $\equiv$ no
 reallocation).
 
@@ -684,13 +641,13 @@ identification of $\eta_s$ therefore requires a supply-side scenario ---
 the premise of the supply arm.
 \end{remark}
 
-\subsection{The sectoral family and its rigid corner}\label{sec:sectoral}
+\subsection{The sectoral family and its rigid corner}\label{app:sectoral}
 
 The two equivalences above are coincidences \emph{within} the executed matrix.
 This section records a third, of a different kind: an equivalence between two
 \emph{closures}, one of which is the matrix's $\eta = 0$ endpoint and the other
 a corner of a family that extends beyond the matrix. It is exact rather than
-asymptotic, and it is what makes the labor door of Section~\ref{sec:scope}
+asymptotic, and it is what makes the labor door of Section~\ref{app:scope}
 concrete.
 
 \paragraph{The family.} Replace the single aggregate supply equation
@@ -789,8 +746,8 @@ Four readings.
 
 \emph{(a) Prices move, and with the demand composition.} Every sectoral cell
 carries a deflator different from one and a $\max|p-1|$ that differs between F1
-and F2/F3 --- the signature no single-wage closure produces (all twelve
-$\eta = 1$ cells of the matrix read exactly $0.000000$).
+and F2/F3 --- the signature no single-wage closure produces (all nine
+$\eta = 1$ cells of the single-wage closures read exactly $0.000000$).
 \emph{(b) The elasticity splits the adjustment.} As $\eta_s$ rises from $0.25$
 to $2$, the price response falls monotonically ($0.1529 \to 0.0372$ at F2)
 while employment rises ($1.000864 \to 1.001914$): the family trades price
@@ -846,8 +803,7 @@ Table~\ref{tab:matrix}.
 \emph{The proof never uses $A = 1$.} Nothing in the four row blocks of the
 proposition's proof refers to the technology shock, so the nesting is not a
 demand-only property. Verified directly: under a $+20\%$ productivity shock in
-sector 1 the canary again reads $0.00 \times 10^0$ in all four blocks
-in the same check. The same experiment shows why $\eta_{s,i}$
+sector 1 the four row blocks again agree to machine precision. The same experiment shows why $\eta_{s,i}$
 matters outside the demand-only slice: the rungs separate under the shock
 (employment $1.000000$, $1.002187$, $1.008218$ and the real-wage spread
 $1.215$, $1.105$, $1.043$ at $\eta_s = 0, 0.5, 2$), so the sectoral elasticity
@@ -855,7 +811,7 @@ is identifiable only with a supply-side scenario, while under a demand-only
 program it is a sensitivity parameter.
 
 
-\subsection{What actually differs across the rows}\label{sec:gauge}
+\subsection{What actually differs across the rows}\label{app:gauge}
 
 Lemma~\ref{lem:affine} shows that the demand-only matrix is a partition of
 \emph{scalar closure regimes} over one and the same linear system.
@@ -908,20 +864,11 @@ slightly downward ($-0.10\%$ employment). The
 $\eta = 0$ row is no longer degenerate: at the sectoral-wage endpoint the
 welfare index reads $+0.096\%$ (F1) and $-1.980\%$ (F2/F3), the deflator
 moves ($1.0063$ / $1.0072$), and the external account closes in every
-column. Two caveats now describe the
-\emph{superseded} v5 pin generation: there the recorded
-no-reallocation / standard-CGE
-differences were carried by the pin, not by the frozen allocation
-(replacing the pin by the labor equation reproduced the standard CGE cells
-to
-$2.8\times10^{-17}$), and the $\eta = 0$ external position was not
-identified (every pin value $F = c$ an exact root that moved the booked
-position one-for-one). The sectoral-wage closure resolves both: the account
-closes to
-$\le 1.04\times10^{-11}$ at the no-reallocation closure, $F$ is a solved
-equilibrium object,
-financing neutrality extends to $\eta = 0$ ($F_{F3} = F_{F2} - B_{gov}$ to
-$3.5\times10^{-14}$), and no entry of that row need be withheld.
+column. The row is fully identified at the sectoral-wage endpoint: the
+account closes to $\le 1.04\times10^{-11}$, the transfer $F$ is a solved
+equilibrium object rather than a pin, financing neutrality extends to
+$\eta = 0$ ($F_{F3} = F_{F2} - B_{gov}$ to $3.5\times10^{-14}$), and no entry
+of that row need be withheld.
 
 \paragraph{Admissibility.} All fifteen cells execute. In particular the F1
 column is
@@ -931,7 +878,7 @@ marginal leakage that keeps $\max \mathrm{colsum}(G) < 1$ (the admissibility cri
 and $0.8320$ under the F1 tilt); the endogenous tax rate $\tau = \sum g^G/\alpha^{\!\top}y$ is a
 fixed-revenue level ($T = p\!\cdot\!g^G$) and enters $b$, not $G$.
 
-\subsection{Scope conditions: what breaks the equivalences}\label{sec:scope}
+\subsection{Scope conditions: what breaks the equivalences}\label{app:scope}
 
 Both propositions rest on Lemma~\ref{lem:price}: the price block contains
 no demand variable. Any model change that lets demand into that block
@@ -998,7 +945,7 @@ the way the solutions were generated. The sectoral cells are reported
 separately in Table~\ref{tab:sectoral}.
 
 Table~\ref{tab:matrix} extracts the rows of the executed matrix (the
-fifteen cells reproduce their manifests to all printed decimals; the columns
+fifteen cells reproduce the recorded solutions to all printed decimals; the columns
 are income-side real GDP, the household-consumption welfare index and
 employment). The elastic-supply rows are the sectoral cells at
 $\eta_s = 0.5$; they are a distinct economy. The single-wage elastic-supply cells, which coincide with
@@ -1060,7 +1007,7 @@ statements rather than negative findings: those parameters are unidentified
 on this slice, which is what makes the closure choice, not the calibration,
 the source of the variation the matrix exhibits. The sectoral family is the
 implemented answer to the variety question
-(Section~\ref{sec:sectoral}), with two caveats that travel with it: under
+(Section~\ref{app:sectoral}), with two caveats that travel with it: under
 demand-only shocks the sectoral supply elasticities are sensitivity
 parameters rather than estimates, so the level of the price response is
 identified only through the supply arm (Remark~\ref{rem:supply}); and the

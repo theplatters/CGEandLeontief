@@ -106,32 +106,9 @@ ultimate objective of this distinction needs clarification.}
 \response The revised manuscript does not use the Type I/Type II vocabulary as a framing
 device -- the paper's first question is now stated as the choice of the short
 run -- but the distinction does map onto the model, and it is worth saying
-where. On the standard definition our kernel is a Type II model throughout:
-household consumption is proportional to the wage bill in every cell, and the
-matrix that generates our multipliers carries that household round.
-Appendix~A's equivalence is derived on exactly that closed system. This is
-also why the distinction cannot be one of the margins our matrix varies: a
-label that holds in every cell cannot separate them. What the matrix varies
-are the two questions the distinction bundles with it: whether employment and
-output can expand at all, which with labor as the only primary factor is the
-labor-market closure, and how the additional expenditure is financed, which
-decides how much of it displaces other demand (Section~3, Tables~2 and~3c).
-One consequence of the labor pin belongs here: where the mobile rows hold
-employment at the endowment, the wage bill cannot move, so the consumption
-round is closed but cannot amplify the shock -- which is why that column is
-exactly neutral under a demand-only shock. The classic Leontief-inverse
-multiplier is therefore reproduced by the pinned-wage row rather than by the
-model as a whole (Section~3, Appendix~A).
-\loc{Sec.~3 (the two questions; Tables~2 and~3c); Sec.~5. The old ``Keynesian approach: the
-Leontief inverse'' framing of Section~2.1 has been removed.}
-% AG (Oct 2026): approved + sharpened -- the model is Type II in every cell, so the label
-% separates nothing; the AG draft note it replaces asked whether the induced loop is active in
-% the Leontief row, and App. B answers it (the household round sits in the matrix G of the
-% equivalence, i.e. it is active in every row, including the pinned-wage one). The claim checked against the text: Sec. 3 already says the
-% fixed-real-wage closure reproduces the Leontief-inverse multiplier exactly, at every value of the
-% substitution elasticities (App. A carries the proof). NOT verified: whether the induced household
-% loop is active in the DELTA row despite that exact reproduction -- if you want, I can settle it
-% from the runs/*/manifest.toml of the Leontief cells before this sentence goes to the referee.
+how. On the standard definition our kernel is a Type II model throughout, which is now also made explicit in section 2. In short, household consumption is proportional to the wage bill in every cell, and the matrix that generates our multipliers carries that household round. Appendices~A and~B state and derive the equivalence on exactly that closed system. On categorization we would add that while a Type II model is sometimes conceived as ``more Keynesian'' due to higher multipliers (for fixed wage closures), the Type I closure would assume that all additional income resulting from additional spending leaks, which is a key reason why it had fallen somewhat out of fashion.
+\loc{Sec.~2; Apps.~A and B.}
+
 
 \subsection*{R1.5 --- Labor-market slack and the wage-setting rule}
 \refcom{The discussion regarding labour market slack requires additional
@@ -158,17 +135,49 @@ or nominal wages should be implemented. Also a simple wage curve.
 Unless I have misunderstood the authors' approach, is it simply a matter of
 increasing labour supply by the number of unemployed persons, similar to the
 previous scenario but with different figures?}
-\response TODO: GAMMA/BETA with explicit wage rules; the no-go corollary on
-nominal wage rules.
+\response{In the course of reorganizing our manuscript we decided to drop the two
+designs addressed by the reviewer, as they are somewhat ad hoc constructions
+that admittedly did not represent the state of the art in input-output
+modeling well. What the replacement does is specify a wage rule rather than
+avoid one. The fixed-real-wage closure pegs the real wage -- a two-sided peg,
+with employment endogenous and uncapped -- so that labor-market outcomes are
+set by a wage rule instead of by market clearing at full employment, which is
+also where an estimated wage curve of the Blanchflower--Oswald type lands (the
+reading we give FIDELIO in Section~3). The elastic labor-supply closure then
+replaces the fixed endowment with sectoral supply curves in the real wage,
+with the supply elasticity as an explicit parameter. A nominal wage rule, by
+contrast, cannot do the work the comment expects of it in this framework: it
+re-labels the nominal scale while the real wage stays pinned by technology
+(see Appendix~B and the no-go corollary for nominal wage rules). Which side is pegged
+-- and which is left free to adjust -- is thus itself part of the matrix
+rather than a background assumption.}
+% AG (Oct 2026): the first sentence is his, grammar-corrected; the rest is a draft for approval. The two designs
+% dropped are the demand-driven scenario (submitted Sec. 5.1) and the empirical-calibration variant (Sec. 5.2) --
+% both exogenous injections, neither of them a closure. The wage-rule request is this cell's real subject, and the
+% revision answers it three times over: fixed real wage, elastic supply, and the no-go result for nominal rules.
 \loc{Sec. 4 (closures); Sec. 6.}
 
 \subsection*{R1.6 --- Labor mobility and the unified wage rule}
 \refcom{Another question pertains to labour mobility. Under imperfect labour market
 conditions, does the model assume a unified wage rule to enable labour
 mobility across sectors?}
-\response TODO: BF/ALPHA; the sectoral family (ADR-0022).
-\loc{Sec. 4; Sec. 6.}
-
+\response{In the original version, labor supply was specified as a sector-specific quantity with a cap in every sector ($l_i \leq l_i^{\max}$), and the wage was sector-specific as well -- in the standard scenario and in both slack variants; a unified wage rule never appeared. That specification is exactly what the revised matrix now reports as its no-reallocation row. The case the comment asks about -- labor moving
+across sectors at one flexible wage with total employment fixed -- is new in
+the revision, where it is the standard CGE closure and the reference against
+which the other rows are read. The two are the poles of a single axis: the
+reallocation parameter runs from the immobile case to full reallocation, and
+full reallocation coincides with the conventional CGE closure, so that the
+treatment of labor mobility is now an explicit choice rather than an inherited
+default. Section~3 states the family; Appendix~B derives each closure and
+their overlaps.}
+\loc{Sec.~3 (the five labor-market closures); Sec.~4 (the household and labor-market blocks); Appendix~B.}
+% AG (Oct 2026): his draft claimed a unified wage rule was 'the case for the full reallocation version' in the
+% original submission. Checked against paper/submission-metro/submission.tex (and submission-anon.tex): labor
+% enters as $l_k \leq l_k^{\text{max}}$ in the profit-max and cost-min problems, the wage is indexed by sector
+% in the objective, the wage function maps to a vector of sectoral wages, and the household budget is
+% $\sum_u w_u l_u$; 'reallocation' occurs only in generic prose. R2's report reads the same submission the same
+% way. His original sentence is kept verbatim below.
+% JK ORIGINAL: \response{In our original submission this was the case for the full reallocation version that is now shown to coincide with the conventional CGE. In the no-reallocation closure instead, that was also present in the original manuscript, labor supply and, hence, also wages are sector-specific, which is now hopefully more clearly explained in our new manuscript.}
 \subsection*{R1.7 --- Aggregate vs.\ sectoral results}
 \refcom{I would also try to differentiate and stress particularly more the
 differences between the results of the aggregate economic variables and the
@@ -190,8 +199,16 @@ In this paper you will see that if you allow for involuntary unemployment
 and full economic adjustment you will get into a new steady state with
 IO-Type of results. That is with zero changes in prices in the long-run.
 Naturally in the long-run multiplier will be much larger than an IO case.}
-\response TODO: engage; the DELTA corner and the long-run bridge.
-\loc{Sec. 2 (literature); Sec. 6.}
+\response We are grateful for the reference, and we now engage it. The outcome the
+report describes --- a steady state in which the price level has stopped
+moving and quantities carry the entire adjustment, so that the long-run
+multiplier exceeds the input--output one --- is the
+fixed-real-wage corner of our matrix and its Leontief fixed-coefficient
+variant. However, what our static design cannot reproduce is the process that delivers that outcome: \citet{McGregor.1996} reach it through investment, capacity growth and full adjustment over time, whereas we compare closures at a single horizon.
+Sections~3~and~7 therefore cite their paper as the vantage point for a dynamic
+reinterpretation of our results rather than as a mechanism our static design
+contains, and we say so explicitly.
+\loc{Sec.~3; Sec.~7.}
 
 \subsection*{R1.9 --- Minor comments}
 \refcom{Minor comments:
@@ -204,8 +221,14 @@ and requires revision.
 incomplete and needs additional clarification.
 
 • Figure 3: Is the horizontal axis representing sectors?}
-\response TODO: copy-edits.
-\loc{Sec. 2; Sec. 4; Figure (sectors on the axis).}
+\response{Thanks for these hints. The sentence quoted no longer appears, and the passage the referee
+found incomplete has been replaced by the verbal description of the model in
+Section~4.}
+\loc{Sec.~2 (the sentence quoted); Sec.~4 (the verbal model description).}
+% AG (Oct 2026): the Figure 3 question is deliberately LEFT OPEN here -- the sectoral figures are still
+% being reworked, so the letter must not promise a numbered sector axis yet. Once they are final, add to
+% the response: ``On the figure: the horizontal axis is a sector index, with the seven program sectors
+% numbered on it (Section~5).'' Check the final figures before adding it, and extend \loc to Sec.~5.
 
 \subsection*{R1.10 --- The exogenous shock and the near-zero aggregate effect}
 \refcom{Another aspect I observed concerns the exogenous shock. This configuration
@@ -213,11 +236,13 @@ is a conventional short-run economy. As the primary factor cannot adjust,
 the impact manifests only through prices. Consequently, as illustrated in
 the chart, the CGE model's effect on GDP is virtually zero, assuming the
 results are reported as percentage changes from base values.}
-\response TODO: the aggregate neutrality of the standard CGE column under a demand-only shock is a
-property of the one-factor constant-returns setup (Sec. 3), and the near-zero GDP response the
-referee reads off the chart is that property -- the impulse is absorbed by prices only where the
-labor market is sectoral.
-\loc{Sec.~3 (the two questions); Sec.~5 (Table~4, the aggregate responses).}
+\response{We now document more clearly that the exogenous impulse is absorbed by prices
+only where the labor market is sectoral, or where additional dynamics move
+prices (Sections~5 and~6). Demonstrating the aggregate neutrality of the
+standard CGE model under a demand-only shock serves the paper's purpose of
+showing what different closure choices imply, and it is a useful addition to
+the portfolio of scenarios studied.}
+\loc{Sec.~3-5; App. A and B.}
 % AG (Oct 2026): cell promoted out of R1.7 -- the comment had no entry in the Stage-3 point map.
 
 \subsection*{R1.11 --- Price changes, crowding-in/out and the open economy}
@@ -228,9 +253,17 @@ in this model and can generate both crowding-in and crowding-out effects. My
 understanding is that the model is also configured as a closed economy;
 otherwise, in an open economy, falling prices could stimulate exports,
 partially offsetting declines in output.}
-\response TODO: the sentence quoted here belonged to the removed ``demand-side view'' passage; the
-revision keeps the crowding-in/crowding-out intuition but states it through the loss and gain
-columns of Table~4, and the open-economy caveat is now built in (exports in final demand, imports
-and indirect taxes as explicit leaks, F3 as the external-financing column).
-\loc{Sec.~5 (Table~4 and the sectoral panels); Sec.~4 (the removed passage).}
+\response{Thanks for these hints; the sentence quoted belonged to a passage that no
+longer appears in the revision. The crowding-in/crowding-out intuition it
+carries does survive, but it is now stated through the loss and gain columns
+of Table~4 rather than as a property of prices. On the open-economy
+point, the revision is explicit, though not in the direction the comment
+suggests: exports enter final demand as an exogenous component, so relative
+price movements do not feed back into export volumes in the reported design --
+an endogenous export demand is a lever the appendix names but one that is not implemented in the approaches discussed in the paper. What the open economy does carry is the import side: imported intermediates and imported final goods enter as explicit leaks, which routes part of the program's demand abroad and makes the terms of trade
+respond, and one of the three financing columns is an external-debt variant,
+in which the program adds external income instead of displacing domestic
+demand.}
+\loc{Sec.~4 (the removed passage; imports and taxes as leaks); Sec.~5 (Table~4 and the sectoral panels);
+Appendix~B (the quantity-side levers, including endogenous export demand).}
 % AG (Oct 2026): cell promoted out of R1.7. The two TODO responses above are drafts for approval.

@@ -37,29 +37,22 @@ Notably, we observe that the different financial closures have close to no impac
 % Provenance: ADR-0029 (Stage A), ADR-0030 (Stage B), ADR-0032; runs
 % pricing_markup-v2-* and pricing_profit-v2-* (all five labour rows,
 % OpenCGE v0.2.1; supersede the v1 markup runs); Table~\ref{tab:pricing-markup}.
-While Kaldor-Verdoorn dyamics capture the idea that firms become successively more efficient when supplying greater quantities, such an increase in firm size can also lead to a corresponding increase in market power. Similarly, effective markups are said to rise with utilisation, which  points to the relevance of distributional considerations in input-output models with multiple production factors. All this eventually resonates with the observation that pricing power that moves with demand has a long pedigree in economics \citep{Kalecki1954,Bils1987}. Taking the latter formualtion -- markups rising with capacity utilization -- and projecting it unto a sectoral level in line the basic setup from section \ref{sec:kernel}, we arrive the the following formulation for prices 
+While Kaldor-Verdoorn dynamics capture the idea that firms become successively more efficient when supplying greater quantities, such an increase in firm size can also lead to a corresponding increase in market power. Similarly, effective markups are said to rise with utilisation, which points to the relevance of distributional considerations associated with final demand shocks in input-output models featuring multiple production factors. These considerations resonate with the observation that pricing power that moves with demand has a long pedigree in economics \citep{Kalecki1954,Bils1987}. Taking the latter formulation -- markups rising with capacity utilization -- as a vantage point and projecting it unto a sectoral level in line the basic setup from section \ref{sec:kernel}, we arrive the the following formulation for prices 
 
 \begin{equation}\label{eq:markup-door}
   p_i \;=\; \mu_i\,c_i, \qquad \mu_i \;=\; 1 + \kappa\Bigl(\frac{y_i}{\lambda_i} - 1\Bigr),
 \end{equation}
-which is nested at $\kappa = 0$. Introducing such a pricing equation gives profits an explicit role which is why this section departs from the hitherto used benchmark case of a one factor model, but introduces capital as a second factor of production. This feature ???
+which is nested at $\kappa = 0$. Introducing such a pricing equation gives profits an explicit role which is why this section departs from the hitherto used benchmark case of a one factor model, but introduces capital as a second factor of production. Here, this feature is introduced in a minimal way: firms still hire labour and inputs at \emph{marginal cost} $c_i = p_i/\mu_i$, while households and other firms buy at $p_i$; the
+four places where the price enters a first-order condition are re-derived
+accordingly in Appendix~\ref{app:pricing-door}. However, an additional assumption is required for profits as a novel stream of income which must eventually go somewhere.
 
 %NOTE: wir haben hier wieder mal ein lamlbda eingeführt?
 % Ist das OG lambda
 
+%NOTE: das hier sollte man verstehen.
+%Second, the rent $\Xi = \sum_i (1 - 1/\mu_i)\,p_i y_i$ must go somewhere.
 
-This section uses it only as a pricing
-closure, not as a theory of distribution. Two modelling choices make
-it a closure. First, firms still hire labour and inputs at \emph{marginal
-cost} $c_i = p_i/\mu_i$, while households and other firms buy at $p_i$; the
-four places where the price enters a first-order condition are re-derived
-accordingly in Appendix~\ref{app:pricing-door}. Second, the rent
-$\Xi = \sum_i (1 - 1/\mu_i)\,p_i y_i$ must go somewhere.
-
-Table~\ref{tab:routing} lists the four places it can go. Foreign owners would
-book it in the external account; a government wedge would make the state a
-third financing instrument beside F2 and F3. We take \emph{retention} as the
-baseline (the retained rows of Table~\ref{tab:pricing-markup}): the rent is booked as
+Table~\ref{tab:routing} maps the four key assumption we can make on what happens with profits: two of these options -- foreign owners could book it in the external account; a government wedge would make the state a third financing instrument beside F2 and F3 -- are ignored in what follows. Instead, we take \emph{retention} as the baseline (the retained rows of Table~\ref{tab:pricing-markup}), where the rent is booked as
 saving by firms, the household budget is unchanged and all real effects run
 through relative prices. Retention is the cheapest closure that keeps the
 external-account identity exact; its cost, stated rather than implied, is that
@@ -67,6 +60,7 @@ retained funds are hoarded, since investment is exogenous. We develop the
 domestic-profit alternative (the distributed rows): the household receives
 $(1 - s_\pi)\Xi$ untaxed and saves the rest at the retention rate $s_\pi$,
 with $s_\pi = 1$ reproducing retention exactly.
+%TODO: I would tend to shelve the table: mention alternative routes not followed in a footnote and focus everyhing on $(1 - s_\pi)\Xi$, which basically gives all scenarios. Would be simpler, clearer shorter?
 
 \begin{table}[htbp]
 \centering

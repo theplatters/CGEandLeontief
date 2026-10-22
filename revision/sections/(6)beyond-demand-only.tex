@@ -14,7 +14,7 @@ effective technology respond to utilisation,
   A^{\mathrm{eff}}_i \;=\; A_i\,\Bigl(\frac{y_i}{\lambda_i}\Bigr)^{-\delta_i\,\alpha_i},
 \end{equation}
 with $\lambda_i$ as the sector's baseline gross output and $\alpha_i$ the factor (value-added) share, so that $\delta = 0$ reproduces the model of the preceding sections exactly.
-The elasticity $\delta_i$ is a reduced-form utilisation elasticity of \emph{value-added} productivity, not a rental rate: no factor is added and no income block is created, because the productivity change passes into unit cost under zero profit, weighted by the factor share. A Hicks-neutral gain $d\ln A^{\mathrm{eff}}_i$ then raises value added per worker by $d\ln A^{\mathrm{eff}}_i/\alpha_i$ (Appendix~\ref{app:pricing-hooks}), so $-\delta_i$ is directly comparable with an estimated Verdoorn coefficient.\footnote{Applied to gross output without the factor share, the same bracket would overstate the value-added response by $1/\alpha_i$: factor shares below one half turn $\delta = 0.5$ into an elasticity above one, and into $11.6$ for coke and refined petroleum ($v \approx 0.04$).}
+The elasticity $\delta_i$ is a reduced-form utilisation elasticity of \emph{value-added} productivity: no factor is added and no income block is created, because the productivity change passes into unit cost under zero profit, weighted by the factor share. A Hicks-neutral gain $d\ln A^{\mathrm{eff}}_i$ then raises value added per worker by $d\ln A^{\mathrm{eff}}_i/\alpha_i$ (Appendix~\ref{app:pricing-hooks}), so $-\delta_i$ is directly comparable with an estimated Verdoorn coefficient.\footnote{Applied to gross output without the factor share, the same bracket would overstate the value-added response by $1/\alpha_i$: factor shares below one half turn $\delta = 0.5$ into an elasticity above one, and into $11.6$ for coke and refined petroleum ($v \approx 0.04$).}
 
 The two signs of $\delta$ again carry two traditions, underpinned by two distinct visions of the typical operating mode of an economy. With $\delta > 0$ scarcity gains an additional bite: unit costs rise with own output --- capacity pressure, tight supply chains, higher risk and, hence, eventually higher costs and prices (even if, as here, market power considerations are bracketed out). With $\delta < 0$, on the other hand, unit cost falls with output --- the dynamic increasing returns articulated early by \textcite{Verdoorn1949} (see also \citealp{Kaldor1966} and \citealp{SylosLabini1995}).\footnote{With $\delta_i < 0$ a sector's unit cost falls as its output rises --- a positive feedback that can admit several equilibria. Every run with $\delta \neq 0$ is therefore reachedby continuation in $\delta$ from the $\delta = 0$ case and re-solved from four starting points; a result is accepted only if the converged starts agree to $10^{-6}$ and the residual Jacobian has full rank. Every result with $\delta \neq 0$ in the executed generation passes this check(Appendix~\ref{app:pricing-guard} reports the design and the measured spreads).}
 
@@ -42,9 +42,10 @@ While Kaldor-Verdoorn dynamics capture the idea that firms become successively m
 \begin{equation}\label{eq:markup-door}
   p_i \;=\; \mu_i\,c_i, \qquad \mu_i \;=\; 1 + \kappa\Bigl(\frac{y_i}{\lambda_i} - 1\Bigr),
 \end{equation}
-which is nested at $\kappa = 0$. Introducing such a pricing equation gives profits an explicit role which is why this section departs from the hitherto used benchmark case of a one factor model, but introduces capital as a second factor of production. Here, this feature is introduced in a minimal way: firms still hire labour and inputs at \emph{marginal cost} $c_i = p_i/\mu_i$, while households and other firms buy at $p_i$; the
+which is nested at $\kappa = 0$. Introducing such a pricing equation gives profits an explicit role which is why this section departs from the hitherto used benchmark case of zero profits, but introduces profits as a second income foundation, without explicitly modeling capital as a second factor of production. Hence, this feature is introduced in a minimal way: firms still hire labour and inputs at \emph{marginal cost} $c_i = p_i/\mu_i$, while households and other firms buy at $p_i$; the
 four places where the price enters a first-order condition are re-derived
-accordingly in Appendix~\ref{app:pricing-door}. However, an additional assumption is required for profits as a novel stream of income which must eventually go somewhere.
+accordingly in Appendix~\ref{app:pricing-door}. The only  difference is now that profits enter as a pure surplus (akin to the classic definition of a rent), which eventuelly go somewhere, which is why an additional assumption is required for profits as a novel stream of income. This setup also implies that the core framework from section \ref{sec:kernel}remains unchanged when $\kappa = 0$.
+%NOTE: sagen mein letzter satz und der erste satz im absatz dasselbe?
 
 %NOTE: wir haben hier wieder mal ein lamlbda eingeführt?
 % Ist das OG lambda
@@ -52,45 +53,21 @@ accordingly in Appendix~\ref{app:pricing-door}. However, an additional assumptio
 %NOTE: das hier sollte man verstehen.
 %Second, the rent $\Xi = \sum_i (1 - 1/\mu_i)\,p_i y_i$ must go somewhere.
 
-Table~\ref{tab:routing} maps the four key assumption we can make on what happens with profits: two of these options -- foreign owners could book it in the external account; a government wedge would make the state a third financing instrument beside F2 and F3 -- are ignored in what follows. Instead, we take \emph{retention} as the baseline (the retained rows of Table~\ref{tab:pricing-markup}), where the rent is booked as
-saving by firms, the household budget is unchanged and all real effects run
-through relative prices. Retention is the cheapest closure that keeps the
-external-account identity exact; its cost, stated rather than implied, is that
-retained funds are hoarded, since investment is exogenous. We develop the
-domestic-profit alternative (the distributed rows): the household receives
-$(1 - s_\pi)\Xi$ untaxed and saves the rest at the retention rate $s_\pi$,
-with $s_\pi = 1$ reproducing retention exactly.
-%TODO: I would tend to shelve the table: mention alternative routes not followed in a footnote and focus everyhing on $(1 - s_\pi)\Xi$, which basically gives all scenarios. Would be simpler, clearer shorter?
-
-\begin{table}[htbp]
-\centering
-\footnotesize
-\begin{tabular}{@{}lll@{}}
-\toprule
-Rent routing & Where $\Xi$ is booked & Status here \\
-\midrule
-Foreign owners & external account & not used \\
-Retained by firms & saving beside $sE$ (a leak) & taken (retained rows) \\
-Government wedge & public budget & not used \\
-Domestic profit income & household budget, $(1-s_\pi)\Xi$ & developed (distributed rows) \\
-\bottomrule
-\end{tabular}
-\caption{Where the markup rent can go: the assumption-disclosure table for
-the distribution door (ADR-0029, ADR-0030).}
-\label{tab:routing}
-\end{table}
+Regarding the question how profit income is used we rely on a simple formulation that captures the share of profit income retained with $s_\pi$, which allows for representing different scenarios. Taking $s_\pi = 1$, for instance, would allow to represent cases where profits are fully retained by firms or foreign asset holders and do not feed back into the economy. In addition to such a scenario of ``full retention'', which is shown for $\kappa=0.25$ and $\kappa=0.5$, we also derive two additional scenarios where profit are treated as normal income. For these scenarios we show two different runs that set the savings rate on profits $s_\pi$ to either match the overall savings rate $s \approx 0.12$.
 
 \input{tables/table7_pricing-markup.tex}
+
+Both doors move sectoral prices by the same order of magnitude.
 
 Run against the capacity door, the markup door turns a robustness check into a
 result. At the fixed real wage, with the capacity door confined to the goods sectors,
 every door raises the price level in every financing column except
 Kaldor--Verdoorn, which lowers it in all three (the fixed-wage panels of
 Tables~\ref{tab:pricing-kaldor} and~\ref{tab:pricing-markup}).
-Both doors move sectoral prices by the same order of magnitude. At
+ At
 $\kappa = 0.5$ the markup's largest sectoral deviation (9 to 12 percent) is
 two to two and a half times the capacity door's. The doors part company in the quantity block,
-where the rent shows up as a leak (retention) or as additional household
+where profits show up as a leak (retention) or as additional household
 demand (distribution). Whether a demand-led transformation raises or lowers
 prices therefore depends on which pricing door is modelled, on which sectors
 it acts and on how the programme is financed. Under external finance the
@@ -101,23 +78,21 @@ pressure (0.34 percent) and the retained markup (1.01 percent) lie in between;
 the all-sector profile widens the fall to 0.82 percent
 (Appendix~\ref{app:variants}). The profit share stays small --- below two
 percent of factor income in every cell --- and rises with the financing
-closure's demand impulse. Distributing the rent raises consumption and
+closure's demand impulse. Distributing profits raises consumption and
 employment relative to retention in every financing column of the fixed-wage
 and Leontief panels, most under external finance. In the three CPI-gauge
 panels of Table~\ref{tab:pricing-markup} it changes nothing: the distributed
 rows repeat the retained rows exactly, because the net external transfer $F$
-falls by precisely the
-distributed rent (\texttt{pricing\_markup-v2-ALPHA-F2-k05} against
+falls by precisely the distributed profits (\texttt{pricing\_markup-v2-ALPHA-F2-k05} against
 \texttt{pricing\_profit-v2-ALPHA-F2-k05-\{spi05,spis\}}), the same mechanism
 that makes tax and external finance indistinguishable there, so the routing of
-the rent matters only where the real wage is pegged. The welfare measure
+profits matters only where the real wage is pegged. The welfare measure
 changes meaning accordingly: with distributed
 profit, $\Delta W$ is the consumption of a household that also owns the
 firms, and each manifest carries a real-income companion (labour plus
 distributed profit, deflated by the CPI) beside it. Two caveats bound the
 reading: the markup is symmetric about the baseline, so a contracting sector
-prices at a discount ($\mu_i < 1$; the run records the range), and leaving the
-rent untaxed understates the fiscal response under tax finance.
+prices at a discount ($\mu_i < 1$; the run records the range), and leaving profits untaxed understates the fiscal response under tax finance.
 
 \subsection{The no-go corollary and the no-reallocation pole}\label{subsec:no-go}
 % TODO: nominal wage rules are vacuous in both gauges --- the rigidity that

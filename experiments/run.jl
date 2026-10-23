@@ -397,7 +397,7 @@ unbooked `p·(A+G)`, so this gate applies to zero-manna designs only.
 """
 function assert_external_account(model::Model, sol::Solution;
         clearing_tol::Real = 1e-6, gap_tol::Real = 1e-9)
-    fixed = labor_closure(model.options) isa FixedWageClosure
+    fixed = labor_closure(model.options) isa Union{FixedWageClosure,NominalWageClosure}
     p, q = sol.prices_raw, sol.quantities
     # eta = 0 carries the sectoral wage vector (ADR-0020 option C); an ADR-0022
     # sectoral cell (eta_s_vec) carries one too; every other eta = 1 regime
@@ -735,7 +735,7 @@ function evaluate_gates(cell::Dict{String,Any}, design_d::Dict{String,Any},
     wage_tol = Float64(gates["wage_tol"])
     data = model.data
     fin = model.financing
-    fixed = labor_closure(model.options) isa FixedWageClosure
+    fixed = labor_closure(model.options) isa Union{FixedWageClosure,NominalWageClosure}
 
     p, q = sol.prices_raw, sol.quantities
     # eta = 0 carries the sectoral wage vector (ADR-0020 option C); an ADR-0022

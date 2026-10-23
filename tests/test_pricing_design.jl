@@ -124,7 +124,7 @@ end
     @test design_sha256("pricing_capacity_v1"; root = tmp) != h0
 end
 
-"""Real-table GAMMA cell with a pricing door, or `nothing` without the data."""
+"""Historical nominal-wage pricing cell, or `nothing` without the real data."""
 function pricing_real_cell(fin_id::AbstractString, pricing::AbstractPricing)
     data = ext_test_data()
     data === nothing && return nothing
@@ -134,7 +134,7 @@ function pricing_real_cell(fin_id::AbstractString, pricing::AbstractPricing)
     fin = cell_financing(fin_id, ψ, g, "tilt_g0_over_c0", data)
     N = length(data.factor_share)
     mk(pr) = mobile_labor_model(data, Shocks(ones(N), ones(N), zeros(N)), 0.5, 0.5, 0.9, 1.0;
-        closure = :fixed, financing = fin, pricing = pr)
+        closure = NominalWageClosure(), financing = fin, pricing = pr)
     base = solve(mk(NoPricing()))
     x = OpenCGE._solution_vector(mk(NoPricing()), base)
     sol = base
@@ -228,12 +228,12 @@ end
         fin = cell_financing("F3", ψ, g, "tilt_g0_over_c0", data)
         md = delta_model(data, Shocks(ones(N), ones(N), zeros(N)); ε = 1e-4, financing = fin)
         @test solve(m0).quantities == solve(md).quantities
-        # The door reaches DELTA's cost line and moves prices.
+        # The door reaches DELTA's cost line, and under the fixed-real-wage
+        # restriction (w/CPI = 1, F = 0) raises FixedRealWageFeasibilityError.
         m = build_cell_model(cell, design_d, data, ψ, g)
         @test m.pricing isa CapacityPricing
-        sol = solve_cell(cell, design_d, data, ψ, g, OpenCGE._solution_vector(m0, solve(m0)))
-        @test maximum(abs, equilibrium_residuals(sol.model, OpenCGE._solution_vector(sol.model, sol))) < 1e-9
-        @test maximum(abs.(sol.prices_raw .- 1)) > 1e-2
+        @test_throws FixedRealWageFeasibilityError solve_cell(cell, design_d, data, ψ, g,
+            OpenCGE._solution_vector(m0, solve(m0)))
         # Scalar BETA still refuses a door; the sectoral form carries the row.
         cb = Dict{String,Any}("labor" => "BETA", "financing" => "F3", "eta" => 1.0, "eta_s" => 0.5,
             "theta" => 0.5, "epsilon" => 0.5, "sigma" => 0.9)

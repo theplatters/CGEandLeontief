@@ -240,7 +240,7 @@ end
 @testset "matrix plots: headless stubs require GLMakie" begin
 	for f in (plot_matrix_overview, plot_matrix_wages, plot_matrix_prices,
 			plot_matrix_quantities, plot_matrix_consumption, plot_matrix_trade,
-			save_matrix_figures)
+			save_matrix_figures, plot_closure_comparison, save_closure_comparison)
 		err = try
 			f()
 			nothing
@@ -250,6 +250,25 @@ end
 		@test err isa ErrorException
 		@test occursin("GLMakie", err.msg)
 	end
+end
+
+@testset "matrix plots: closure_comparison_data and sector resolution" begin
+	data, _, ref, sol = matrix_test_cells()
+	base = matrix_baseline(data, ref)
+	cells = [
+		matrix_cell_data("id-$lab-$fin", lab, fin, 1.0, 0.5, "executed",
+			data, sol, ref; labels = ["Sec.A", "Sec.B"])
+		for lab in ("BF", "ALPHA") for fin in ("F1", "F2", "F3")
+	]
+	ds = matrix_dataset("matrix_5x3_v10", base, cells)
+	cc = closure_comparison_data(ds, [2, 1], [:BF, :ALPHA];
+		sector_labels = ["Sector B", "Sector A"])
+	@test cc.sectors == ["b", "a"]
+	@test cc.labels == ["Sector B", "Sector A"]
+	@test size(cc.changes) == (2, 3, 6)
+	idx, slabels = resolve_comparison_sectors(ds, ["B short", "Sec.A"], ["A short", "B short"])
+	@test idx == [2, 1]
+	@test slabels == ["B short", "A short"]
 end
 
 @testset "matrix panels: retain moving sectoral prices (optional GLMakie)" begin

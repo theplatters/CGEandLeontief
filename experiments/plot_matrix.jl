@@ -37,13 +37,22 @@ isdefined(Main, :run_design) || include(joinpath(@__DIR__, "run.jl"))
 """Print usage to stderr and return exit code 1."""
 function plot_usage()::Int
     println(stderr, """usage:
-  julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--no-figures] [--quiet]""")
+  julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--comparison-out FILE] [--comparison-sectors s1,s2,s3] [--comparison-closures c1,c2] [--no-figures] [--quiet]""")
     return 1
 end
 
+"""Default three sectors for `--comparison-out`: one directly targeted programme
+sector, one upstream intermediate supplier, and one crowded-out consumer service."""
+const DEFAULT_COMPARISON_SECTORS = [
+    "Electrical.equipment",
+    "Metal.ores..other.mining.and.quarr..prod..services",
+    "Other.personal.service.activities",
+]
+
 """
 Parse the driver CLI args into a NamedTuple (`design`, `cells`, `outdir`,
-`data_dir`, `panel_dir`, `no_figures`, `quiet`). `--design` is required (checked by
+`data_dir`, `panel_dir`, `comparison_out`, `comparison_sectors`,
+`comparison_closures`, `no_figures`, `quiet`). `--design` is required (checked by
 `plot_main`); `--cells` is a comma-separated run-id list. Throws an
 `ArgumentError` on a missing value or an unknown option.
 """
@@ -53,12 +62,16 @@ function parse_plot_args(args::Vector{String})::NamedTuple
     outdir::Union{String,Nothing} = nothing
     data_dir::Union{String,Nothing} = nothing
     panel_dir::Union{String,Nothing} = nothing
+    comparison_out::Union{String,Nothing} = nothing
+    comparison_sectors::Union{Vector{String},Nothing} = nothing
+    comparison_closures::Union{Vector{String},Nothing} = nothing
     no_figures = false
     quiet = false
     i = 1
     while i <= length(args)
         a = args[i]
-        if a == "--design" || a == "--cells" || a == "--outdir" || a == "--data-dir" || a == "--panel-dir"
+        if a in ("--design", "--cells", "--outdir", "--data-dir", "--panel-dir",
+                "--comparison-out", "--comparison-sectors", "--comparison-closures")
             i + 1 > length(args) && throw(ArgumentError("missing value for $a"))
             key = a[3:end]
             val = args[i+1]
@@ -70,6 +83,12 @@ function parse_plot_args(args::Vector{String})::NamedTuple
                 outdir = val
             elseif key == "panel-dir"
                 panel_dir = val
+            elseif key == "comparison-out"
+                comparison_out = val
+            elseif key == "comparison-sectors"
+                comparison_sectors = String.(strip.(split(val, ",")))
+            elseif key == "comparison-closures"
+                comparison_closures = String.(strip.(split(val, ",")))
             else
                 data_dir = val
             end
@@ -86,6 +105,9 @@ function parse_plot_args(args::Vector{String})::NamedTuple
     end
     return (; design = design, cells = cells, outdir = outdir,
         data_dir = data_dir, panel_dir = panel_dir,
+        comparison_out = comparison_out,
+        comparison_sectors = comparison_sectors,
+        comparison_closures = comparison_closures,
         no_figures = no_figures, quiet = quiet)
 end
 
@@ -149,6 +171,36 @@ function plot_short_sector_labels(labels::AbstractVector{<:AbstractString};
         return nothing
     end
     return [table[l] for l in labels]
+end
+
+"""
+Resolve `--comparison-sectors` (or `DEFAULT_COMPARISON_SECTORS` when `nothing`)
+against `ds` and the curated short names `short_all` into `(sectors, sector_labels)`
+suitable for `OpenCGE.save_closure_comparison`. Accepts 1-based integer indices,
+exact `cell.sectors` or `cell.labels` entries, or curated short names.
+"""
+function resolve_comparison_sectors(ds::MatrixDataset,
+        requested::Union{Nothing,AbstractVector{<:AbstractString}},
+        short_all::Union{Nothing,AbstractVector{<:AbstractString}})
+    isempty(ds.cells) && throw(ArgumentError("dataset contains no cells"))
+    ref = first(ds.cells)
+    n = length(ref.sectors)
+    raw = requested === nothing ? DEFAULT_COMPARISON_SECTORS : collect(requested)
+    idx = Int[]
+    for s in raw
+        k = tryparse(Int, s)
+        if k !== nothing && 1 <= k <= n
+            push!(idx, k)
+            continue
+        end
+        m = findall(==(s), ref.sectors)
+        isempty(m) && (m = findall(==(s), ref.labels))
+        isempty(m) && short_all !== nothing && (m = findall(==(s), short_all))
+        length(m) == 1 || throw(ArgumentError("unknown or ambiguous comparison sector $(repr(s))"))
+        push!(idx, only(m))
+    end
+    slabels = short_all === nothing ? ref.labels[idx] : [String(short_all[j]) for j in idx]
+    return idx, slabels
 end
 
 """
@@ -511,6 +563,39 @@ function plot_main(args::Vector{String} = ARGS;
         for p in paths
             println("wrote $p")
         end
+    end
+
+    # 10c. Closure-comparison range-bar figure (OpenCGE ≥ v0.4.0, ADR-0037).
+    if opts.comparison_out !== nothing
+        if !glmakie_available()
+            println(stderr, "`OpenCGE.save_closure_comparison` requires " *
+                "the GLMakie extension, which is not loaded. " *
+                "Run `using GLMakie` together with `using OpenCGE` " *
+                "(install it first with `import Pkg; Pkg.add(\"GLMakie\")` " *
+                "if necessary).")
+            return 1
+        end
+        try
+            @eval using GLMakie
+        catch e
+            println(stderr, "could not load GLMakie: $(sprint(showerror, e))")
+            return 1
+        end
+        short_all = plot_short_sector_labels(labels; root = root)
+        closures = opts.comparison_closures === nothing ?
+            [l for l in matrix_labour_order() if any(c -> c.labour == l, ds.cells)] :
+            opts.comparison_closures
+        written = try
+            idx, slabels = resolve_comparison_sectors(ds, opts.comparison_sectors, short_all)
+            mkpath(dirname(abspath(opts.comparison_out)))
+            Base.invokelatest(OpenCGE.save_closure_comparison,
+                opts.comparison_out, ds, idx, closures; sector_labels = slabels)
+        catch e
+            println(stderr,
+                "save_closure_comparison failed: $(sprint(showerror, e))")
+            return 1
+        end
+        println("wrote $written")
     end
 
     # 11. Exit code: 0 only when every selected cell validated (figures were

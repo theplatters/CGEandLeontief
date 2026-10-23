@@ -223,7 +223,7 @@ harness and hard-validates it against the recorded run artifacts; figures
 created and no registry/run files are modified.
 
 ```bash
-julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id1,id2] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--no-figures] [--quiet]
+julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id1,id2] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--comparison-out FILE] [--comparison-sectors s1,s2,s3] [--comparison-closures c1,c2] [--no-figures] [--quiet]
 ```
 
 - `--design` (required) must be preregistered with a matching SHA-256;
@@ -293,6 +293,14 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   instead of repeated "0.00%" ticks.
   `--panel-dir` loads GLMakie on its own and combines with `--no-figures`
   (which suppresses only the six standard exploratory figures).
+- `--comparison-out FILE` writes a publication closure-comparison range-bar
+  figure (`OpenCGE.save_closure_comparison`, OpenCGE ≥ `v0.4.0`): horizontal
+  output, consumption (`W_D`), and price range bars with ordered per-closure
+  ticks in separate lanes. `--comparison-sectors` selects sectors by 1-based
+  index, dotted label, or curated short name (default: `Electrical equipment`,
+  `Metal ores & mining`, `Other personal services`); `--comparison-closures`
+  selects labour ids or exact `run_id`s (default: all labour closures present
+  in the validated dataset in canonical order).
 
 ## Animating the pricing panels
 

@@ -50,7 +50,7 @@ ROWS = [
     ("BF", "No-reallocation"),
     ("ALPHA", "Standard CGE"),
     ("BETA", r"Elastic labour supply ($\eta_{s,i} = 0.5$)"),
-    ("GAMMA", "Fixed real wage"),
+    ("GAMMA", "Employment adjustment"),
     ("DELTA", "Leontief closure"),
 ]
 

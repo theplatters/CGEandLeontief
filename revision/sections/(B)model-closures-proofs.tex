@@ -35,8 +35,8 @@ Appendix~\ref{app:kernel}.
 \subsection{Production and consumption}\label{app:model-kernel}
 
 \paragraph{Notation.} $L_i$ is employment in sector $i$ and $L=\sum_i L_i$ total employment; a bar marks the baseline, so $\bar L_i$ is baseline sectoral and $\Lbar$ baseline total employment. $w$ is the common wage of the mobile closures, $w_i$ the
-sector-specific wage where labor markets are sectoral, and $\bar w$ the
-pegged real wage. Real wages are deflated by the consumption price index
+sector-specific wage where labor markets are sectoral, and $\bar w$ the baseline real-wage
+anchor. Real wages are deflated by the consumption price index
 $\mathcal{P}(p)$, the CES price of the household's bundle; a subscript $0$ marks
 baseline values. $L_i^{\mathrm{cm}}(p,y_i,w_i)$ is the labor demand that
 solves the firm's cost-minimization problem
@@ -53,7 +53,7 @@ limit $0^{+}$ is fixed proportions.
 On the financing side, $c_i^h$ is the household purchase of good $i$ and
 $E^h$ its consumption expenditure, so $\sum_i p_i c_i^h=E^h$ is the
 household budget of equation \eqref{eq:utility-max}. $W=\sum_i w_i L_i$ is the wage bill, $T_G(p)=\sum_i p_i g_i^G$ the baseline tax cost of government purchases, and $g_i$ the program bundle (real public investment in sector $i$) with current-price cost
-$\sum_i p_i g_i$. F1 changes the composition of $E^h$, while under F2 the program's cost is financed by the wage-income tax at the endogenous rate $\tau$ defined in~\eqref{eq:cons}; under F3 it is booked as external program financing $B_{\mathrm{gov}}$. The net external transfer $F$ closes the external account; it is endogenous in the mobile regime and identically zero in the fixed-wage regime.
+$\sum_i p_i g_i$. F1 changes the composition of $E^h$, while under F2 the program's cost is financed by the wage-income tax at the endogenous rate $\tau$ defined in~\eqref{eq:cons}; under F3 it is booked as external program financing $B_{\mathrm{gov}}$. The net external transfer $F$ closes the external account; it is endogenous in the mobile regime and identically zero in the wage-pinned regime.
 
 Each sector's technology is a nested CES with constant returns: labor and an intermediate composite substitute with elasticity $\epsilon$, and intermediate inputs substitute with elasticity $\theta$ inside the composite. Cost minimization, equation \eqref{eq:cost-min}, gives the intermediate price index and the unit cost
 \begin{align}
@@ -159,34 +159,44 @@ Appendix~\ref{app:variants}. The single-wage form of this closure is
 retained there only as a distinct benchmark; its zero-elasticity limit is
 the standard CGE closure, not the no-reallocation one.
 
-\paragraph{The fixed real wage closure.}
-The real wage is pegged at its baseline value, while employment is
-endogenous and uncapped:
+\paragraph{The employment-adjustment closure: wage pinned, employment uncapped.}
+The labor-supply equation is dropped, the common money wage is held at its
+baseline value as the numeraire, the net external transfer is fixed at zero,
+and employment is endogenous and uncapped:
 \begin{equation}
-\frac{w}{\mathcal{P}(p)} = \bar{w} = 1,
+w = 1 \quad(\text{numeraire}),
+\qquad F = 0,
 \qquad L_i = L_i^{\mathrm{cm}}(p,y_i,w),
-\qquad \eta = 1.
+\qquad \eta = 1 .
 \label{eq:closure-gamma}
 \end{equation}
 Unlike the standard CGE closure, this closure does not impose
-$\sum_i L_i = \Lbar$.
-It is a two-sided wage peg, not a one-sided wage floor with unemployment
-rationing. On the demand-only baseline branch, $\mathcal{P}(p)=1$ and the
-implemented wage pin is $w=1$.
+$\sum_i L_i = \Lbar$: employment absorbs whatever labor equilibrium
+production requires. It is not a one-sided wage floor with unemployment
+rationing either, since no employment constraint is imposed at all. The real
+wage is an outcome and not an instrument --- at every solution
+$w/\mathcal{P}(p) = 1/\mathcal{P}(\pi(A))$, a function of technology alone
+(Corollary~\ref{cor:peg}) --- so the pin $w=1$ is a unit convention rather than a
+wage-setting rule. At baseline technology $\mathcal{P}(\pi)=\mathcal{P}(\one)=1$;
+that is why the demand-only matrix, where relative prices do not move, cannot
+distinguish this closure from one that pegs the real wage, and why the peg reading is
+falsified as soon as they do.
 
 \paragraph{The Leontief closure: the fixed-coefficient corner.}
-The Leontief closure keeps the wage and employment rule of the fixed real
-wage closure while taking the
+The Leontief closure keeps the employment rule of the preceding closure ---
+pinned money wage, uncapped and demand-determined employment, $F = 0$ ---
+while taking the
 substitution elasticities to their Leontief limits:
 \begin{equation}
-\frac{w}{\mathcal{P}(p)} = \bar{w} = 1,
-\qquad \eta = 1,
+w = 1, \qquad F = 0, \qquad \eta = 1,
 \qquad (\theta,\epsilon,\sigma) \longrightarrow (0^+,0^+,0^+).
 \label{eq:closure-delta}
 \end{equation}
-The Leontief closure is therefore a corner of the fixed real wage closure
-with fixed-coefficient technology, rather than an independent
-labor-market mechanism.
+The Leontief closure is therefore the fixed-coefficient corner of the
+employment-adjustment closure rather than an independent
+labor-market mechanism. The corner is exact at the calibration technology
+(Proposition~\ref{prop:gd}); once prices move, the two rows separate
+(Section~\ref{sec:beyond-demand-only}).
 
 \subsection{The three financing closures}\label{app:financing-closures}
 % Programme-scale F1 tilt: experiments/run.jl, f1_tilt_weights.
@@ -275,8 +285,8 @@ B_{\mathrm{gov}} = \sum_{i=1}^N p_i g_i,
 The booking $B_{\mathrm{gov}}$ is distinct from the net external transfer
 $F$ entering household resources after tax. The latter is solved
 endogenously in the no-reallocation, the standard CGE and both
-elastic-supply forms, but is fixed at zero in the two fixed-wage closures,
-the fixed real wage closure and its Leontief corner. With no unfinanced
+elastic-supply forms, but is fixed at zero in the two wage-pinned closures,
+the employment-adjustment closure and its Leontief corner. With no unfinanced
 demand injection, all closures clear
 all $N$ goods markets and satisfy the external-account identity
 \begin{equation}
@@ -346,9 +356,9 @@ $X = (p, y, w, F) \in \mathbb{R}^{2N+2}$ with the consumption price index
 \eqref{eq:labour-cpi} as numeraire, and close with the labor equation
 \eqref{eq:closure-alpha} in the standard CGE closure and
 \eqref{eq:closure-beta} in the elastic-supply closure (where
-$w_0/\mathcal{P}_0 = 1$). The fixed-wage systems solve for $X = (p, y) \in \mathbb{R}^{2N}$ with the
+$w_0/\mathcal{P}_0 = 1$). The wage-pinned systems solve for $X = (p, y) \in \mathbb{R}^{2N}$ with the
 wage pinned $w \equiv 1$ and $F \equiv 0$; employment is a post-solve
-outcome. The fixed real wage closure runs them at the baseline elasticities,
+outcome. The employment-adjustment closure runs them at the baseline elasticities,
 the Leontief closure at the Leontief
 corner $(\theta_\delta,\epsilon_\delta,\sigma_\delta) = (10^{-4},10^{-4},
 10^{-4})$. The no-reallocation closure is the sectoral-wage system at
@@ -368,7 +378,7 @@ technology $A$, every solution satisfies $p = w\,\pi(A)$, where
 $\pi(A) \in \mathbb{R}^N_{++}$ solves $c_i(\pi,1;A) = \pi_i$ for all $i$;
 relative prices and the ratio $p/w$ are functions of $A$ alone. Under the
 CPI numeraire, $w = 1/\mathcal{P}(\pi(A))$ and $p = \pi(A)/\mathcal{P}(\pi(A))$; under the
-fixed wage, $w = 1$ and $p = \pi(A)$. At $A \equiv \one$ the calibration
+wage pin, $w = 1$ and $p = \pi(A)$. At $A \equiv \one$ the calibration
 identity gives $\pi = \one$, hence in both gauges
 \begin{equation}
 p = \one, \qquad w = 1, \qquad \mathcal{P} = 1,
@@ -411,6 +421,45 @@ nine $\eta = 1$ cells of the single-wage closures, and a demand
 shock of ten times the program size moves $\max|p-\one|$ by
 $2.7\times10^{-15}$.)
 \end{corollary}
+
+\begin{corollary}[No real-wage peg]\label{cor:peg}
+Let $\eta = 1$ and $F \equiv 0$, and let $(p, y, w)$ solve the shared price
+block at any technology $A$. Then the real wage is
+\begin{equation}
+\frac{w}{\mathcal{P}(p)} = \frac{1}{\mathcal{P}(\pi(A))},
+\end{equation}
+a \emph{solution object} rather than an instrument. A peg
+$w/\mathcal{P}(p) = 1$ imposed on that system therefore holds if and only if
+$\mathcal{P}(\pi(A)) = 1$, which the calibration identity delivers at
+$A \equiv \one$ and nowhere else. Since $\mathcal{P}(\pi(A))$ depends on
+technology alone, no choice of numeraire and no rescaling of $w$ can restore
+the peg away from the calibration point.
+\end{corollary}
+
+\begin{proof}
+Immediate from Lemma~\ref{lem:price} and Corollary~\ref{cor:realwage}:
+$p = w\,\pi(A)$ with $\mathcal{P}(w\,\pi) = w\,\mathcal{P}(\pi)$ gives the
+displayed ratio at any scale, and at $A \equiv \one$ we have $\pi = \one$ and
+$\mathcal{P}(\one) = 1$. The peg is redundant there and infeasible elsewhere.
+In dimension form the same fact is a count: the wage-pinned system in
+$(p,y) \in \mathbb{R}^{2N}$ is square --- $N$ zero-profit conditions and $N$
+clearings, with $w$ entering only through $p/w$ and set to one as a unit ---
+so appending $w/\mathcal{P} = 1$ adds an equation whose left-hand side the
+price block has already determined.
+\end{proof}
+
+\begin{remark}[What the wage-pinned system implements]\label{rem:empadj}
+Dropping the labor-supply equation and fixing $w = 1$ leaves employment
+demand-determined at the real wage the price block delivers:
+$L_i = L_i^{\mathrm{cm}}(p, y_i, w)$ with no aggregate constraint and no
+wage-setting rule. We therefore call it an \emph{employment-adjustment}
+closure, wage-pinned: employment is the absorbing margin, the net external
+transfer is fixed at $F = 0$, and the real wage is an outcome that sits at its
+baseline level only while relative prices do. The label separates the
+closure's two substantive components --- the fixed transfer and the uncapped
+employment margin --- from its unit convention $w = 1$, which carries no
+economics (Corollary~\ref{cor:nogo}).
+\end{remark}
 
 \begin{lemma}[Elasticity-free affine quantity block]\label{lem:affine}
 Fix $\eta = 1$ and $A \equiv \one$, and evaluate the quantity block at the
@@ -483,7 +532,7 @@ property behind the coincidences. The IO endpoint makes the rigidity
 literal --- the Robinson (2006) fixed-price multiplier --- but, as
 Proposition~\ref{prop:gd} shows, it is not an approximation:
 the same candidate equilibrium $(p,y)=(\one,y^{\ast})$
-solves the fixed-wage system at every elasticity triple in the fixed-wage
+solves the wage-pinned system at every elasticity triple in the wage-pinned
 gauge.
 \end{remark}
 
@@ -511,18 +560,18 @@ are therefore
 equivalent, equation by equation.
 \end{proof}
 
-\begin{proposition}[The fixed real wage closure $\equiv$ the Leontief
+\begin{proposition}[The employment-adjustment closure $\equiv$ the Leontief
 closure]\label{prop:gd}
 Let $A \equiv \one$, $\eta = 1$, $F \equiv 0$, $w \equiv 1$. Then
 $(p,y) = (\one,\, y^{\ast})$ with
-$y^{\ast} = (I - G)^{-1} b(0)$ solves the fixed-wage system at
+$y^{\ast} = (I - G)^{-1} b(0)$ solves the wage-pinned system at
 \emph{every} elasticity triple $(\theta,\epsilon,\sigma)$; the employment
 outcome is $L^{\ast} = \alpha^{\!\top} y^{\ast}$, the consumption block is
 $c^{\ast} = (1-s)\,\mathrm{diag}(1-m)\,\tilde\beta(ds)\,
 (L^{\ast} - \sum g^G - \sum g\,\mathbf{1}_{F2})$, where
 $\mathbf{1}_{F2}$ selects the tax-financed column, and the block
 decomposition \eqref{eq:leontiefblocks} holds verbatim. In particular the
-fixed real wage closure (baseline
+employment-adjustment closure (baseline
 elasticities) and the Leontief closure (the Leontief corner) share this
 solution, and the
 analytic system \eqref{eq:affine}--\eqref{eq:bvec} computes it exactly.
@@ -541,11 +590,11 @@ the guard admits the branch on which the affine fixed
 point is unique and positive, but does not by itself exclude further roots of
 the nonlinear system; the multi-init admissibility checks recorded for the F1
 column (three distinct starting points converging to the same root) are the
-evidence that the reported root is the admitted one. Both fixed-wage solves
-(the fixed real wage closure and the Leontief closure) are subject to the
+evidence that the reported root is the admitted one. Both wage-pinned solves
+(the employment-adjustment closure and the Leontief closure) are subject to the
 same guard, and both converged to this root
 (residuals $4.4\times10^{-16}$ to $2.0\times10^{-13}$
-across the six fixed-wage cells). The
+across the six wage-pinned cells). The
 elasticity-independence is exact in the equations, not an $\epsilon$-limit
 artefact: the Leontief-corner solve at $\epsilon_\delta = 10^{-4}$
 reproduces the
@@ -556,7 +605,7 @@ differences $\sim 10^{-12}$.
 
 \begin{corollary}[Classification]\label{cor:class}
 The coincidences, their status and what each leaves unidentified are those
-collected in Tables~\ref{tab:equiv-links} and~\ref{tab:equiv-matrix} (Appendix~\ref{app:equivalences}); the statuses follow from Lemma~\ref{lem:affine} (fixed real wage $\equiv$ Leontief corner), Corollary~\ref{cor:realwage} (standard CGE $\equiv$
+collected in Tables~\ref{tab:equiv-links} and~\ref{tab:equiv-matrix} (Appendix~\ref{app:equivalences}); the statuses follow from Lemma~\ref{lem:affine} (employment adjustment $\equiv$ Leontief corner), Corollary~\ref{cor:realwage} (standard CGE $\equiv$
 single-wage supply), Section~\ref{app:gauge} (F2 $\equiv$ F3 in the mobile
 rows) and Proposition~\ref{prop:nest} (sectoral corner $\equiv$ no
 reallocation).
@@ -565,7 +614,8 @@ reallocation).
 \begin{remark}[Off the demand-only slice]\label{rem:supply}
 The equivalences fail the moment technology moves. At $A \neq \one$,
 Corollary~\ref{cor:realwage} gives $w/\mathcal{P} = 1/\mathcal{P}(\pi(A)) \neq 1$ in
-general, and the elastic-supply labor equation reduces to
+general --- the wage-pinned row then sits off its real-wage anchor, which is
+Corollary~\ref{cor:peg}'s point --- and the elastic-supply labor equation reduces to
 $\alpha^{\!\top}y = \Lbar\,[1/\mathcal{P}(\pi(A))]^{\eta_s}$: employment is pinned
 to a \emph{technology-determined constant} that now depends on $\eta_s$.
 The supply-side pilot (+20\% in sector 1) measures exactly this separation
@@ -657,22 +707,22 @@ so the solution sets coincide.
 Sweeping $\eta_{s,i}$ moves the adjustment from quantities to prices. At
 $\eta_{s,i} = 0$ the allocation is pinned and the $N$ wages absorb the shock;
 as $\eta_{s,i} \to \infty$ the supply curves become infinitely elastic, the
-real wage returns to its technology-determined anchor and employment becomes
-the absorbing margin --- fixed-real-wage prices and the fixed real wage
-closure's absorbing margin. The
+real wage is forced back to its baseline anchor and employment becomes
+the absorbing margin --- prices pinned as in the wage-pinned row, and that
+row's absorbing margin. The
 two ends of the family are therefore the matrix's own rigidity rows: the
 no-reallocation closure
-(allocation frozen, wages free) at the rigid corner, the fixed real wage
-closure (real wage pinned,
+(allocation frozen, wages free) at the rigid corner, the employment-adjustment
+closure (wage pinned,
 allocation free) at the elastic one. Two qualifications are exact and matter
 for reading the table below. First, the elastic end is a \emph{limit}, not a
 cell: the supply slope diverges and the direct solve eventually fails
 ($\eta_s = 10^6$). Second, the family keeps the transfer $F$ free,
-whereas the fixed-wage system pins $F \equiv 0$. The two ends are therefore of
+whereas the wage-pinned system fixes $F \equiv 0$. The two ends are therefore of
 different kinds: at $\eta_{s,i} = 0$ the family \emph{coincides} with the
 no-reallocation row exactly --- the two systems share their solution set
 (Proposition~\ref{prop:nest}) --- whereas at the elastic end it only
-\emph{approaches} the fixed real wage closure, and does not attain it, for the
+\emph{approaches} the employment-adjustment closure, and does not attain it, for the
 additional reason that the transfer is pinned there.
 \end{remark}
 
@@ -722,7 +772,7 @@ rigid program, $\eta_s = 0.5$ & $0.215061$ & $0.272033$ & $0.996621$ & $-0.02691
 rigid largest half, $\eta_s = 0.5$ & $0.109583$ & $0.123362$ & $1.000196$ & $-0.019053$ \\
 \midrule
 No reallocation ($\eta_{s,i} = 0$) & $0.221442$ & $0.279009$ & $1.000000$ & $-0.019800$ \\
-Fixed real wage & $0.000000$ & $0.000000$ & $1.001260$ & $-0.015333$ \\
+Employment adjustment & $0.000000$ & $0.000000$ & $1.001260$ & $-0.015333$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -756,12 +806,12 @@ regime (the sectoral-wage system):
 
 \begin{center}
 {\small
-\begin{tabular}{lccc}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{5.2cm}ccc@{}}
 \toprule
 Rows & $F$ & Employment & Household round in $G$ \\
 \midrule
 Standard CGE, elastic supply ($\eta = 1$) & free (instrument) & pinned, $L = \Lbar$ & active \\
-Fixed real wage, Leontief corner ($\eta = 1$) & $F \equiv 0$ & endogenous, $L = \alpha^{\!\top}y$ & active \\
+Employment adjustment, Leontief corner ($\eta = 1$) & $F \equiv 0$ & endogenous, $L = \alpha^{\!\top}y$ & active \\
 No reallocation ($\eta = 0$) & free (solved) & pinned via allocation & active (wage bill) \\
 \bottomrule
 \end{tabular}
@@ -791,7 +841,7 @@ decimals; $G_0 = \sum_i g_i = 0.013310$).
 two paradigms is which margin absorbs the program. In the mobile rows the
 labor pin forces the household to pay (consumption $-1.82\%$ under F2/F3;
 the $F$ instrument crowds it out exactly), while real GDP is flat by
-construction ($w\,\Lbar$ deflated). In the fixed-wage rows
+construction ($w\,\Lbar$ deflated). In the wage-pinned rows
 employment is the margin: F3 expands employment by $1.78\%$ and consumption
 by $2.26\%$ (the Keynesian case), F2 leaves GDP nearly neutral
 ($+0.13\%$) with a welfare loss from the tax, and F1 shifts composition
@@ -837,8 +887,8 @@ $\mathcal{P}(p) = w\,\mathcal{P}(\pi)$ at every solution, so the real wage
 $w/\mathcal{P} = 1/\mathcal{P}(\pi(A))$ is invariant to whatever sets $w$; the rule merely
 re-labels the nominal scale. With the CPI numeraire or the $w = 1$ pin such
 a rule is either vacuous or over-determines the system (in the fixed gauge
-it forces $\alpha^{\!\top}y = \Lbar$, i.e.\ silently reverts the fixed real
-wage closure to
+it forces $\alpha^{\!\top}y = \Lbar$, i.e.\ silently reverts the employment-adjustment
+closure to
 the standard CGE closure). A rule on the \emph{real} wage,
 $w/\mathcal{P} = \phi(L)$, is the elastic-supply
 equation \eqref{eq:closure-beta} rearranged and is already in the model --- where
@@ -871,11 +921,11 @@ generated.
 Table~\ref{tab:matrix} prints the same fifteen cells at full precision
 (income-side real GDP, the household-consumption welfare index and
 employment); every entry reproduces the recorded solution to all printed
-decimals. The paired rows --- the fixed real wage closure and its Leontief
+decimals. The paired rows --- the employment-adjustment closure and its Leontief
 corner --- are identical in every reported metric, and so are F2 and F3 in the
 mobile rows; the elastic-supply rows are the sectoral cells at
 $\eta_s = 0.5$ and hence a distinct economy. The GDP deflator reads
-$1.000000$ in the nine $\eta = 1$ standard CGE and fixed-wage cells --- the
+$1.000000$ in the nine $\eta = 1$ standard CGE and wage-pinned cells --- the
 numerical face of Lemma~\ref{lem:price} --- while the three no-reallocation
 cells carry $1.006326$ (F1) and $1.007181$ (F2/F3).
 
@@ -895,11 +945,11 @@ Elastic supply  & F2 & $+0.001287$ & $-0.015712$ & $1.001255$ \\
 Standard CGE & F3 & $+0.000000$ & $-0.018226$ & $1.000000$ \\
 Elastic supply  & F3 & $+0.001287$ & $-0.015712$ & $1.001255$ \\
 \midrule
-Fixed real wage & F1 & $-0.000973$ & $-0.000806$ & $0.999027$ \\
+Employment adjustment & F1 & $-0.000973$ & $-0.000806$ & $0.999027$ \\
 Leontief corner & F1 & $-0.000973$ & $-0.000806$ & $0.999027$ \\
-Fixed real wage & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
+Employment adjustment & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
 Leontief corner & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
-Fixed real wage & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
+Employment adjustment & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
 Leontief corner & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
 \midrule
 No reallocation & F1 & $-0.000110$ & $+0.000963$ & $1.000000$ \\

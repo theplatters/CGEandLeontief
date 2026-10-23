@@ -17,7 +17,7 @@ COLLAPSE (2026-10-17): the coincidences the caption states are PRINTED ONCE.
     with \\multirow{2} on the F2 row, the F3 row leaves those columns empty,
     and the rule between the two rows is a \\cmidrule over the two right-hand
     columns only (a full \\midrule would cut through the merged cell).
-  * the fixed real wage and Leontief columns coincide -> one \\multicolumn{2}
+  * the employment-adjustment and Leontief columns coincide -> one \\multicolumn{2}
     cell per row, vertically centred (m column).
   The generator ASSERTS each coincidence on the PRINTED strings before it
   writes (see check_collapses): a kernel change that breaks an equivalence
@@ -37,11 +37,11 @@ ETA_BRACKET = [("0.5", "-etas05"), ("1", "-etas1"), ("2", "-etas2")]
 ETA_LO, ETA_HI = ETA_BRACKET[0][0], ETA_BRACKET[-1][0]
 
 # column order matches table3c (no-reallocation leftmost)
-cols = [("BF",    "No-reallocation",      "immobile labour, sectoral wages"),
-        ("ALPHA", "Standard CGE",         "one flexible wage, mobile labour"),
-        ("BETA",  "Elastic labour supply","sectoral supply on the real wage"),
-        ("GAMMA", "Fixed real wage",      "real wage pegged, employment uncapped"),
-        ("DELTA", "Leontief closure",     "real wage pegged, quantities absorb")]
+cols = [("BF",    "No-reallocation",      "immobile labor, sectoral wages"),
+        ("ALPHA", "Standard CGE",         "one flexible wage, mobile labor"),
+        ("BETA",  "Elastic labor supply","sectoral supply on the real wage"),
+        ("GAMMA", "Employment adjustment", "wage pinned, employment uncapped"),
+        ("DELTA", "Leontief closure",     "wage pinned, quantities absorb")]
 fin = [("F1", "repurposing of consumption"),
        ("F2", "refinancing via taxes"),
        ("F3", "external / debt finance")]
@@ -180,7 +180,7 @@ def plain_caption():
             r"($\Delta W_C$), all in percent against the reference continuation. The" "\n"
             r"elastic-supply column is bracketed: each entry is the interval over the executed" "\n"
             r"$\eta_{s,i} \in \{" + r",\ ".join(e for e, _ in ETA_BRACKET) + r"\}$, with" "\n"
-            r"$\eta_{s,i} = " + ETA_LO + r"$ the headline point value. The fixed-wage and" "\n"
+            r"$\eta_{s,i} = " + ETA_LO + r"$ the headline point value. The wage-pinned and" "\n"
             r"Leontief columns coincide, and F2 and F3 coincide in the three flexible-wage" "\n"
             r"columns, so the fifteen cells describe nine distinct economies.}")
 
@@ -288,7 +288,7 @@ def build():
     A(r"sector across the closure matrix. Each cell reports the change in real GDP")
     A(r"($\Delta Y$), employment ($\Delta L$), the price level ($\Delta P$, the GDP deflator),")
     A(r"the net external position ($\Delta D$) and household consumption welfare")
-    A(r"($\Delta W_C$), all in percent against the reference continuation. The fixed-wage and")
+    A(r"($\Delta W_C$), all in percent against the reference continuation. The wage-pinned and")
     A(r"Leontief columns coincide, and F2 and F3 coincide in the three flexible-wage")
     A(r"columns, so the fifteen cells describe nine distinct economies.}")
     A(r"\label{tab:results-matrix}")

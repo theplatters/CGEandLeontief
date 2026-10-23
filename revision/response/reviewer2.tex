@@ -3,7 +3,8 @@
 % Source: docs/reviews/metro-rev2.docx
 % Point map: docs/DOCS_ASSESSMENT.md, Stage 3 (R2.1-R2.14).
 % Status: general response (R2.0) written 2026-10-22; R2.1-R2.14 still to be
-%         written.
+%         written. 2026-10-23: R2.2, R2.14 and the new R2.15 (price-reporting
+%         units and the closure specification) are written.
 % 2026-10-22: every \refcom now quotes the report VERBATIM and in full (one block
 %         per review paragraph, nothing elided; his own ellipses survive as \dots).
 %         Inner quotes are single (`...'), since \refcom already supplies the outer pair.
@@ -217,8 +218,38 @@ As Robinson (2006: 2016) puts it succinctly, `it is possible to make a CGE
 model behave like a fixed-price multiplier model by assuming that primary
 input prices are all fixed and that supplies of primary inputs are
 unconstrained'.}
-\response TODO: the closure taxonomy; Robinson (2006) central.
-\loc{Sec. 2.}
+\response{The report is right about the construction, and we now say so explicitly
+rather than leaving it implicit. Fixing primary input prices and dropping the
+supply constraint is exactly the closure our fourth row runs, and it reproduces
+the Leontief-inverse multiplier exactly at every value of the substitution
+elasticities (the employment-adjustment equivalence in Appendix~B); we no
+longer call it a fixed real-wage closure, which it never was, and which in a
+one-factor constant-returns model would over-determine the system rather than
+identify anything (the no-real-wage-peg corollary, Appendix~B). That closure is
+the lineage of Dervis, de Melo and Robinson (1982) and de Melo and Tarr (1992),
+which we now cite where it belongs.
+
+What we keep separate from that concession is the second half of the comment --
+that the bridging parameter is the labour-supply elasticity and that the paper
+simply failed to set it to infinity. On the demand-only slice the elastic family
+does not approach the fixed-price closure as the elasticity rises; it coincides
+with the full-employment closure at every value of it, so raising $\eta_s$
+changes nothing at all (the standard-CGE equivalence in Appendix~B). The
+distinction appears only once relative prices move, and there the limit is empty
+rather than merely unattained in the single-wage member: the real-wage anchor a
+flat supply curve would have to sit on is fixed by technology, while the price
+block decides where the economy actually sits. The route the report describes
+therefore works; what it does not do is order our matrix, because it reaches one
+row of it.
+
+The other dimension of the matrix is not a labour-supply elasticity at all. The
+no-reallocation row pins the sectoral allocation and solves sectoral wages, and
+no value of a supply elasticity reproduces that once prices move (the no-go
+corollary, Appendix~B). Our claim is not that the bridge is undiscovered -- we
+state that it is measurement in Sections~1 and 7 -- but that the two dimensions
+along which applied models actually differ are not both elasticities.}
+\loc{Sec.~3 (the two questions and the five closures); Sec.~7;
+Appendix~B (the two equivalences and the two corollaries).}
 
 \subsection*{R2.3 --- The 'paradigmatic cleavage' framing}
 \refcom{The paper's characterisation of a `paradigmatic cleavage' between
@@ -441,7 +472,7 @@ fix-price/flex-price distinction of the postwar synthesis, with its
 horizontal, upward-sloping and vertical segments -- is the aggregate form of
 the question our first axis poses sectorally: whether output or prices absorb
 a demand impulse. Read against our matrix, the horizontal segment corresponds
-to the row with the real wage pegged, in which quantities carry the impulse
+to the row with the money wage pinned, in which quantities carry the impulse
 and the price block does not respond, and the vertical segment corresponds to
 the full-employment closure, in which output is supply-determined; the elastic
 labor-supply family is the upward-sloping middle. One difference is worth
@@ -463,5 +494,59 @@ closures by skill type along the lines sketched above. (Moreover, a proper
 state-of-the art analysis of the scheme in question would adopt a dynamic
 CGE approach in which the sectoral productive capital stocks adapt over time
 to the imposed shifts in demand).}
-\response TODO: optional extension; state the limitation.
-\loc{Sec.~7 (the limitations paragraph of the conclusion).}
+\response{Accepted as a limitation rather than a defect. Splitting labour by skill
+class would multiply the labour axis rather than sharpen the comparison: each
+class would carry its own closure and, in the sectoral system, one wage per class
+and sector, but the exercise is a comparison of closures on a single factor, and
+a second factor would change the object rather than the reading. The point is
+stated in the limitations paragraph of Section~7, together with the dynamic
+extension the comment also raises: the long-run reinterpretation of the
+input--output result \citep{McGregor.1996} is named there as the vantage point
+from which the static comparison would be carried into a path.}
+\loc{Sec.~7 (limitations).}
+
+\subsection*{R2.15 --- Units of the reported price changes}
+\refcom{[the referee's wording on the normalisation of reported price changes ---
+to be inserted]}
+\response{We thank the referee: this was wrong, and chasing it turned up a second,
+more substantive error of ours. The two are related but distinct, and we have
+treated them as such.
+
+\emph{Units.} The pricing tables compared nominal magnitudes expressed in two
+different units. The flexible-wage closures carry the consumption price index as
+numeraire, so their rows were already in consumption units; the wage-pinned rows
+fixed the money wage instead, which left prices in wage units. All pricing rows
+are now reported in consumption units: prices are divided by the cell's own CPI,
+the GDP deflator is rescaled with them, and the maximum sectoral deviation is
+computed on the normalised price vector. Where the CPI sits at one --- which is
+the whole demand-only matrix, and therefore every headline result of the paper
+--- nothing changes. Where the pricing doors move prices, it does: of the sixty
+affected cells ten reverse the sign of the reported deflator, and in thirty-two
+of them the correction is larger than the effect being reported. The extreme
+case is the distributed-profit, Leontief, externally financed cell at
+$\kappa = 0.5$, which read $+1.92$ per cent in wage units and reads $-0.01$ per
+cent in consumption units: the entire ``effect'' was the change of unit.
+
+\emph{Closure.} The reason the CPI moved at all is that the closure we had called
+a ``fixed real wage'' closure does not peg the real wage. It fixes the money wage
+as the numeraire, sets the net external transfer to zero and drops the
+labour-supply equation, so that employment adjusts. With one production factor
+and constant returns the real wage is not an instrument at all: it is fixed by
+technology, $w/\mathcal{P}(p) = 1/\mathcal{P}(\pi(A))$, so a peg on it is
+redundant at the calibration point and infeasible away from it (the
+no-real-wage-peg corollary in Appendix~B). We have renamed the closure
+\emph{employment adjustment}, stated its equations exactly as they are solved,
+and added the identity with its proof. No estimate in the paper changes: the
+kernel never solved the peg, and real outcomes are invariant to the nominal
+scale. What changes is the label, the interpretation --- in particular we no
+longer claim that workers' purchasing power is held fixed there --- and the
+units.
+
+The two corrections cannot substitute for one another, which is why we report
+both: renormalising cannot restore a constant real wage, and relabelling cannot
+repair mixed units. Reporting the wage-pinned rows in consumption units is in
+fact what makes the movement of the real wage visible instead of hidden inside
+the reporting convention.}
+\loc{Sec.~4 (the numeraire of each closure); Secs.~5--6 (the affected tables);
+Appendix~A (the nesting claims, scoped to the demand-only slice); Appendix~B
+(the no-real-wage-peg corollary and the accompanying remark).}

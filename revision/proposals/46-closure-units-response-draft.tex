@@ -1,0 +1,83 @@
+% =====================================================================
+% PROPOSAL --- response-letter text for the price-reporting / closure
+% clarification. NOT \input anywhere; the manuscript compiles without it.
+%
+% Adoption step:
+%   1. Decide the home. Variant A (R2.15) if the units point came from
+%      referee 2; Variant B (E2) if it came from the editor's letter or a
+%      third report. Everything except the heading is identical.
+%   2. Paste the chosen variant at the END of revision/response/reviewer2.tex
+%      (respectively revision/response/editor.tex).
+%   3. Insert the referee's own words into \refcom{...}.
+%   4. Check the two numbers against revision/tables/pricing_prices.csv
+%      before submission (they are read from it, not from memory: 60
+%      price-moving GAMMA/DELTA cells, 10 sign reversals, worst case
+%      DELTA-F3-k05-spis at +1.92 % in wage units and -0.01 % in
+%      consumption units).
+%
+% ADOPTED 2026-10-23: wired into response/reviewer2.tex as R2.15 (heading
+% 'Units of the reported price changes'). This file stays as the record of the
+% wording; only the \refcom quote still has to be filled in.
+%
+% Written 2026-10-23 (AG) under ADR-0037 (consumption-unit reporting) and
+% ADR-0038 (employment-adjustment closure). Cross-checked against
+% Corollary cor:peg and Remark rem:empadj in Appendix B.
+% =====================================================================
+
+% ---------- Variant A: as a referee point ----------------------------
+\subsection*{R2.15 --- Units of the reported price changes}
+\refcom{[insert the referee's wording on the normalisation of reported
+price changes]}
+\response{We thank the referee: this was wrong, and chasing it turned up a
+second, more substantive error of ours. The two are related but distinct, and
+we have treated them as such.
+
+\emph{Units.} The pricing tables compared nominal magnitudes expressed in two
+different units. The mobile closures carry the consumption price index as
+numeraire, so their rows were already in consumption units; the wage-pinned
+rows fixed the money wage instead, leaving prices in wage units. All pricing
+rows are now reported in consumption units: prices are divided by the cell's
+own CPI, the GDP deflator is rescaled with them, and the maximum sectoral
+deviation is computed on the normalised price vector. Where the CPI sits at
+one --- which is the whole demand-only matrix, and therefore every headline
+result of the paper --- nothing changes. Where the pricing doors move prices,
+it does: of the sixty affected cells ten reverse the sign of the reported
+deflator, and in thirty-two of them the correction is larger than the effect
+being reported. The extreme case is the distributed-profit, Leontief,
+externally financed cell at $\kappa = 0.5$, which read $+1.92$ per cent in
+wage units and reads $-0.01$ per cent in consumption units: the entire
+"effect" was the change of unit.
+
+\emph{Closure.} The reason the CPI moved at all is that the closure we had
+called a ``fixed real wage'' closure does not peg the real wage. It fixes the
+money wage as the numeraire, sets the net external transfer to zero and drops
+the labour-supply equation, so that employment adjusts. With one production
+factor and constant returns, the real wage is not an instrument at all: it is
+fixed by technology, $w/\mathcal{P}(p) = 1/\mathcal{P}(\pi(A))$, so a peg on it
+is redundant at the calibration point and infeasible away from it. We have
+renamed the closure \emph{employment adjustment}, stated its equations exactly
+as they are solved, and added the identity with its proof (Appendix~B,
+the no-real-wage-peg corollary and the remark on what the closure implements). No estimate in the paper
+changes: the kernel never solved the peg, and real outcomes are invariant to
+the nominal scale. What changes is the label, the interpretation --- in
+particular we no longer claim that workers' purchasing power is held fixed
+there --- and the units.
+
+The two corrections cannot substitute for one another, which is why we report
+both: renormalising cannot restore a constant real wage, and relabelling
+cannot repair mixed units. Reporting the wage-pinned rows in consumption units
+is in fact what makes the movement of the real wage visible rather than hidden
+inside the reporting convention.}
+\loc{Sec.~4 (numeraire and the reporting rule); Secs.~5--6 (the affected
+tables); Appendix~A (the nesting claims, now scoped to the demand-only
+slice); Appendix~B (col.\ the no-real-wage-peg corollary and the accompanying remark).}
+
+% ---------- Variant B: as a self-disclosed correction -----------------
+% \subsection*{E2 --- Corrections we made on our own initiative}
+% \refcom{[the editor's letter does not raise this point]}
+% \response{[same body as Variant A, with ``We thank the referee'' replaced by
+%   ``Beyond the points raised by the referees, we report two corrections of
+%   our own. They concern how the fixed-wage closure is described and in which
+%   units the reported price changes are expressed. Neither changes a real
+%   result; one changes the interpretation of a whole column of our matrix.'']}
+% \loc{[as Variant A]}

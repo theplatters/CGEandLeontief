@@ -60,6 +60,7 @@ settled question.
 | ADR-0033 | Financing formulations name the balancing variable (wage-rate tax, endogenous F, B_gov) | proposed |
 | ADR-0036 | Print-ready matrix panels (OpenCGE v0.3.2) without a new generation | accepted |
 | ADR-0037 | Consumption-unit price reporting | accepted |
+| ADR-0038 | The wage-pinned closure is an employment-adjustment closure | accepted |
 
 **Migrated to OpenCGE DECISIONS.md** (2026-10-12, ADR-0028): ADR-0001,
 ADR-0005, ADR-0010, ADR-0011, ADR-0014, ADR-0015, ADR-0016, ADR-0017,

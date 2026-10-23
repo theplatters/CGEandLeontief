@@ -4,8 +4,8 @@
 % v2 of the closure flexibility map. Changes vs. v1:
 %   * ~20% narrower: every label takes a symmetric two-line break, so the
 %     constant-size boxes shrink (2.7cm wide, pitch 3.2cm; v1: 3.4 / 4.0).
-%   * a new double arrow between "fixed real wage" and "Leontief closure"
-%     (the equivalence of Section 3: the fixed real wage IS the Leontief
+%   * a new double arrow between "employment adjustment" and "Leontief closure"
+%     (the equivalence of Section 3: employment adjustment IS the Leontief
 %     result once production is rigid), replacing the plain link there.
 % Grid unchanged: row 1 = aggregate, row 2 = sectoral; columns = increasing
 % flexibility. The elastic-labour-supply box still spans columns 2-3.
@@ -44,7 +44,7 @@
 
   % ---- cells: row 1 = aggregate --------------------------------------
   \node[box] (r1c2) at (\dx,0)    {conventional\\CGE};
-  \node[box] (r1c3) at (2*\dx,0)  {fixed real\\wage};
+  \node[box] (r1c3) at (2*\dx,0)  {employment\\adjustment};
   \node[box] (r1c4) at (3*\dx,0)  {Leontief\\closure};
 
   % ---- cells: row 2 = sectoral ---------------------------------------
@@ -55,7 +55,7 @@
   % ---- connector line through the left aggregate pair (left-right) ----
   \draw[link] (r1c2.east) -- (r1c3.west);
 
-  % ---- double arrow: fixed real wage <-> Leontief closure --------------
+  % ---- double arrow: employment adjustment <-> Leontief closure --------
   \draw[flexarrow] (r1c3.east) -- (r1c4.west);
 
   % ---- double arrow: no reallocation -> conventional CGE
@@ -64,7 +64,7 @@
 
   % ---- short double arrows of the elastic-labor-supply box -----------
   \draw[flexarrow] (ELS.west)     -- (r2c1.east);        % to no reallocation
-  \draw[flexarrow] (2*\dx,-1.35)  -- (r1c3.south);       % up to fixed real wage
+  \draw[flexarrow] (2*\dx,-1.35)  -- (r1c3.south);       % up to employment adjustment
 
   % ---- double arrow: single-wage elastic supply <-> conventional CGE --
   %      (the missing link: with ONE common wage the supply equation
@@ -89,11 +89,11 @@
   aggregate row collects the single-wage closures, the sectoral row the
   sector-level ones. The double-width box holds the elastic-labor-supply
   family, tied by short double arrows to the no-reallocation and
-  fixed-real-wage corners it interpolates between, and in its single-wage
+  employment-adjustment corner it interpolates between, and in its single-wage
   form coinciding with the conventional CGE closure (the vertical double
   arrow beneath it); the right-angled double
   arrow marks the reallocation margin from no reallocation up to the
-  conventional CGE closure, and the arrow between the fixed real wage and
+  conventional CGE closure, and the arrow between employment adjustment and
   the Leontief corner marks their equivalence under demand-only shocks,
   at any substitution elasticities.}
 \label{fig:flexibility-map}

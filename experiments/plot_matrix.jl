@@ -4,7 +4,9 @@
 # Usage (from the repo root, with `julia --project=.`):
 #
 #   julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c]
-#       [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--no-figures] [--quiet]
+#       [--outdir DIR] [--data-dir DIR] [--panel-dir DIR]
+#       [--comparison-out FILE] [--scatter-out FILE] [--scatter-pairs BF/F1,BETA/F2]
+#       [--no-figures] [--quiet]
 #
 # Validation contract: every selected cell is RE-SOLVED with the harness
 # (`solve_cell` + `evaluate_gates` from `run.jl`) and HARD-VALIDATED against
@@ -37,7 +39,7 @@ isdefined(Main, :run_design) || include(joinpath(@__DIR__, "run.jl"))
 """Print usage to stderr and return exit code 1."""
 function plot_usage()::Int
     println(stderr, """usage:
-  julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--comparison-out FILE] [--comparison-sectors s1,s2,s3] [--comparison-closures c1,c2] [--no-figures] [--quiet]""")
+  julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--comparison-out FILE] [--comparison-sectors s1,s2,s3] [--comparison-closures c1,c2] [--scatter-out FILE] [--scatter-pairs BF/F1,BETA/F2] [--no-figures] [--quiet]""")
     return 1
 end
 
@@ -52,7 +54,7 @@ const DEFAULT_COMPARISON_SECTORS = [
 """
 Parse the driver CLI args into a NamedTuple (`design`, `cells`, `outdir`,
 `data_dir`, `panel_dir`, `comparison_out`, `comparison_sectors`,
-`comparison_closures`, `no_figures`, `quiet`). `--design` is required (checked by
+`comparison_closures`, `scatter_out`, `scatter_pairs`, `no_figures`, `quiet`). `--design` is required (checked by
 `plot_main`); `--cells` is a comma-separated run-id list. Throws an
 `ArgumentError` on a missing value or an unknown option.
 """
@@ -65,13 +67,16 @@ function parse_plot_args(args::Vector{String})::NamedTuple
     comparison_out::Union{String,Nothing} = nothing
     comparison_sectors::Union{Vector{String},Nothing} = nothing
     comparison_closures::Union{Vector{String},Nothing} = nothing
+    scatter_out::Union{String,Nothing} = nothing
+    scatter_pairs::Union{Vector{Tuple{String,String}},Nothing} = nothing
     no_figures = false
     quiet = false
     i = 1
     while i <= length(args)
         a = args[i]
         if a in ("--design", "--cells", "--outdir", "--data-dir", "--panel-dir",
-                "--comparison-out", "--comparison-sectors", "--comparison-closures")
+                "--comparison-out", "--comparison-sectors", "--comparison-closures",
+                "--scatter-out", "--scatter-pairs")
             i + 1 > length(args) && throw(ArgumentError("missing value for $a"))
             key = a[3:end]
             val = args[i+1]
@@ -89,6 +94,18 @@ function parse_plot_args(args::Vector{String})::NamedTuple
                 comparison_sectors = String.(strip.(split(val, ",")))
             elseif key == "comparison-closures"
                 comparison_closures = String.(strip.(split(val, ",")))
+            elseif key == "scatter-out"
+                scatter_out = val
+            elseif key == "scatter-pairs"
+                scatter_pairs = Tuple{String,String}[]
+                for entry in split(val, ",")
+                    pair = strip.(split(entry, "/"))
+                    length(pair) == 2 && all(!isempty, pair) ||
+                        throw(ArgumentError("scatter pairs must use LABOUR/FINANCING, e.g. BF/F1,BETA/F2"))
+                    push!(scatter_pairs, (String(pair[1]), String(pair[2])))
+                end
+                length(unique(scatter_pairs)) == length(scatter_pairs) ||
+                    throw(ArgumentError("scatter pairs must be unique"))
             else
                 data_dir = val
             end
@@ -108,6 +125,7 @@ function parse_plot_args(args::Vector{String})::NamedTuple
         comparison_out = comparison_out,
         comparison_sectors = comparison_sectors,
         comparison_closures = comparison_closures,
+        scatter_out = scatter_out, scatter_pairs = scatter_pairs,
         no_figures = no_figures, quiet = quiet)
 end
 
@@ -209,6 +227,13 @@ The figure path `@eval using GLMakie` only after this check passes.
 """
 function glmakie_available()::Bool
     return Base.find_package("GLMakie") !== nothing
+end
+
+"""Called in the latest world after the optional GLMakie import in plot_main."""
+function plot_save_scatter(path::AbstractString, fig)
+    img = GLMakie.colorbuffer(fig; px_per_unit = 600 / 72)
+    GLMakie.FileIO.save(path, img; dpi = 600)
+    return path
 end
 
 """
@@ -565,7 +590,7 @@ function plot_main(args::Vector{String} = ARGS;
         end
     end
 
-    # 10c. Closure-comparison range-bar figure (OpenCGE ≥ v0.4.0, ADR-0037).
+    # 10c. Vertical ranges over financing, grouped by labour (OpenCGE v0.5.0).
     if opts.comparison_out !== nothing
         if !glmakie_available()
             println(stderr, "`OpenCGE.save_closure_comparison` requires " *
@@ -596,6 +621,30 @@ function plot_main(args::Vector{String} = ARGS;
             return 1
         end
         println("wrote $written")
+    end
+
+    # 10d. All-sector output/price comparison; point area is the baseline
+    # Domar weight, shared across the explicitly selected closure pairs.
+    if opts.scatter_out !== nothing
+        if !glmakie_available()
+            println(stderr, "`OpenCGE.plot_closure_scatter` requires GLMakie; load it alongside OpenCGE.")
+            return 1
+        end
+        try
+            @eval using GLMakie
+            pairs = opts.scatter_pairs === nothing ?
+                [(c.labour, c.financing) for c in ds.cells] : opts.scatter_pairs
+            fig = Base.invokelatest(OpenCGE.plot_closure_scatter, ds, pairs;
+                programme = g, size = (482, 370), fontsize = 10, max_markersize = 16)
+            lowercase(splitext(opts.scatter_out)[2]) == ".png" ||
+                throw(ArgumentError("--scatter-out writes .png files"))
+            mkpath(dirname(abspath(opts.scatter_out)))
+            Base.invokelatest(plot_save_scatter, opts.scatter_out, fig)
+            println("wrote $(opts.scatter_out)")
+        catch e
+            println(stderr, "plot_closure_scatter failed: $(sprint(showerror, e))")
+            return 1
+        end
     end
 
     # 11. Exit code: 0 only when every selected cell validated (figures were

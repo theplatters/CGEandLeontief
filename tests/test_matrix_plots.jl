@@ -271,6 +271,26 @@ end
 	@test slabels == ["B short", "A short"]
 end
 
+@testset "matrix plots: explicit scatter pairs" begin
+	args = parse_plot_args(["--design", "matrix_5x3_v10", "--no-figures",
+		"--scatter-out", "scatter.png", "--scatter-pairs", "BF/F1, BETA/F2"])
+	@test args.scatter_pairs == [("BF", "F1"), ("BETA", "F2")]
+	@test args.scatter_out == "scatter.png"
+	@test args.no_figures
+	for pairs in ("BF", "BF/", "BF/F1/extra", "BF/F1,BF/F1")
+		@test_throws ArgumentError parse_plot_args(["--scatter-pairs", pairs])
+	end
+	data, _, ref, sol = matrix_test_cells()
+	cells = [matrix_cell_data("id-$lab-$fin", lab, fin, 1.0, 0.5,
+		"executed", data, sol, ref) for lab in ("BF", "BETA") for fin in ("F1", "F2")]
+	ds = matrix_dataset("test", matrix_baseline(data, ref), cells)
+	scatter = closure_scatter_data(ds, args.scatter_pairs; programme = [0.1, 0.0])
+	@test scatter.run_ids == ["id-BF-F1", "id-BETA-F2"]
+	@test size(scatter.output) == (2, 2)
+	@test scatter.output[:, 1] ≈ 100 .* (sol.quantities ./ ref.quantities .- 1)
+	@test scatter.shocked == [true, false]
+end
+
 @testset "matrix panels: retain moving sectoral prices (optional GLMakie)" begin
 	ext = Base.get_extension(OpenCGE, :OpenCGEGLMakieExt)
 	if ext === nothing

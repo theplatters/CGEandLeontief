@@ -293,14 +293,42 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   instead of repeated "0.00%" ticks.
   `--panel-dir` loads GLMakie on its own and combines with `--no-figures`
   (which suppresses only the six standard exploratory figures).
-- `--comparison-out FILE` writes a publication closure-comparison range-bar
-  figure (`OpenCGE.save_closure_comparison`, OpenCGE ≥ `v0.4.0`): horizontal
-  output, consumption (`W_D`), and price range bars with ordered per-closure
-  ticks in separate lanes. `--comparison-sectors` selects sectors by 1-based
-  index, dotted label, or curated short name (default: `Electrical equipment`,
-  `Metal ores & mining`, `Other personal services`); `--comparison-closures`
-  selects labour ids or exact `run_id`s (default: all labour closures present
-  in the validated dataset in canonical order).
+- `--comparison-out FILE` writes a publication closure-comparison figure
+  (`OpenCGE.save_closure_comparison`, OpenCGE tag `v0.5.0`,
+  `OpenCGE@ADR-0041`): vertical output, household-consumption (plotted as
+  `W_D`), and price ranges, grouped by labour closure; each range spans
+  financing outcomes, marked by financing-specific line styles.
+  `--comparison-sectors` selects
+  sectors by 1-based index, dotted label, or curated short name (default:
+  `Electrical equipment`, `Metal ores & mining`, `Other personal services`);
+  `--comparison-closures` selects labour ids or exact `run_id`s (default: all
+  labour closures present in the validated dataset in canonical order).
+- `--scatter-out FILE` writes the all-sector output/price scatter
+  (`OpenCGE.plot_closure_scatter`, OpenCGE tag `v0.5.0`,
+  `OpenCGE@ADR-0039`–`OpenCGE@ADR-0042`). `--scatter-pairs BF/F1,BETA/F2`
+  selects explicit labour/financing pairs (default: every validated cell).
+  Each pair gets one color; programme sectors are dark and other sectors
+  are light. Point area is proportional to the pre-programme Domar weight.
+  Both comparison outputs are 17 cm wide, use 10-point text and 600-dpi PNGs,
+  and combine with `--no-figures` to suppress exploratory figures.
+
+The Section 5.2 comparisons are regenerated together with:
+
+```bash
+julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v11 --no-figures \
+  --comparison-out revision/images/closure_comparison.png \
+  --scatter-out revision/images/closure_scatter.png \
+  --scatter-pairs BF/F1,BF/F2,ALPHA/F1,ALPHA/F2,BETA/F1,BETA/F2,GAMMA/F1,GAMMA/F2,GAMMA/F3
+```
+
+The range plot covers all fifteen headline cells; the scatter shows the nine
+distinct economies (F2 stands for coincident F2/F3 in BF/ALPHA/BETA, and
+GAMMA stands for coincident GAMMA/DELTA). Sources are
+`matrix_5x3-v11-<LABOUR>-<FINANCING>`, replacing BETA by
+`matrix_5x3-v11-BETA-<FINANCING>-etas05` throughout (ADR-0036).
+Appendix D preserves the existing detailed panels, their labels and their
+`matrix_5x3_v10` source mapping in ADR-0036. The new main-text comparisons
+use `matrix_5x3_v11` (ADR-0044).
 
 ## Animating the pricing panels
 

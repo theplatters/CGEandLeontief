@@ -17,6 +17,14 @@
 % =====================================================================
 
 \section{The model, its closures and the formal results}\label{app:proofs}
+%NOTE (recorded 2026-10-23 at the author's request): the author doubts that what
+%remains of this appendix carries its weight for a Metroeconomica audience and
+%considers Appendix A sufficient on its own. What is kept here is either exact
+%(Lemmas lem:price and lem:affine; Propositions prop:ab, prop:gd, prop:nest) or
+%measured (Table tab:sectoral with the sectoral readings). Cut in this round: the
+%classification corollary, the off-slice remark and the interpolation remark ---
+%the last because the limit it asserted does not hold. Candidate for deletion
+%before resubmission if no referee asks for proofs.
 
 \noindent
 This appendix collects the formal apparatus behind the closure matrix: the
@@ -25,8 +33,9 @@ problems of Section~\ref{subsec:optimization}
 (Section~\ref{app:model-kernel}); the five labor-market closures and the
 three financing closures (Sections~\ref{app:labour-closures}
 and~\ref{app:financing-closures}); and the formal results --- the closure
-systems, the demand-only reduction, the equivalence propositions and their classification (Corollary~\ref{cor:class}),
-the scope conditions and the numerical evidence
+systems, the demand-only reduction, the exact equivalences
+(Propositions~\ref{prop:ab}, \ref{prop:gd}, \ref{prop:nest}), the scope
+conditions and the numerical evidence
 (Sections~\ref{app:closure-systems}--\ref{app:eqnumevidence}). The
 intermediate-bill and external-account accounting is in
 Appendix~\ref{app:kernel}.
@@ -168,7 +177,7 @@ $\sum_i L_i = \Lbar$: employment absorbs whatever labor equilibrium
 production requires; no employment constraint is imposed at all. The real
 wage is an outcome and not an instrument --- at every solution
 $w/\mathcal{P}(p) = 1/\mathcal{P}(\pi(A))$, a function of technology alone
-(Corollary~\ref{cor:peg}) --- so the pin $w=1$ is a numeraire rather than a
+(Corollary~\ref{cor:realwage}) --- so the pin $w=1$ is a numeraire rather than a
 wage-setting rule. 
 
 \paragraph{The Leontief closure: the fixed-coefficient corner.}
@@ -503,15 +512,12 @@ closure.
 \end{proposition}
 
 \begin{proof}
-The two systems differ in exactly one equation. By
-Lemma~\ref{lem:price} and Corollary~\ref{cor:realwage}, every solution of
-the shared block satisfies $w/\mathcal{P} = 1 = w_0/\mathcal{P}_0$, so the elastic-supply
-labor
-equation \eqref{eq:closure-beta} reduces to $\sum_i L_i = \Lbar$, which is
-\eqref{eq:closure-alpha}. Conversely, any solution of the standard CGE system
-satisfies the elastic-supply equation by the same substitution. The systems
-are therefore
-equivalent, equation by equation.
+The two systems differ in one equation. By Lemma~\ref{lem:price} and
+Corollary~\ref{cor:realwage}, every solution of the shared block satisfies
+$w/\mathcal{P} = 1 = w_0/\mathcal{P}_0$, so the elastic-supply labor equation
+\eqref{eq:closure-beta} reduces to $\sum_i L_i = \Lbar$, which is
+\eqref{eq:closure-alpha}; conversely, any solution of the standard CGE system
+satisfies the supply equation by the same substitution.
 \end{proof}
 
 \begin{proposition}[The employment-adjustment closure $\equiv$ the Leontief
@@ -532,53 +538,20 @@ analytic system \eqref{eq:affine}--\eqref{eq:bvec} computes it exactly.
 \end{proposition}
 
 \begin{proof}
-Existence and form: at $p = \one$ the price block holds by the calibration
-identity (Lemma~\ref{lem:price}), and by Lemma~\ref{lem:affine} the
-clearing block at $p = \one$ is the affine system, of which
-$y^{\ast} = (I-G)^{-1}b(0)$ is the solution. Uniqueness on the admitted
-branch: the scale-determinacy guard verifies at the reference
-prices that $(I - G)$ is nonsingular --- contraction if
-$\max_u \mathrm{colsum}_u(G) < 1$, otherwise a direct rank test --- and
-that the candidate $y^{\ast}$ is strictly positive;
-the guard admits the branch on which the affine fixed
-point is unique and positive, but does not by itself exclude further roots of
-the nonlinear system; the multi-init admissibility checks recorded for the F1
-column (three distinct starting points converging to the same root) are the
-evidence that the reported root is the admitted one. Both wage-pinned solves
-(the employment-adjustment closure and the Leontief closure) are subject to the
-same guard, and both converged to this root
-(residuals $4.4\times10^{-16}$ to $2.0\times10^{-13}$
-across the six wage-pinned cells). The
-elasticity-independence is exact in the equations, not an $\epsilon$-limit
-artifact: the Leontief-corner solve at $\epsilon_\delta = 10^{-4}$
-reproduces the
-analytic $y^{\ast}$ with relative error $0.0$ (F2/F3 verification), and
-the flow metrics of the two rows agree to all printed decimals with residual-level wedge
-differences $\sim 10^{-12}$.
+At $p = \one$ the price block holds by the calibration identity
+(Lemma~\ref{lem:price}), and by Lemma~\ref{lem:affine} the clearing block at
+$p = \one$ is the affine system \eqref{eq:affine}--\eqref{eq:bvec}, of which
+$y^{\ast} = (I - G)^{-1} b(0)$ is the solution; the employment and consumption
+blocks then give the stated $L^{\ast}$ and $c^{\ast}$. Elasticity-independence
+is exact in the equations, not an $\epsilon$-limit artefact: the Leontief-corner
+solve at $\epsilon_\delta = 10^{-4}$ reproduces the analytic $y^{\ast}$, and the
+two rows agree to all printed decimals. Uniqueness holds on the admitted branch
+--- $(I-G)$ nonsingular, $y^{\ast}$ strictly positive --- and the guard and
+multi-init checks behind both rows are reported in
+Section~\ref{app:eqnumevidence}.
 \end{proof}
 
-\begin{corollary}[Classification]\label{cor:class}
-The coincidences, their status and what each leaves unidentified are those
-collected in Tables~\ref{tab:equiv-links} and~\ref{tab:equiv-matrix} (Appendix~\ref{app:equivalences}); the statuses follow from Lemma~\ref{lem:affine} (employment adjustment $\equiv$ Leontief corner), Corollary~\ref{cor:realwage} (standard CGE $\equiv$
-single-wage supply), Section~\ref{app:gauge} (F2 $\equiv$ F3 in the mobile
-rows) and Proposition~\ref{prop:nest} (sectoral corner $\equiv$ no
-reallocation).
-\end{corollary}
 
-\begin{remark}[Off the demand-only slice]\label{rem:supply}
-The equivalences fail the moment technology moves. At $A \neq \one$,
-Corollary~\ref{cor:realwage} gives $w/\mathcal{P} = 1/\mathcal{P}(\pi(A)) \neq 1$ in
-general --- the wage-pinned row then sits off its real-wage anchor, which is
-Corollary~\ref{cor:peg}'s point --- and the elastic-supply labor equation reduces to
-$\alpha^{\!\top}y = \Lbar\,[1/\mathcal{P}(\pi(A))]^{\eta_s}$: employment is pinned
-to a \emph{technology-determined constant} that now depends on $\eta_s$.
-The supply-side pilot (+20\% in sector 1) measures exactly this separation
---- the failure of Proposition~\ref{prop:ab}'s hypothesis $A \equiv \one$:
-$w = 1.004903$, with $L = 1.0024$ at $\eta_s = 0.5$ versus $L = 1.0098$ at
-$\eta_s = 2$ against the standard CGE closure's $L = 1.0000$. The
-identification of $\eta_s$ therefore requires a supply-side scenario ---
-the premise of the supply arm.
-\end{remark}
 
 \subsection{The sectoral family and its rigid corner}\label{app:sectoral}
 
@@ -644,40 +617,16 @@ allocation, $L_i := \bar{L}_i$, instead of at the cost-minimizing demand
 $L^{cm}_i$.
 
 \emph{(i)} Let $X$ solve the sectoral system at $\eta_{s,i} \equiv 0$. Its (W)
-gives $L^{cm}_i(X) = \bar{L}_i$ for every $i$, the supply term vanishing
-identically. Substituting $L^{cm}_i = \bar{L}_i$ into its (Y) makes that block
-equal the endpoint's (Y); (P) and (E) are identical in the two systems by
-inspection. Hence $X$ solves the endpoint system.
-
-\emph{(ii)} Let $X$ solve the endpoint system. Its (W) gives
+gives $L^{cm}_i(X) = \bar{L}_i$ for every $i$; substituting this into (Y) makes
+that block equal the endpoint's (Y), while (P) and (E) are identical in the two
+systems by inspection, so $X$ solves the endpoint system.
+\emph{(ii)} Conversely, let $X$ solve the endpoint system. Its (W) gives
 $L^{cm}_i(X) = \bar{L}_i$, which satisfies the sectoral (W) at
-$\eta_{s,i} \equiv 0$; substituting it into (Y) yields the sectoral (Y). Hence
-$X$ solves the sectoral system. Both systems are square --- $3N+1$ unknowns,
-$3N+1$ equations --- and their residual maps agree on the common solution set,
-so the solution sets coincide.
+$\eta_{s,i} \equiv 0$, and substituting it into (Y) yields the sectoral (Y).
+Both systems are square --- $3N+1$ unknowns, $3N+1$ equations --- and their
+residual maps agree on the common solution set, so the solution sets coincide.
 \end{proof}
 
-\begin{remark}[Why the family interpolates, and where it does not close]
-Increasing $\eta_{s,i}$ moves the adjustment from prices to quantities. At
-$\eta_{s,i} = 0$ the allocation is pinned and the $N$ wages absorb the shock;
-as $\eta_{s,i} \to \infty$ the supply curves become infinitely elastic, the
-real wage is forced back to its baseline anchor and employment becomes
-the absorbing margin, as in the wage-pinned row. The
-two ends of the family are therefore the matrix's own rigidity rows: the
-no-reallocation closure
-(allocation frozen, wages free) at the rigid corner, the employment-adjustment
-closure (wage pinned,
-allocation free) at the elastic one. Two qualifications are exact and matter
-for reading the table below. First, the elastic end is a \emph{limit}, not a
-cell: the supply slope diverges and the direct solve eventually fails
-($\eta_s = 10^6$). Second, the family keeps the transfer $F$ free,
-whereas the wage-pinned system fixes $F \equiv 0$. The two ends are therefore of
-different kinds: at $\eta_{s,i} = 0$ the family \emph{coincides} with the
-no-reallocation row exactly --- the two systems share their solution set
-(Proposition~\ref{prop:nest}) --- whereas at the elastic end it only
-\emph{approaches} the employment-adjustment closure, and does not attain it, for the
-additional reason that the transfer is pinned there.
-\end{remark}
 
 \paragraph{Measured.} Table~\ref{tab:sectoral} reports the sectoral results.
 Four patterns emerge.
@@ -825,7 +774,7 @@ import prices enter the intermediate index~\eqref{eq:model-ip} and the
 consumer price index through the margins, so they route the program's import
 content into the terms of trade. Supply shocks, $A \neq 1$, break
 Corollary~\ref{cor:realwage} and separate the elastic-supply closure from the
-standard CGE closure (Remark~\ref{rem:supply}). A wage vector pinned
+standard CGE closure (Corollary~\ref{cor:realwage}). A wage vector pinned
 \emph{exogenously} is also available, but it yields design heterogeneity
 rather than demand-sensitivity, because the pinned vector keeps the price
 block demand-free.

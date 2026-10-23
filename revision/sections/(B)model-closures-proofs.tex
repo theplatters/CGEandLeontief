@@ -35,7 +35,7 @@ Appendix~\ref{app:kernel}.
 \subsection{Production and consumption}\label{app:model-kernel}
 
 \paragraph{Notation.} $L_i$ is employment in sector $i$ and $L=\sum_i L_i$ total employment; a bar marks the baseline, so $\bar L_i$ is baseline sectoral and $\Lbar$ baseline total employment. $w$ is the common wage of the mobile closures, $w_i$ the
-sector-specific wage where labor markets are sectoral, and $\bar w$ the baseline real-wage anchor. Real wages are calculated by deflating with by the consumption price index $\mathcal{P}(p)$, the CES price of the household's bundle; a subscript $0$ marks
+sector-specific wage where labor markets are sectoral, and $\bar w$ the baseline real-wage anchor. Real wages are computed by deflating with the consumption price index $\mathcal{P}(p)$, the CES price of the household's bundle; a subscript $0$ marks
 baseline values. $L_i^{\mathrm{cm}}(p,y_i,w_i)$ is the labor demand that
 solves the firm's cost-minimization problem
 of Section~\ref{subsec:optimization} at prices $p$ and output $y_i$. The
@@ -146,7 +146,9 @@ L_i = L_i^{\mathrm{cm}}(p,y_i,w_i)
 \label{eq:closure-beta}
 \end{equation}
 Equal supply elasticities do not impose equal wages: $N$ separate labor
-markets determine $w_i$. As explained in Appendix \ref{app:equivalences} $\eta_s$ is a labor-supply elasticity, not the allocation parameter $\eta$; however, setting $\eta_s = 0$ gives exactly the no-reallocation row. The calibrated real-wage anchors are $w_{i0}/\mathcal{P}_0 = 1$. The deflator remains the common consumption price index, not the sector's own goods price $p_i$. The supply curves are reduced forms without a
+markets determine $w_i$. As explained in Appendix~\ref{app:equivalences}, $\eta_s$ is a labor-supply
+elasticity and not the allocation parameter $\eta$; yet setting $\eta_s = 0$
+reproduces the no-reallocation row exactly. The calibrated real-wage anchors are $w_{i0}/\mathcal{P}_0 = 1$. The deflator remains the common consumption price index, not the sector's own goods price $p_i$. The supply curves are reduced forms without a
 labor--leisure income effect. The headline panels use $\eta_s = 0.5$;
 the elasticity ladder and heterogeneous sectoral variants are reported in
 Appendix~\ref{app:variants}. 
@@ -251,7 +253,7 @@ not remain unchanged. Hence, strictly speaking, F1 is a demand-repurposing exper
 
 \paragraph{F2: tax-financed public investment.}
 F2 adds the real program bundle $g$ and levies an additional household
-tax equal to its value at equilibrium prices to compensate for the program costs:
+tax that covers the program at equilibrium prices:
 \begin{equation}
 T(p) = \sum_{i=1}^N p_i g_i,
 \qquad E = W-T_G(p)-T(p)+F,
@@ -271,7 +273,8 @@ B_{\mathrm{gov}} = \sum_{i=1}^N p_i g_i,
 \label{eq:closure-f3}
 \end{equation}
 The booking $B_{\mathrm{gov}}$ is distinct from the net external transfer
-$F$ entering household resources after tax, although their economic interpreation is similar, namely some form of external debt. $F$ is solved endogenously in the no-reallocation, the standard CGE and both elastic-supply forms, but is fixed at zero in the two wage-pinned closures, the employment-adjustment closure and its Leontief corner. $B_gov$ in contrast is set endognously to match the size of the spending program.
+$F$ entering household resources after tax, although their economic interpretation is similar, namely some form of external debt. $F$ is solved endogenously in the no-reallocation, the standard CGE and both elastic-supply forms, but is fixed at zero in the two wage-pinned closures, the employment-adjustment closure and its Leontief corner. $B_{\mathrm{gov}}$, by contrast, is set endogenously to match the size of the
+spending program.
 \begin{equation}
 S + T_{\mathrm{int}} + M - (I+X) = F+B_{\mathrm{gov}},
 \qquad S=sE,
@@ -280,7 +283,8 @@ S + T_{\mathrm{int}} + M - (I+X) = F+B_{\mathrm{gov}},
 where $I$ is non-program investment, $X$ exports, $M$ total imports
 (including intermediate and program imports), and $T_{\mathrm{int}}$
 the separately booked product-tax leak on intermediate use; all are
-current-price values. As already indicated the net external position is $F+B_{\mathrm{gov}}$, not the program cost alone. F3 is an accounting open-economy closure, not a monetary mechanism: the static model cannot distinguish external borrowing from a transfer and does not model interest payments, repayment or exchange-rate adjustment.
+current-price values. The net external position is therefore $F+B_{\mathrm{gov}}$, not the program
+cost alone. F3 is an accounting open-economy closure, not a monetary mechanism: the static model cannot distinguish external borrowing from a transfer and does not model interest payments, repayment or exchange-rate adjustment.
 
 \subsection{The closure systems}\label{app:closure-systems}
 

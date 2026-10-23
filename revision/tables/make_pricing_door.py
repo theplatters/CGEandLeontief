@@ -26,7 +26,7 @@ Outputs:
 
 Split (2026-10-18, ADR-0032). The two doors get one table each, and each table
 carries all five labour rows, so the dissolution of the demand-only
-equivalences (fixed wage vs Leontief, standard CGE vs elastic supply) is
+equivalences (employment adjustment vs Leontief, standard CGE vs elastic supply) is
 read off the tables rather than stated. The capacity table carries the
 goods-only profile (delta on CPA A--F, where the programme's entire direct
 incidence falls); the all-sector counterfactual is in the appendix table. The

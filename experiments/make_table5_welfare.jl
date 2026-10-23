@@ -46,7 +46,7 @@ const FINLABEL = Dict("F1" => "repurposing of consumption",
                       "F2" => "refinancing via taxes",
                       "F3" => "external / debt finance")
 const LABEL = Dict("BF" => "No-reallocation", "ALPHA" => "Standard CGE",
-                   "BETA" => "Elastic supply", "GAMMA" => "Fixed nominal wage",
+                   "BETA" => "Elastic supply", "GAMMA" => "Employment adjustment",
                    "DELTA" => "Leontief")
 
 cell_id(lab, fin, suf = "") = "matrix_5x3-v11-$lab-$fin" * (lab == "BETA" ? (suf == "" ? "-etas05" : suf) : "")
@@ -183,7 +183,7 @@ cellstr(lab, r) = lab == "BETA" ? etas_str(r) : plain_str(r)
 #     with \multirow on the F2 row, the F3 row leaves those columns empty, and
 #     the rule between the two rows is a \cmidrule over the GAMMA/DELTA pair only
 #     (a full \midrule would cut through the merged cells).
-#   * the fixed-nominal-wage and Leontief columns coincide -> one \multicolumn{2}
+#   * the employment-adjustment and Leontief columns coincide -> one \multicolumn{2}
 #     cell per row, horizontally centred.
 # check_collapses() compares the PRINTED strings before anything is written, so a
 # kernel change that breaks an equivalence aborts the run instead of silently
@@ -237,7 +237,7 @@ function render(io, rows)
     println(io, "%   coincidences the table states are PRINTED ONCE -- F2/F3 share one cell in")
     println(io, "%   the three flexible-wage columns (\\multirow, centred across the two rows,")
     println(io, "%   the rule between them a \\cmidrule over the GAMMA/DELTA pair only) and the")
-    println(io, "%   fixed-nominal-wage and Leontief columns share one \\multicolumn{2} cell per")
+    println(io, "%   employment-adjustment and Leontief columns share one \\multicolumn{2} cell per")
     println(io, "%   row. check_collapses() asserts both on the PRINTED strings, so a broken")
     println(io, "%   equivalence aborts the run. Column widths and the cell contents are Table")
     println(io, "%   5's own; only the collapse/centre/rule grammar is Table 4's.")
@@ -274,8 +274,8 @@ function render(io, rows)
     println(io, "& \\textbf{No-reallocation}\\newline \\scriptsize immobile labour, sectoral wages")
     println(io, "& \\textbf{Standard CGE}\\newline \\scriptsize one flexible wage, mobile labour")
     println(io, "& \\textbf{Elastic labour supply}\\newline \\scriptsize sectoral supply on the real wage\\newline " * etas_head())
-    println(io, "& \\textbf{Fixed nominal wage}\\newline \\scriptsize nominal wage pegged, employment uncapped")
-    println(io, "& \\textbf{Leontief closure}\\newline \\scriptsize nominal wage pegged, quantities absorb")
+    println(io, "& \\textbf{Employment adjustment}\\newline \\scriptsize wage pinned, employment uncapped")
+    println(io, "& \\textbf{Leontief closure}\\newline \\scriptsize wage pinned, quantities absorb")
     println(io, "\\\\")
     println(io, "\\midrule")
     # refuse to merge unless the two printed cells really are identical
@@ -284,7 +284,7 @@ function render(io, rows)
     flagof(fin) = all(by[(fin, lab)].ok for lab in LABOUR) ? "" : "\\textsuperscript{\\dag}"
 
     # --- row F1: nothing is shared; all three flexible cells are separate, and
-    #     the fixed-nominal-wage and Leontief columns print once as one cell
+    #     the employment-adjustment and Leontief columns print once as one cell
     println(io, "\\textbf{F1}\\newline \\scriptsize " * FINLABEL["F1"] * flagof("F1"))
     for lab in FLEX_COLS
         print(io, "& " * cellstr(lab, by[("F1", lab)]))

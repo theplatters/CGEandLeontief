@@ -206,7 +206,7 @@ def build():
     A(r"% All in percent vs. the reference continuation; GDP at basic prices = 1.")
     A(r"% COLLAPSED CELLS: F2/F3 share one cell in the three flexible-wage columns")
     A(r"%   (\multirow{2}, the rule between those rows is a \cmidrule over the two")
-    A(r"%   right-hand columns only); the fixed-nominal-wage and Leontief columns share")
+    A(r"%   right-hand columns only); the employment-adjustment and Leontief columns share")
     A(r"%   one \multicolumn{2} cell per row. The generator asserts both coincidences")
     A(r"%   on the printed strings, so a broken equivalence aborts the build.")
     A(r"% =====================================================================")

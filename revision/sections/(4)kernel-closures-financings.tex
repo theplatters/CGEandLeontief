@@ -7,7 +7,6 @@ a utility-maximizing household. This kernel is held fixed by design as it provid
 \renewcommand*{\theHequation}{kernel.\arabic{equation}}
 
 \subsection{The input--output table}\label{subsec:io-table}
-git 
 An input--output table records, for $N$ sectors, the domestic deliveries
 $x_{ui}$ of good $u$ to sector $i$, final use $z_u$ of domestic good $u$
 (household consumption, government purchases, investment, exports) and the
@@ -36,7 +35,9 @@ The table is a static snapshot of the underlying economy: it fixes shares at one
 
 \subsection{The optimization problems}\label{subsec:optimization}
 
-On the production side each sector is represented as a single competitive firm with a constant-returns technology $\Phi_i$ in labor and intermediate inputs. Labor is the only primary factor: $L_i$ stands for the composite of all primary inputs, so the whole of value added $v_i$ --- compensation of employees, but also depreciation, the operating surplus and other net taxes on production --- accrues to it, and $\alpha_i$ is the full value-added share rather than the labor share in the national-accounts sense. Given prices $p$, its wage $w_i$ and output $y_i$, these firms aim to minimize cost:
+On the production side each sector is represented as a single competitive firm with a constant-returns technology $\Phi_i$ in labor and intermediate inputs. Labor is the only primary factor: $L_i$ stands for the composite of all primary inputs, so the whole of value added $v_i$ --- compensation of employees, but also depreciation, the operating surplus and other net taxes on production --- accrues to it, and $\alpha_i$ is the full value-added share rather than the labor share in the national-accounts sense.\footnote{This is the factor side as it enters the accounting we build on, where the primary input
+is carried as an aggregate \citep{Hulten.1978,Baqaee.2021}. Consequently no claim about
+the division of value added between wages and profits is made anywhere below.} Given prices $p$, its wage $w_i$ and output $y_i$, these firms aim to minimize cost:
 \begin{equation}
 \min_{L_i,\,x_{1i},\ldots,x_{Ni}} \; w_i L_i + \sum_{u=1}^N p_u x_{ui}
 \qquad \text{s.t.} \qquad \Phi_i(L_i, x_{1i},\ldots,x_{Ni}; A_i) \geq y_i,
@@ -61,7 +62,7 @@ On the consumption side, a representative household maximizes utility given its 
 We represent $U$ by a CES function with elasticity $\sigma = 0.9$.
 The corresponding consumer price index (CPI), $\mathcal{P}(p) = (\sum_i \beta_i p_i^{1-\sigma})^{1/(1-\sigma)}$, measures the expenditure required to purchase one unit of the household's consumption composite. We use it to express wages and household expenditure in consumption units and choose it as the numeraire,$\mathcal{P}(p)=1$ in the flexible wage closures.  In the wage-pinned closures we instead normalize the common money wage to $w=1$.
 
-In line with standard reasoning, we calibrate the CES functions by equating the measured consumption ($\beta_u$) and income shares ($\alpha_i$, $\Omega_{ui}$) with the imposed weights so that the current allocation represents an optimum. In other words, with baseline prices normalized to one, the solutions to~\eqref{eq:cost-min} and~\eqref{eq:utility-max} then reproduce the measurements, which also sectoral gross outputs $\lambda_i$, the so-called Domar weights. This result holds regardless of the chosen production elasticities ($\epsilon$, $\theta$) and will move with $\sigma$ only once prices move away from the baseline. In equilibrium, output must meet intermediate and final demand in every sector: the row identity~\eqref{eq:io-row}, which holds in the table by construction, becomes a market-clearing condition that prices must restore after a shock.
+In line with standard reasoning, we calibrate the CES functions by equating the measured consumption ($\beta_u$) and income shares ($\alpha_i$, $\Omega_{iu}$) with the imposed weights so that the current allocation represents an optimum. In other words, with baseline prices normalized to one, the solutions to~\eqref{eq:cost-min} and~\eqref{eq:utility-max} then reproduce the measurements, which also sectoral gross outputs $\lambda_i$, the so-called Domar weights. This result holds regardless of the chosen production elasticities ($\epsilon$, $\theta$) and will move with $\sigma$ only once prices move away from the baseline. In equilibrium, output must meet intermediate and final demand in every sector: the row identity~\eqref{eq:io-row}, which holds in the table by construction, becomes a market-clearing condition that prices must restore after a shock.
 
 \subsection{The welfare measure}\label{subsec:welfare}
 

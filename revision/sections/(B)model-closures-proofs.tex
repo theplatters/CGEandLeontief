@@ -1,50 +1,22 @@
 % =====================================================================
 % Appendix B --- The model, its closures and the formal results
 % ---------------------------------------------------------------------
-% STRUCTURE (2026-10-22): notation folded into "Production and consumption";
-% the "Purpose and summary" subsection removed (its measured witnesses are
-% discharged by the propositions and by "Numerical evidence"); the second
-% block renamed "The closure systems"; all subsection labels standardised to
-% app:* (was: sec:reduction, sec:equiv, sec:sectoral, sec:gauge, sec:scope).
-% Later edits must keep the label family app:* inside appendices.
-% MERGED 2026-10-18 from three appendices that overlapped: the closure FOCs,
-% the model formulation, and the proofs. One equation label set only; the
-% proofs refer back to the formulation's labels, and proof-specific equations
+% STRUCTURE (2026-10-22): notation folded into B.1 "Production and
+% consumption"; the "Purpose and summary" subsection removed; the shared
+% blocks renamed B.4 "The closure systems"; all subsection labels are app:*
+% (was: sec:reduction, sec:equiv, sec:sectoral, sec:gauge, sec:scope), and
+% the section carries ONE label, app:proofs (the aliases app:model and
+% app:closure-focs were retired; Section 4 now points at app:proofs).
+% Admissibility paragraph removed; B.10 compressed to the evidentiary minimum.
+% MERGED 2026-10-18 from three appendices that overlapped (closure FOCs, model
+% formulation, proofs). One equation label set only; proof-specific equations
 % (eq:int, eq:cons, eq:leontiefblocks, eq:affine, eq:bvec, eq:finstrument)
-% remain where first used. Equations run in one series.
+% remain where first used; equations run in one series.
 % REGISTER: no ADR numbers, run ids, generation tags, probe names, file or
-% registry paths remain; measured values are stated as values. Keep it that
-% way when editing.
+% registry paths; measured values are stated as values. Keep it that way.
 % =====================================================================
-% Appendix B --- The model, its closures and the formal results
-% ---------------------------------------------------------------------
-% MERGED 2026-10-18 from three appendices that overlapped:
-%   (B)closure-focs.tex  -> the Notation subsection; its duplicate condition
-%                           lists were dropped (the conditions are stated in
-%                           full below, with their equations)
-%   (H)model-formulation.tex -> the kernel and the closure formulation
-%   (C)proofs.tex        -> Purpose and summary through Numerical evidence
-% Order: notation, formulation, then the formal results. Labels preserved on
-% the merged section: app:model, app:closure-focs, app:proofs (Section 3 cites
-% the first two, Section 4 the third; all three print the same appendix
-% letter). Subsection labels app:model-kernel, app:labour-closures,
-% app:financing-closures, app:foc-notation, app:eqkernel, sec:reduction,
-% sec:equiv, sec:sectoral, sec:gauge, sec:scope and app:eqnumevidence are
-% untouched.
-% EQUATIONS: one label set only. The canonical kernel equations are the
-% formulation's (eq:model-ip, eq:model-cost, eq:zp, eq:closure-labour-demand,
-% eq:model-clearing, eq:labour-cpi, eq:closure-alpha, eq:closure-beta and the
-% financing equations); the proofs refer back to them. The former duplicates
-% in the proofs part (eq:ip, eq:cost, eq:labdemand, eq:clearing, eq:alpha,
-% eq:beta, eq:cpi) were deleted and their \eqref's retargeted. Proof-specific
-% equations (eq:int, eq:cons, eq:leontiefblocks, eq:affine, eq:bvec,
-% eq:finstrument) remain where they are first used. Equations run in one
-% series: the proof part's counter override was removed.
-% REGISTER: no ADR numbers, run ids, generation tags, probe names, file or
-% registry paths remain; measured values are stated as values. Keep it that
-% way when editing.
-% =====================================================================
-\section{The model, its closures and the formal results}\label{app:model}\label{app:closure-focs}\label{app:proofs}
+
+\section{The model, its closures and the formal results}\label{app:proofs}
 
 \noindent
 This appendix collects the formal apparatus behind the closure matrix: the
@@ -53,8 +25,8 @@ problems of Section~\ref{subsec:optimization}
 (Section~\ref{app:model-kernel}); the five labor-market closures and the
 three financing closures (Sections~\ref{app:labour-closures}
 and~\ref{app:financing-closures}); and the formal results --- the closure
-systems, the demand-only reduction, the equivalence propositions, the scope
-conditions and the numerical evidence
+systems, the demand-only reduction, the equivalence propositions and their classification (Corollary~\ref{cor:class}),
+the scope conditions and the numerical evidence
 (Sections~\ref{app:closure-systems}--\ref{app:eqnumevidence}). The
 intermediate-bill and external-account accounting is in
 Appendix~\ref{app:kernel}.
@@ -603,6 +575,7 @@ collected in Tables~\ref{tab:equiv-links} and~\ref{tab:equiv-matrix} (Appendix~\
 single-wage supply), Section~\ref{app:gauge} (F2 $\equiv$ F3 in the mobile
 rows) and Proposition~\ref{prop:nest} (sectoral corner $\equiv$ no
 reallocation).
+\end{corollary}
 
 \begin{remark}[Off the demand-only slice]\label{rem:supply}
 The equivalences fail the moment technology moves. At $A \neq \one$,
@@ -781,7 +754,7 @@ Table~\ref{tab:matrix}.
 proposition's proof refers to the technology shock, so the nesting is not a
 demand-only property. Verified directly: under a $+20\%$ productivity shock in
 sector 1 the four row blocks again agree to machine precision. The same experiment shows why $\eta_{s,i}$
-matters outside the demand-only slice: the rungs separate under the shock
+matters outside the demand-only slice: the levels separate under the shock
 (employment $1.000000$, $1.002187$, $1.008218$ and the real-wage spread
 $1.215$, $1.105$, $1.043$ at $\eta_s = 0, 0.5, 2$), so the sectoral elasticity
 is identifiable only with a supply-side scenario, while under a demand-only
@@ -820,8 +793,8 @@ F^{\ast} = \frac{\Lbar - \alpha^{\!\top}(I-G)^{-1} b_0}
 \label{eq:finstrument}
 \end{equation}
 This instrument is why the mobile F2 and F3 columns are real-neutral: F2
-charges the program through the wage-income tax ($E = \alpha^{\!\top}y -
-\sum g^G - \sum g + F$), F3 through the external account ($E = \alpha^{\!\top}y
+charges the program through the wage-income tax \eqref{eq:closure-f2} ($E = \alpha^{\!\top}y -
+\sum g^G - \sum g + F$), F3 through the external account \eqref{eq:closure-f3} ($E = \alpha^{\!\top}y
 - \sum g^G + F$), and the two $b$-vectors differ by exactly
 $f\,\sum g$. The pin \eqref{eq:finstrument} therefore yields
 $F^{\ast}_{F3} = F^{\ast}_{F2} - \sum g$, identical real allocations, and
@@ -846,14 +819,6 @@ account closes to $\le 1.04\times10^{-11}$, the transfer $F$ is a solved
 equilibrium object rather than a pin, financing neutrality extends to
 $\eta = 0$ ($F_{F3} = F_{F2} - B_{gov}$ to $3.5\times10^{-14}$), and no entry
 of that row need be withheld.
-
-\paragraph{Admissibility.} All fifteen cells execute. In particular the F1
-column is
-admissible in the fixed-wage
-rows: the saving rate and the import margins supply the
-marginal leakage that keeps $\max \mathrm{colsum}(G) < 1$ (the admissibility criterion reads $0.8314$ on the full $71$-sector matrix
-and $0.8320$ under the F1 tilt); the endogenous tax rate $\tau = \sum g^G/\alpha^{\!\top}y$ is a
-fixed-revenue level ($T = p\!\cdot\!g^G$) and enters $b$, not $G$.
 
 \subsection{Scope conditions: what breaks the equivalences}\label{app:scope}
 
@@ -909,39 +874,25 @@ intact.
 
 \subsection{Numerical evidence}\label{app:eqnumevidence}
 
-Three independent solutions of the fifteen matrix cells agree. Two of them
-are bit-identical to one another in every reported metric --- real GDP,
-consumption, employment, the deflator, the price dispersion, the external
-transfer, the wage extremes and the identity residual, all at
-$\max|\Delta| = 0$ --- and the third reproduces them to solver precision:
-$9.34\times10^{-9}$ in the stiffest no-reallocation diagnostic,
-$1.63\times10^{-11}$ in the worst of the other four rows and
-$4.55\times10^{-15}$ at the exact-baseline cells, with no printed figure
-affected. The equivalences and the tables below are therefore invariant to
-the way the solutions were generated. The sectoral cells are reported
-separately in Table~\ref{tab:sectoral}.
+All fifteen cells execute, and three independent solutions of them agree: two
+are bit-identical to one another in every reported metric at
+$\max|\Delta| = 0$, and the third reproduces them to solver precision
+($9.34\times10^{-9}$ in the stiffest no-reallocation diagnostic,
+$1.63\times10^{-11}$ in the worst of the other rows, $4.55\times10^{-15}$ at
+the exact-baseline cells), with no printed figure affected. The equivalences
+and the table below are therefore invariant to the way the solutions were
+generated.
 
-Table~\ref{tab:matrix} extracts the rows of the executed matrix (the
-fifteen cells reproduce the recorded solutions to all printed decimals; the columns
-are income-side real GDP, the household-consumption welfare index and
-employment). The elastic-supply rows are the sectoral cells at
-$\eta_s = 0.5$; they are a distinct economy. The single-wage elastic-supply cells, which coincide with
-the standard CGE closure to
-all printed decimals, are kept as a benchmark (Appendix~\ref{app:variants}).
-The paired rows (the fixed real wage closure and its Leontief corner) are
-identical to all printed decimals in every
-reported metric, including the full flow decomposition (saving, tax,
-investment plus exports, imports, taxes on intermediates), which the three
-solutions reproduce to all printed decimals. The
-three no-reallocation rows are included for contrast: the $\eta = 0$
-sectoral-wage
-endpoint is a distinct economy, not a normalization of the standard CGE
-closure. The GDP
-deflator reads $1.000000$ in the nine $\eta = 1$ standard CGE and
-fixed-wage cells --- the numerical face of Lemma~\ref{lem:price} --- while
-the three no-reallocation
-$\eta = 0$ cells carry a deflator of $1.006326$ (F1) and $1.007181$
-(F2/F3), the price response the sectoral wages create.
+Table~\ref{tab:matrix} prints the same fifteen cells at full precision
+(income-side real GDP, the household-consumption welfare index and
+employment); every entry reproduces the recorded solution to all printed
+decimals. The paired rows --- the fixed real wage closure and its Leontief
+corner --- are identical in every reported metric, and so are F2 and F3 in the
+mobile rows; the elastic-supply rows are the sectoral cells at
+$\eta_s = 0.5$ and hence a distinct economy. The GDP deflator reads
+$1.000000$ in the nine $\eta = 1$ standard CGE and fixed-wage cells --- the
+numerical face of Lemma~\ref{lem:price} --- while the three no-reallocation
+cells carry $1.006326$ (F1) and $1.007181$ (F2/F3).
 
 \begin{table}[htbp]
 \centering
@@ -973,20 +924,7 @@ No reallocation & F3 & $-0.000162$ & $-0.019800$ & $1.000000$ \\
 \end{tabular}
 \end{table}
 
-Two further readings follow from the executed cells. The flexible-wage rows
-form one equivalence class --- composition changing at pinned employment ---
-and the fixed-wage rows another, with employment moving at a pinned real
-wage; the gap between the classes is carried by the external transfer that
-the labor pin solves for, so the distinction is a derivation rather than an
-observation. And the null results for the supply elasticity and for the
-substitution elasticities under demand-only shocks are identification
-statements rather than negative findings: those parameters are unidentified
-on this slice, which is what makes the closure choice, not the calibration,
-the source of the variation the matrix exhibits. The sectoral family is the
-implemented answer to the variety question
-(Section~\ref{app:sectoral}), with two caveats that travel with it: under
-demand-only shocks the sectoral supply elasticities are sensitivity
-parameters rather than estimates, so the level of the price response is
-identified only through the supply arm (Remark~\ref{rem:supply}); and the
-rule that makes a subset of sectors rigid is a modeling choice, to be
-reported as a band rather than a point.
+The identification statements travel with the table: the supply elasticity and
+the substitution elasticities are unidentified under a demand-only shock, which
+is what makes the closure choice, not the calibration, the source of the
+variation the matrix exhibits.

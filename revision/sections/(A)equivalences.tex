@@ -58,17 +58,56 @@ Section~\ref{sec:two-questions} introduces the single-wage branch and sectoral
 wages as the matrix's two key approaches to labor-market dynamics. Where the wage is common, the conditions above apply as stated; where it is not, they lapse, and that is where the matrix regains
 variety.
 
-\clearpage
-\subsection*{The coincidences}
-
-The two tables below summarize coincidences across specifications: first
+The two sections below summarize coincidences across specifications: first
 those sketched in Figure~\ref{fig:flexibility-map}, then those that the
 results matrix prints.
 
+\clearpage
+\subsection*{Key coincidences in the background}
+
 \input{tables/tableA1_links-in-figure}
+
+\paragraph{The three links.} Each link of Table~\ref{tab:equiv-links} has a
+one-step argument,
+
+\emph{The switch.} There is nothing to prove for the first line: $\eta$ takes only the values $0$ and $1$, and its mobile value \emph{is} the cost-minimizing allocation, which is what the conventional closure assumes. The row earns its place by saying what the no-reallocation narrative is --- one switch away from the standard model, not a rival theory of the short run.
+
+\emph{The single-wage supply.} The two systems differ in one equation only. At
+the anchored real wage $w/\mathcal{P} = 1$ the supply equation reduces to
+$\sum_i L_i = \Lbar$, which is the full-employment condition; the reduction is
+an identity at every $\eta_s$ and under every financing rule
+(Proposition~\ref{prop:ab}).
+
+\emph{The rigid corner.} Write the sectoral system and the $\eta=0$ endpoint in
+the same four row blocks --- prices, quantities, wages, numeraire. At
+$\eta_{s,i}=0$ the supply term vanishes identically in every sector's labor
+equation, leaving $L^{cm}_i(p,y_i,w_i)=\bar L_i$; the endpoint's quantity block
+evaluates the wage bill at exactly that frozen allocation. Each system's
+solution therefore satisfies the other's equations, and since both are square,
+their solution sets coincide (Proposition~\ref{prop:nest}).
+
+\emph{The link that is not an identity.} The arrow from the elastic family to
+the fixed real wage in Figure~\ref{fig:flexibility-map} is a limit: as
+$\eta_{s,i}\to\infty$ the supply curves flatten and the family approaches the
+fixed real wage without attaining it, because the family keeps the net external
+transfer free while the fixed-wage closures pin it at zero. 
+%##AG: this one here is missing in the tbale isn't it?
+
+Of the identities
+above, the single-wage one does not survive a supply shock --- $A\neq\one$
+breaks the real-wage anchor (Remark~\ref{rem:supply}) --- whereas the
+rigid-corner identity does, because its argument never uses $A\equiv\one$.
+%##AG: in the last sentence: either say something about all of them or none?
+
+\subsection*{Key coincidences in the closure matrix}
+
+The two rows of Table~\ref{tab:equiv-matrix} rest on the two blocks below --- the
+fixed-wage/Leontief pair is the quantity block read at a pegged wage
+(Lemma~\ref{lem:affine}), the financing pair is the transfer instrument of
+Section~\ref{app:gauge}.
+
 \input{tables/tableA2_overlaps-in-matrix}
 
-\subsection*{The algebra behind the coincidences}
 
 \paragraph{The price block.} Unit cost depends on prices and the wage alone,
 \begin{equation}
@@ -102,42 +141,6 @@ solve for. The technique, and with it relative prices, is independent of the
 composition of demand, which allocates quantities only. This is the third
 scope condition read as algebra, and it is what makes the matrix a partition
 of a few scalar regimes rather than fifteen separate models.
-
-\paragraph{The three links.} Each link of Table~\ref{tab:equiv-links} has a
-one-step argument, and the arguments are of three different kinds; the two
-rows of Table~\ref{tab:equiv-matrix} rest on the two blocks above --- the
-fixed-wage/Leontief pair is the quantity block read at a pegged wage
-(Lemma~\ref{lem:affine}), the financing pair is the transfer instrument of
-Section~\ref{app:gauge}.
-
-\emph{The rigid corner.} Write the sectoral system and the $\eta=0$ endpoint in
-the same four row blocks --- prices, quantities, wages, numeraire. At
-$\eta_{s,i}=0$ the supply term vanishes identically in every sector's labor
-equation, leaving $L^{cm}_i(p,y_i,w_i)=\bar L_i$; the endpoint's quantity block
-evaluates the wage bill at exactly that frozen allocation. Each system's
-solution therefore satisfies the other's equations, and since both are square,
-their solution sets coincide (Proposition~\ref{prop:nest}).
-
-\emph{The single-wage supply.} The two systems differ in one equation only. At
-the anchored real wage $w/\mathcal{P} = 1$ the supply equation reduces to
-$\sum_i L_i = \Lbar$, which is the full-employment condition; the reduction is
-an identity at every $\eta_s$ and under every financing rule
-(Proposition~\ref{prop:ab}).
-
-\emph{The switch.} There is nothing to prove here, because nothing can be:
-$\eta$ takes only the values $0$ and $1$, and its mobile value \emph{is} the
-cost-minimizing allocation, which is what the conventional closure assumes. The
-row earns its place by saying what the no-reallocation narrative is --- one
-switch away from the standard model, not a rival theory of the short run.
-
-\emph{The link that is not an identity.} The arrow from the elastic family to
-the fixed real wage in Figure~\ref{fig:flexibility-map} is a limit: as
-$\eta_{s,i}\to\infty$ the supply curves flatten and the family approaches the
-fixed real wage without attaining it, because the family keeps the net external
-transfer free while the fixed-wage closures pin it at zero. Of the identities
-above, the single-wage one does not survive a supply shock --- $A\neq\one$
-breaks the real-wage anchor (Remark~\ref{rem:supply}) --- whereas the
-rigid-corner identity does, because its argument never uses $A\equiv\one$.
 
 What the appendix does not establish is that the matrix is rigid in general.
 It is rigid \emph{for demand-only shocks}, and every channel that lets

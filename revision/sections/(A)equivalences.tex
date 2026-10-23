@@ -37,7 +37,7 @@ in, e.g., Table~\ref{tab:results-matrix}.
 \subsection*{Scope: three conditions}
 
 \paragraph{A demand-only shock.} The program enters final demand at
-baseline technology, so it touches neither the price nor the technology margin. This assumption underpins the main case of our application.
+baseline technology, without directly changing technology or the pricing equations. This assumption underpins the main case of our application.
 
 \paragraph{Prices cannot see demand.} The zero-profit conditions
 contain no demand variable and are homogeneous of degree one in prices and
@@ -49,7 +49,7 @@ the wage, so relative prices are pinned by technology alone
 clearing system is exactly affine and independent of the substitution
 elasticities $(\theta,\epsilon,\sigma)$ (Lemma~\ref{lem:affine}) --- the
 production side of the classical nonsubstitution result
-(Remark~\ref{rem:samuelson}). Every closure that pins the wage and lets quantities absorb
+(Remark~\ref{rem:samuelson}). Every closure that pins the wage and lets quantities absorb the shock
 therefore solves one and the same linear system, whatever the technology.
 
 The second and third conditions are also what locate the boundary of the
@@ -81,18 +81,18 @@ an identity at every $\eta_s$ and under every financing rule
 
 \emph{The rigid corner.} Write the sectoral system and the $\eta=0$ endpoint in
 the same four row blocks --- prices, quantities, wages, numeraire. At
-$\eta_{s,i}=0$ the supply term vanishes identically in every sector's labor
-equation, leaving $L^{cm}_i(p,y_i,w_i)=\bar L_i$; the endpoint's quantity block
+$\eta_{s,i}=0$ sectoral labor supply becomes $\bar L_i$, so each sector's labor
+equation reduces to $L^{cm}_i(p,y_i,w_i)=\bar L_i$; the endpoint's quantity block
 evaluates the wage bill at exactly that frozen allocation. Each system's
-solution therefore satisfies the other's equations, and since both are square,
-their solution sets coincide (Proposition~\ref{prop:nest}).
+solution therefore satisfies the other's equations, so their solution sets
+coincide (Proposition~\ref{prop:nest}).
 
 \emph{The link that is not an identity.} The arrow from the elastic family to
 the employment-adjustment closure in Figure~\ref{fig:flexibility-map} is a limit: as
 $\eta_{s,i}\to\infty$ the supply curves flatten and the family approaches it
 without attaining it. The reason is the fixed net external transfer ---
 the family keeps $F$ free while those closures fix it at zero. The sectoral family
-owns the $N$ wages that make an anchor attainable in principle, so the limit it
+has $N$ endogenous sectoral wages that make an anchor attainable in principle, so the limit it
 approaches exists; no finite $\eta_{s,i}$ reaches it.
 
 Of the three identities, the definitional one holds under any shock because
@@ -119,7 +119,7 @@ P_i(p) = \Big( \textstyle\sum_u \Omega_{iu}\, p_u^{\,1-\theta} \Big)^{\frac{1}{1
 \label{eq:appA-cost}
 \end{equation}
 and zero profit imposes $p_i = c_i(p,w;A)$ sector by sector. No demand
-variable appears in that system, so it is homogeneous of degree one in
+variable appears in that system, and it is homogeneous of degree one in
 $(p,w)$: for any technology, every solution has the form $p = w\,\pi(A)$, and
 \emph{relative} prices are functions of technology alone. With the
 consumption price index $\mathcal{P}(p)$ as numeraire the real wage is therefore a

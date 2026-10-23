@@ -194,9 +194,16 @@ w = 1, \qquad F = 0, \qquad \eta = 1,
 \end{equation}
 The Leontief closure is therefore the fixed-coefficient corner of the
 employment-adjustment closure rather than an independent
-labor-market mechanism. The corner is exact at the calibration technology
-(Proposition~\ref{prop:gd}); once prices move, the two rows separate
-(Section~\ref{sec:beyond-demand-only}).
+labor-market mechanism. The two rows share their solution only while prices
+sit at the baseline, that is, at the calibration technology under a
+demand-only impulse (Proposition~\ref{prop:gd}); as soon as prices move,
+they separate (Section~\ref{sec:beyond-demand-only}).
+% NOTE (2026-10-23): reworded from "The corner is exact at the calibration
+% technology". That phrase was broader than Proposition prop:gd assumes: the
+% markup runs of Section sec:beyond-demand-only sit at unchanged technology
+% (A = 1) and still separate the two rows, since demand enters the price
+% block there. The exact boundary is prices at the baseline; see app:scope
+% for the five doors.
 
 \subsection{The three financing closures}\label{app:financing-closures}
 % Programme-scale F1 tilt: experiments/run.jl, f1_tilt_weights.
@@ -423,43 +430,35 @@ $2.7\times10^{-15}$.)
 \end{corollary}
 
 \begin{corollary}[No real-wage peg]\label{cor:peg}
-Let $\eta = 1$ and $F \equiv 0$, and let $(p, y, w)$ solve the shared price
-block at any technology $A$. Then the real wage is
-\begin{equation}
-\frac{w}{\mathcal{P}(p)} = \frac{1}{\mathcal{P}(\pi(A))},
-\end{equation}
-a \emph{solution object} rather than an instrument. A peg
-$w/\mathcal{P}(p) = 1$ imposed on that system therefore holds if and only if
-$\mathcal{P}(\pi(A)) = 1$, which the calibration identity delivers at
-$A \equiv \one$ and nowhere else. Since $\mathcal{P}(\pi(A))$ depends on
-technology alone, no choice of numeraire and no rescaling of $w$ can restore
-the peg away from the calibration point.
+On the shared single-wage price block the real wage is
+$w/\mathcal{P}(p) = 1/\mathcal{P}(\pi(A))$ at every solution
+(Corollary~\ref{cor:realwage}) --- a \emph{solution object} rather than an
+instrument. A peg $w/\mathcal{P}(p) = 1$ appended to that system therefore
+holds if and only if $\mathcal{P}(\pi(A)) = 1$: redundant at the calibration
+point, where the calibration identity gives $\pi = \one$ and
+$\mathcal{P}(\one) = 1$, and generically binding away from it, where no
+solution of the block satisfies the peg at all. Nothing nominal moves the
+ratio: no choice of numeraire and no rescaling of $w$ can restore the peg
+(Corollary~\ref{cor:nogo}). In dimension form the same fact is a count: the
+wage-pinned instantiation of the block solves $(p,y) \in \mathbb{R}^{2N}$ ---
+$N$ zero-profit conditions and $N$ clearings, with $w$ entering only through
+$p/w$ and set to one as a unit --- so appending $w/\mathcal{P} = 1$ adds an
+equation whose left-hand side the price block has already determined.
 \end{corollary}
 
-\begin{proof}
-Immediate from Lemma~\ref{lem:price} and Corollary~\ref{cor:realwage}:
-$p = w\,\pi(A)$ with $\mathcal{P}(w\,\pi) = w\,\mathcal{P}(\pi)$ gives the
-displayed ratio at any scale, and at $A \equiv \one$ we have $\pi = \one$ and
-$\mathcal{P}(\one) = 1$. The peg is redundant there and infeasible elsewhere.
-In dimension form the same fact is a count: the wage-pinned system in
-$(p,y) \in \mathbb{R}^{2N}$ is square --- $N$ zero-profit conditions and $N$
-clearings, with $w$ entering only through $p/w$ and set to one as a unit ---
-so appending $w/\mathcal{P} = 1$ adds an equation whose left-hand side the
-price block has already determined.
-\end{proof}
-
-\begin{remark}[What the wage-pinned system implements]\label{rem:empadj}
-Dropping the labor-supply equation and fixing $w = 1$ leaves employment
-demand-determined at the real wage the price block delivers:
-$L_i = L_i^{\mathrm{cm}}(p, y_i, w)$ with no aggregate constraint and no
-wage-setting rule. We therefore call it an \emph{employment-adjustment}
-closure, wage-pinned: employment is the absorbing margin, the net external
-transfer is fixed at $F = 0$, and the real wage is an outcome that sits at its
-baseline level only while relative prices do. The label separates the
-closure's two substantive components --- the fixed transfer and the uncapped
-employment margin --- from its unit convention $w = 1$, which carries no
-economics (Corollary~\ref{cor:nogo}).
-\end{remark}
+%TODO: Ich glaub das kann weg.
+%\begin{remark}[What the wage-pinned system implements]\label{rem:empadj}
+%Dropping the labor-supply equation and fixing $w = 1$ leaves employment
+%demand-determined at the real wage the price block delivers:
+%$L_i = L_i^{\mathrm{cm}}(p, y_i, w)$ with no aggregate constraint and no
+%wage-setting rule. We therefore call it an \emph{employment-adjustment}
+%closure, wage-pinned: employment is the absorbing margin, the net external
+%transfer is fixed at $F = 0$, and the real wage is an outcome that sits at its
+%baseline level only while relative prices do. The label separates the
+%closure's two substantive components --- the fixed transfer and the uncapped
+%employment margin --- from its unit convention $w = 1$, which carries no
+%economics (Corollary~\ref{cor:nogo}).
+%\end{remark}
 
 \begin{lemma}[Elasticity-free affine quantity block]\label{lem:affine}
 Fix $\eta = 1$ and $A \equiv \one$, and evaluate the quantity block at the

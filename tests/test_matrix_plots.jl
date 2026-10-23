@@ -291,6 +291,21 @@ end
 	@test scatter.shocked == [true, false]
 end
 
+@testset "matrix plots: financing splits and manuscript labels" begin
+	args = parse_plot_args(["--scatter-split", "--scatter-pairs",
+		"BF/F1,BETA/F1,DELTA/F1,BF/F3,BETA/F3,DELTA/F3"])
+	@test args.scatter_split
+	@test MANUSCRIPT_COMPARISON_CLOSURES == ["BF", "BETA", "DELTA"]
+	outputs = plot_scatter_outputs("images/scatter.png", args.scatter_pairs, true)
+	@test getproperty.(outputs, :path) == ["images/scatter_F1.png", "images/scatter_F3.png"]
+	@test outputs[1].pairs == [("BF", "F1"), ("BETA", "F1"), ("DELTA", "F1")]
+	@test outputs[2].pairs == [("BF", "F3"), ("BETA", "F3"), ("DELTA", "F3")]
+	@test plot_scatter_labels(outputs[1].pairs) ==
+		["No-reallocation", "Elastic labor supply", "Leontief closure"]
+	@test plot_scatter_labels(outputs[1].pairs) == plot_scatter_labels(outputs[2].pairs)
+	@test only(plot_scatter_outputs("scatter.png", args.scatter_pairs, false)).pairs == args.scatter_pairs
+end
+
 @testset "matrix panels: retain moving sectoral prices (optional GLMakie)" begin
 	ext = Base.get_extension(OpenCGE, :OpenCGEGLMakieExt)
 	if ext === nothing

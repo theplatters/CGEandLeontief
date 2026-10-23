@@ -6,6 +6,7 @@
 #   julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c]
 #       [--outdir DIR] [--data-dir DIR] [--panel-dir DIR]
 #       [--comparison-out FILE] [--scatter-out FILE] [--scatter-pairs BF/F1,BETA/F2]
+#       [--scatter-split]
 #       [--no-figures] [--quiet]
 #
 # Validation contract: every selected cell is RE-SOLVED with the harness
@@ -39,7 +40,7 @@ isdefined(Main, :run_design) || include(joinpath(@__DIR__, "run.jl"))
 """Print usage to stderr and return exit code 1."""
 function plot_usage()::Int
     println(stderr, """usage:
-  julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--comparison-out FILE] [--comparison-sectors s1,s2,s3] [--comparison-closures c1,c2] [--scatter-out FILE] [--scatter-pairs BF/F1,BETA/F2] [--no-figures] [--quiet]""")
+  julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--comparison-out FILE] [--comparison-sectors s1,s2,s3] [--comparison-closures c1,c2] [--scatter-out FILE] [--scatter-pairs BF/F1,BETA/F2] [--scatter-split] [--no-figures] [--quiet]""")
     return 1
 end
 
@@ -51,10 +52,37 @@ const DEFAULT_COMPARISON_SECTORS = [
     "Other.personal.service.activities",
 ]
 
+const MANUSCRIPT_COMPARISON_CLOSURES = ["BF", "BETA", "DELTA"]
+const PLOT_LABOUR_LABELS = Dict(
+    "BF" => "No-reallocation", "ALPHA" => "Standard CGE",
+    "BETA" => "Elastic labor supply", "GAMMA" => "Employment adjustment",
+    "DELTA" => "Leontief closure")
+const PLOT_FINANCING_LABELS = Dict(
+    "F1" => "Repurposing of consumption", "F2" => "Refinancing via taxes",
+    "F3" => "External / debt finance")
+
+plot_labour_label(id::AbstractString) = get(PLOT_LABOUR_LABELS, id, id)
+plot_financing_label(id::AbstractString) = get(PLOT_FINANCING_LABELS, id, id)
+
+"""Keep each requested pair in its financing group without expanding selections."""
+function plot_scatter_outputs(path::AbstractString, pairs::AbstractVector, split::Bool)
+    split || return [(; path = String(path), pairs)]
+    stem, ext = splitext(path)
+    return [(; path = stem * "_" * fin * ext,
+        pairs = filter(p -> last(p) == fin, pairs)) for fin in unique(last.(pairs))]
+end
+
+function plot_scatter_labels(pairs::AbstractVector)
+    common_financing = length(unique(last.(pairs))) == 1
+    return [plot_labour_label(first(p)) * (common_financing ? "" :
+        " — " * plot_financing_label(last(p))) for p in pairs]
+end
+
 """
 Parse the driver CLI args into a NamedTuple (`design`, `cells`, `outdir`,
 `data_dir`, `panel_dir`, `comparison_out`, `comparison_sectors`,
-`comparison_closures`, `scatter_out`, `scatter_pairs`, `no_figures`, `quiet`). `--design` is required (checked by
+`comparison_closures`, `scatter_out`, `scatter_pairs`, `scatter_split`,
+`no_figures`, `quiet`). `--design` is required (checked by
 `plot_main`); `--cells` is a comma-separated run-id list. Throws an
 `ArgumentError` on a missing value or an unknown option.
 """
@@ -69,6 +97,7 @@ function parse_plot_args(args::Vector{String})::NamedTuple
     comparison_closures::Union{Vector{String},Nothing} = nothing
     scatter_out::Union{String,Nothing} = nothing
     scatter_pairs::Union{Vector{Tuple{String,String}},Nothing} = nothing
+    scatter_split = false
     no_figures = false
     quiet = false
     i = 1
@@ -113,6 +142,9 @@ function parse_plot_args(args::Vector{String})::NamedTuple
         elseif a == "--no-figures"
             no_figures = true
             i += 1
+        elseif a == "--scatter-split"
+            scatter_split = true
+            i += 1
         elseif a == "--quiet"
             quiet = true
             i += 1
@@ -125,7 +157,7 @@ function parse_plot_args(args::Vector{String})::NamedTuple
         comparison_out = comparison_out,
         comparison_sectors = comparison_sectors,
         comparison_closures = comparison_closures,
-        scatter_out = scatter_out, scatter_pairs = scatter_pairs,
+        scatter_out = scatter_out, scatter_pairs = scatter_pairs, scatter_split = scatter_split,
         no_figures = no_figures, quiet = quiet)
 end
 
@@ -230,10 +262,29 @@ function glmakie_available()::Bool
 end
 
 """Called in the latest world after the optional GLMakie import in plot_main."""
-function plot_save_scatter(path::AbstractString, fig)
+function plot_save_png(path::AbstractString, fig)
+    lowercase(splitext(path)[2]) == ".png" ||
+        throw(ArgumentError("comparison plots write .png files"))
+    mkpath(dirname(abspath(path)))
     img = GLMakie.colorbuffer(fig; px_per_unit = 600 / 72)
     GLMakie.FileIO.save(path, img; dpi = 600)
     return path
+end
+
+"""Use full manuscript descriptions, angled to fit the repeated labour groups."""
+function plot_save_comparison(path, ds, idx, closures, sector_labels)
+    data = closure_comparison_data(ds, idx, closures)
+    labour_labels = plot_labour_label.(unique(data.labours))
+    fig = OpenCGE.plot_closure_comparison(ds, idx, closures;
+        sector_labels, labour_labels,
+        financing_labels = plot_financing_label.(unique(data.financings)))
+    ax = only(a for a in fig.content if a isa GLMakie.Axis &&
+        a.ylabel[] == "Change vs. baseline (%)")
+    ax.xticks = (first(ax.xticks[]), repeat(labour_labels, length(idx)))
+    ax.xticklabelrotation = pi / 4
+    ax.xticklabelalign = (:right, :center)
+    GLMakie.resize_to_layout!(fig)
+    return plot_save_png(path, fig)
 end
 
 """
@@ -608,13 +659,12 @@ function plot_main(args::Vector{String} = ARGS;
         end
         short_all = plot_short_sector_labels(labels; root = root)
         closures = opts.comparison_closures === nothing ?
-            [l for l in matrix_labour_order() if any(c -> c.labour == l, ds.cells)] :
+            [l for l in MANUSCRIPT_COMPARISON_CLOSURES if any(c -> c.labour == l, ds.cells)] :
             opts.comparison_closures
         written = try
             idx, slabels = resolve_comparison_sectors(ds, opts.comparison_sectors, short_all)
-            mkpath(dirname(abspath(opts.comparison_out)))
-            Base.invokelatest(OpenCGE.save_closure_comparison,
-                opts.comparison_out, ds, idx, closures; sector_labels = slabels)
+            Base.invokelatest(plot_save_comparison,
+                opts.comparison_out, ds, idx, closures, slabels)
         catch e
             println(stderr,
                 "save_closure_comparison failed: $(sprint(showerror, e))")
@@ -633,14 +683,15 @@ function plot_main(args::Vector{String} = ARGS;
         try
             @eval using GLMakie
             pairs = opts.scatter_pairs === nothing ?
-                [(c.labour, c.financing) for c in ds.cells] : opts.scatter_pairs
-            fig = Base.invokelatest(OpenCGE.plot_closure_scatter, ds, pairs;
-                programme = g, size = (482, 370), fontsize = 10, max_markersize = 16)
-            lowercase(splitext(opts.scatter_out)[2]) == ".png" ||
-                throw(ArgumentError("--scatter-out writes .png files"))
-            mkpath(dirname(abspath(opts.scatter_out)))
-            Base.invokelatest(plot_save_scatter, opts.scatter_out, fig)
-            println("wrote $(opts.scatter_out)")
+                [(c.labour, c.financing) for c in ds.cells
+                    if c.labour in MANUSCRIPT_COMPARISON_CLOSURES] : opts.scatter_pairs
+            for output in plot_scatter_outputs(opts.scatter_out, pairs, opts.scatter_split)
+                fig = Base.invokelatest(OpenCGE.plot_closure_scatter, ds, output.pairs;
+                    programme = g, closure_labels = plot_scatter_labels(output.pairs),
+                    size = (482, 340), fontsize = 10, max_markersize = 16)
+                Base.invokelatest(plot_save_png, output.path, fig)
+                println("wrote $(output.path)")
+            end
         catch e
             println(stderr, "plot_closure_scatter failed: $(sprint(showerror, e))")
             return 1

@@ -301,12 +301,16 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   `--comparison-sectors` selects
   sectors by 1-based index, dotted label, or curated short name (default:
   `Electrical equipment`, `Metal ores & mining`, `Other personal services`);
-  `--comparison-closures` selects labour ids or exact `run_id`s (default: all
-  labour closures present in the validated dataset in canonical order).
+  `--comparison-closures` selects labour ids or exact `run_id`s (default:
+  BF, BETA and DELTA, shown as No-reallocation, Elastic labor supply and
+  Leontief closure).
 - `--scatter-out FILE` writes the all-sector output/price scatter
   (`OpenCGE.plot_closure_scatter`, OpenCGE tag `v0.5.0`,
   `OpenCGE@ADR-0039`–`OpenCGE@ADR-0042`). `--scatter-pairs BF/F1,BETA/F2`
-  selects explicit labour/financing pairs (default: every validated cell).
+  selects explicit labour/financing pairs (default: the validated BF, BETA
+  and DELTA cells). `--scatter-split` writes one image per selected financing
+  closure, adding `_F1`, `_F2` or `_F3` before the extension. Legends use the
+  manuscript descriptions instead of registry ids.
   Each pair gets one color; programme sectors are dark and other sectors
   are light. Point area is proportional to the pre-programme Domar weight.
   Both comparison outputs are 17 cm wide, use 10-point text and 600-dpi PNGs,
@@ -317,14 +321,19 @@ The Section 5.2 comparisons are regenerated together with:
 ```bash
 julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v11 --no-figures \
   --comparison-out revision/images/closure_comparison.png \
-  --scatter-out revision/images/closure_scatter.png \
-  --scatter-pairs BF/F1,BF/F2,ALPHA/F1,ALPHA/F2,BETA/F1,BETA/F2,GAMMA/F1,GAMMA/F2,GAMMA/F3
+  --comparison-closures BF,BETA,DELTA \
+  --scatter-out revision/images/closure_scatter.png --scatter-split \
+  --scatter-pairs BF/F1,BETA/F1,DELTA/F1,BF/F3,BETA/F3,DELTA/F3
 ```
 
-The range plot covers all fifteen headline cells; the scatter shows the nine
-distinct economies (F2 stands for coincident F2/F3 in BF/ALPHA/BETA, and
-GAMMA stands for coincident GAMMA/DELTA). Sources are
-`matrix_5x3-v11-<LABOUR>-<FINANCING>`, replacing BETA by
+The range plot covers BF, BETA and DELTA under all three financing closures.
+The two scatter images, `closure_scatter_F1.png` and `closure_scatter_F3.png`,
+show those same labour closures separately under repurposing of consumption
+and external financing. Labels follow Table 4: No-reallocation, Elastic labor
+supply and Leontief closure. Range labels are angled to keep the descriptions
+legible at print width. GAMMA and DELTA coincide on this demand-only branch;
+the selected employment-adjustment corner is represented by DELTA throughout.
+Sources are `matrix_5x3-v11-<LABOUR>-<FINANCING>`, replacing BETA by
 `matrix_5x3-v11-BETA-<FINANCING>-etas05` throughout (ADR-0036).
 Appendix D preserves the existing detailed panels, their labels and their
 `matrix_5x3_v10` source mapping in ADR-0036. The new main-text comparisons

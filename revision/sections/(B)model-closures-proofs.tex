@@ -114,7 +114,7 @@ closures use the same labor demand~\eqref{eq:closure-labour-demand}; they
 differ in the wage and labor-supply restrictions imposed on it.
 
 \paragraph{The no-reallocation closure: immobile labor.}
-The no-reallocation row fixes employment in every sector and solves a
+The no-reallocation row fixes employment in every sector and solves for a
 sector-specific wage to clear each labor market:
 \begin{equation}
 L_i = L_i^{\mathrm{cm}}(p,y_i,w_i) = \bar{L}_i,
@@ -550,7 +550,7 @@ same guard, and both converged to this root
 (residuals $4.4\times10^{-16}$ to $2.0\times10^{-13}$
 across the six wage-pinned cells). The
 elasticity-independence is exact in the equations, not an $\epsilon$-limit
-artefact: the Leontief-corner solve at $\epsilon_\delta = 10^{-4}$
+artifact: the Leontief-corner solve at $\epsilon_\delta = 10^{-4}$
 reproduces the
 analytic $y^{\ast}$ with relative error $0.0$ (F2/F3 verification), and
 the flow metrics of the two rows agree to all printed decimals with residual-level wedge
@@ -616,7 +616,7 @@ the sectoral wage is whatever clears cost-minimizing demand against it. At
 $\eta_{s,i} = 0$ each sector has a \emph{vertical} supply curve,
 $L^s_i = \bar{L}_i$ for every $w_i$, so the market clears at the same
 allocation with a demand-determined wage. A constraint imposed on a quantity
-and an infinitely inelastic price response turn out to be the same row of
+and perfectly inelastic labor supply turn out to be the same row of
 algebra --- which is the content of the proposition below.
 
 \begin{proposition}[The rigid corner is the $\eta = 0$ endpoint]\label{prop:nest}
@@ -658,12 +658,11 @@ so the solution sets coincide.
 \end{proof}
 
 \begin{remark}[Why the family interpolates, and where it does not close]
-Sweeping $\eta_{s,i}$ moves the adjustment from quantities to prices. At
+Increasing $\eta_{s,i}$ moves the adjustment from prices to quantities. At
 $\eta_{s,i} = 0$ the allocation is pinned and the $N$ wages absorb the shock;
 as $\eta_{s,i} \to \infty$ the supply curves become infinitely elastic, the
 real wage is forced back to its baseline anchor and employment becomes
-the absorbing margin --- prices pinned as in the wage-pinned row, and that
-row's absorbing margin. The
+the absorbing margin, as in the wage-pinned row. The
 two ends of the family are therefore the matrix's own rigidity rows: the
 no-reallocation closure
 (allocation frozen, wages free) at the rigid corner, the employment-adjustment
@@ -680,8 +679,8 @@ no-reallocation row exactly --- the two systems share their solution set
 additional reason that the transfer is pinned there.
 \end{remark}
 
-\paragraph{Measured.} Table~\ref{tab:sectoral} reports the executed sectoral cells
-Four readings.
+\paragraph{Measured.} Table~\ref{tab:sectoral} reports the sectoral results.
+Four patterns emerge.
 
 \emph{(a) Prices move, and with the demand composition.} Every sectoral cell
 carries a deflator different from one and a $\max|p-1|$ that differs between F1
@@ -691,8 +690,8 @@ $\eta = 1$ cells of the single-wage closures read exactly $0.000000$).
 to $2$, the price response falls monotonically ($0.1529 \to 0.0372$ at F2)
 while employment rises ($1.000864 \to 1.001914$): the family trades price
 adjustment for quantity adjustment, and the welfare cost falls with it
-($-1.69\% \to -1.39\%$). The F1 column, whose program is financed by a
-preference tilt rather than a tax, is the exception: its welfare index is
+($-1.69\% \to -1.39\%$). The F1 column, in which household spending is
+redirected through a preference tilt, is the exception: its welfare index is
 positive ($+0.42\%$ at $\eta_s = 0.5$).
 \emph{(c) Incidence matters more than the level.} Making the \emph{program}
 sectors rigid ($\eta_{s,i} = 0$ there, $\eta_s = 0.5$ elsewhere) more than
@@ -813,13 +812,13 @@ of that row need be withheld.
 
 Both propositions rest on Lemma~\ref{lem:price}: the price block contains
 no demand variable. Any model change that lets demand into that block
-restores identification and creates variety in the published matrix. The doors are five, and Section~\ref{sec:beyond-demand-only} develops them.
+restores identification and creates variety in the published matrix. Five extensions are considered in Section~\ref{sec:beyond-demand-only}.
 Sector-specific wages break the single-wage homogeneity the lemma rests on,
 require no income closure because no rents arise, and are already implemented
 at the $\eta = 0$ endpoint. Demand-sensitive markups break the lemma directly
 but require a profit-income closure. A sector-fixed factor, or its reduced
 form --- an endogenous utilization externality that raises unit cost with
-demand while keeping zero profit, so that the cost hook~\eqref{eq:model-cost}
+demand while keeping zero profit, so that the unit-cost function~\eqref{eq:model-cost}
 alone changes --- leaves the accounting intact, and with the opposite sign it
 delivers increasing returns, prices \emph{falling} with demand. Endogenous
 import prices enter the intermediate index~\eqref{eq:model-ip} and the

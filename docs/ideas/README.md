@@ -49,10 +49,13 @@ dropped --- point it at its dead end.
 | IDEA-0005 | Pricing-door workstream: handover of what is built, decided, measured and next (capacity/P1, markup/P2, Stage A retention, Stage B distributed profit) | scoped | `docs/decisions/ADR-0029-pricing-door.md`; `docs/decisions/ADR-0030-distributed-profit-income.md`; `registry/closures.toml` `[pricing.P1]`/`[pricing.P2]`; `ROADMAP.md` Phase 7; OpenCGE v0.2.0 (`e119f8d7`) |
 | IDEA-0006 | The Verdoorn grid: which matrix closures to carry the capacity door (the dissolution of the three Lemma-1 equivalences, and why BETA rather than DELTA or BF) | scoped | `runs/pricing_*` (69 executed cells: GAMMA 45, ALPHA 24, BETA/BF/DELTA 0); `registry/closures.toml` `[pricing.P1]` (the dissolution claim); `experiments/designs/pricing_capacity_v2.toml`; Appendix C (prop. `gd`, `ab`, `nest`); Section 6.4 of the revision draft |
 | IDEA-0007 | Restructuring the remaining appendices: four appendices by function (data, robustness, pricing door, traditions) instead of six by topic | scoped | The measured appendix block of 2026-10-18 (`revision/sections/`: 12,851 words, 59 percent of them in Appendix B; citation map counted from Sections 1-8); the A/B/C/H merge of 2026-10-18; Section 4's two accounting pointers into Appendix C; Section 6's five forwards into Appendix D |
-| IDEA-0008 | Local index convention for production-network expressions: subject i, input u, user j, with generic-index exceptions and baseline share definitions | scoped | `revision/sections/(4)kernel-closures-financings.tex`; `revision/sections/(B)model-closures-proofs.tex`; `revision/sections/(H)pricing-door.tex` |
+| IDEA-0008 | One index convention for the kernel: `i` the sector the equation is about, `u` an input, `j` a user --- the rule, its scope, the rejected alternative and the six sites that still violate it | scoped | `revision/sections/(B)model-closures-proofs.tex` lines 315, 485, 493, 495; `revision/sections/(4)kernel-closures-financings.tex` (the $\Omega$ definition and the calibration sentence); `revision/sections/(H)pricing-door.tex` (aligned 2026-10-23) |
 
-All eight notes stay in this register: each affects the paper's methods or
-results, not only the kernel. The kernel-side ADR/DE records they cite were
+All seven research notes stay in this register: each affects the paper's methods
+or results, not only the kernel. IDEA-0008 is the exception in kind --- a
+presentation convention for the kernel's notation, registered because it changed
+the appendix text and because the letter table must outlive the session that
+derived it. The kernel-side ADR/DE records they cite were
 migrated to OpenCGE's `DECISIONS.md` in the repo split (ADR-0028); their ids
 are unchanged (`OpenCGE@ADR-…`, `OpenCGE@DE-…` in `registry/`).
 
@@ -76,3 +79,4 @@ to the executed run.
 - **Version 4** (October 2026) --- IDEA-0002 promoted for the capacity and markup doors (ADR-0029, ADR-0030; closures P1/P2); the external, fixed-factor and technology doors remain ideas.
 - **Version 3** (October 2026) --- IDEA-0002 raised from `unexplored` to `scoped` (ROADMAP Phase 7 specifies the markup and capacity doors; probe20 measures them), anchors extended.
 - **Version 4** (October 2026) --- registered IDEA-0005 (the pricing-door handover: state, gaps, sequence and traps, written for a successor). It records that IDEA-0002 now meets this register's own `promoted` criterion --- `ADR-0029`/`ADR-0030` accepted and `[pricing.P1]`/`[pricing.P2]` registered --- and should be raised with pointers; left to the operator.
+- **Version 7** (October 2026) --- registered IDEA-0008 (one index convention for the kernel: `i` the sector the equation is about, `u` an input, `j` a user). Records the measured drift between the price index and the intermediate-demand equation, the alternative that was rejected and why, the six remaining violations with their line numbers, and the notation fixes made the same day (the transposed $\Omega$ in Section 4, Appendix H's letter pair, the dead `A^bill` symbol, and the scaling factor in the program bundle).

@@ -40,22 +40,27 @@ in, e.g., Table~\ref{tab:results-matrix}.
 baseline technology, without directly changing technology or the pricing equations. This assumption underpins the main case of our application.
 
 \paragraph{Prices cannot see demand.} The zero-profit conditions
-contain no demand variable and are homogeneous of degree one in prices and
-the wage, so relative prices are pinned by technology alone
-(Lemma~\ref{lem:price}). Under the consumption price index $\mathcal{P}(p)$ as numeraire the real wage then sits at its baseline anchor for every demand vector, every financing closure and every shock size (Corollary~\ref{cor:realwage}). 
+contain no demand variable and are homogeneous of degree one in prices and the
+\emph{single} money wage, so relative prices are pinned by technology alone
+(Lemma~\ref{lem:price}). A sectoral wage vector breaks exactly this: with $N$
+wages the block reads $p=\pi(A,w)$ and demand reaches prices through the wage
+structure. Under the consumption price index $\mathcal{P}(p)$ as numeraire the real wage then sits at its baseline anchor for every demand vector, every financing closure and every shock size (Corollary~\ref{cor:realwage}). 
 % (sentence cut 2026-10-22 on the author's decision.)
 
-\paragraph{A quantity block that is elasticity-free.} At such prices the
-clearing system is exactly affine and independent of the substitution
-elasticities $(\theta,\epsilon,\sigma)$ (Lemma~\ref{lem:affine}) --- the
-production side of the classical nonsubstitution result
-(Remark~\ref{rem:samuelson}). Every closure that pins the wage and lets quantities absorb the shock therefore solves one and the same linear system, whatever the technology.
+\paragraph{A quantity block that is elasticity-free.} Evaluated at the baseline
+prices $p=w=1$, the clearing system is exactly affine and independent of the
+substitution elasticities $(\theta,\epsilon,\sigma)$ (Lemma~\ref{lem:affine})
+--- the production side of the classical nonsubstitution result
+(Remark~\ref{rem:samuelson}). Every closure that pins the wage and lets
+quantities absorb the shock therefore solves one and the same linear system, for
+every substitution-elasticity triple at baseline technology and under a fixed
+financing rule.
 
-The second and third conditions are also what locate the boundary of the
-exercise: both rest on a \emph{single common wage}, and
-Section~\ref{sec:two-questions} introduces the single-wage branch and sectoral
-wages as the matrix's two key approaches to labor-market dynamics. Where the wage is common, the conditions above apply as stated; where it is not, they lapse, and that is where the matrix regains
-variety.
+The second and third conditions also locate the boundary of the exercise,
+since Section~\ref{sec:two-questions} introduces the single-wage branch and
+sectoral wages as the matrix's two key approaches to labor-market dynamics:
+where the wage is common the conditions apply as stated, where it is not they
+lapse, and that is where the matrix regains variety.
 
 The two sections below summarize coincidences across specifications: first
 those sketched in Figure~\ref{fig:flexibility-map}, then those that the
@@ -76,7 +81,7 @@ three different kinds; the fourth link is a limit that is not attained.
 the anchored real wage $w/\mathcal{P} = 1$ the supply equation reduces to
 $\sum_i L_i = \Lbar$, which is the full-employment condition; the reduction is
 an identity at every $\eta_s$ and under every financing rule
-(Proposition~\ref{prop:ab}).
+(Corollary~\ref{cor:realwage}).
 
 \emph{The rigid corner.} Write the sectoral system and the $\eta=0$ endpoint in
 the same four row blocks --- prices, quantities, wages, numeraire. At
@@ -144,8 +149,10 @@ scope condition read as algebra, and it is what makes the matrix a partition
 of a few scalar regimes rather than fifteen separate models.
 
 What the appendix does not establish is that the matrix is rigid in general.
-It is rigid \emph{for demand-only shocks}, and every channel that lets
-demand back into the price block --- sectoral labor markets,
-demand-sensitive markups, capacity constraints, endogenous import prices,
-supply shocks --- restores identification and creates the variety that
-Section~\ref{sec:beyond-demand-only} takes up.
+It is rigid on the single-wage branch at baseline technology, and two different
+things restore variety. Channels that let demand into the price block ---
+sectoral labor markets, demand-sensitive markups, capacity constraints,
+endogenous import prices --- restore identification. A supply shock does
+something else: it moves technology, and with it the price block, breaking the
+equivalences without demand entering them.
+Section~\ref{sec:beyond-demand-only} takes up both.

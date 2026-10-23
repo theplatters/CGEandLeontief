@@ -20,7 +20,7 @@
 %NOTE (recorded 2026-10-23 at the author's request): the author doubts that what
 %remains of this appendix carries its weight for a Metroeconomica audience and
 %considers Appendix A sufficient on its own. What is kept here is either exact
-%(Lemmas lem:price and lem:affine; Propositions prop:ab, prop:gd, prop:nest) or
+%(Lemmas lem:price and lem:affine; Proposition prop:nest) or
 %measured (Table tab:sectoral with the sectoral readings). Cut in this round: the
 %classification corollary, the off-slice remark and the interpolation remark ---
 %the last because the limit it asserted does not hold. Candidate for deletion
@@ -33,9 +33,8 @@ problems of Section~\ref{subsec:optimization}
 (Section~\ref{app:model-kernel}); the five labor-market closures and the
 three financing closures (Sections~\ref{app:labour-closures}
 and~\ref{app:financing-closures}); and the formal results --- the closure
-systems, the demand-only reduction, the exact equivalences
-(Propositions~\ref{prop:ab}, \ref{prop:gd}, \ref{prop:nest}), the scope
-conditions and the numerical evidence
+systems, the demand-only reduction, the rigidity result
+(Proposition~\ref{prop:nest}), the scope conditions and the numerical evidence
 (Sections~\ref{app:closure-systems}--\ref{app:eqnumevidence}). The
 intermediate-bill and external-account accounting is in
 Appendix~\ref{app:kernel}.
@@ -193,7 +192,7 @@ The Leontief closure is therefore the fixed-coefficient corner of the
 employment-adjustment closure rather than an independent
 labor-market mechanism. The two rows share their solution only while prices
 sit at the baseline, that is, at the calibration technology under a
-demand-only impulse (Proposition~\ref{prop:gd}); as soon as prices move,
+demand-only impulse (Lemma~\ref{lem:affine}); as soon as prices move,
 they separate (Section~\ref{sec:beyond-demand-only}).
 % NOTE (2026-10-23): reworded from "The corner is exact at the calibration
 % technology". That phrase was broader than Proposition prop:gd assumes: the
@@ -493,69 +492,15 @@ structure is a smooth parametrization of that corner; the demand-only matrix
 therefore inherits the theorem's rigidity: this is the model-class
 property behind the coincidences. The IO endpoint makes the rigidity
 literal --- the Robinson (2006) fixed-price multiplier --- but, as
-Proposition~\ref{prop:gd} shows, it is not an approximation:
+Lemma~\ref{lem:affine} shows, it is not an approximation:
 the same candidate equilibrium $(p,y)=(\one,y^{\ast})$
 solves the wage-pinned system at every elasticity triple in the wage-pinned
 gauge.
 \end{remark}
 
-\subsection{The two equivalences}\label{app:equiv}
-
-\begin{proposition}[The standard CGE closure $\equiv$ the single-wage
-elastic-supply closure]\label{prop:ab}
-Let $A \equiv \one$ and $\eta = 1$. The standard-CGE system
-\eqref{eq:zp},\eqref{eq:model-clearing},\eqref{eq:closure-alpha},$\mathcal{P} = 1$ and the
-\emph{single-wage} (scalar) elastic-supply system
-\eqref{eq:zp},\eqref{eq:model-clearing},\eqref{eq:closure-beta},$\mathcal{P} = 1$ have
-identical solution sets, for every $\eta_s \geq 0$ and every financing
-closure.
-\end{proposition}
-
-\begin{proof}
-The two systems differ in one equation. By Lemma~\ref{lem:price} and
-Corollary~\ref{cor:realwage}, every solution of the shared block satisfies
-$w/\mathcal{P} = 1 = w_0/\mathcal{P}_0$, so the elastic-supply labor equation
-\eqref{eq:closure-beta} reduces to $\sum_i L_i = \Lbar$, which is
-\eqref{eq:closure-alpha}; conversely, any solution of the standard CGE system
-satisfies the supply equation by the same substitution.
-\end{proof}
-
-\begin{proposition}[The employment-adjustment closure $\equiv$ the Leontief
-closure]\label{prop:gd}
-Let $A \equiv \one$, $\eta = 1$, $F \equiv 0$, $w \equiv 1$. Then
-$(p,y) = (\one,\, y^{\ast})$ with
-$y^{\ast} = (I - G)^{-1} b(0)$ solves the wage-pinned system at
-\emph{every} elasticity triple $(\theta,\epsilon,\sigma)$; the employment
-outcome is $L^{\ast} = \alpha^{\!\top} y^{\ast}$, the consumption block is
-$c^{\ast} = (1-s)\,\mathrm{diag}(1-m)\,\tilde\beta(ds)\,
-(L^{\ast} - \sum g^G - \sum g\,\mathbf{1}_{F2})$, where
-$\mathbf{1}_{F2}$ selects the tax-financed column, and the block
-decomposition \eqref{eq:leontiefblocks} holds verbatim. In particular the
-employment-adjustment closure (baseline
-elasticities) and the Leontief closure (the Leontief corner) share this
-solution, and the
-analytic system \eqref{eq:affine}--\eqref{eq:bvec} computes it exactly.
-\end{proposition}
-
-\begin{proof}
-At $p = \one$ the price block holds by the calibration identity
-(Lemma~\ref{lem:price}), and by Lemma~\ref{lem:affine} the clearing block at
-$p = \one$ is the affine system \eqref{eq:affine}--\eqref{eq:bvec}, of which
-$y^{\ast} = (I - G)^{-1} b(0)$ is the solution; the employment and consumption
-blocks then give the stated $L^{\ast}$ and $c^{\ast}$. Elasticity-independence
-is exact in the equations, not an $\epsilon$-limit artefact: the Leontief-corner
-solve at $\epsilon_\delta = 10^{-4}$ reproduces the analytic $y^{\ast}$, and the
-two rows agree to all printed decimals. Uniqueness holds on the admitted branch
---- $(I-G)$ nonsingular, $y^{\ast}$ strictly positive --- and the guard and
-multi-init checks behind both rows are reported in
-Section~\ref{app:eqnumevidence}.
-\end{proof}
-
-
-
 \subsection{The sectoral family and its rigid corner}\label{app:sectoral}
 
-The two equivalences above are coincidences \emph{within} the executed matrix.
+The equivalences stated in Appendix~\ref{app:equivalences} are coincidences \emph{within} the executed matrix.
 This section records a third, of a different kind: an equivalence between two
 \emph{closures}, one of which is the matrix's $\eta = 0$ endpoint and the other
 a corner of a family that extends beyond the matrix. It is exact rather than
@@ -735,9 +680,7 @@ charges the program through the wage-income tax \eqref{eq:closure-f2} ($E = \alp
 - \sum g^G + F$), and the two $b$-vectors differ by exactly
 $f\,\sum g$. The pin \eqref{eq:finstrument} therefore yields
 $F^{\ast}_{F3} = F^{\ast}_{F2} - \sum g$, identical real allocations, and
-an identical net external position $F + B_{gov}$. Measured: $F_{F3} - F_{F2} = -0.01330991 = -G_0$ to eight
-decimals in every mobile row (the $F$ values reproduce to all printed
-decimals; $G_0 = \sum_i g_i = 0.013310$).
+an identical net external position $F + B_{gov}$. Measured: $F_{F3} - F_{F2} = -G_0$ in every mobile row.
 
 \paragraph{Who pays.} The economically meaningful difference between the
 two paradigms is which margin absorbs the program. In the mobile rows the
@@ -759,7 +702,7 @@ of that row need be withheld.
 
 \subsection{Scope conditions: what breaks the equivalences}\label{app:scope}
 
-Both propositions rest on Lemma~\ref{lem:price}: the price block contains
+The equivalences rest on Lemma~\ref{lem:price}: the price block contains
 no demand variable. Any model change that lets demand into that block
 restores identification and creates variety in the published matrix. Five extensions are considered in Section~\ref{sec:beyond-demand-only}.
 Sector-specific wages break the single-wage homogeneity the lemma rests on,

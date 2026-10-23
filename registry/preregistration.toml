@@ -51,6 +51,23 @@ actor = "hermes-agent"
     eta = 1.0
     programme_year = 2024
 
+[designs.matrix_5x3_v11]
+git_commit = "e604e38ea49d686d4f512d47cc4606d287b7da38"
+note = "OpenCGE v0.5.0 wage-pinned generation (ADR-0044); same calibration, programme and cell parameters as matrix_5x3_v10. Historical runs are retained."
+registered_at = "2026-10-23T11:18:34"
+design_sha256 = "ff859bb33c61c917c3cad5a46e11e756c87e45ef8d108edccf3537a5a75610ea"
+actor = "codex"
+
+    [designs.matrix_5x3_v11.pinned]
+    sigma = 0.9
+    theta = 0.5
+    f1_shift = "tilt_g0_over_c0"
+    epsilon = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    eta = 1.0
+    programme_year = 2024
+
 [designs.supply_etas_prog]
 git_commit = "3b2ac52f9ff8416dc1831aef51521b9793011b9f"
 note = "Supply arm prog: productivity gain A_i = 1 + alpha*psi_i on the programme's own sectors, alpha in {0.05,0.10,0.20}; full-71 A-bill; ALPHA control + scalar BETA (eta_s 0.5/1/2/5) + sectoral uniform BETA (eta_s 0.5/2), x F1/F2/F3 x 3 magnitudes. ADR-0023 [shock] schema."
@@ -76,6 +93,28 @@ design_sha256 = "12709395570a92da0a9d8a1784e01bd61f4ce8d2f25c6edef0f66eccfcf7c65
 actor = "franzs"
 
     [designs.pricing_profit_v2.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_s_pi = 1.0
+    pricing_continuation_steps = 4
+    pricing_kind = "markup"
+    eta = 1.0
+    epsilon = 0.5
+    pricing_kappa = 0.0
+
+[designs.pricing_markup_v3]
+git_commit = "e604e38ea49d686d4f512d47cc4606d287b7da38"
+note = "OpenCGE v0.5.0 wage-pinned generation (ADR-0044); same calibration, programme and cell parameters as pricing_markup_v2. Historical runs are retained."
+registered_at = "2026-10-23T11:18:34"
+design_sha256 = "ad3eb4becf4f570e047dabe2f7f55727dc1ddc8307da13b6076e928a0111f074"
+actor = "codex"
+
+    [designs.pricing_markup_v3.pinned]
     f1_shift = "tilt_g0_over_c0"
     programme_year = 2024
     sigma = 0.9
@@ -374,6 +413,52 @@ actor = "franzs"
     epsilon = 0.5
     pricing_kappa = 0.0
 
+[designs.pricing_capacity_v3]
+git_commit = "e604e38ea49d686d4f512d47cc4606d287b7da38"
+note = "OpenCGE v0.5.0 wage-pinned generation (ADR-0044); same calibration, programme and cell parameters as pricing_capacity_v2. Historical runs are retained."
+registered_at = "2026-10-23T11:18:34"
+design_sha256 = "408890299e9114d4841f5593196b240893d2aac43a6562ca9d301043b5ebc563"
+actor = "codex"
+
+    [designs.pricing_capacity_v3.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    pricing_n_sectors = 71
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_delta = 0.0
+    pricing_continuation_steps = 4
+    eta = 1.0
+    pricing_kind = "capacity"
+    pricing_services = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]
+    epsilon = 0.5
+
+[designs.pricing_capacity_rows_v2]
+git_commit = "e604e38ea49d686d4f512d47cc4606d287b7da38"
+note = "OpenCGE v0.5.0 wage-pinned generation (ADR-0044); same calibration, programme and cell parameters as pricing_capacity_rows_v1. Historical runs are retained."
+registered_at = "2026-10-23T11:18:34"
+design_sha256 = "d08fc5ca2d0f82f19739f0fabcea99699063023ce02e20e08835cae035b200cb"
+actor = "codex"
+
+    [designs.pricing_capacity_rows_v2.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    pricing_n_sectors = 71
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_delta = 0.0
+    pricing_continuation_steps = 4
+    eta = 1.0
+    pricing_kind = "capacity"
+    pricing_services = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]
+    epsilon = 0.5
+
 [designs.matrix_5x3]
 git_commit = "60c2665acafa107912154c39a7dde1e65dbdfbb0"
 note = "Labour (BF/ALPHA/BETA/GAMMA/DELTA) x financing (F1/F2/F3) evaluation matrix on the full-71 A-bill calibration (ADR-0012)"
@@ -435,3 +520,48 @@ actor = "franzs"
     pricing_kind = "markup"
     epsilon = 0.5
     pricing_kappa = 0.0
+
+[designs.pricing_profit_v3]
+git_commit = "e604e38ea49d686d4f512d47cc4606d287b7da38"
+note = "OpenCGE v0.5.0 wage-pinned generation (ADR-0044); same calibration, programme and cell parameters as pricing_profit_v2. Historical runs are retained."
+registered_at = "2026-10-23T11:18:34"
+design_sha256 = "e792e7950f82849703075bd3a8d1dddc28ed7768724c36497b0579371dc10ea3"
+actor = "codex"
+
+    [designs.pricing_profit_v3.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_s_pi = 1.0
+    pricing_continuation_steps = 4
+    eta = 1.0
+    pricing_kind = "markup"
+    epsilon = 0.5
+    pricing_kappa = 0.0
+
+[designs.pricing_mobile_v3]
+git_commit = "e604e38ea49d686d4f512d47cc4606d287b7da38"
+note = "OpenCGE v0.5.0 wage-pinned generation (ADR-0044); same calibration, programme and cell parameters as pricing_mobile_v2. Historical runs are retained."
+registered_at = "2026-10-23T11:18:34"
+design_sha256 = "c8f3c1e0584f088a960cf11eae99a317bf6e24857556326383697d49adac4ab2"
+actor = "codex"
+
+    [designs.pricing_mobile_v3.pinned]
+    f1_shift = "tilt_g0_over_c0"
+    pricing_n_sectors = 71
+    programme_year = 2024
+    sigma = 0.9
+    theta = 0.5
+    total_eur_m = 40300.0
+    exo_scale_steps = 6
+    pricing_multistart_tol = 1.0e-6
+    pricing_delta = 0.0
+    pricing_continuation_steps = 4
+    eta = 1.0
+    pricing_kind = "capacity"
+    pricing_services = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]
+    epsilon = 0.5

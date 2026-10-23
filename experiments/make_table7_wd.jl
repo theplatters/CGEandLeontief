@@ -2,13 +2,10 @@
 # Table 7 --- W_D for the markup-door cells (GENERATED sidecar)
 # ---------------------------------------------------------------------
 # Do NOT edit the output by hand. Regenerate with:
-#   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table7_wd.jl
+#   julia --project=. experiments/make_table7_wd.jl
 # then rebuild the table with revision/tables/make_pricing_door.py.
 #
-#   NOT `--project=.`: like make_table6_wd.jl, this script calls
-#   `final_demand_bundle` (OpenCGE diag(WELFARE), branch welfare-indices =
-#   v0.2.1 + the welfare diagnostics), which the paper repo's Manifest does
-#   not yet pin. Point --project at a checkout that contains it.
+# Uses the committed OpenCGE v0.5.0 release pin (ADR-0044).
 #
 # Job: Table 7 reports the same welfare measure as Table 6 (W_D, the own-weights
 # quantity index of the c + lambda*g bundle), which no manifest records. Every
@@ -17,7 +14,7 @@
 # within GATE_TOL, or the script fails and writes nothing. No run directory is
 # created or modified.
 #
-# Cells (75): the kappa = 0 reference row (the matrix_5x3-v10 no-door twins),
+# Cells (75): the kappa = 0 reference row (the matrix_5x3-v11 no-door twins),
 # the retained markup cells (kappa in {0.25, 0.5}) and the kappa = 0.5
 # distributed cells (s_pi in {0.5, s}).
 #
@@ -32,15 +29,15 @@ const LAMBDA = 1.0
 const GATE_TOL = 1e-6
 const TABLE7_CELLS = Dict(
     # the no-door row of Table 7 uses the eta_s = 0.5 cell on BETA (the plain
-    # matrix_5x3-v10-BETA-F1 run is stale and reproduces ALPHA), as Table 4/6 do.
-    "matrix_5x3_v10"     => r"^matrix_5x3-v10-([A-Z]+-F[123]|BETA-F[123]-etas05)$",
-    "pricing_markup_v2"  => r"^pricing_markup-v2-[A-Z]+-F[123]-k(025|05)$",
-    "pricing_profit_v2"  => r"^pricing_profit-v2-[A-Z]+-F[123]-k05-spi(05|s)$",
+    # matrix_5x3-v11-BETA-F1 cell uses scalar supply and reproduces ALPHA), as Table 4/6 do.
+    "matrix_5x3_v11"     => r"^matrix_5x3-v11-([A-Z]+-F[123]|BETA-F[123]-etas05)$",
+    "pricing_markup_v3"  => r"^pricing_markup-v3-[A-Z]+-F[123]-k(025|05)$",
+    "pricing_profit_v3"  => r"^pricing_profit-v3-[A-Z]+-F[123]-k05-spi(05|s)$",
 )
 
-# The stale plain BETA cells of matrix_5x3_v10 (eta recorded as 0.5 but reproducing
-# ALPHA) are replaced by the eta_s = 0.5 cells; never solve them.
-const SKIP = r"^matrix_5x3-v10-BETA-F[123]$"
+# The plain scalar-supply BETA cells reproduce ALPHA under this shock.
+# Select the sectoral eta_s = 0.5 cells for the table.
+const SKIP = r"^matrix_5x3-v11-BETA-F[123]$"
 
 """W_D in percent: the own-weights quantity index of the c + lambda*g bundle."""
 function w_d(sol::Solution, ref_sol::Solution)
@@ -73,6 +70,7 @@ function main()
         ψ, g = programme_vectors(dd, ref.data, kept; root = root)
         for id in ids
             man = TOML.parsefile(joinpath(root, "runs", id, "manifest.toml"))
+            man["provenance"]["opencge"]["repo_rev"] == "v0.5.0" || error("wrong kernel generation: $id")
             cell = design_cell(dd, id)
             sol = solve_cell(cell, dd, ref.data, ψ, g, ref.init_warm)
             ev = evaluate_gates(cell, dd, sol.model, sol, ref.sol)

@@ -2,11 +2,9 @@
 # Table 5 --- the WELFARE-COMPARISON table (GENERATED)
 # ---------------------------------------------------------------------
 # Do NOT edit by hand. Regenerate with:
-#   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table5_welfare.jl
+#   julia --project=. experiments/make_table5_welfare.jl
 #
-#   NOT `--project=.`: this script calls kernel functions added in OpenCGE
-#   09e2b83 (diag(WELFARE)), which the paper repo's Manifest does not yet pin.
-#   Point --project at a checkout that contains them, or the load fails.
+# Uses the committed OpenCGE v0.5.0 release pin (ADR-0044).
 #
 # Job: compare the welfare reads of one and the same allocation. The macro
 # outcomes and the indices already shown in Table 4 are dropped; only W_C is
@@ -48,10 +46,10 @@ const FINLABEL = Dict("F1" => "repurposing of consumption",
                       "F2" => "refinancing via taxes",
                       "F3" => "external / debt finance")
 const LABEL = Dict("BF" => "No-reallocation", "ALPHA" => "Standard CGE",
-                   "BETA" => "Elastic supply", "GAMMA" => "Fixed real wage",
+                   "BETA" => "Elastic supply", "GAMMA" => "Fixed nominal wage",
                    "DELTA" => "Leontief")
 
-cell_id(lab, fin, suf = "") = "matrix_5x3-v10-$lab-$fin" * (lab == "BETA" ? (suf == "" ? "-etas05" : suf) : "")
+cell_id(lab, fin, suf = "") = "matrix_5x3-v11-$lab-$fin" * (lab == "BETA" ? (suf == "" ? "-etas05" : suf) : "")
 
 """The bundle block: c, g, L_i and wage_bill at one solution."""
 function bundle_block(sol::Solution; lam::Real = LAMBDA)
@@ -96,8 +94,8 @@ end
 
 function main()
     root = default_root()
-    dd = load_design("matrix_5x3_v10"; root = root)
-    @printf("building reference continuation for matrix_5x3_v10 ...\n")
+    dd = load_design("matrix_5x3_v11"; root = root)
+    @printf("building reference continuation for matrix_5x3_v11 ...\n")
     ref = build_reference(dd; root = root)
     drops = Vector{Int}(dd["data"]["drops"])
     kept = sort(setdiff(1:(length(ref.data.factor_share) + length(drops)), drops))
@@ -110,7 +108,9 @@ function main()
         for suf in sufs
             id = cell_id(lab, fin, suf)
             manpath = joinpath(root, "runs", id, "manifest.toml")
-            man = isfile(manpath) ? TOML.parsefile(manpath) : nothing
+            man = TOML.parsefile(manpath)
+            man["status"] == "executed" && man["gates"]["overall"] == "pass" || error("unaccepted cell: $id")
+            man["provenance"]["opencge"]["repo_rev"] == "v0.5.0" || error("wrong kernel generation: $id")
             sol = solve_cell(design_cell(dd, id), dd, ref.data, ψ, g, ref.init_warm)
             r = reads(sol, ref)
             wc = man === nothing ? NaN : 100 * man["metrics"]["consumption_rel"]
@@ -132,6 +132,7 @@ function main()
             cell_id(lab, fin), okall ? "ok" : "FAIL", got[1].wc, got[1][:d],
             got[1][:cesleak], got[1][:starleak], got[1][:starlleak], got[1][:starldef])
     end
+    all(r -> r.ok, rows) || error("manifest gate failed; nothing written")
     path = joinpath(root, "revision", "tables", "table5_welfare-comparison.tex")
     open(path, "w") do io
         render(io, rows)
@@ -182,7 +183,7 @@ cellstr(lab, r) = lab == "BETA" ? etas_str(r) : plain_str(r)
 #     with \multirow on the F2 row, the F3 row leaves those columns empty, and
 #     the rule between the two rows is a \cmidrule over the GAMMA/DELTA pair only
 #     (a full \midrule would cut through the merged cells).
-#   * the fixed-real-wage and Leontief columns coincide -> one \multicolumn{2}
+#   * the fixed-nominal-wage and Leontief columns coincide -> one \multicolumn{2}
 #     cell per row, horizontally centred.
 # check_collapses() compares the PRINTED strings before anything is written, so a
 # kernel change that breaks an equivalence aborts the run instead of silently
@@ -228,14 +229,15 @@ function render(io, rows)
     by = Dict((r.fin, r.lab) => r for r in rows)
     println(io, "% =====================================================================")
     println(io, "% Table 5 --- welfare comparison across the closure matrix (GENERATED)")
+    println(io, "% Sources: runs/matrix_5x3-v11-<labour>-<financing>[-etas{05,1,2}]/manifest.toml; OpenCGE v0.5.0")
     println(io, "% ---------------------------------------------------------------------")
     println(io, "% Do NOT edit by hand. Regenerate with:")
-    println(io, "%   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table5_welfare.jl")
+    println(io, "%   julia --project=. experiments/make_table5_welfare.jl")
     println(io, "% Layout adopts the COLLAPSING ROUTINE of table4_results-5x3.tex: the two")
     println(io, "%   coincidences the table states are PRINTED ONCE -- F2/F3 share one cell in")
     println(io, "%   the three flexible-wage columns (\\multirow, centred across the two rows,")
     println(io, "%   the rule between them a \\cmidrule over the GAMMA/DELTA pair only) and the")
-    println(io, "%   fixed-real-wage and Leontief columns share one \\multicolumn{2} cell per")
+    println(io, "%   fixed-nominal-wage and Leontief columns share one \\multicolumn{2} cell per")
     println(io, "%   row. check_collapses() asserts both on the PRINTED strings, so a broken")
     println(io, "%   equivalence aborts the run. Column widths and the cell contents are Table")
     println(io, "%   5's own; only the collapse/centre/rule grammar is Table 4's.")
@@ -272,8 +274,8 @@ function render(io, rows)
     println(io, "& \\textbf{No-reallocation}\\newline \\scriptsize immobile labour, sectoral wages")
     println(io, "& \\textbf{Standard CGE}\\newline \\scriptsize one flexible wage, mobile labour")
     println(io, "& \\textbf{Elastic labour supply}\\newline \\scriptsize sectoral supply on the real wage\\newline " * etas_head())
-    println(io, "& \\textbf{Fixed real wage}\\newline \\scriptsize real wage pegged, employment uncapped")
-    println(io, "& \\textbf{Leontief closure}\\newline \\scriptsize real wage pegged, quantities absorb")
+    println(io, "& \\textbf{Fixed nominal wage}\\newline \\scriptsize nominal wage pegged, employment uncapped")
+    println(io, "& \\textbf{Leontief closure}\\newline \\scriptsize nominal wage pegged, quantities absorb")
     println(io, "\\\\")
     println(io, "\\midrule")
     # refuse to merge unless the two printed cells really are identical
@@ -282,7 +284,7 @@ function render(io, rows)
     flagof(fin) = all(by[(fin, lab)].ok for lab in LABOUR) ? "" : "\\textsuperscript{\\dag}"
 
     # --- row F1: nothing is shared; all three flexible cells are separate, and
-    #     the fixed-real-wage and Leontief columns print once as one cell
+    #     the fixed-nominal-wage and Leontief columns print once as one cell
     println(io, "\\textbf{F1}\\newline \\scriptsize " * FINLABEL["F1"] * flagof("F1"))
     for lab in FLEX_COLS
         print(io, "& " * cellstr(lab, by[("F1", lab)]))

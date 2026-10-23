@@ -41,7 +41,7 @@ import importlib.util
 spec = importlib.util.spec_from_file_location('pricing', 'revision/tables/make_pricing_door.py')
 m = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
-rid = 'pricing_capacity_rows-v1-DELTA-F3-dm05-s0'
+rid = 'pricing_capacity_rows-v2-DELTA-F3-dm05-s0'
 v = m.values(rid)
 assert abs(v['P'] - (-0.025285014)) < 1e-7
 assert abs(v['P'] - 100*(m.manifest(rid)['metrics']['gdp_deflator']-1)) > 0.2
@@ -49,11 +49,11 @@ assert abs(v['P'] - 100*(m.manifest(rid)['metrics']['gdp_deflator']-1)) > 0.2
 assert m.COLS_MK[3][0] == 'WD'
 for row, _ in m.ROWS:
     for f in m.FIN:
-        baseline = f'matrix_5x3-v10-{row}-{f}' + ('-etas05' if row == 'BETA' else '')
+        baseline = f'matrix_5x3-v11-{row}-{f}' + ('-etas05' if row == 'BETA' else '')
         got = m.values(baseline)
         assert abs(got['P'] - 100*(m.manifest(baseline)['metrics']['gdp_deflator']-1)) < 1e-6
         assert abs(got['WD'] - m.WD[baseline]) < 1e-12
-assert abs(m.values('pricing_profit-v2-GAMMA-F3-k05-spis')['WD'] - 3.40) < 0.005
+assert abs(m.values('pricing_profit-v3-GAMMA-F3-k05-spis')['WD'] - 3.40) < 0.005
 table = m.build_mk_table()
 assert table.count('no door') == 5
 assert 'W_D' in table

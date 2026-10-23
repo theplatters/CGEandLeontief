@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Regenerate table4_results-5x3.tex from the v10 run manifests.
+"""Regenerate table4_results-5x3.tex from the v11 run manifests.
 
 No number is hand-typed: every value is a manifest field. Run from anywhere:
     python3 make_table4_results.py
-Source: runs/matrix_5x3-v10-<closure>-<fin>[-<variant>]/manifest.toml (schema v2).
+Source: runs/matrix_5x3-v11-<closure>-<fin>[-<variant>]/manifest.toml (schema v2).
 Columns are in table3c order (no-reallocation leftmost).
 
 The elastic-supply column reports a BRACKET rather than one sub-column per
@@ -73,7 +73,9 @@ COLLAPSE_LAYOUT = True
 
 def get(c, f, suffix=None):
     suffix = variant.get(c, "") if suffix is None else suffix
-    d = tomllib.load(open(f"{REPO}/runs/matrix_5x3-v10-{c}-{f}{suffix}/manifest.toml", "rb"))
+    d = tomllib.load(open(f"{REPO}/runs/matrix_5x3-v11-{c}-{f}{suffix}/manifest.toml", "rb"))
+    assert d["status"] == "executed" and d["gates"]["overall"] == "pass"
+    assert d["provenance"]["opencge"]["repo_rev"] == "v0.5.0"
     m = d["metrics"]
     return dict(Y=100 * m["gdp_rel"], L=100 * (m["employment"] - 1.0),
                 P=100 * (m["gdp_deflator"] - 1.0),
@@ -194,9 +196,9 @@ def build():
     A(r"% Table 4 --- results across the 5x3 closure matrix (GENERATED)")
     A(r"% ---------------------------------------------------------------------")
     A(r"% Do NOT edit by hand. Regenerate with:  make_table4_results.py")
-    A(r"% Source: runs/matrix_5x3-v10-<closure>-<fin>/manifest.toml (schema v2);")
+    A(r"% Source: runs/matrix_5x3-v11-<closure>-<fin>/manifest.toml (schema v2);")
     A(r"%   elastic-supply column: the executed sectoral cells")
-    A(r"%   matrix_5x3-v10-BETA-<fin>-etas{05,1,2}, reported as a min--max bracket.")
+    A(r"%   matrix_5x3-v11-BETA-<fin>-etas{05,1,2}, reported as a min--max bracket.")
     A(r"% Columns in table3c order (no-reallocation leftmost). Five outcomes per cell:")
     A(r"%   \Delta Y real GDP, \Delta L employment, \Delta P price level (GDP deflator),")
     A(r"%   \Delta D net external position (= F + B_gov, 'external debt'),")
@@ -204,7 +206,7 @@ def build():
     A(r"% All in percent vs. the reference continuation; GDP at basic prices = 1.")
     A(r"% COLLAPSED CELLS: F2/F3 share one cell in the three flexible-wage columns")
     A(r"%   (\multirow{2}, the rule between those rows is a \cmidrule over the two")
-    A(r"%   right-hand columns only); the fixed-real-wage and Leontief columns share")
+    A(r"%   right-hand columns only); the fixed-nominal-wage and Leontief columns share")
     A(r"%   one \multicolumn{2} cell per row. The generator asserts both coincidences")
     A(r"%   on the printed strings, so a broken equivalence aborts the build.")
     A(r"% =====================================================================")

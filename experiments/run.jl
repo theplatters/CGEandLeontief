@@ -1083,6 +1083,7 @@ function execute_cell(run_id::AbstractString, design::AbstractString,
             "sigma" => Float64(cell["sigma"]),
             "shock" => scen["shock"], "magnitude" => scen["magnitude"]),
         "solver" => Dict{String,Any}(
+            "blas_threads" => BLAS.get_num_threads(),
             "init" => "warm:reference-final", "reference" => "batch-continuation",
             "algorithm" => "kernel solve / solve_beta (Newton + residual-gated LM polish)"),
         "artifacts" => Dict{String,Any}("log" => "log.txt", "solution" => ""),
@@ -1297,5 +1298,8 @@ function main(args::Vector{String} = ARGS; root::AbstractString = default_root()
 end
 
 if abspath(PROGRAM_FILE) == abspath(@__FILE__)
+    # These 71-sector systems benefit from avoiding threaded BLAS overhead.
+    # Keep the resource choice explicit and overridable for other workloads.
+    BLAS.set_num_threads(parse(Int, get(ENV, "BEYONDHULTEN_BLAS_THREADS", "1")))
     main()
 end

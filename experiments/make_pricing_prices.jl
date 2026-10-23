@@ -5,8 +5,8 @@
 using OpenCGE, TOML, CSV, DataFrames, Printf
 isdefined(Main, :load_design) || include(joinpath(@__DIR__, "run.jl"))
 
-const PRICE_DESIGNS = ["pricing_capacity_rows_v1", "pricing_capacity_v2",
-    "pricing_mobile_v2", "pricing_markup_v2", "pricing_profit_v2"]
+const PRICE_DESIGNS = ["pricing_capacity_rows_v2", "pricing_capacity_v3",
+    "pricing_mobile_v3", "pricing_markup_v3", "pricing_profit_v3"]
 const PRICE_SIDECAR = "revision/tables/pricing_prices.csv"
 
 """Prices in consumption units, relative to a reference whose sector prices are one.
@@ -45,6 +45,7 @@ function pricing_price_rows(; root = default_root())
         for id in sort(collect(keys(design["cells"])))
             path = joinpath(root, "runs", id, "manifest.toml")
             man = TOML.parsefile(path)
+            man["provenance"]["opencge"]["repo_rev"] == "v0.5.0" || error("wrong kernel generation: $id")
             man["status"] == "failed" && continue  # historical failure stays recorded
             man["status"] == "executed" && man["gates"]["overall"] == "pass" ||
                 error("cell is not accepted: $id")
@@ -52,9 +53,8 @@ function pricing_price_rows(; root = default_root())
             cell = design_cell(design, id)
             cell["labor"] == man["scenario"]["labour"] || error("labour mismatch: $id")
             cell["financing"] == man["scenario"]["financing"] || error("financing mismatch: $id")
-            # ADR-0032 appended the failed BF cell's -v2 replacement to its
-            # design. Historical manifests keep the earlier whole-file hash;
-            # verify each cell's recorded parameters rather than rewriting it.
+            man["provenance"]["design_sha256"] == design_hash || error("design changed: $id")
+            # Verify the recorded numerical and pricing parameters as well.
             for key in ("theta", "epsilon", "sigma", "eta", "eta_s", "delta_epsilon")
                 haskey(cell, key) || continue
                 cell[key] == man["scenario"][key] || error("$key mismatch: $id")

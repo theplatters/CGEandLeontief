@@ -7,7 +7,7 @@ investment (BeyondHulten, Baqaee–Farhi lineage) used to compare labour-market
 and financing closures: the manuscript, the run/registry provenance, and the
 reproduction materials. The model kernel is the separate `OpenCGE` package
 (ADR-0028), pinned here via the committed root `Manifest.toml` (tag
-`v0.2.1`); there is exactly one kernel, and it is not in this tree
+`v0.5.0`); there is exactly one kernel, and it is not in this tree
 (ADR-0001). Research plan and validation gates live in `ROADMAP.md`; the
 documentation audit, closure catalogue and the executed results are in
 `docs/DOCS_ASSESSMENT.md` (currently Version 8).
@@ -16,10 +16,10 @@ documentation audit, closure catalogue and the executed results are in
 
 | Path | What it is |
 | --- | --- |
-| `OpenCGE` (external, <https://github.com/theplatters/OpenCGE>; local `../opencge`) | The model kernel — model, closures, diagnostics. Package/module `OpenCGE`, one kernel only (ADR-0001, summarized in the kernel's `DECISIONS.md`); pinned in `Manifest.toml` at rev `v0.2.1`. Kernel implementation changes happen there and land here only via a Manifest pin bump (ADR-0028). |
+| `OpenCGE` (external, <https://github.com/theplatters/OpenCGE>; local `../opencge`) | The model kernel — model, closures, diagnostics. Package/module `OpenCGE`, one kernel only (ADR-0001, summarized in the kernel's `DECISIONS.md`); pinned in `Manifest.toml` at rev `v0.5.0`. Kernel implementation changes happen there and land here only via a Manifest pin bump (ADR-0028). |
 | `tests/` | The paper/reproduction test suite (entry `tests/runtests.jl`): real-data and tooling contracts. The kernel's own tests live in `OpenCGE` (`OpenCGE@tests/…`). |
 | `baseline/` | The pre-split reproduction baseline: everything the paper pipeline produced before the kernel moved out, reproducible within 1e-8 by `scripts/reproduce.jl --check`. |
-| `Manifest.toml` | The committed pin of the `OpenCGE` dependency (`repo-rev = "v0.2.1"`, `git-tree-sha1`) — the only tracked "generated" artifact, and a generation-level object (ADR-0028). |
+| `Manifest.toml` | The committed pin of the `OpenCGE` dependency (`repo-rev = "v0.5.0"`, `git-tree-sha1`) — the only tracked "generated" artifact, and a generation-level object (ADR-0028). |
 | `scripts/` | Repository tooling — `scripts/status.jl` generates the status board, `scripts/check_repo.jl` is the pre/post-batch gate (ADR-0007), `scripts/reproduce.jl` is the reproduction baseline tool. |
 | `registry/` | Machine-readable single source of truth: `closures.toml`, `scenarios.csv`, `freeze.toml`, `preregistration.toml`. Schema: `registry/README.md`; kernel paths and kernel doc ids are repo-qualified `OpenCGE@…` (schema v2). |
 | `docs/` | `status.md` (generated status board), `decisions/` (ADRs), `dead-ends/` (DE register), `ideas/` (unexplored-idea register, `IDEA-NNNN`; see its README for the status vocabulary), `log/` (lab session log), `archive/` (closed historical docs). |
@@ -52,7 +52,7 @@ From the repository root:
 | Optional plotting | `julia --project=. -e 'using Pkg; Pkg.add("GLMakie")'`, then `using GLMakie` (the plotting extension lives in `OpenCGE` and loads lazily). |
 
 Julia ≥ 1.9 is required. The root `Manifest.toml` **is committed on
-purpose**: it pins `OpenCGE` (rev `v0.2.1`). Change it only as a deliberate
+purpose**: it pins `OpenCGE` (rev `v0.5.0`). Change it only as a deliberate
 generation-level event (see the generation rule below).
 
 `tests/runtests.jl` includes `test_check_repo.jl` ("real repo is clean"), so
@@ -187,7 +187,8 @@ visible (ADR-0004).
   a new generation (`-v2`, `-v3`, …) rather than mixing generations in one
   table. Every run manifest records the OpenCGE pin (version, repo-url,
   repo-rev, git-tree-sha1) in its `[provenance]` block.
-- Current state: the matrix is executed on the full-71 A-bill calibration in
+- Current table sources are defined in `docs/decisions/ADR-0044-wage-pinned-table-generation.md`; run evidence lives in `registry/scenarios.csv` and `docs/status.md`.
+- Historical generations: the matrix is executed on the full-71 A-bill calibration in
   ten generations — `matrix_5x3` (v1, two cells blocked by the retired
   heuristic guard), `matrix_5x3_v2` (ADR-0014), `matrix_5x3_v3` (ADR-0015),
   `matrix_5x3_v4` (ADR-0018 measurement), `matrix_5x3_v5` (ADR-0019,
@@ -195,7 +196,7 @@ visible (ADR-0004).
   sectoral-wage endpoint), `matrix_5x3_v7` / `matrix_5x3_v8` (the record of
   the two ADR-0022 promotion aborts), `matrix_5x3_v9` (first complete
   sectoral generation) and **`matrix_5x3_v10`** (C1-corrected measurement,
-  33/33 executed, all gates pass — the generation to cite), plus the
+  33/33 executed, all gates pass — the historical generation; see ADR-0044 for the current table sources), plus the
   supply-side identification arm `supply_etas_s1` / `_prog` / `_unif`
   (63 cells each, 189 total, ADR-0023), and the Phase 7 pricing generation
   on OpenCGE `v0.2.0` (ADR-0029, ADR-0030; pricing closures `P1`/`P2`):

@@ -2,9 +2,9 @@
 % Table 4 --- results across the 5x3 closure matrix (GENERATED)
 % ---------------------------------------------------------------------
 % Do NOT edit by hand. Regenerate with:  make_table4_results.py
-% Source: runs/matrix_5x3-v10-<closure>-<fin>/manifest.toml (schema v2);
+% Source: runs/matrix_5x3-v11-<closure>-<fin>/manifest.toml (schema v2);
 %   elastic-supply column: the executed sectoral cells
-%   matrix_5x3-v10-BETA-<fin>-etas{05,1,2}, reported as a min--max bracket.
+%   matrix_5x3-v11-BETA-<fin>-etas{05,1,2}, reported as a min--max bracket.
 % Columns in table3c order (no-reallocation leftmost). Five outcomes per cell:
 %   \Delta Y real GDP, \Delta L employment, \Delta P price level (GDP deflator),
 %   \Delta D net external position (= F + B_gov, 'external debt'),
@@ -12,7 +12,7 @@
 % All in percent vs. the reference continuation; GDP at basic prices = 1.
 % COLLAPSED CELLS: F2/F3 share one cell in the three flexible-wage columns
 %   (\multirow{2}, the rule between those rows is a \cmidrule over the two
-%   right-hand columns only); the fixed-real-wage and Leontief columns share
+%   right-hand columns only); the fixed-nominal-wage and Leontief columns share
 %   one \multicolumn{2} cell per row. The generator asserts both coincidences
 %   on the printed strings, so a broken equivalence aborts the build.
 % =====================================================================
@@ -26,12 +26,12 @@
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.5cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{3.3cm} | >{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{2.1cm}@{}}
 \toprule
 \textbf{Financing closure}
-& \textbf{No-reallocation}\newline \scriptsize immobile labor, sectoral wages
-& \textbf{Standard CGE}\newline \scriptsize one flexible wage, mobile labor
-& \textbf{Elastic labor supply}\newline \scriptsize sectoral supply on the real wage\newline {\footnotesize\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.85cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
+& \textbf{No-reallocation}\newline \scriptsize immobile labour, sectoral wages
+& \textbf{Standard CGE}\newline \scriptsize one flexible wage, mobile labour
+& \textbf{Elastic labour supply}\newline \scriptsize sectoral supply on the real wage\newline {\footnotesize\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.85cm}@{\hspace{3pt}}>{\raggedleft\arraybackslash}p{2.2cm}@{}}
 & $\eta_{s,i} \in [0.5,2]$\end{tabular}}
-& \textbf{Employment adjustment}\newline \scriptsize wage pinned, employment uncapped
-& \textbf{Leontief closure}\newline \scriptsize wage pinned, quantities absorb
+& \textbf{Fixed nominal wage}\newline \scriptsize nominal wage pegged, employment uncapped
+& \textbf{Leontief closure}\newline \scriptsize nominal wage pegged, quantities absorb
 \\
 \midrule
 \textbf{F1}\newline \scriptsize repurposing of consumption

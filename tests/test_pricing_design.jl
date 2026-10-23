@@ -43,6 +43,35 @@ isdefined(Main, :ext_test_data) || include(joinpath(@__DIR__, "test_external_clo
     @test scaled_pricing(CapacityPricing(-0.5), 1.0).δ == -0.5
 end
 
+@testset "wage-pinned generation: unchanged design specifications (ADR-0044)" begin
+    pin = opencge_pin(default_root())
+    @test pin["repo_rev"] == "v0.5.0"
+    pairs = ["matrix_5x3_v10" => "matrix_5x3_v11",
+        "pricing_capacity_rows_v1" => "pricing_capacity_rows_v2",
+        "pricing_capacity_v2" => "pricing_capacity_v3",
+        "pricing_mobile_v2" => "pricing_mobile_v3",
+        "pricing_markup_v2" => "pricing_markup_v3",
+        "pricing_profit_v2" => "pricing_profit_v3"]
+    for (old, new) in pairs
+        before, after = load_design(old), load_design(new)
+        @test preregistration_status(new)[1]
+        for key in ("data", "calibration", "programme", "reference", "gates")
+            @test before[key] == after[key]
+        end
+        @test get(before, "pricing", nothing) == get(after, "pricing", nothing)
+        oldprefix, newprefix = replace(old, "_v" => "-v"), replace(new, "_v" => "-v")
+        for (id, cell) in after["cells"]
+            original = before["cells"][replace(id, newprefix => oldprefix)]
+            # Notes cite the current generation; numerical inputs are identical.
+            without_note(d) = Dict(k => v for (k, v) in d if k != "note")
+            @test without_note(cell) == without_note(original)
+            man = TOML.parsefile(joinpath(default_root(), "runs", id, "manifest.toml"))
+            @test man["provenance"]["opencge"] == pin
+            @test man["status"] == "executed" && man["gates"]["overall"] == "pass"
+        end
+    end
+end
+
 @testset "pricing design: delta_services gives a per-sector capacity vector" begin
     pb = Dict{String,Any}("kind" => "capacity", "delta" => 0.0, "n_sectors" => 5,
         "services" => [4, 5])
@@ -228,12 +257,20 @@ end
         fin = cell_financing("F3", ψ, g, "tilt_g0_over_c0", data)
         md = delta_model(data, Shocks(ones(N), ones(N), zeros(N)); ε = 1e-4, financing = fin)
         @test solve(m0).quantities == solve(md).quantities
-        # The door reaches DELTA's cost line, and under the fixed-real-wage
-        # restriction (w/CPI = 1, F = 0) raises FixedRealWageFeasibilityError.
+        # OpenCGE v0.5.0 restores the nominal-wage square system: a door
+        # moves the CPI while all markets clear at w = 1 and F = 0.
         m = build_cell_model(cell, design_d, data, ψ, g)
         @test m.pricing isa CapacityPricing
-        @test_throws FixedRealWageFeasibilityError solve_cell(cell, design_d, data, ψ, g,
+        sol = solve_cell(cell, design_d, data, ψ, g,
             OpenCGE._solution_vector(m0, solve(m0)))
+        X = [sol.prices_raw; sol.quantities]
+        @test length(equilibrium_residuals(m, X)) == 2N
+        @test maximum(abs, equilibrium_residuals(m, X)) < 1e-6
+        @test all(isapprox.(sol.wages_raw, 1.0; atol = 1e-12))
+        @test isapprox(sol.external_transfer, 0.0; atol = 1e-12)
+        cpi = sum(data.consumption_share .* sol.prices_raw .^ (1 - cell["sigma"]))^(1 / (1 - cell["sigma"]))
+        @test abs(cpi - 1.0) > 1e-3
+        @test assert_external_account(m, sol) === nothing
         # Scalar BETA still refuses a door; the sectoral form carries the row.
         cb = Dict{String,Any}("labor" => "BETA", "financing" => "F3", "eta" => 1.0, "eta_s" => 0.5,
             "theta" => 0.5, "epsilon" => 0.5, "sigma" => 0.9)

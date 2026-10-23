@@ -6,9 +6,9 @@ Implementation: `src/closures/labor/labor.jl` (`delta_elasticities`,
 `registry/closures.toml` (`[labor.DELTA]`) and renders on `docs/status.md`
 (ADR-0003); this page carries no status.
 
-## Formulation (ADR-0002, incl. the 2026-09-17 amendment)
+## Formulation (ADR-0002, amended by ADR-0044)
 
-GAMMA (`w/P = 1`) + Leontief limit of the CES core (`θ, ϵ, σ → 0⁺`) at
+GAMMA (`w = 1`, `F = 0`; CPI and real wage may move) + Leontief limit of the CES core (`θ, ϵ, σ → 0⁺`) at
 `η = 1`. DELTA is a **corner** reached as GAMMA + Leontief technology — the
 endpoint row of the 5×3 matrix, not an independent mechanism.
 

@@ -1,6 +1,6 @@
 # ADR-0002 — Closure taxonomy and stable IDs
 
-- **Status:** accepted
+- **Status:** superseded in part by ADR-0044 (GAMMA/DELTA wage condition); taxonomy retained
 - **Date:** 2026-09-17
 - **Related:** ADR-0001, `registry/closures.toml`, `docs/DOCS_ASSESSMENT.md`,
   `cbase2/review.md`

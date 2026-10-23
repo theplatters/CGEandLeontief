@@ -9,16 +9,16 @@ Price columns use pricing_prices.csv, written from the saved solutions by
 experiments/make_pricing_prices.jl in consumption units (ADR-0037).
 Run from anywhere:
     python3 make_pricing_door.py
-Sources (schema v2, all on OpenCGE v0.2.1):
+Sources (schema v2, all on OpenCGE tag v0.5.0):
     capacity door (P1), by labour row:
-      BF, BETA, DELTA  runs/pricing_capacity_rows-v1-<row>-<fin>-<d0|dp05|dm05|dp05-s0|dm05-s0>
-      ALPHA            runs/pricing_capacity_rows-v1-ALPHA-<fin>-d0,
-                       runs/pricing_mobile-v2-ALPHA-<fin>-<dp05|dm05|dp05-s0|dm05-s0>
-      GAMMA            runs/pricing_capacity-v2-GAMMA-<fin>-<d0|dp05|dm05|dp05-s0|dm05-s0>
+      BF, BETA, DELTA  runs/pricing_capacity_rows-v2-<row>-<fin>-<d0|dp05|dm05|dp05-s0|dm05-s0>
+      ALPHA            runs/pricing_capacity_rows-v2-ALPHA-<fin>-d0,
+                       runs/pricing_mobile-v3-ALPHA-<fin>-<dp05|dm05|dp05-s0|dm05-s0>
+      GAMMA            runs/pricing_capacity-v3-GAMMA-<fin>-<d0|dp05|dm05|dp05-s0|dm05-s0>
     markup door (P2), every labour row:
-      runs/matrix_5x3-v10-<row>-<fin>              (kappa = 0 reference row, no door)
-      runs/pricing_markup-v2-<row>-<fin>-<k025|k05>
-      runs/pricing_profit-v2-<row>-<fin>-<k025|k05>-<spi05|spis>
+      runs/matrix_5x3-v11-<row>-<fin>              (kappa = 0 reference row, no door)
+      runs/pricing_markup-v3-<row>-<fin>-<k025|k05>
+      runs/pricing_profit-v3-<row>-<fin>-<k025|k05>-<spi05|spis>
 Outputs:
     revision/tables/table6_pricing-capacity.tex   (main text: capacity door, goods profile)
     revision/tables/table7_pricing-markup.tex     (main text: markup door)
@@ -57,15 +57,11 @@ ROWS = [
 
 def cap_id(row, v):
     """Run-id template of the capacity cell `v` (d0, dp05, ...) on a labour row."""
-    if row == "BF" and v == "dm05":
-        # BF-F1-dm05 failed on a batch stall and was rerun as -v2 (ADR-0004);
-        # F2/F3 ran clean under the original ids.
-        return "pricing_capacity_rows-v1-BF-{f}-dm05" + "{v2}"
     if row == "GAMMA":
-        return "pricing_capacity-v2-GAMMA-{f}-" + v
+        return "pricing_capacity-v3-GAMMA-{f}-" + v
     if row == "ALPHA" and v != "d0":
-        return "pricing_mobile-v2-ALPHA-{f}-" + v
-    return "pricing_capacity_rows-v1-" + row + "-{f}-" + v
+        return "pricing_mobile-v3-ALPHA-{f}-" + v
+    return "pricing_capacity_rows-v2-" + row + "-{f}-" + v
 
 
 def per_row(rows_of):
@@ -78,11 +74,11 @@ MK_PANELS = per_row(lambda row: [
     # sectoral price deviation is 0 in four of the five panels but 22--28 percent
     # in the no-reallocation panel, where it comes from the wage vector) and it
     # restores the shading convention of the earlier tables (baseline shaded).
-    (r"$\kappa = 0$ (no door)", "matrix_5x3-v10-" + row + "-{f}" + ("-etas05" if row == "BETA" else "")),
-    (r"retained, $\kappa = 0.25$", "pricing_markup-v2-" + row + "-{f}-k025"),
-    (r"retained, $\kappa = 0.5$", "pricing_markup-v2-" + row + "-{f}-k05"),
-    (r"distributed, $\kappa = 0.5$, $s_\pi = 0.5$", "pricing_profit-v2-" + row + "-{f}-k05-spi05"),
-    (r"distributed, $\kappa = 0.5$, $s_\pi = s$", "pricing_profit-v2-" + row + "-{f}-k05-spis"),
+    (r"$\kappa = 0$ (no door)", "matrix_5x3-v11-" + row + "-{f}" + ("-etas05" if row == "BETA" else "")),
+    (r"retained, $\kappa = 0.25$", "pricing_markup-v3-" + row + "-{f}-k025"),
+    (r"retained, $\kappa = 0.5$", "pricing_markup-v3-" + row + "-{f}-k05"),
+    (r"distributed, $\kappa = 0.5$, $s_\pi = 0.5$", "pricing_profit-v3-" + row + "-{f}-k05-spi05"),
+    (r"distributed, $\kappa = 0.5$, $s_\pi = s$", "pricing_profit-v3-" + row + "-{f}-k05-spis"),
 ])
 
 APP_PANELS = (
@@ -91,8 +87,8 @@ APP_PANELS = (
         (r"$\delta = -0.5$", cap_id(row, "dm05")),
     ]) for row, name in ROWS]
     + [("B. Markup door, profit distributed, $\\kappa = 0.25$: " + name, [
-        (r"$s_\pi = 0.5$", "pricing_profit-v2-" + row + "-{f}-k025-spi05"),
-        (r"$s_\pi = s$", "pricing_profit-v2-" + row + "-{f}-k025-spis"),
+        (r"$s_\pi = 0.5$", "pricing_profit-v3-" + row + "-{f}-k025-spi05"),
+        (r"$s_\pi = s$", "pricing_profit-v3-" + row + "-{f}-k025-spis"),
     ]) for row, name in ROWS]
 )
 
@@ -101,6 +97,7 @@ def manifest(rid):
     with open(f"{REPO}/runs/{rid}/manifest.toml", "rb") as fh:
         d = tomllib.load(fh)
     assert d["status"] == "executed" and d["gates"]["overall"] == "pass", rid
+    assert d["provenance"]["opencge"]["repo_rev"] == "v0.5.0", f"wrong kernel generation: {rid}"
     return d
 
 
@@ -126,12 +123,12 @@ def sha256(path):
 @lru_cache(maxsize=None)
 def reported_prices(rid):
     """Checked, derived reporting prices; original manifests keep their raw units."""
-    if rid.startswith("matrix_5x3-v10-"):
+    if rid.startswith("matrix_5x3-v11-"):
         # The new no-door rows use matrix W_D, with prices checked against
         # their recorded kappa=0 twins in the pricing sidecar.
         baseline = manifest(rid)
         scenario = baseline["scenario"]
-        twin = f"pricing_markup-v2-{scenario['labour']}-{scenario['financing']}-k0"
+        twin = f"pricing_markup-v3-{scenario['labour']}-{scenario['financing']}-k0"
         for key in ("gdp_deflator", "max_abs_price_dev"):
             assert abs(baseline["metrics"][key] - manifest(twin)["metrics"][key]) < 1e-8, rid
         return reported_prices(twin)
@@ -217,7 +214,7 @@ def build_table(panels, cols, caption_lines, label, comment_lines, fit=False):
         for rowlabel, tmpl in rows:
             cells = []
             for f in FIN:
-                v = values(tmpl.format(f=f, v2="-v2" if f == "F1" else ""))
+                v = values(tmpl.format(f=f))
                 cells += [num(v[key], signed) for key, _, signed in cols]
             A(r"\quad " + rowlabel + " & " + " & ".join(cells) + r" \\")
     A(r"\bottomrule")
@@ -279,7 +276,7 @@ def build_guided_table(panels, cols, stub, caption_lines, label, comment_lines, 
         for j, (rowlabel, tmpl) in enumerate(rows):
             cells = []
             for f in FIN:
-                v = values(tmpl.format(f=f, v2="-v2" if f == "F1" else ""))
+                v = values(tmpl.format(f=f))
                 cells += [""] + [num(v[key], signed) for key, _, signed in cols]
             shade = r"\rowcolor{tableguide}" if j == 0 else ""
             A(shade + r"\quad " + rowlabel + " & " + " & ".join(cells) + r" \\")
@@ -315,6 +312,9 @@ def build_cap_table():
          r"% Table 6 --- the capacity door by labour closure and financing (GENERATED)",
          r"% ---------------------------------------------------------------------",
          r"% Do NOT edit by hand. Regenerate with:  make_pricing_door.py",
+         r"% OpenCGE tag v0.5.0 (ADR-0044); source run ids are listed below.",
+         r"% Sources: pricing_capacity_rows-v2-<row>-<fin>-<variant>,",
+         r"% pricing_capacity-v3-GAMMA-<fin>-<variant>, pricing_mobile-v3-ALPHA-<fin>-<variant>.",
          r"% Goods-only profile (the main-text calibration), all five labour rows",
          r"% (ADR-0032). The all-sector counterfactual lives in tableE_pricing-profiles.tex.",
          r"% ====================================================================="])
@@ -335,6 +335,10 @@ def build_mk_table():
          r"% Table 7 --- the markup door by labour closure and financing (GENERATED)",
          r"% ---------------------------------------------------------------------",
          r"% Do NOT edit by hand. Regenerate with:  make_pricing_door.py",
+         r"% OpenCGE tag v0.5.0 (ADR-0044); source run ids are listed below.",
+         r"% Sources: matrix_5x3-v11-<row>-<fin>[-etas05],",
+         r"% pricing_markup-v3-<row>-<fin>-<k025|k05>,",
+         r"% pricing_profit-v3-<row>-<fin>-k05-<spi05|spis>.",
          r"% No-door kappa = 0 reference row, then retained and distributed profit,",
          r"% kappa in {0.25, 0.5}, all five labour rows (ADR-0032). kappa = 0.25",
          r"% distributed: tableE.",
@@ -359,6 +363,11 @@ def build_app_table():
          r"% Table E --- pricing-door profiles not carried in the main text (GENERATED)",
          r"% ---------------------------------------------------------------------",
          r"% Do NOT edit by hand. Regenerate with:  make_pricing_door.py",
+         r"% OpenCGE tag v0.5.0 (ADR-0044); source run ids are listed below.",
+         r"% Sources: pricing_capacity_rows-v2-<row>-<fin>-<dp05|dm05>,",
+         r"% pricing_capacity-v3-GAMMA-<fin>-<dp05|dm05>,",
+         r"% pricing_mobile-v3-ALPHA-<fin>-<dp05|dm05>,",
+         r"% pricing_profit-v3-<row>-<fin>-k025-<spi05|spis>.",
          r"% Panels: A = capacity door, all-sector counterfactual; B = markup door,",
          r"% kappa = 0.25, profit distributed; each on all five labour rows.",
          r"% ====================================================================="],

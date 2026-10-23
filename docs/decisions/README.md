@@ -37,7 +37,7 @@ settled question.
 
 | ID | Title | Status |
 | --- | --- | --- |
-| ADR-0002 | Closure taxonomy and stable IDs | accepted |
+| ADR-0002 | Closure taxonomy and stable IDs | superseded in part by ADR-0044 (wage condition) |
 | ADR-0003 | `registry/` is the single source of truth | accepted |
 | ADR-0004 | Runs are immutable, manifest-backed records | accepted |
 | ADR-0006 | Experiment entry point and preregistration | accepted |

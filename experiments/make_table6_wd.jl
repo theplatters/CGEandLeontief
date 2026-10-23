@@ -2,13 +2,10 @@
 # Table 6 --- W_D for the capacity-door cells (GENERATED sidecar)
 # ---------------------------------------------------------------------
 # Do NOT edit the output by hand. Regenerate with:
-#   julia --project=<OPEN_CGE_CHECKOUT> experiments/make_table6_wd.jl
+#   julia --project=. experiments/make_table6_wd.jl
 # then rebuild the table with revision/tables/make_pricing_door.py.
 #
-#   NOT `--project=.`: like make_table5_welfare.jl, this script calls
-#   `final_demand_bundle` (OpenCGE diag(WELFARE), branch welfare-indices =
-#   v0.2.1 + the welfare diagnostics), which the paper repo's Manifest does
-#   not yet pin. Point --project at a checkout that contains it.
+# Uses the committed OpenCGE v0.5.0 release pin (ADR-0044).
 #
 # Job: W_D is not a manifest field, so it is computed here, exactly as in
 # Table 5: the quantity index of demand, sum(c + g) / sum(c0 + g0) - 1, at
@@ -27,7 +24,7 @@ isdefined(Main, :load_design) || include(joinpath(@__DIR__, "run.jl"))
 
 const LAMBDA = 1.0
 const GATE_TOL = 1e-6
-const DESIGNS = ["pricing_capacity_rows_v1", "pricing_capacity_v2", "pricing_mobile_v2"]
+const DESIGNS = ["pricing_capacity_rows_v2", "pricing_capacity_v3", "pricing_mobile_v3"]
 const TABLE6_CELL = r"-(d0|dp05-s0|dm05-s0)$"
 
 """W_D in percent: the own-weights quantity index of the c + lambda*g bundle."""
@@ -61,6 +58,7 @@ function main()
         ψ, g = programme_vectors(dd, ref.data, kept; root = root)
         for id in ids
             man = TOML.parsefile(joinpath(root, "runs", id, "manifest.toml"))
+            man["provenance"]["opencge"]["repo_rev"] == "v0.5.0" || error("wrong kernel generation: $id")
             cell = design_cell(dd, id)
             sol = solve_cell(cell, dd, ref.data, ψ, g, ref.init_warm)
             ev = evaluate_gates(cell, dd, sol.model, sol, ref.sol)

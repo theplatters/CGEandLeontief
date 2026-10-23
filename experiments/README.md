@@ -361,3 +361,19 @@ uniform-sectoral BETA cell of the financing) is hard-validated
 `registered_at`, `git_commit`, `actor`, `pinned` (the key scalar
 parameters, informational), `note`. Written only by
 `experiments/run.jl --preregister`.
+
+## Wage-pinned table generation (ADR-0044)
+
+Tables 4–7 and Appendix E use OpenCGE tag `v0.5.0` (package metadata `0.4.1`).
+Designs: `matrix_5x3_v11`, `pricing_capacity_rows_v2`, `pricing_capacity_v3`,
+`pricing_mobile_v3`, `pricing_markup_v3`, `pricing_profit_v3`. See
+`registry/scenarios.csv` and `docs/status.md` for run evidence. Regenerate with
+`experiments/make_table5_welfare.jl`, `experiments/make_table6_wd.jl`,
+`experiments/make_table7_wd.jl`, `experiments/make_pricing_prices.jl` (all with
+`julia --project=.`), then `python3 revision/tables/make_table4_results.py` and
+`python3 revision/tables/make_pricing_door.py`. GAMMA/DELTA pin the nominal
+wage; pricing tables retain consumption-unit prices under ADR-0037.
+
+The run CLI defaults to one BLAS thread for the small sector systems; set
+`BEYONDHULTEN_BLAS_THREADS` to override it. New manifests record this resource
+setting in `[solver] blas_threads`; solver algorithms and gates are unchanged.

@@ -34,17 +34,15 @@ Appendix~\ref{app:kernel}.
 
 \subsection{Production and consumption}\label{app:model-kernel}
 
-\paragraph{Notation.} $L_i$ is employment in sector $i$ and $L=\sum_i L_i$ total employment; a bar
-marks the baseline, so $\bar L_i$ is baseline sectoral and $\Lbar$ baseline
-total employment. $w$ is the common wage of the mobile closures, $w_i$ the
+\paragraph{Notation.} $L_i$ is employment in sector $i$ and $L=\sum_i L_i$ total employment; a bar marks the baseline, so $\bar L_i$ is baseline sectoral and $\Lbar$ baseline total employment. $w$ is the common wage of the mobile closures, $w_i$ the
 sector-specific wage where labor markets are sectoral, and $\bar w$ the
 pegged real wage. Real wages are deflated by the consumption price index
-$\mathcal{P}(p)$, the CES price of the household's bundle; a superscript $0$ marks
+$\mathcal{P}(p)$, the CES price of the household's bundle; a subscript $0$ marks
 baseline values. $L_i^{\mathrm{cm}}(p,y_i,w_i)$ is the labor demand that
 solves the firm's cost-minimization problem
 of Section~\ref{subsec:optimization} at prices $p$ and output $y_i$. The
 allocation parameter $\eta$ takes only its endpoints: $\eta=1$ lets labor
-move to its cost-minimizing use, $\eta=0$ freezes the baseline allocation.
+move to its cost-minimizing use, $\eta=0$ freezes the baseline allocation of labor.
 The labor-supply elasticity $\eta_{s,i}$ governs how strongly sectoral
 employment responds to the real wage; the headline results set it to a
 common value $\eta_s$. Finally, $\theta$, $\epsilon$ and $\sigma$ are the
@@ -54,23 +52,10 @@ limit $0^{+}$ is fixed proportions.
 
 On the financing side, $c_i^h$ is the household purchase of good $i$ and
 $E^h$ its consumption expenditure, so $\sum_i p_i c_i^h=E^h$ is the
-household budget of~\eqref{eq:utility-max}, held fixed while F1 tilts its
-composition; $W=\sum_i w_i L_i$ is the wage bill, $T_G(p)=\sum_i p_i g_i^G$
-the baseline tax cost of government purchases, and $g_i$ the program
-bundle (real public investment in sector $i$) with current-price cost
-$\sum_i p_i g_i$. Under F2 that cost is raised by the wage-income tax at the
-endogenous rate $\tau$ defined in~\eqref{eq:cons}; under F3 it is booked as
-external program financing $B_{\mathrm{gov}}$. The net external transfer $F$
-closes the external account; it is endogenous in the mobile regime and
-identically zero in the fixed-wage regime.
+household budget of equation \eqref{eq:utility-max}. $W=\sum_i w_i L_i$ is the wage bill, $T_G(p)=\sum_i p_i g_i^G$ the baseline tax cost of government purchases, and $g_i$ the program bundle (real public investment in sector $i$) with current-price cost
+$\sum_i p_i g_i$. F1 changes the composition of $E^h$, while under F2 the program's cost is financed by the wage-income tax at the endogenous rate $\tau$ defined in~\eqref{eq:cons}; under F3 it is booked as external program financing $B_{\mathrm{gov}}$. The net external transfer $F$ closes the external account; it is endogenous in the mobile regime and identically zero in the fixed-wage regime.
 
-
-
-Subscript $0$ denotes the baseline. Each sector's technology is a nested CES
-with constant returns: labor and an intermediate composite substitute with
-elasticity $\epsilon$, and intermediate inputs substitute with elasticity
-$\theta$ inside the composite. Cost minimization gives the intermediate
-price index and the unit cost
+Each sector's technology is a nested CES with constant returns: labor and an intermediate composite substitute with elasticity $\epsilon$, and intermediate inputs substitute with elasticity $\theta$ inside the composite. Cost minimization, equation \eqref{eq:cost-min}, gives the intermediate price index and the unit cost
 \begin{align}
 P_i(p) &= \Big(\textstyle\sum_{u=1}^N \Omega_{iu}\,p_u^{1-\theta}\Big)^{1/(1-\theta)},
 \label{eq:model-ip}\\
@@ -85,8 +70,8 @@ $(p,w,A)=(\one,\one,\one)$. Zero profit requires
 p_i = c_i(p,w_i;A_i) \qquad \forall\, i.
 \label{eq:zp}
 \end{equation}
-Shephard's lemma, evaluated at zero profit, gives the cost-minimizing
-labor demand
+Shephard's lemma, evaluated at zero profit ($p_i = c_i$), gives the
+cost-minimizing labor demand
 \begin{equation}
 L_i^{\mathrm{cm}}(p,y_i,w_i)
  = \alpha_i A_i^{\epsilon-1} y_i
@@ -94,7 +79,7 @@ L_i^{\mathrm{cm}}(p,y_i,w_i)
 \label{eq:closure-labour-demand}
 \end{equation}
 where $y_i$ is gross output, $A_i$ productivity and $\alpha_i$ the calibrated
-labor share. Intermediate demand follows in the same way from the
+labor share. Demand for intermediate goods follows in the same way from the
 composite~\eqref{eq:model-ip} and is charged with the domestic bill
 (Appendix~\ref{app:kernel}; explicit form in~\eqref{eq:int}).
 

@@ -48,15 +48,15 @@ minimization (Shephard's lemma on \eqref{eq:app-unit-cost}) gives labor demand
 \begin{equation}\label{eq:app-labour}
   L_i \;=\; c_i^{\epsilon}\,(A^{\mathrm{eff}}_i)^{\epsilon-1}\,\alpha_i\,y_i\,w_i^{-\epsilon},
 \end{equation}
-and the demand for input $j$ of user $u$ is
+and the demand for input $u$ of user $i$ is
 \begin{equation}\label{eq:app-intermediate}
-  x_{ju} \;=\; p_j^{-\theta}\,\Omega_{uj}\;
-     c_u^{\epsilon}\,(A^{\mathrm{eff}}_u)^{\epsilon-1}\,P_u^{\theta-\epsilon}\,a_u\,y_u ,
+  x_{ui} \;=\; p_u^{-\theta}\,\Omega_{iu}\;
+     c_i^{\epsilon}\,(A^{\mathrm{eff}}_i)^{\epsilon-1}\,P_i^{\theta-\epsilon}\,a_i\,y_i ,
 \end{equation}
-with $a_u$ the domestic intermediate bill per unit of output. The outer
-$p_j^{-\theta}$ is the price of the demanded input and stays the purchaser
-price; the inner $c_u^{\epsilon}$ is the user's marginal cost. The same factor
-$k_u = c_u^{\epsilon}(A^{\mathrm{eff}}_u)^{\epsilon-1}P_u^{1-\epsilon}$ values
+with $a_i$ the domestic intermediate bill per unit of output. The outer
+$p_u^{-\theta}$ is the price of the demanded input and stays the purchaser
+price; the inner $c_i^{\epsilon}$ is the user's marginal cost. The same factor
+$k_i = c_i^{\epsilon}(A^{\mathrm{eff}}_i)^{\epsilon-1}P_i^{1-\epsilon}$ values
 the two leaks of the purchaser-price intermediate bill, imported
 intermediates $M^{\mathrm{int}}$ and product taxes on intermediate use
 $T^{\mathrm{int}}$. These are the four sites where the price enters a
@@ -72,7 +72,7 @@ needs no first-order-condition change.
 \subsection{The Cobb--Douglas price identity}\label{app:pricing-cd}
 At $\theta = \epsilon = 1$ and a fixed wage $w = 1$ the price block is
 log-linear: $\log p_i = \log \mu_i - \log A^{\mathrm{eff}}_i
-+ (1-\alpha_i)\sum_j \Omega_{ij}\log p_j$, hence
++ (1-\alpha_i)\sum_u \Omega_{iu}\log p_u$, hence
 \begin{equation}\label{eq:app-cd}
   \log p \;=\; (I - B)^{-1}\bigl(\log \mu - \log A^{\mathrm{eff}}\bigr),
   \qquad B = \operatorname{diag}(1-\alpha)\,\Omega .

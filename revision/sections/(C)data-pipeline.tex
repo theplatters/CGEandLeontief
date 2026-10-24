@@ -22,15 +22,14 @@ One published table goes in; one set of shares comes out. Every closure in the
 paper is calibrated on the same objects --- the input shares $\Omega$, the
 composite factor share $\alpha$, the Domar weights $\lambda$ and the household
 consumption shares $\beta$ --- so differences in results cannot originate in the
-data step. The accounting built on them is in Appendix~\ref{app:kernel}.
+data step. The accounting built on them is in Section~\ref{app:abill}.
 
 \subsection{Source data}\label{app:pipeline-source}
 
 The table is Germany's input--output account for 2019 (revision 2019), 71
 product groups at basic prices. We read the formatted copy shipped with the
 replication package, the file \texttt{I-O\_DE2019\_}
-\texttt{formatiert.csv} in the \texttt{data} directory; the published
-spreadsheets are cited in Appendix~\ref{app:provenance}. Rows $1$--$71$ are the
+\texttt{formatiert.csv} in the \texttt{data} directory. Rows $1$--$71$ are the
 modelled product groups; row $72$ (households' own goods and services) lies
 outside the modelled block; rows $73$--$75$ are the domestic intermediate bill
 $A$, the imported intermediates $m_i$ and the product taxes less subsidies
@@ -83,6 +82,29 @@ Water transport services & $6{,}093$ & $13{,}259$ & $7{,}166$ & 0.539 \\
 \end{tabular}
 \end{table}
 
+\subsection{The A-bill and the external account}\label{app:abill}
+
+The intermediate use of a sector splits into three recorded components: the
+domestic bill $A_u$, imported intermediates $M_{\mathrm{int},u}$ and product
+taxes on intermediate use $T_{\mathrm{int},u}$. Together they exhaust gross
+output once the value-added bill is deducted,
+\begin{equation}
+\sum_u \bigl( A_u + M_{\mathrm{int},u} + T_{\mathrm{int},u} \bigr)
+  = \sum_u \lambda_u - 1,
+\label{eq:abill}
+\end{equation}
+since gross output is value added plus intermediate consumption and the
+$\lambda_u$ are measured in baseline income units with GDP $=1$. The kernel
+charges the domestic component as input demand and books the other two as the
+explicit leaks $m_i$ and $t_i$ of Section~\ref{sec:kernel}, which is what makes
+the row identity \eqref{eq:io-row} close sector by sector. On the external side
+the accounts satisfy
+\begin{equation}
+S + T_{\mathrm{int}} + M - (I + X) = F + B_{\mathrm{gov}},
+\end{equation}
+the identity of \eqref{eq:financing-external-account}: saving, product taxes and
+imports finance investment, exports and the external position.
+
 \subsection{Normalizing to cost shares: $\Omega$}\label{app:pipeline-omega}
 
 Dividing each column of $Z$ by the user's intermediate bill and transposing
@@ -93,7 +115,7 @@ construction --- the contract the CES price index relies on. The model's
 equilibrium technology is the \emph{total} matrix, which prices the intermediates
 a sector actually buys; the money charged to domestic intermediates is the bill $A_i$,
 with the imported and taxed content carried as the explicit leaks
-$M_{\mathrm{int}}$ and $T_{\mathrm{int}}$ (Appendix~\ref{app:kernel}). The
+$M_{\mathrm{int}}$ and $T_{\mathrm{int}}$ (Section~\ref{app:abill}). The
 domestic matrix is kept for incidence and audit.
 
 The total matrix is sparse: $1{,}631$ of its
@@ -102,7 +124,7 @@ The self-supply diagonal averages $0.224$ (median $0.201$) and is strongly
 skewed --- IT and information services $0.828$, pig iron and steel $0.724$,
 non-ferrous metals $0.671$, legal and management consultancy $0.569$ --- with
 seven sectors above $0.45$ (13, 18, 19, 48, 53, 58, 68), the set behind the
-reduced variant of Appendix~\ref{app:variants}. Off the diagonal the largest
+reduced variant of Section~\ref{app:pipeline-variants}. Off the diagonal the largest
 entries are water transport's purchase of warehousing and transport services
 ($0.543$) and insurance's from finance-related services ($0.448$). Normalization
 runs down the using sector, so
@@ -161,14 +183,14 @@ baseline $y=\lambda$: the residual of
 $(I-\operatorname{diag}(1-\alpha)\Omega^{\mathrm{raw}})'y$ left after government,
 investment and exports is the baseline household block, clamped at zero and
 renormalized to one. With the domestic-bill accounting of
-Appendix~\ref{app:kernel} that residual is exactly the observed domestic
+Section~\ref{app:abill} that residual is exactly the observed domestic
 household final demand, so no sector is genuinely clamped (one sits at
 $4\times10^{-19}$ of dust). $\beta$ is concentrated --- real estate services
 $0.189$, retail trade $0.088$, food $0.059$, accommodation and food services
 $0.050$. The saving rate is not assumed but the data-implied residual
 $s=1-\sum_u c_u/(1-\sum_u g_u)=0.1199$, with government at $0.2141$ of baseline
 income, exports $0.4219$, investment $0.1624$ and intermediate imports $0.2214$
-(Appendix~\ref{app:kernel}).
+(Section~\ref{app:abill}).
 
 \subsection{Consistency checks}\label{app:pipeline-checks}
 
@@ -193,12 +215,11 @@ documented open item of the raw table itself, not a calibration error of ours:
 the final-demand columns are recorded at purchaser prices whose import and tax
 content does not close the basic-price identity. The gross-error guard fails
 above ten per cent; the measured value is well inside it
-(Appendix~\ref{app:kernel}).
+(Section~\ref{app:abill}).
 
 \subsection{Sector-exclusion variants}\label{app:pipeline-variants}
 
-The variants of Appendix~\ref{app:variants} are rebuilt from the raw table, not
-by slicing the derived shares: the dropped sectors' rows and columns come out of
+These variants are rebuilt from the raw table, not by slicing the derived shares: the dropped sectors' rows and columns come out of
 the table and the whole transformation is re-run on the slice, each retained
 $\Omega$ row renormalized over the retained suppliers, $\lambda$ and $\alpha$
 re-derived, and the category-level import and tax entries scaled by the retained

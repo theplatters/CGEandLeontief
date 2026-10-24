@@ -28,7 +28,7 @@ factor share $\alpha_i = v_i/(p_i y_i)$, so that $1-\alpha_i$ is the share
 of the full intermediate bill, and the input shares $\Omega_{iu} = p_u x_{ui}/TC_i$ (the transpose of the
 column-wise table: rows are input bundles, columns are inputs), where totals
 sector costs $TC_i$ are given by $\sum_{u} p_{u}x_{ui}$. Household consumption shares $\beta_u$ follow in the same way from the final-use columns. In the model only the domestic part of the bill, $\sum_u p_u x_{ui}$, is demand
-for domestic goods; $m_i$ and $t_i$ are booked as explicit leaks (Appendix~\ref{app:kernel}). The step from the source table to these shares is documented in Appendix~\ref{app:pipeline}.
+for domestic goods; $m_i$ and $t_i$ are booked as explicit leaks (Appendix~\ref{app:abill}). The step from the source table to these shares is documented in Appendix~\ref{app:pipeline}.
 %TODO: eventuell nochmal den index von Omega durchdenken
 
 The table is a static snapshot of the underlying economy: it fixes shares at one point, is silent about how they respond when prices or demand change. That is the job of the optimization problems discussed below.
@@ -65,7 +65,7 @@ In line with standard reasoning, we calibrate the CES functions by equating the 
 \subsection{The welfare measure}\label{subsec:welfare}
 
 The approach above gives an estimate for \emph{Real GDP} based on inspecting
-the wage bill $\sum_i w_i L_i$, which equals aggregate value added because labor is the only primary factor (Section~\ref{subsec:optimization}). For scenarios with price changes the wage bill is deflated to express it at constant prices\footnote{Specifically, we use a seven-component T\"ornqvist price index of final demand (consumption, government purchases and the program, investment, exports, and the three import and tax leaks booked in Appendix~\ref{app:kernel})}. However, under a demand-only shock every price is pinned at its baseline value in the majority of the scenarios captured by table \ref{tab:closure-matrix-3x5}. In these cases the deflator is exactly one and real GDP moves with the employment index $w\sum_i L_i$ alone. Hence, in our setup deflation is only required for the no-reallocation and the elastic labor supply closures. 
+the wage bill $\sum_i w_i L_i$, which equals aggregate value added because labor is the only primary factor (Section~\ref{subsec:optimization}). For scenarios with price changes the wage bill is deflated to express it at constant prices\footnote{Specifically, we use a seven-component T\"ornqvist price index of final demand (consumption, government purchases and the program, investment, exports, and the three import and tax leaks booked in Appendix~\ref{app:abill})}. However, under a demand-only shock every price is pinned at its baseline value in the majority of the scenarios captured by table \ref{tab:closure-matrix-3x5}. In these cases the deflator is exactly one and real GDP moves with the employment index $w\sum_i L_i$ alone. Hence, in our setup deflation is only required for the no-reallocation and the elastic labor supply closures. 
 
 However, real GDP measures how much is produced, not how well the household fares. In this context, different assumptions on the valuation of this output can be made and  such assumptions often represent different theoretical viewpoints or normative stances. 
 

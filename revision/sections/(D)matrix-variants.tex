@@ -1,57 +1,15 @@
-% =====================================================================
-% Appendix D --- Matrix variants and gamma/beta representation robustness
-% ---------------------------------------------------------------------
-% Job: where the presentation-decision variants live; all tables cite run
-%      ids. Tally: fifteen matrix cells + twelve ladder cells + six
-%      two-group cells = 33.
-% Mindmap: N11, N12.
-% Status: STUB --- narrative outline v3 (2026-09-20).
-% =====================================================================
-\section{Matrix variants and gamma/beta representation robustness}\label{app:variants}
+\section{Sectoral responses in every closure}\label{app:variants}\label{app:sectoral-panels}
 
-% TABLE (linked, revision/tables/matrix_5x3_v10_flows.md): the full 15-cell
-% matrix + the 18 sectoral cells, all run ids.
-% ADDED (2026-10-18): the pricing-door profiles (tableE_pricing-profiles.tex),
-% moved here from Section 6.4 when the main text switched to the goods-only
-% profile. Re-cut the same day (ADR-0032): all five labour rows; the mobile
-% rows now sit in the main-text Tables 6 and 7.
-% TODO: the full 15-cell matrix (citing matrix_5x3_v10 run ids); the
-% gamma/beta variant tables; the ADR-0021 wage-structure axis as a
-% representation-robustness row; the 33-cell tally
-% (15 matrix + 12 ladder + 6 two-group).
-
-\subsection{The pricing-door profiles on every labor closure}\label{app:profiles}
-
-The main text carries the pricing door in the profile in which the utilization
-elasticity is confined to the goods sectors, because the entire direct incidence
-of the program falls there and because \textcite{Kaldor1966} reads Verdoorn's
-law as a law of manufacturing. Table~\ref{tab:pricing-profiles} prints the rows
-this leaves out, on every labor closure: the counterfactual in which $\delta$
-extends to every sector, and the $\kappa = 0.25$ markup with its profit
-distributed.
-
-The all-sector profile is worth stating explicitly, because it is what makes the
-sign of the price response look like a property of the financing closure. With
-$\delta$ on 36 service sectors, which receive none of the program directly,
-Kaldor--Verdoorn lowers the GDP deflator except under external finance
-(\texttt{pricing\_capacity-v2-GAMMA-\{F1,F2,F3\}-dm05}: $-0.20$, $-0.16$,
-$+0.12$ percent), against $-0.06$ to $-0.04$ percent in all three columns when
-the elasticity is confined to goods. It is a statement about where returns are assumed to live,
-and it carries over to the Leontief closure ($-0.16$, $-0.13$, $+0.14$ percent;
-\texttt{pricing\_capacity\_rows-v1-DELTA-\{F1,F2,F3\}-dm05}), while the
-standard CGE closure lowers the deflator by 0.16 percent in every column.
-
-The three CPI-gauge closures (no-reallocation, standard CGE, elastic supply)
-keep F2 and F3 indistinguishable in every row of both panels, so the financing
-the transfer neutrality behind \eqref{eq:finstrument} survives the pricing door; in panel B the
-distributed profit leaves them unchanged as well, because the net external
-transfer absorbs it (Section~\ref{subsec:pricing-markup}).
-
-\input{tables/tableE_pricing-profiles.tex}
-
-\subsection{Detailed sectoral responses}\label{app:sectoral-panels}
-
-Figures~\ref{fig:sectoral-flex-f23} to \ref{fig:sectoral-fixed} show what the nine distinct economies of the matrix make of the program described in Section~\ref{subsec:sectoral} at the level of the sector. Each panel refers to one cell (the collapsed cells of Table~\ref{tab:results-matrix} share a panel). The left half compares, for each of the seven program sectors (numbered 1 to 7), the size of the impulse with the resulting change in gross output, in household consumption and in the sectoral price; the error bars span the consumption elasticity $\sigma\in\{0.6,0.99\}$ with everything else fixed. The right half places all 71 sectors in the output--price plane, with the program sectors marked by their numbers, or, where no price moves, ranks them by their output response.
+The figures below show what the nine distinct economies of the matrix make of the
+program described in Section~\ref{subsec:sectoral} at the level of the sector.
+Each panel refers to one cell (the collapsed cells of
+Table~\ref{tab:results-matrix} share a panel). The left half compares, for each of
+the seven program sectors, the size of the impulse with the resulting change in
+gross output, in household consumption and in the sectoral price; the error bars
+span the consumption elasticity $\sigma\in\{0.6,0.99\}$ with everything else
+fixed. The right half places all 71 sectors in the output--price plane, with the
+program sectors marked by their numbers, or, where no price moves, ranks them by
+their output response.
 
 \begin{figure}[htbp]
 \centering

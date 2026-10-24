@@ -296,8 +296,8 @@ cost alone. F3 is an accounting open-economy closure, not a monetary mechanism: 
 \subsection{The closure systems}\label{app:closure-systems}
 
 We keep the notation above and record the data-calibrated objects the
-systems below use: domestic bill coefficients $a_u$, the value of domestic
-intermediates used per unit of gross output of sector $u$, the input-share matrix $\Omega$ ($\Omega_{iu}$ the share of input $u$ in
+systems below use: domestic bill coefficients $a_i$, the value of domestic
+intermediates used per unit of gross output of sector $i$, the input-share matrix $\Omega$ ($\Omega_{iu}$ the share of input $u$ in
 sector $i$'s bundle, rows summing to one), sector import margins $m_i$, the
 saving rate $s$, baseline government demand $g^G$, non-program investment
 $inv$, exports $X$, and the labor bar $\Lbar = \sum_i \bar L_i = 1$ in
@@ -320,8 +320,8 @@ $L^{cm}_i(p, y_i, w_i) = \bar{L}_i$ jointly with \eqref{eq:zp}.
 Intermediate demand is charged with the \emph{domestic}
 bill:
 \begin{equation}
-int_i = p_i^{-\theta} \sum_u \Omega_{ui}\,
-        p_u^{\epsilon} A_u^{\epsilon-1} P_u^{\theta-\epsilon}\, a_u\, y_u.
+int_i = p_i^{-\theta} \sum_j \Omega_{ji}\,
+        p_j^{\epsilon} A_j^{\epsilon-1} P_j^{\theta-\epsilon}\, a_j\, y_j.
 \label{eq:int}
 \end{equation}
 Household demand is CES with CPI deflation and the financing weights
@@ -485,10 +485,10 @@ the unit point, and this affine form does not describe the $\eta = 0$ row.
 \end{lemma}
 
 \begin{proof}
-At $p = w = A = \one$: $P_u = 1$ in \eqref{eq:int}, so all elasticity
+At $p = w = A = \one$: $P_j = 1$ in \eqref{eq:int}, so all elasticity
 factors $p^{\epsilon}$, $P^{\theta-\epsilon}$, $p^{-\theta}$ equal $1$ and
 \eqref{eq:int} reduces to the fixed-coefficient round
-$\sum_u \Omega_{ui} a_u y_u$; \eqref{eq:closure-labour-demand} reduces to
+$\sum_j \Omega_{ji} a_j y_j$; \eqref{eq:closure-labour-demand} reduces to
 $L_i = \alpha_i y_i$ since every exponent collapses at unit prices; in
 \eqref{eq:cons} the terms $p_i^{-\sigma}$ and the normalizer reduce to
 $1$ and $\sum_j \beta_j ds_j$, giving the fixed spending weights
@@ -496,9 +496,9 @@ $\tilde\beta(ds)$; and the tax rate $\tau = \sum g^G / \alpha^{\!\top}y$
 turns $E$ into the affine form shown. Collecting terms in
 \eqref{eq:model-clearing} gives \eqref{eq:affine}--\eqref{eq:bvec}: the
 intermediate round contributes the columns
-$\sum_i \Omega_{ui} a_u = a_u$ (row sums of $\Omega$ equal $1$) and the
+$\sum_i \Omega_{ji} a_j = a_j$ (row sums of $\Omega$ equal $1$) and the
 household round contributes $(1-s)\sum_i (1-m_i)\tilde\beta_i(ds)\,
-\alpha_u$ per unit of $y_u$.
+\alpha_j$ per unit of $y_j$.
 \end{proof}
 
 \begin{remark}[Nonsubstitution]\label{rem:samuelson}

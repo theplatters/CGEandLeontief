@@ -13,61 +13,53 @@
 % =====================================================================
 \section{The pricing door: derivations, guard and accounting}\label{app:pricing-door}
 
-\subsection{Two hooks on one cost line}\label{app:pricing-hooks}
+\subsection{The pricing equation and the factor demands}\label{app:pricing-hooks}
 Sector $i$ produces with the CES unit cost
 \begin{equation}\label{eq:app-unit-cost}
   c_i \;=\; \Bigl[\,(A^{\mathrm{eff}}_i)^{\epsilon-1}\bigl(\alpha_i\,w_i^{1-\epsilon}
      + (1-\alpha_i)\,P_i^{1-\epsilon}\bigr)\Bigr]^{\frac{1}{1-\epsilon}},
 \end{equation}
-where $P_i$ is the intermediate price index (CES in $\theta$ over the
-purchaser prices $p_u$) and $\alpha_i$ the factor share. The two doors act on
-this one line. The capacity door replaces $A_i$ by
-$A^{\mathrm{eff}}_i = A_i (y_i/\lambda_i)^{-\delta_i \alpha_i}$ ($\lambda_i$ the sector's baseline gross output) and keeps zero profit,
-$p_i = c_i$. The factor share in the exponent converts the value-added
-elasticity $\delta_i$ into a gross-output one: at fixed input prices a
-Hicks-neutral change $d\ln A^{\mathrm{eff}}_i$ raises value added per worker by
-$d\ln A^{\mathrm{eff}}_i/\alpha_i$, so value-added productivity responds to own
-output with elasticity $-\delta_i$. The markup door keeps $A^{\mathrm{eff}}_i = A_i$ and sets
-$p_i = \mu_i c_i$ with $\mu_i = 1 + \kappa(y_i/\lambda_i - 1)$. Both are
-written in $y_i/\lambda_i$, so the reference point ($y = \lambda$) is a
-fixed point of either hook ($A^{\mathrm{eff}} = A$, $\mu = 1$) and the
-scale-determinacy guard of the kernel, evaluated at the reference, is
-unchanged. Their product
-$p_i = \bigl(1 + \kappa(y_i/\lambda_i - 1)\bigr)\,c_i\bigl(A_i (y_i/\lambda_i)^{-\delta_i\alpha_i}\bigr)$
-is one family with two parameters; $\delta = \kappa = 0$ reproduces the
-kernel exactly (bit for bit, as the nesting cells
-\texttt{pricing\_capacity-v2-GAMMA-*-d0},
-\texttt{pricing\_capacity\_rows-v1-*-d0} and
-\texttt{pricing\_markup-v2-*-k0} confirm against their
-\texttt{matrix\_5x3-v10} twins on every labor closure).
+where $P_i$ is the intermediate price index (CES in $\theta$ over the purchaser
+prices $p_u$) and $\alpha_i$ the factor share. Both modifications introduced in Section~\ref{sec:beyond-demand-only} can be captured in this way ---
+one shifts it, the other marks it up:
+\begin{equation}\label{eq:app-price-rule}
+  p_i \;=\; \mu_i\,c_i\bigl(A^{\mathrm{eff}}_i\bigr),
+  \qquad
+  \mu_i \;=\; 1 + \kappa\Bigl(\frac{y_i}{\lambda_i} - 1\Bigr),
+  \qquad
+  A^{\mathrm{eff}}_i \;=\; A_i\Bigl(\frac{y_i}{\lambda_i}\Bigr)^{-\delta_i \alpha_i},
+\end{equation}
+with $\lambda_i$ the sector's baseline gross output. The capacity modification keeps zero profit ($\mu_i \equiv 1$) and lets technology respond; the markup modification keeps $A^{\mathrm{eff}}_i = A_i$ and lets the margin respond. The factor share in the
+exponent converts a value-added elasticity into a gross-output one: at fixed input
+prices a Hicks-neutral change $d\ln A^{\mathrm{eff}}_i$ raises value added per worker
+by $d\ln A^{\mathrm{eff}}_i/\alpha_i$, so value-added productivity responds to own
+output with elasticity $-\delta_i$. Both modifications are written in $y_i/\lambda_i$, so at the baseline ($y = \lambda$)
+both are no-ops --- technology is $A_i$ and the margin is one. That leaves the kernel's
+scale-determinacy test untouched, since the test is evaluated at exactly that point, and
+$\delta = \kappa = 0$ returns the demand-only model: every priced cell reproduces its
+column of Table~\ref{tab:results-matrix}.
 
-\subsection{First-order conditions at marginal cost}\label{app:pricing-foc}
-A firm with a markup buys at the purchaser prices but equates marginal revenue
-product to factor cost at its \emph{marginal cost} $c_i = p_i/\mu_i$. Cost
-minimization (Shephard's lemma on \eqref{eq:app-unit-cost}) gives labor demand
-\begin{equation}\label{eq:app-labour}
-  L_i \;=\; c_i^{\epsilon}\,(A^{\mathrm{eff}}_i)^{\epsilon-1}\,\alpha_i\,y_i\,w_i^{-\epsilon},
-\end{equation}
-and the demand for input $u$ of user $i$ is
-\begin{equation}\label{eq:app-intermediate}
-  x_{ui} \;=\; p_u^{-\theta}\,\Omega_{iu}\;
-     c_i^{\epsilon}\,(A^{\mathrm{eff}}_i)^{\epsilon-1}\,P_i^{\theta-\epsilon}\,a_i\,y_i ,
-\end{equation}
-with $a_i$ the domestic intermediate bill per unit of output. The outer
-$p_u^{-\theta}$ is the price of the demanded input and stays the purchaser
-price; the inner $c_i^{\epsilon}$ is the user's marginal cost. The same factor
-$k_i = c_i^{\epsilon}(A^{\mathrm{eff}}_i)^{\epsilon-1}P_i^{1-\epsilon}$ values
-the two leaks of the purchaser-price intermediate bill, imported
-intermediates $M^{\mathrm{int}}$ and product taxes on intermediate use
-$T^{\mathrm{int}}$. These are the four sites where the price enters a
-first-order condition (labor demand, the inner factor of intermediate demand,
-and both leak valuations); writing $p$ instead of $c$ at any of them inflates
-the corresponding demand by $\mu^{\epsilon}$ while leaving the price response
-untouched. The two leak sites are invisible on any synthetic fixture
-($M^{\mathrm{int}} = T^{\mathrm{int}} = 0$), which is why the paper-side tests
-assert the external account on the German table. Under the capacity door
-$\mu \equiv 1$, so $c = p$ and only $A^{\mathrm{eff}}$ moves: the capacity door
-needs no first-order-condition change.
+The firm, however, buys at the purchaser prices while it hires and buys inputs at
+its \emph{marginal cost} $c_i = p_i/\mu_i$. Shephard's lemma on
+\eqref{eq:app-unit-cost} then gives labour demand and input demand together,
+\begin{align}
+  L_i \;&=\; c_i^{\epsilon}\,(A^{\mathrm{eff}}_i)^{\epsilon-1}\,\alpha_i\,y_i\,w_i^{-\epsilon},
+  \label{eq:app-labour}\\
+  x_{ui} \;&=\; p_u^{-\theta}\,\Omega_{iu}\;c_i^{\epsilon}\,
+     (A^{\mathrm{eff}}_i)^{\epsilon-1}\,P_i^{\theta-\epsilon}\,a_i\,y_i ,
+  \label{eq:app-intermediate}
+\end{align}
+with $a_i$ the domestic intermediate bill per unit of output: the outer
+$p_u^{-\theta}$ is the price of the demanded input and stays the purchaser price,
+the inner $c_i^{\epsilon}$ is the user's marginal cost. The same factor
+$k_i = c_i^{\epsilon}(A^{\mathrm{eff}}_i)^{\epsilon-1}P_i^{1-\epsilon}$ values the
+two leaks of the purchaser-price intermediate bill, imported intermediates
+$M^{\mathrm{int}}$ and product taxes on intermediate use $T^{\mathrm{int}}$. The
+price therefore enters the first-order conditions at four places --- labour demand,
+the inner factor of input demand, and both leak valuations --- and writing $p$
+instead of $c$ at any of them inflates the corresponding demand by
+$\mu^{\epsilon}$ while leaving the price response untouched. Under the capacity
+modification $\mu \equiv 1$ so that $c = p$ and only $A^{\mathrm{eff}}$ moves.
 
 \subsection{The Cobb--Douglas price identity}\label{app:pricing-cd}
 At $\theta = \epsilon = 1$ and a pinned wage $w = 1$ the price block is
@@ -79,8 +71,8 @@ log-linear: $\log p_i = \log \mu_i - \log A^{\mathrm{eff}}_i
 \end{equation}
 A uniform constant markup $\bar\mu$ therefore raises prices by
 $\bar\mu^{(I-B)^{-1}\mathbf 1}$, not by $\bar\mu$: the markup cascades through
-the intermediate network, by a factor of about $1.8$ on the German table. The
-kernel tests assert \eqref{eq:app-cd} for both doors.
+the intermediate network, by a factor of about $1.8$ on the German table. Both doors satisfy \eqref{eq:app-cd}, since they act on
+the same cost line.
 
 \subsection{The uniqueness guard}\label{app:pricing-guard}
 With $\delta_i < 0$ a sector's unit cost falls as its output rises, a positive
@@ -90,57 +82,53 @@ door-free solution) and must pass a uniqueness gate: re-solved from four
 starting points (the default initial point, the door-free solution, and the
 solution with all quantities scaled by $0.9$ and $1.1$), at least two must
 converge and every converged start must lie within $10^{-6}$ of the solution,
-and the Jacobian of the full residual must have full rank. The measured
-spreads are at most $6 \cdot 10^{-9}$ at condition numbers up to $10^{8}$
-(the no-reallocation closure, whose sectoral wages enlarge the system); a
-distinct equilibrium would sit about $10^{-2}$ away. All 180 priced cells pass,
-on every labor closure.
+and the Jacobian of the full residual must have full rank. The converged starts agree
+to at most $6\cdot 10^{-9}$ at condition numbers up to $10^{8}$ (the no-reallocation
+closure, whose sectoral wages enlarge the system), where a distinct equilibrium would
+sit about $10^{-2}$ away. All priced cells pass the gate, on every labor closure.
 
 \subsection{Accounting with the profit booked}\label{app:pricing-accounting}
-The profit bill is $\Pi$ of equation~\eqref{eq:profit-bill}. With retention
-rate $s_\pi$ the household spends
-$E = (1-\tau)\,w\textstyle\sum_i L_i + F + (1-s_\pi)\Pi$, and the
-external-account identity of the kernel becomes
+With total profits $\Pi$ of equation~\eqref{eq:profit-bill} and a retention rate
+$s_\pi$, the household spends $E = (1-\tau)\,w\textstyle\sum_i L_i + F + (1-s_\pi)\Pi$, and the external-account identity of the kernel becomes
 \begin{equation}\label{eq:app-account}
   sE + s_\pi \Pi + T^{\mathrm{int}} + M - (I + X) \;=\; F + B_{\mathrm{gov}},
 \end{equation}
-which every priced run satisfies to $10^{-11}$; dropping the $s_\pi\Pi$ term
-leaves it short by exactly the retained profit. On the income side GDP is factor
-income $w\sum_i L_i + \Pi$, so the companion identity between the GDP wedge and
-the account gap holds unchanged. Retention ($s_\pi = 1$) needs injections in
-the wage-pinned gauge: summing over sectors,
-$(\mu - 1)\,c\,y + (s + m - s m)\,w L = p\,(1-m)(g^G + \mathit{exo}) + pX$, so an
-economy without government demand, investment or exports has no positive
-retained-profit equilibrium. The application carries all three.
-%TODO (relabel): Pi collides with the consumption price index Pi(p) of Sections
-% 4-5 and Appendices A-B; the price index is to be relabelled before submission
-% (see the note in Section 6.2 at eq. profit-bill).
+which every priced run satisfies to $10^{-11}$; dropping the $s_\pi\Pi$ term leaves it
+short by exactly the retained profit.
 
-\subsection{The pricing-door profiles on every labor closure}\label{app:profiles}
+On the income side GDP is factor income $w\sum_i L_i + \Pi$, so the companion identity
+between the GDP wedge and the account gap holds unchanged. Full retention ($s_\pi = 1$)
+is admissible only because the application carries injections --- government demand,
+investment and exports; without them the same identity admits no solution with positive
+output.
 
-The main text carries the pricing door in the profile in which the utilization
-elasticity is confined to the goods sectors, because the entire direct incidence
-of the program falls there and because \textcite{Kaldor1966} reads Verdoorn's
-law as a law of manufacturing. Table~\ref{tab:pricing-profiles} prints the rows
-this leaves out, on every labor closure: the counterfactual in which $\delta$
-extends to every sector, and the $\kappa = 0.25$ markup with its profit
-distributed.
+\subsection{Robustness: the all-sector capacity profile}\label{app:profiles}
 
-The all-sector profile is worth stating explicitly, because it is what makes the
-sign of the price response look like a property of the financing closure. With
-$\delta$ on 36 service sectors, which receive none of the program directly,
-Kaldor--Verdoorn lowers the GDP deflator except under external finance
-(\texttt{pricing\_capacity-v2-GAMMA-\{F1,F2,F3\}-dm05}: $-0.20$, $-0.16$,
-$+0.12$ percent), against $-0.06$ to $-0.04$ percent in all three columns when
-the elasticity is confined to goods. It is a statement about where returns are assumed to live,
-and it carries over to the Leontief closure ($-0.16$, $-0.13$, $+0.14$ percent;
-\texttt{pricing\_capacity\_rows-v1-DELTA-\{F1,F2,F3\}-dm05}), while the
-standard CGE closure lowers the deflator by 0.16 percent in every column.
+In Section~\ref{subsec:pricing-capacity} the utilization elasticity is confined to
+the goods sectors, because the entire direct incidence of the program falls
+there and because \textcite{Kaldor1966} reads Verdoorn's law as a law of
+manufacturing. As a robustness check, Table~\ref{tab:pricing-profiles} reports the
+alternative in which $\delta$ extends to every sector.
 
-The three CPI-gauge closures (no-reallocation, standard CGE, elastic supply)
-keep F2 and F3 indistinguishable in every row of both panels, so the financing
-the transfer neutrality behind \eqref{eq:finstrument} survives the pricing door; in panel B the
-distributed profit leaves them unchanged as well, because the net external
-transfer absorbs it (Section~\ref{subsec:pricing-markup}).
+Where the elasticity sits relative to the demand decides what it does. Confined to
+the goods sectors it meets the program's direct demand --- the sectors that expand are
+the sectors whose unit costs fall --- and in the closures whose price level is anchored
+by the wage the deflator moves by at most $0.06$ percent, in the direction the
+coefficient implies (Table~\ref{tab:pricing-kaldor}). Spread over the 36 service
+sectors as well, the same coefficient acts where no program demand arrives directly:
+their output moves only as far as the financing closure reallocates demand away from
+them or adds income to them, and there the deflator stops following the coefficient.
+Under $\delta = -0.5$ it falls by $0.20$ and $0.16$ percent under preference
+reallocation and tax finance and rises by $0.12$ percent under external finance; the
+same reversal appears in the Leontief closure ($-0.16$, $-0.13$ and $+0.14$ percent),
+while the standard CGE closure lowers the deflator by 0.16 percent in every column.
+The all-sector profile is therefore a statement about where returns are assumed to
+live, not about the size of the coefficient.
 
+In the three closures whose price level is set by the CPI (no-reallocation,
+standard CGE, elastic supply) F2 and F3 stay indistinguishable in every row, so
+the transfer neutrality behind \eqref{eq:finstrument} survives the pricing
+door.
+
+\clearpage
 \input{tables/tableE_pricing-profiles.tex}

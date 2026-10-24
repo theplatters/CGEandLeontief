@@ -5,10 +5,10 @@
 % OpenCGE tag v0.5.0 (ADR-0044); source run ids are listed below.
 % Sources: pricing_capacity_rows-v2-<row>-<fin>-<dp05|dm05>,
 % pricing_capacity-v3-GAMMA-<fin>-<dp05|dm05>,
-% pricing_mobile-v3-ALPHA-<fin>-<dp05|dm05>,
-% pricing_profit-v3-<row>-<fin>-k025-<spi05|spis>.
-% Panels: A = capacity door, all-sector counterfactual; B = markup door,
-% kappa = 0.25, profit distributed; each on all five labour rows.
+% pricing_mobile-v3-ALPHA-<fin>-<dp05|dm05>.
+% One panel: the all-sector capacity counterfactual; the kappa = 0.25
+% distributed-profit rows were dropped from the paper on 2026-10-24
+% (they repeated the invariance Section 6.2 already states).
 % =====================================================================
 \begin{table}[htbp]
 \centering
@@ -22,53 +22,30 @@
 \cmidrule(lr){2-6}\cmidrule(lr){7-11}\cmidrule(lr){12-16}
 \multicolumn{1}{c}{Labor closure and door} & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W_C$} & \multicolumn{1}{c}{$\Delta\Pi/Y$} & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W_C$} & \multicolumn{1}{c}{$\Delta\Pi/Y$} & \multicolumn{1}{c}{$\Delta P$} & \multicolumn{1}{c}{\shortstack{$\max$\\$|\Delta p|$}} & \multicolumn{1}{c}{$\Delta L$} & \multicolumn{1}{c}{$\Delta W_C$} & \multicolumn{1}{c}{$\Delta\Pi/Y$} \\
 \midrule
-\multicolumn{16}{@{}l}{\textit{A. Capacity door, all sectors: No-reallocation}} \\
+\multicolumn{16}{@{}l}{\textit{Capacity effects on all sectors: No-reallocation}} \\
 \quad $\delta = +0.5$ & $+0.74$ & $26.82$ & $0.00$ & $+0.10$ & $0.00$ & $+0.86$ & $35.47$ & $0.00$ & $-1.99$ & $0.00$ & $+0.86$ & $35.47$ & $0.00$ & $-1.99$ & $0.00$ \\
 \quad $\delta = -0.5$ & $+0.48$ & $16.39$ & $0.00$ & $+0.06$ & $0.00$ & $+0.53$ & $19.52$ & $0.00$ & $-1.99$ & $0.00$ & $+0.53$ & $19.52$ & $0.00$ & $-1.99$ & $0.00$ \\
 \midrule
-\multicolumn{16}{@{}l}{\textit{A. Capacity door, all sectors: Standard CGE}} \\
+\multicolumn{16}{@{}l}{\textit{Capacity effects on all sectors: Standard CGE}} \\
 \quad $\delta = +0.5$ & $+0.12$ & $4.06$ & $0.00$ & $+0.15$ & $0.00$ & $+0.13$ & $4.27$ & $0.00$ & $-1.83$ & $0.00$ & $+0.13$ & $4.27$ & $0.00$ & $-1.83$ & $0.00$ \\
 \quad $\delta = -0.5$ & $-0.16$ & $4.56$ & $0.00$ & $+0.07$ & $0.00$ & $-0.16$ & $4.47$ & $0.00$ & $-1.87$ & $0.00$ & $-0.16$ & $4.47$ & $0.00$ & $-1.87$ & $0.00$ \\
 \midrule
-\multicolumn{16}{@{}l}{\textit{A. Capacity door, all sectors: Elastic labor supply ($\eta_s = 0.5$)}} \\
+\multicolumn{16}{@{}l}{\textit{Capacity effects on all sectors: Elastic labor supply ($\eta_s = 0.5$)}} \\
 \quad $\delta = +0.5$ & $+0.38$ & $14.11$ & $+0.15$ & $+0.38$ & $0.00$ & $+0.42$ & $16.21$ & $+0.16$ & $-1.64$ & $0.00$ & $+0.42$ & $16.21$ & $+0.16$ & $-1.64$ & $0.00$ \\
 \quad $\delta = -0.5$ & $+0.13$ & $4.31$ & $+0.07$ & $+0.40$ & $0.00$ & $+0.13$ & $4.54$ & $+0.08$ & $-1.57$ & $0.00$ & $+0.13$ & $4.54$ & $+0.08$ & $-1.57$ & $0.00$ \\
 \midrule
-\multicolumn{16}{@{}l}{\textit{A. Capacity door, all sectors: Employment adjustment}} \\
+\multicolumn{16}{@{}l}{\textit{Capacity effects on all sectors: Employment adjustment}} \\
 \quad $\delta = +0.5$ & $+0.12$ & $4.06$ & $+0.04$ & $+0.21$ & $0.00$ & $+0.10$ & $4.22$ & $+0.35$ & $-1.30$ & $0.00$ & $-0.10$ & $3.90$ & $+2.61$ & $+2.14$ & $0.00$ \\
 \quad $\delta = -0.5$ & $-0.20$ & $4.60$ & $-0.15$ & $-0.53$ & $0.00$ & $-0.16$ & $4.47$ & $-0.01$ & $-1.89$ & $0.00$ & $+0.12$ & $4.03$ & $+1.05$ & $+2.43$ & $0.00$ \\
 \midrule
-\multicolumn{16}{@{}l}{\textit{A. Capacity door, all sectors: Leontief closure}} \\
+\multicolumn{16}{@{}l}{\textit{Capacity effects on all sectors: Leontief closure}} \\
 \quad $\delta = +0.5$ & $+0.14$ & $4.52$ & $+0.02$ & $+0.21$ & $0.00$ & $+0.10$ & $4.54$ & $+0.31$ & $-1.34$ & $0.00$ & $-0.15$ & $4.21$ & $+2.45$ & $+1.89$ & $0.00$ \\
 \quad $\delta = -0.5$ & $-0.16$ & $4.12$ & $-0.12$ & $-0.44$ & $0.00$ & $-0.13$ & $4.15$ & $+0.03$ & $-1.79$ & $0.00$ & $+0.14$ & $3.76$ & $+1.22$ & $+2.61$ & $0.00$ \\
-\midrule
-\multicolumn{16}{@{}l}{\textit{B. Markup door, profit distributed, $\kappa = 0.25$: No-reallocation}} \\
-\quad $s_\pi = 0.5$ & $+0.70$ & $24.43$ & $0.00$ & $+0.09$ & $0.04$ & $+0.80$ & $31.46$ & $0.00$ & $-2.00$ & $0.04$ & $+0.80$ & $31.46$ & $0.00$ & $-2.00$ & $0.04$ \\
-\quad $s_\pi = s$ & $+0.70$ & $24.43$ & $0.00$ & $+0.09$ & $0.04$ & $+0.80$ & $31.46$ & $0.00$ & $-2.00$ & $0.04$ & $+0.80$ & $31.46$ & $0.00$ & $-2.00$ & $0.04$ \\
-\midrule
-\multicolumn{16}{@{}l}{\textit{B. Markup door, profit distributed, $\kappa = 0.25$: Standard CGE}} \\
-\quad $s_\pi = 0.5$ & $+0.16$ & $5.32$ & $0.00$ & $+0.12$ & $0.07$ & $+0.17$ & $5.68$ & $0.00$ & $-1.86$ & $0.07$ & $+0.17$ & $5.68$ & $0.00$ & $-1.86$ & $0.07$ \\
-\quad $s_\pi = s$ & $+0.16$ & $5.32$ & $0.00$ & $+0.12$ & $0.07$ & $+0.17$ & $5.68$ & $0.00$ & $-1.86$ & $0.07$ & $+0.17$ & $5.68$ & $0.00$ & $-1.86$ & $0.07$ \\
-\midrule
-\multicolumn{16}{@{}l}{\textit{B. Markup door, profit distributed, $\kappa = 0.25$: Elastic labor supply ($\eta_s = 0.5$)}} \\
-\quad $s_\pi = 0.5$ & $+0.38$ & $13.43$ & $+0.12$ & $+0.38$ & $0.11$ & $+0.41$ & $15.35$ & $+0.12$ & $-1.62$ & $0.12$ & $+0.41$ & $15.35$ & $+0.12$ & $-1.62$ & $0.12$ \\
-\quad $s_\pi = s$ & $+0.38$ & $13.43$ & $+0.12$ & $+0.38$ & $0.11$ & $+0.41$ & $15.35$ & $+0.12$ & $-1.62$ & $0.12$ & $+0.41$ & $15.35$ & $+0.12$ & $-1.62$ & $0.12$ \\
-\midrule
-\multicolumn{16}{@{}l}{\textit{B. Markup door, profit distributed, $\kappa = 0.25$: Employment adjustment}} \\
-\quad $s_\pi = 0.5$ & $+0.16$ & $5.32$ & $+0.04$ & $+0.21$ & $0.09$ & $+0.15$ & $5.65$ & $+0.23$ & $-1.36$ & $0.17$ & $+0.06$ & $5.47$ & $+1.59$ & $+1.65$ & $0.76$ \\
-\quad $s_\pi = s$ & $+0.16$ & $5.32$ & $+0.08$ & $+0.30$ & $0.10$ & $+0.15$ & $5.63$ & $+0.31$ & $-1.19$ & $0.20$ & $+0.03$ & $5.42$ & $+1.95$ & $+2.43$ & $0.91$ \\
-\midrule
-\multicolumn{16}{@{}l}{\textit{B. Markup door, profit distributed, $\kappa = 0.25$: Leontief closure}} \\
-\quad $s_\pi = 0.5$ & $+0.18$ & $6.16$ & $+0.01$ & $+0.20$ & $0.10$ & $+0.16$ & $6.25$ & $+0.18$ & $-1.41$ & $0.19$ & $+0.03$ & $6.08$ & $+1.41$ & $+1.43$ & $0.79$ \\
-\quad $s_\pi = s$ & $+0.17$ & $6.16$ & $+0.05$ & $+0.30$ & $0.12$ & $+0.15$ & $6.24$ & $+0.26$ & $-1.23$ & $0.23$ & $-0.01$ & $6.03$ & $+1.75$ & $+2.19$ & $0.96$ \\
 \bottomrule
 \end{tabular}}
-\caption{The pricing-door rows the main text does not carry, on every labor closure.
-Panel A extends the capacity door's $\delta$ to every sector (the all-sector
-counterfactual of Table~\ref{tab:pricing-kaldor}); panel B distributes the
-profit of the $\kappa = 0.25$ markup (Table~\ref{tab:pricing-markup} carries
-$\kappa = 0.5$). Conventions as in Table~\ref{tab:pricing-markup}, except that the
-welfare column is household consumption ($\Delta W_C$ of Table~\ref{tab:results-matrix}).
-Generated from the same run manifests; no number is hand-typed.}
+\caption{The capacity door with the utilization elasticity extended to every sector ---
+the all-sector counterfactual of Table~\ref{tab:pricing-kaldor} --- on all five
+labor closures. Conventions as in Table~\ref{tab:pricing-markup}, except that the
+welfare column is household consumption ($\Delta W_C$ of Table~\ref{tab:results-matrix}).}
 \label{tab:pricing-profiles}
 \end{table}

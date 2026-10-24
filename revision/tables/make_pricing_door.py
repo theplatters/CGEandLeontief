@@ -82,13 +82,9 @@ MK_PANELS = per_row(lambda row: [
 ])
 
 APP_PANELS = (
-    [("A. Capacity door, all sectors: " + name, [
+    [("Capacity effects on all sectors: " + name, [
         (r"$\delta = +0.5$", cap_id(row, "dp05")),
         (r"$\delta = -0.5$", cap_id(row, "dm05")),
-    ]) for row, name in ROWS]
-    + [("B. Markup door, profit distributed, $\\kappa = 0.25$: " + name, [
-        (r"$s_\pi = 0.5$", "pricing_profit-v3-" + row + "-{f}-k025-spi05"),
-        (r"$s_\pi = s$", "pricing_profit-v3-" + row + "-{f}-k025-spis"),
     ]) for row, name in ROWS]
 )
 
@@ -207,7 +203,7 @@ def build_table(panels, cols, caption_lines, label, comment_lines, fit=False):
     A(" & " + " & ".join([r"\multicolumn{%d}{c}{\textbf{%s}}" % (k, f) for f in FIN]) + r" \\")
     A("".join([r"\cmidrule(lr){%d-%d}" % (2 + k * i, 1 + k * (i + 1)) for i in range(len(FIN))]))
     sub = " & ".join(hdr_cell(h) for _, h, _ in cols)
-    A(r"\multicolumn{1}{c}{Labour closure and door} & " + " & ".join([sub] * len(FIN)) + r" \\")
+    A(r"\multicolumn{1}{c}{Labor closure and door} & " + " & ".join([sub] * len(FIN)) + r" \\")
     for panel, rows in panels:
         A(r"\midrule")
         A(r"\multicolumn{%d}{@{}l}{\textit{%s}} \\" % (ncol, panel))
@@ -323,7 +319,7 @@ def build_cap_table():
 def build_mk_table():
     return build_guided_table(
         MK_PANELS, COLS_MK, "Routing of profits",
-        [r"Introducing markup pricing in the context of a demand-only programme for all closure scenarios.",
+        [r"Introducing markup pricing in the context of a demand-only program for all closure scenarios.",
          r"Columns and conventions as in Table~\ref{tab:pricing-kaldor}, including the welfare",
          r"measure ($\Delta W_D$, the quantity index of demand over $c+g$); $\Delta\Pi/Y$ is the surplus",
          r"the door creates as a share of value added in percent (the kernel prices at marginal",
@@ -351,13 +347,10 @@ def build_mk_table():
 def build_app_table():
     return build_table(
         APP_PANELS, COLS_MK_APP,
-        [r"The pricing-door rows the main text does not carry, on every labour closure.",
-         r"Panel A extends the capacity door's $\delta$ to every sector (the all-sector",
-         r"counterfactual of Table~\ref{tab:pricing-kaldor}); panel B distributes the",
-         r"profit of the $\kappa = 0.25$ markup (Table~\ref{tab:pricing-markup} carries",
-         r"$\kappa = 0.5$). Conventions as in Table~\ref{tab:pricing-markup}, except that the",
-         r"welfare column is household consumption ($\Delta W_C$ of Table~\ref{tab:results-matrix}).",
-         r"Generated from the same run manifests; no number is hand-typed."],
+        [r"The capacity door with the utilization elasticity extended to every sector ---",
+         r"the all-sector counterfactual of Table~\ref{tab:pricing-kaldor} --- on all five",
+         r"labor closures. Conventions as in Table~\ref{tab:pricing-markup}, except that the",
+         r"welfare column is household consumption ($\Delta W_C$ of Table~\ref{tab:results-matrix})."],
         r"\label{tab:pricing-profiles}",
         [r"% =====================================================================",
          r"% Table E --- pricing-door profiles not carried in the main text (GENERATED)",
@@ -366,10 +359,10 @@ def build_app_table():
          r"% OpenCGE tag v0.5.0 (ADR-0044); source run ids are listed below.",
          r"% Sources: pricing_capacity_rows-v2-<row>-<fin>-<dp05|dm05>,",
          r"% pricing_capacity-v3-GAMMA-<fin>-<dp05|dm05>,",
-         r"% pricing_mobile-v3-ALPHA-<fin>-<dp05|dm05>,",
-         r"% pricing_profit-v3-<row>-<fin>-k025-<spi05|spis>.",
-         r"% Panels: A = capacity door, all-sector counterfactual; B = markup door,",
-         r"% kappa = 0.25, profit distributed; each on all five labour rows.",
+         r"% pricing_mobile-v3-ALPHA-<fin>-<dp05|dm05>.",
+         r"% One panel: the all-sector capacity counterfactual; the kappa = 0.25",
+         r"% distributed-profit rows were dropped from the paper on 2026-10-24",
+         r"% (they repeated the invariance Section 6.2 already states).",
          r"% ====================================================================="],
         fit=True)
 

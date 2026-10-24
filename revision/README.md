@@ -35,23 +35,20 @@ Two title suggestions sit as a comment above `\papertitle` in `main.tex`.
 
 | Sect. | Title | Source |
 | --- | --- | --- |
-| 1 | Introduction | stub |
-| 2 | From transformation research to IO models | stub |
-| 3 | Two primitive questions | stub |
-| 4 | A shared machine room: the core model setup | kernel + 4.3 welfare; closures moved to App. B |
-| 5 | Application: the programme through the matrix | stub |
-| 6 | Beyond demand-only shocks | stub |
-| 7 | Discussion | stub |
-| 8 | Conclusion | stub |
-| A | Equivalences and overlaps of the closure matrix | NEW 2026-10-15 (absorbs the old App. A prose + App. B Cor. 2 table) |
-| B | The closure first-order conditions | NEW 2026-10-15 (absorbs the condensed Section 4.3 prose) |
-| C | Full proofs | ported from `equivalence.tex` v4 (was App. B) |
-| D | Kernel, calibration, A-bill accounting | was App. C |
-| E | Matrix variants and gamma/beta robustness | was App. D |
-| F | Vector construction and data provenance | was App. E |
-| G | Closures and the neo-Keynesian mapping | was App. F; ported from `closures_and_demand_shocks.md` |
-| H | The model: kernel and closure formulations | was App. G |
-| I | From the input--output table to Omega | was App. H |
+| Sect. | Title | Notes |
+| --- | --- | --- |
+| 1 | Introduction |  |
+| 2 | From transformation research to input--output models | programme and its import content |
+| 3 | Two primitive questions, one closure matrix |  |
+| 4 | A shared machine room: the kernel, closures and financing |  |
+| 5 | Application: the programme through the matrix |  |
+| 6 | Beyond demand-only shocks | Kaldor--Verdoorn, markup door, no-go |
+| 7 | Conclusion | absorbs the dissolved Discussion; no separate Sec. 8 |
+| A | Equivalences, overlaps and scope of the closure matrix |  |
+| B | The model, its closures and the formal results | B.1 kernel, B.2 labor closures, B.3 financing, B.4 closure systems, B.5 demand-only reduction, B.6 elastic supply, B.7 scope |
+| C | From the input--output table to Omega: the data pipeline | calibration, A-bill accounting, consistency checks; C.9 = the composition of the programme's spending |
+| D | Sectoral responses in every closure | figure panels only, no numbered subsections |
+| E | The pricing door: derivations, guard and accounting |  |
 
 # Compile (in-container and on the Mac, verified 2026-10-22)
 

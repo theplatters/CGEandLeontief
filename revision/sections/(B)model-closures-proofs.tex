@@ -33,9 +33,9 @@ problems of Section~\ref{subsec:optimization}
 (Section~\ref{app:model-kernel}); the five labor-market closures and the
 three financing closures (Sections~\ref{app:labour-closures}
 and~\ref{app:financing-closures}); and the formal results --- the closure
-systems, the demand-only reduction, the rigidity result
-(Proposition~\ref{prop:nest}) and where the reduction stops
-(Sections~\ref{app:closure-systems}--\ref{app:scope}). The
+systems, the demand-only reduction and the rigidity result
+(Proposition~\ref{prop:nest};
+Sections~\ref{app:closure-systems}--\ref{app:sectoral}). The
 intermediate-bill and external-account accounting is in
 Appendix~\ref{app:abill}.
 
@@ -197,8 +197,7 @@ they separate (Section~\ref{sec:beyond-demand-only}).
 % technology". That phrase was broader than Proposition prop:gd assumes: the
 % markup runs of Section sec:beyond-demand-only sit at unchanged technology
 % (A = 1) and still separate the two rows, since demand enters the price
-% block there. The exact boundary is prices at the baseline; see app:scope
-% for the five doors.
+% block there. The exact boundary is prices at the baseline.
 
 \subsection{The three financing closures}\label{app:financing-closures}
 % Programme-scale F1 tilt: experiments/run.jl, f1_tilt_weights.
@@ -587,35 +586,3 @@ Table~\ref{tab:results-matrix}. And nothing in the proof refers to $A\equiv\one$
 the nesting survives supply shocks, under which the elastic end instead
 separates and $\eta_s$ becomes identifiable --- whereas a demand-only
 program leaves it a sensitivity parameter.
-
-\subsection{Where the demand-only reduction stops}\label{app:scope}
-
-The demand-only reduction is a slice of the framework, not a property of it. Its
-two steps need two premises --- demand out of the price block
-(Lemma~\ref{lem:price}) and the clearing system evaluated at unit prices
-(Lemma~\ref{lem:affine}) --- and this subsection records which parts of the
-closure space leave them.
-
-Two of the matrix's own columns already lie outside. Sector-specific wages
---- the $\eta_s<\infty$ column and the no-reallocation case --- keep the price block demand-dependent, since employment feeds back into $N$ wages and through them into prices.
-
-Three doors outside the kernel leave both steps for the same reason:
-demand-sensitive markups, which require a profit-income closure; a sector-fixed
-factor, or its reduced form, an endogenous utilization externality that raises
-unit cost with demand while keeping zero profit, so that the unit-cost
-function~\eqref{eq:model-cost} alone changes; and endogenous import prices,
-which enter the intermediate index~\eqref{eq:model-ip} and the consumer price
-index through the margins. Section~\ref{sec:beyond-demand-only} develops variants including capacity considerations and markups; import prices are not implemented here.
-
-A supply shock does something else, and the distinction matters. $A\not\equiv
-\one$ leaves Lemma~\ref{lem:price} intact --- relative prices remain functions of
-technology --- but it moves the price block off the unit point at which
-Lemma~\ref{lem:affine} evaluates the clearing system, so the second step fails
-while the first holds. An exogenously pinned wage \emph{vector} works the same
-way: prices are then set by the pin rather than by the numeraire, and the affine
-form no longer describes the system at $p=w=1$.
-
-Changes that touch only the quantity block --- endogenous saving rates,
-endogenous export demand, the financing closures themselves --- alter $G$ or
-$b$ in \eqref{eq:affine} and leave both steps intact. That is why the financing
-axis adds variety within a row of the matrix rather than creating new rows.

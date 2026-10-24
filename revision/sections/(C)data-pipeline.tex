@@ -217,9 +217,27 @@ Three qualifications bound these numbers. First, they are cost shares at
 baseline prices, not behavioral parameters: they record how much import content,
 product tax and value added the program's spending carries given the table's
 technology, and they are therefore the same under every closure of the model.
-Induced household demand is not included, because how much of it the income
-generates depends on which margin gives way and on how the program is financed;
-those responses are read off Table~\ref{tab:results-matrix}. Second, they use the
+% =========================================================================
+% JK ORIGINAL -- the induced-demand sentence (before the mechanical fixes: typo
+% 'resultig' -> 'resulting' and 'see table BELOW' -> \ref; wording unchanged)
+% Verbatim original; nothing below is active LaTeX.
+% =========================================================================
+% Induced household demand is not included, because the generated imports then would depend on
+% the resultig consumption multiplier and typically increase with the latter as consumption
+% carries a higher share of imports (see table BELOW).
+% -------------------------------------------------------------------------
+% NOTE [AG, 2026-10-24] -- the clause "as consumption carries a higher share of imports" has
+% been dropped and a remark added at the end of the subsection: the 2019 table gives private
+% consumption an import share of 9.9 per cent against 17.8 per cent for the programme's bill,
+% so consumption carries a LOWER share and cannot explain a rise. The full-model multiplier
+% does rise with the closure (imports per euro of programme: 21.6--48.3 per cent), but because
+% its numerator grows with the response --- nearly three times the programme in F3 --- not
+% because the spending's import content changes. The comparison table built for this was
+% removed again on JK's instruction; the generated file and its script are retained in
+% revision/tables/ and cbase2/scripts/ as the measurement behind the remark.
+% -------------------------------------------------------------------------
+
+Induced household demand is not included, because the generated imports then would depend on the resulting consumption multiplier and typically increase with it. Second, they use the
 cost-side coefficients in supply orientation, $\Omega'\operatorname{diag}(1-\alpha)$,
 the matrix the kernel inverts; inverting the transposed system instead raises the
 embodied share to $21.2\%$, some $35\%$ too high. Third, the table's own residual:
@@ -230,3 +248,9 @@ exposition of Section~2 conflates --- imported final use, product taxes and
 domestic deliveries --- and it is the content counterpart to the financing accounts
 of Section~\ref{sec:application}, where $\Delta D = F + B_{\mathrm{gov}}$ answers
 who finances the program.
+
+One reading to avoid: a multiplier read off the model's full response would not be comparable
+with these cost shares. Its numerator grows with the response the closure permits --- nearly
+three times the programme in the third financing regime --- so the ratio can exceed the
+programme's own import content without that content having changed. It ranks closures by how
+much output they let through, not by how import-intensive the spending is.

@@ -34,8 +34,8 @@ problems of Section~\ref{subsec:optimization}
 three financing closures (Sections~\ref{app:labour-closures}
 and~\ref{app:financing-closures}); and the formal results --- the closure
 systems, the demand-only reduction, the rigidity result
-(Proposition~\ref{prop:nest}), the scope conditions and the numerical evidence
-(Sections~\ref{app:closure-systems}--\ref{app:eqnumevidence}). The
+(Proposition~\ref{prop:nest}) and where the reduction stops
+(Sections~\ref{app:closure-systems}--\ref{app:scope}). The
 intermediate-bill and external-account accounting is in
 Appendix~\ref{app:kernel}.
 
@@ -584,116 +584,39 @@ limit beside the closure at $F = 0$ and at $F = F^{\ast}$.
 
 \emph{Two checks.} Solving the sectoral system at $\eta_s=0$ from the $\eta = 0$ solution reproduces all four blocks exactly, so no separate rigid
 sectoral cell is reported: the corner \emph{is} the no-reallocation row of
-Table~\ref{tab:matrix}. And nothing in the proof refers to $A\equiv\one$, so
+Table~\ref{tab:results-matrix}. And nothing in the proof refers to $A\equiv\one$, so
 the nesting survives supply shocks, under which the elastic end instead
 separates and $\eta_s$ becomes identifiable --- whereas a demand-only
 program leaves it a sensitivity parameter.
 
-\subsection{Scope conditions: what breaks the equivalences}\label{app:scope}
+\subsection{Where the demand-only reduction stops}\label{app:scope}
 
-The equivalences rest on Lemma~\ref{lem:price}: the price block contains
-no demand variable. Any model change that lets demand into that block
-restores identification and creates variety in the published matrix. Five extensions are considered in Section~\ref{sec:beyond-demand-only}.
-Sector-specific wages break the single-wage homogeneity the lemma rests on,
-require no income closure because no rents arise, and are already implemented
-at the $\eta = 0$ endpoint. Demand-sensitive markups break the lemma directly
-but require a profit-income closure. A sector-fixed factor, or its reduced
-form --- an endogenous utilization externality that raises unit cost with
-demand while keeping zero profit, so that the unit-cost function~\eqref{eq:model-cost}
-alone changes --- leaves the accounting intact, and with the opposite sign it
-delivers increasing returns, prices \emph{falling} with demand. Endogenous
-import prices enter the intermediate index~\eqref{eq:model-ip} and the
-consumer price index through the margins, so they route the program's import
-content into the terms of trade. Supply shocks, $A \neq 1$, break
-Corollary~\ref{cor:realwage} and separate the elastic-supply closure from the
-standard CGE closure (Corollary~\ref{cor:realwage}). A wage vector pinned
-\emph{exogenously} is also available, but it yields design heterogeneity
-rather than demand-sensitivity, because the pinned vector keeps the price
-block demand-free.
+The demand-only reduction is a slice of the framework, not a property of it. Its
+two steps need two premises --- demand out of the price block
+(Lemma~\ref{lem:price}) and the clearing system evaluated at unit prices
+(Lemma~\ref{lem:affine}) --- and this subsection records which parts of the
+closure space leave them.
 
-\begin{corollary}[No-go for nominal wage rules]\label{cor:nogo}
-Within the kernel's one-factor CRS price block, no rule that writes the
-\emph{nominal} wage as a function of endogenous aggregates --- an aggregate
-wage curve $w = \bar{w}\,(\alpha^{\!\top}y/\Lbar)^{\varphi}$, nominal
-indexation, or a re-anchored numeraire --- can create demand-sensitive
-\emph{real} outcomes. By Lemma~\ref{lem:price}, $p = w\,\pi(A)$ and
-$\mathcal{P}(p) = w\,\mathcal{P}(\pi)$ at every solution, so the real wage
-$w/\mathcal{P} = 1/\mathcal{P}(\pi(A))$ is invariant to whatever sets $w$; the rule merely
-re-labels the nominal scale. With the CPI numeraire or the $w = 1$ pin such
-a rule is either vacuous or over-determines the system (in the fixed gauge
-it forces $\alpha^{\!\top}y = \Lbar$, i.e.\ silently reverts the employment-adjustment
-closure to
-the standard CGE closure). A rule on the \emph{real} wage,
-$w/\mathcal{P} = \phi(L)$, is the elastic-supply
-equation \eqref{eq:closure-beta} rearranged and is already in the model --- where
-it is pinned by technology under demand-only shocks. The numeraire is
-likewise inert: because the real wage is invariant to whatever sets the
-nominal scale, re-anchoring the numeraire cannot create demand sensitivity
-either.
-A single common wage curve is also what a
-\emph{single-wage} price block can express; the sectoral-wage door above
-escapes the corollary precisely by breaking the single-wage homogeneity on
-which it rests.
-\end{corollary}
+Two of the matrix's own columns already lie outside. Sector-specific wages
+--- the $\eta_s<\infty$ column and the no-reallocation case --- keep the price block demand-dependent, since employment feeds back into $N$ wages and through them into prices.
 
-Quantity-side levers (endogenous saving rates, endogenous export demand)
-change $G$ or $b$ but not the price block; they add variety between
-financing columns, not between closures, and leave Lemma~\ref{lem:price}
-intact.
+Three doors outside the kernel leave both steps for the same reason:
+demand-sensitive markups, which require a profit-income closure; a sector-fixed
+factor, or its reduced form, an endogenous utilization externality that raises
+unit cost with demand while keeping zero profit, so that the unit-cost
+function~\eqref{eq:model-cost} alone changes; and endogenous import prices,
+which enter the intermediate index~\eqref{eq:model-ip} and the consumer price
+index through the margins. Section~\ref{sec:beyond-demand-only} develops variants including capacity considerations and markups; import prices are not implemented here.
 
-\subsection{Numerical evidence}\label{app:eqnumevidence}
+A supply shock does something else, and the distinction matters. $A\not\equiv
+\one$ leaves Lemma~\ref{lem:price} intact --- relative prices remain functions of
+technology --- but it moves the price block off the unit point at which
+Lemma~\ref{lem:affine} evaluates the clearing system, so the second step fails
+while the first holds. An exogenously pinned wage \emph{vector} works the same
+way: prices are then set by the pin rather than by the numeraire, and the affine
+form no longer describes the system at $p=w=1$.
 
-All fifteen cells execute, and three independent solutions of them agree: two
-are bit-identical to one another in every reported metric at
-$\max|\Delta| = 0$, and the third reproduces them to solver precision
-($9.34\times10^{-9}$ in the stiffest no-reallocation diagnostic,
-$1.63\times10^{-11}$ in the worst of the other rows, $4.55\times10^{-15}$ at
-the exact-baseline cells), with no printed figure affected. The equivalences
-and the table below are therefore invariant to the way the solutions were
-generated.
-
-Table~\ref{tab:matrix} prints the same fifteen cells at full precision
-(income-side real GDP, the household-consumption welfare index and
-employment); every entry reproduces the recorded solution to all printed
-decimals. The paired rows --- the employment-adjustment closure and its Leontief
-corner --- are identical in every reported metric, and so are F2 and F3 in the
-mobile rows; the elastic-supply rows are the sectoral cells at
-$\eta_s = 0.5$ and hence a distinct economy. The GDP deflator reads
-$1.000000$ in the nine $\eta = 1$ standard CGE and wage-pinned cells --- the
-numerical face of Lemma~\ref{lem:price} --- while the three no-reallocation
-cells carry $1.006326$ (F1) and $1.007181$ (F2/F3).
-
-\begin{table}[htbp]
-\centering
-\caption{The matrix rows (elastic supply = sectoral, $\eta_s=0.5$;
-deviations from the no-program baseline).}
-\label{tab:matrix}
-\begin{tabular}{llrrr}
-\toprule
-Row & Financing & Real GDP & Consumption (welfare) & Employment $L$ \\
-\midrule
-Standard CGE & F1 & $+0.000000$ & $+0.001432$ & $1.000000$ \\
-Elastic supply  & F1 & $+0.001217$ & $+0.004227$ & $1.001191$ \\
-Standard CGE & F2 & $+0.000000$ & $-0.018226$ & $1.000000$ \\
-Elastic supply  & F2 & $+0.001287$ & $-0.015712$ & $1.001255$ \\
-Standard CGE & F3 & $+0.000000$ & $-0.018226$ & $1.000000$ \\
-Elastic supply  & F3 & $+0.001287$ & $-0.015712$ & $1.001255$ \\
-\midrule
-Employment adjustment & F1 & $-0.000973$ & $-0.000806$ & $0.999027$ \\
-Leontief corner & F1 & $-0.000973$ & $-0.000806$ & $0.999027$ \\
-Employment adjustment & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
-Leontief corner & F2 & $+0.001260$ & $-0.015333$ & $1.001260$ \\
-Employment adjustment & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
-Leontief corner & F3 & $+0.017796$ & $+0.022644$ & $1.017796$ \\
-\midrule
-No reallocation & F1 & $-0.000110$ & $+0.000963$ & $1.000000$ \\
-No reallocation & F2 & $-0.000162$ & $-0.019800$ & $1.000000$ \\
-No reallocation & F3 & $-0.000162$ & $-0.019800$ & $1.000000$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The identification statements travel with the table: the supply elasticity and
-the substitution elasticities are unidentified under a demand-only shock, which
-is what makes the closure choice, not the calibration, the source of the
-variation the matrix exhibits.
+Changes that touch only the quantity block --- endogenous saving rates,
+endogenous export demand, the financing closures themselves --- alter $G$ or
+$b$ in \eqref{eq:affine} and leave both steps intact. That is why the financing
+axis adds variety within a row of the matrix rather than creating new rows.

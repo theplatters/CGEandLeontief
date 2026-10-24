@@ -28,14 +28,14 @@ data step. The accounting built on them is in Section~\ref{app:abill}.
 \subsection{Source data}\label{app:pipeline-source}
 
 The table is Germany's input--output account for 2019 (revision 2019), 71
-product groups at basic prices. Rows $1$--$71$ are the modelled sectors; row $72$ (households' own goods and services) lies outside the modelled block; rows $73$--$75$ represent the domestic intermediate bill $A$, the imported intermediates $m_i$ and the product taxes less subsidies $t_i$, both by using sector; rows $77$--$84$ carry value added and output. Columns $2$--$72$ are the 71 using sectors, columns $75$--$81$ the seven final-demand categories (household consumption, government, investment,
+product groups at basic prices. Rows $1$--$71$ are the modeled sectors; row $72$ (households' own goods and services) lies outside the modeled block; rows $73$--$75$ represent the domestic intermediate bill $A$, the imported intermediates $m_i$ and the product taxes less subsidies $t_i$, both by using sector; rows $77$--$84$ carry value added and output. Columns $2$--$72$ are the 71 using sectors, columns $75$--$81$ the seven final-demand categories (household consumption, government, investment,
 inventories, exports).
 
 \subsection{The intermediate-use matrix}\label{app:pipeline-z}
 
 The $71\times71$ sector block is the intermediate-use matrix $Z$, with $x_{ui}$
 the value supplied by $u$ to $i$, domestic and imported content combined; its
-row and column sums reproduce eq.~\eqref{eq:io-row}--\eqref{eq:io-column} up to
+row and column sums reproduce Equation~\eqref{eq:io-row}--\eqref{eq:io-column} up to
 the recorded imports and taxes. Those are reported by \emph{using} sector only:
 row $74$ gives $m_i$ and is silent on the supplying sector. The domestic matrix $Z^{\mathrm{D}}$ therefore allocates imports
 proportionally at the user level,
@@ -49,7 +49,7 @@ transport --- the sectors with the highest import intensity (imports are 68, 46
 and $54\%$ of their gross output). The pipeline clamps the remainder at
 zero and treats them as fully import-dependent: their columns of
 $Z^{\mathrm{D}}$, and hence their rows of the domestic share matrix, are zero;
-nothing else is adjusted (table~\ref{tab:pipeline-clamp}).
+nothing else is adjusted (Table~\ref{tab:pipeline-clamp}).
 
 \begin{table}[t]
 \centering
@@ -176,7 +176,7 @@ production sector proper: 70 sectors remain, carrying $99.2\%$ of gross
 output, and this is the working set. The second drops in addition the seven
 sectors whose self-supply share exceeds $0.45$ (13, 18, 19, 48, 53, 58, 68),
 where a sector's own input dominates its cost structure and the self-loop
-destabilizes the fixed-point iteration. That is a modelling choice, not a data
+destabilizes the fixed-point iteration. That is a modeling choice, not a data
 correction, and it costs coverage: 63 sectors remain, carrying $87.4\%$ of
 gross output.
 
@@ -244,13 +244,13 @@ embodied share to $21.2\%$, some $35\%$ too high. Third, the table's own residua
 panel~B closes sector by sector, the table as a whole does not, so the composition
 is stated per euro of spending rather than as a closed budget identity
 (Section~\ref{app:pipeline-checks}). What it quantifies is what the closed-economy
-exposition of Section~2 conflates --- imported final use, product taxes and
+exposition of Section~\ref{sec:io-bridge} conflates --- imported final use, product taxes and
 domestic deliveries --- and it is the content counterpart to the financing accounts
 of Section~\ref{sec:application}, where $\Delta D = F + B_{\mathrm{gov}}$ answers
 who finances the program.
 
 One reading to avoid: a multiplier read off the model's full response would not be comparable
 with these cost shares. Its numerator grows with the response the closure permits --- nearly
-three times the programme in the third financing regime --- so the ratio can exceed the
-programme's own import content without that content having changed. It ranks closures by how
+three times the program in the third financing regime --- so the ratio can exceed the
+program's own import content without that content having changed. It ranks closures by how
 much output they let through, not by how import-intensive the spending is.

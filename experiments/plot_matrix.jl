@@ -335,53 +335,6 @@ function plot_max_metric_delta(deltas::AbstractDict)::Float64
     return best
 end
 
-"""
-σ-sensitivity variants for one validated matrix cell (panel error bars, D2).
-
-Re-solve the cell with the consumption elasticity σ at its legacy extreme
-values (0.6 and 0.99), holding the cell's θ, ε, η, financing, `eta_s` /
-`eta_s_vec` and shock fixed, warm-started from the central solution's
-canonical vector (`[p; q]` for fixed-wage cells, `[p; q; w; F]` for mobile
-cells, the sectoral `[p; q; w(1:N); F]` form when the variant model is
-sectoral — the `sect` rule of `experiments/run.jl`). Returns `(low, high)`
-of `MatrixCellData` (`nothing` for a side whose solve/gate failed). A
-variant failure never fails the cell: it is reported (always, even under
-`--quiet`) and omitted, so the error bars span the remaining variants.
-"""
-function plot_sigma_variants(id::AbstractString, cell::Dict{String,Any}, sol,
-        design_d::Dict{String,Any}, data, ψ::Vector{Float64}, g::Vector{Float64},
-        ref_sol, labels::Vector{String}; quiet::Bool = false)
-    labour = string(cell["labor"])
-    financing = string(cell["financing"])
-    eta = Float64(cell["eta"])
-    eta_s = Float64(get(cell, "eta_s", 0.0))
-    out = Dict{String,Any}()
-    for (tag, sig) in (("low", 0.6), ("high", 0.99))
-        suffix = tag == "low" ? "-sigmalow" : "-sigmahigh"
-        try
-            vcell = Dict{String,Any}(cell)
-            vcell["sigma"] = sig
-            vmodel = build_cell_model(vcell, design_d, data, ψ, g)
-            fixed = labor_closure(vmodel.options) isa FixedWageClosure
-            sect = vmodel.options.elasticities.η == 0.0 ||
-                vmodel.options.elasticities.eta_s_vec !== nothing
-            init_v = fixed ? [sol.prices_raw; sol.quantities] :
-                sect ? [sol.prices_raw; sol.quantities; sol.wages_raw; sol.external_transfer] :
-                [sol.prices_raw; sol.quantities; sol.wages_raw[1]; sol.external_transfer]
-            vsol = solve_cell(vcell, design_d, data, ψ, g, init_v)
-            vev = evaluate_gates(vcell, design_d, vsol.model, vsol, ref_sol)
-            vev.gates["overall"] == "pass" ||
-                throw(ErrorException("σ=$sig variant gates report \"$(vev.gates["overall"])\""))
-            out[tag] = matrix_cell_data(id * suffix, labour, financing,
-                eta, eta_s, "derived", data, vsol, ref_sol; labels = labels)
-            quiet || println("σ variant $(id * suffix) (σ=$sig) ok")
-        catch e
-            println("σ variant $(id * suffix) (σ=$sig) failed: " *
-                "$(sprint(showerror, e)) (omitted from the panel error bars)")
-        end
-    end
-    return (low = get(out, "low", nothing), high = get(out, "high", nothing))
-end
 
 """
 Driver entry point: preregistration gate, reference continuation, per-cell
@@ -465,7 +418,6 @@ function plot_main(args::Vector{String} = ARGS;
     # aborts the batch.
     cells = MatrixCellData[]
     validation = Dict{String,String}()
-    variants = Dict{String,Any}()
     man_commits = Dict{String,Any}()
     report = Tuple{String,String,Dict{String,Float64},String,String,Int}[]
     for id in order
@@ -502,15 +454,9 @@ function plot_main(args::Vector{String} = ARGS;
                     Float64(get(cell, "eta_s", 0.0)), status,
                     ref.data, sol, ref.sol; metrics = ev.metrics,
                     diagnostics = ev.diagnostics, labels = labels))
-                # σ variants for the panel error bars (D2; panels only):
-                # re-solve at σ ∈ {0.6, 0.99} when panels will be drawn.
-                # A variant failure is recorded inside and never fails the cell.
-                if opts.panel_dir !== nothing
-                    vv = plot_sigma_variants(id, cell, sol, design_d, ref.data,
-                        ψ, g, ref.sol, labels; quiet = quiet)
-                    (vv.low === nothing && vv.high === nothing) ||
-                        (variants[id] = vv)
-                end
+                # Panels carry no error bars (2026-10-24): the σ-variant
+                # re-solves were dropped on request, see the note in the
+                # panel bullet of README.md.
                 verdict = "ok"
             else
                 reason = join(vc.failures, "; ")
@@ -600,8 +546,7 @@ function plot_main(args::Vector{String} = ARGS;
 
     # 10b. Manuscript panel figures (one per matrix cell, each standalone).
     # Independent of --no-figures, which suppresses only the six standard
-    # figures above; without --panel-dir GLMakie is never loaded (and no σ
-    # variants are solved).
+    # figures above; without --panel-dir GLMakie is never loaded.
     if opts.panel_dir !== nothing
         if !glmakie_available()
             println(stderr, "`OpenCGE.save_matrix_panels` requires " *
@@ -620,14 +565,14 @@ function plot_main(args::Vector{String} = ARGS;
         # `invokelatest`, as above: the extension method is born at
         # `using GLMakie` time. Qualified access avoids relying on the
         # extension's exports; `programme = g` is the per-sector additive
-        # programme demand in model units from step 3, `variants` the
-        # σ-variant cells from step 5-6 for the error bars; `:manuscript` is
+        # programme demand in model units from step 3; no variant cells are
+        # passed, so the panels carry no error bars; `:manuscript` is
         # the print layout (no title, footnotes or run id; legends explain),
         # with the curated short sector names.
         written = try
             Base.invokelatest(OpenCGE.save_matrix_panels, ds;
                 outdir = opts.panel_dir, prefix = "panel_5x3", programme = g,
-                variants = variants, style = :manuscript,
+                style = :manuscript,
                 sector_labels = plot_short_sector_labels(labels; root = root))
         catch e
             println(stderr,

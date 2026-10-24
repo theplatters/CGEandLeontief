@@ -280,13 +280,23 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   `right = :bars` / `:scatter` force either path in the plotting API.
   Each file is standalone with
   per-cell axis limits; it carries no title, footnotes or `run_id` (the
-  legends below the axes state the baseline and the σ range, and the
-  driver's validation report ties each file to its `run_id`).
-  Error bars on the last three bar series span the
-  consumption-elasticity range: the min/max over the central cell and its
-  two σ variants (σ ∈ {0.6, 0.99}, the cell's θ, ε, η, financing and shock
-  fixed; a variant solve/gate failure is reported and omitted, so the bars
-  span the remaining variants). Quantity bars label the three largest
+  legend states the four series and the sector grouping, and the driver's
+  validation report ties each file to its `run_id`).
+  The panels carry NO error bars: the σ-variant re-solves
+  (σ ∈ {0.6, 0.99}, two extra solves per cell) were dropped on 2026-10-24 to
+  keep the plate simple — the manuscript reports one elasticity, σ = 0.9
+  (Section 4), and an unexplained band asks a question the text does not
+  answer. `save_matrix_panels(variants = ...)` still accepts variant cells
+  should a band ever be wanted back; the driver no longer computes them.
+  **Regenerating the panels needs no `runs/*/solution.csv`** (it is
+  gitignored): `read_stored_solution` returns `nothing` when the file is
+  absent and `validate_cell` then skips the vector check while still
+  comparing all fifteen manifest metrics at `rtol = atol = 1e-8`. What a
+  fresh checkout does need is `data/` — the Destatis table
+  `I-O_DE2019_formatiert.csv` and, for the manuscript's sector names,
+  `sector_short_names.csv`; without the latter the kernel falls back to its
+  cleaned names and the plate's labels change.
+  Quantity bars label the three largest
   programme and three largest other movers by absolute quantity change;
   both right-panel paths retain the orange/blue sector grouping and legend.
   Forced degenerate scatter ranges retain a minimum span with an annotation

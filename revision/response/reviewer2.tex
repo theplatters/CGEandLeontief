@@ -368,60 +368,42 @@ purchases by domestic agents -while adding taxes minus subsidies on
 production and intermediate inputs to the model's single primary factor
 demand vector (misleadingly labelled `labor' despite containing both labor
 and capital returns).}
-%FIXME: [AG] Settle the import decomposition and restore its method in the appendix before claiming it is documented. Match Section 2's numbers.
-\response{The comment is right about what the closed-economy algebra forces, and the
-revision replaces it with an explicit open-economy treatment. Three things are
-now stated rather than left to be inferred. First the accounting: domestic
-deliveries, imported intermediates and product taxes enter separately, and
-only the domestic bill counts as demand for domestic output, with imports and
-taxes carried as explicit leaks (Section~4; the kernel in Appendix~B). Second
-the factor label: the single primary factor is the composite of all primary
-inputs, so the full value added -- compensation of employees together with
-depreciation, the operating surplus and other net taxes on production --
-accrues to it, and $\alpha_i$ is the full value-added share rather than the
-labor share in the national-accounts sense (Section~4). Third the shock
-itself: the part of the expansion that falls on imported goods is booked at
-the sectoral import shares implied by the table rather than assumed away, and
-one of the three financing columns is an external-debt variant (Section~3).
-The steps from the raw table to these shares -- the import split, the
-value-added decomposition, and the 5.387\,per cent expenditure residual that
-the raw table itself carries -- are documented in the data-pipeline and
-vector-provenance appendices, and the equivalence results are stated on the
-calibration that treats the imported and taxed components explicitly (Appendix~A).
-The revision also states the size of the leakage, not only its treatment: taken at the
-level of final-demand categories --- the finest split the published table offers --- the
-programme's import content is about 18\,per cent directly and a further 21\,per cent
-embodied in the imported intermediates required along the domestic supply chains, so
-that about 61\,per cent of the spending accrues as domestic value added (Section~2).
-Table~4 reports $\Delta D = F + B_{\mathrm{gov}}$, the net external position; that is
-the financing side of the question --- how the programme is funded from abroad and what
-this does to the external position --- and is therefore complementary to, rather than a
-measure of, the import content of the spending.}
-% AG (Oct 2026): the import numbers quoted here are OUR calculation on the 2019 table (direct: the import share of
-% investment final demand, rows 72-74 of the raw table; embodied: Leontief-induced imported intermediates of the programme).
-% Until App F carries the method, this sentence is a claim without a documented appendix behind it.
-\loc{Secs.~3--4.}
-% AG (Oct 2026): filled the two WHEREs with the details you asked for. TWO COUPLING DEPENDENCIES: (i) the pipeline
-% appendix (file (G)data-pipeline.tex) is still a TODO register, so 'documented in the ... appendices' is a promise
-% until that prose is written -- the facts are in its comment block (rows 73/74/75, the import split by USING sector,
-% the 5.387 per cent residual); (ii) I softened 'our original application was too simplistic and fundamentally
-% invalid' to a concession about what the closed-economy algebra forces -- 'fundamentally invalid' is the referee's
-% verdict restated by us, which the Stage-4 tone rule avoids. Verified in the text: Sec. 4 states imports/taxes as
-% leaks and the value-added composite; Table 4 already reports the net external position (Delta D).
-% WITHDRAWN (AG, 2026-10-23): an earlier note suggested quoting the source study's own import share (about 30 per cent)
-%   for comparison. Dropped: their figure is a direct-scope estimate for an equipment-inclusive bundle and is not
-%   comparable with our decomposition, so the letter quotes only our own numbers.
+%FIXME: [AG] Settle the programme import margin, spending denominator and product-tax treatment; restore the import-decomposition method in Appendix F and reconcile Section 2 before quoting percentages.
+\response{The reviewer is right that the closed-economy exposition did not adequately
+explain the calibration to Germany's open-economy accounts. The revision
+distinguishes domestic deliveries, imported intermediates and product taxes
+explicitly. Only the domestic intermediate bill enters demand for domestic
+output; imported intermediates and intermediate product taxes are recorded
+separately in the accounting. Exports remain an exogenous component of final
+demand, rather than being combined with imports into purchases attributed to
+domestic agents.
 
+We also clarify the interpretation of the primary factor. It represents a
+composite of primary inputs and receives the full value added recorded in the
+table, including compensation of employees, depreciation, operating surplus
+and other net taxes on production. Consequently, the calibrated factor share
+is a value-added share, not a labor-compensation share. This composite-factor
+specification limits the interpretation of the reported employment changes.
 
-%NOTE (JK): imports in the paper / a variable in table 5 / a note in section 2?
-% -> AG: done as a paragraph in Sec. 2 (Sec. 2 now states the import content declaratively, 36-39 per cent imports vs
-%    61-65 per cent domestic value added) plus the import section of App. F; no change to Table 5 (it compares welfare
-%    measures) because Table 4 already carries the net external position Delta D.
-%NOTE (JK): what about the labor vs. value-added part?
-% -> AG: answered by the existing sentence in Sec. 4 (the composite factor; alpha_i is the full value-added share,
-%    not the labour share) -- the label leg of the response above. A distributional sentence was drafted and then
-%    REMOVED on your steer: it needed a carve-out for the markup variant of Sec. 6 (which states the profit bill
-%    itself), so three sentences in three places bought one clause.
+On the demand shock, the spending is not assumed to fall exclusively on
+domestic production. Its domestic and imported components are distinguished
+using the final-demand import margins available in the calibration. Since the
+published table reports imports by final-demand category rather than by
+individual supplying product, this allocation requires an explicit
+proportionality assumption. Imported intermediates required by the resulting
+domestic production are accounted for separately.
+
+The revised documentation distinguishes this import content from the
+financing of the programme. Table~4 reports the net external position,
+$F+B_{\mathrm{gov}}$; this is not a measure of the programme's direct and
+embodied imports. We also disclose the approximately 5.387\,per cent
+production--expenditure discrepancy in the source accounts separately from
+the model's goods-market and external-account consistency checks.}
+\loc{Sec.~4 (open-economy accounting and the composite primary factor); Sec.~5, Table~4 (net external position); Appendix~F (data pipeline and consistency checks).}
+% The former 18 per cent direct / 21 per cent embodied / 61 per cent domestic-value-added
+% decomposition is omitted pending reconciliation. Appendix F's import-content subsection
+% remains absent, and Appendix E remains a stub. Do not restore the percentages until the
+% complete decomposition, including product taxes and any residual, supports them; align Sec. 2 then.
 
 \subsection*{R2.5 --- Sector-specific immobile labor}
 \refcom{- p.8, eq. (18): The authors choose to specify labor supply (and hence wage

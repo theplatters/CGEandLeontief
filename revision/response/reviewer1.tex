@@ -3,7 +3,7 @@
 % Source: docs/reviews/metro-rev1.docx
 % Point map: docs/DOCS_ASSESSMENT.md, Stage 3 (R1.1-R1.9).
 % Status: general response (R1.0) written 2026-10-22 (proofread pass: typos,
-%         parallelism, \loc added); R1.1-R1.9 still to be written.
+%         parallelism, \loc added). All points R1.0-R1.11 written; \loc pass 2026-10-24.
 % 2026-10-22: every \refcom now quotes the report VERBATIM and in full (one block
 %         per review paragraph, nothing elided; his own ellipses survive as \dots).
 %         Inner quotes are single (`...'), since \refcom already supplies the outer
@@ -41,7 +41,7 @@ fully rewritten new version allows for discussing our original question in a
 more useful and better substantiated way.
 
 Concretely, the revision restates the comparison as two primitive questions --- the
-nature of the short run and the question of who bears the cost --- and organises it
+nature of the short run and the question of who bears the cost --- and organizes it
 as a matrix of five labor-market closures and three financing closures, taking the
 decarbonization of the German residential sector as an example for how input-output
 modeling and transformation research might interact and how closure choices moderate
@@ -133,7 +133,7 @@ these steps and the associated consistency checks.
 
 This baseline reproduction should be distinguished from a complete
 reconciliation of the published accounts. The source data retain a
-production--expenditure discrepancy of approximately 5.387\,per cent, which we
+production--expenditure discrepancy of approximately 5.387\,percent, which we
 disclose separately rather than absorb into domestic demand or the
 primary-factor account.
 
@@ -144,9 +144,10 @@ three sides of GDP --- and a table of the elasticities the exercise runs on,
 which are imposed rather than estimated. Both belong to the calibration rather
 than to the argument, so we have kept them out of the main text: the summary in
 Appendix~C, the elasticities early in Appendix~B.}
-\loc{Secs.~4.1--4.2; Appendix~C. [Add the final references to the calibration summary and elasticity tables.]}
-% Proposed placement: economic-summary table in Sec. 4.1; elasticity table in Sec. 4.2,
-% with labor-closure variants cross-referenced to Appendix D. These tables are not yet added.
+\loc{Secs.~4.1--4.2; Appendix~C (the summary table) and B.1 (the elasticity table).}
+% RESOLVED 2026-10-24: both tables are in the manuscript -- the account summary as Table A8
+% in Appendix C.10 (tables/table_io-summary.tex), the elasticity table as Table A3 in
+% Appendix B.1 (tables/table_parameters.tex). Labor-closure variants: Appendix D.
 
 \subsection*{R1.4 --- The Keynesian approach (Type I vs Type II multipliers)}
 \refcom{The purpose behind the Keynesian approach in section 2.1 remains unclear to
@@ -207,9 +208,7 @@ one-factor constant-returns price block, relative prices and the real wage
 are determined by technology. At baseline technology, a demand-only shock
 therefore leaves the real wage at its reference value; it is not held there
 by an independently imposed real-wage peg. Appendix~B.5 states this result,
-and Appendix~B.7 explains why a rule determining only the nominal scale
-cannot generate an additional real adjustment margin within that price
-block. These statements do not extend to the sectoral-wage closures or to
+and Appendix~B.2 records that the wage pin is a numeraire rather than a wage-setting rule, so a rule determining only the nominal scale cannot generate an additional real adjustment margin within that price block. These statements do not extend to the sectoral-wage closures or to
 the demand-dependent pricing extensions of Section~6.
 
 The elastic labor-supply closure provides a different adjustment mechanism:
@@ -219,7 +218,7 @@ relation, without a labor--leisure income effect, rather than an estimated
 unemployment wage curve. We therefore distinguish this closure from the
 employment-adjustment benchmark and do not claim to implement the wage-curve
 mechanisms discussed in the applied literature.}
-\loc{Sec.~3, Table~3 (closure comparison); Appendix~B.2 (labor closures), B.5 (real-wage invariance) and B.7 (scope and nominal wage rules); Sec.~6 (pricing extensions).}
+\loc{Sec.~3, Table~3 (closure comparison); Appendix~B.2 (the labor closures and the wage pin as numeraire) and B.5 (the demand-only reduction and the real-wage anchor); Sec.~6 (pricing extensions).}
 
 \subsection*{R1.6 --- Labor mobility and the unified wage rule}
 \refcom{Another question pertains to labour mobility. Under imperfect labour market
@@ -254,10 +253,9 @@ in Section~5.1 (Table~4) from sectoral results in Section~5.2
 (Figures~2--4), with detailed cell-by-cell panels in Appendix~D.
 The distinction matters because a small aggregate response can conceal
 substantial changes in the composition of production and in sectoral prices.
-For example, under no reallocation, glass output rises by about 12--14\,per
-cent while its price rises by 22--28\,per cent; with elastic sectoral labor
-supply, the corresponding increases are about 17--18\,per cent in output
-and 10\,per cent in price. These are differences between labor-market
+For example, under no reallocation, glass output rises by about 12--14\,percent while its price rises by 22--28\,percent; with elastic sectoral labor
+supply, the corresponding increases are about 17--18\,percent in output
+and 10\,percent in price. These are differences between labor-market
 closures at the reported substitution elasticities, not estimates of
 substitution-elasticity sensitivity.
 
@@ -322,10 +320,11 @@ incomplete and needs additional clarification.
 found incomplete has been replaced by the verbal description of the model in
 Section~4.}
 \loc{Sec.~2 (the sentence quoted); Sec.~4 (the verbal model description).}
-% AG (Oct 2026): the Figure 3 question is deliberately LEFT OPEN here -- the sectoral figures are still
-% being reworked, so the letter must not promise a numbered sector axis yet. Once they are final, add to
-% the response: ``On the figure: the horizontal axis is a sector index, with the seven program sectors
-% numbered on it (Section~5).'' Check the final figures before adding it, and extend \loc to Sec.~5.
+% AG (2026-10-24, figures now final): the three sectoral figures are matrix_5x3_v11 and were verified
+% against their manifests; the horizontal axis is a sector index, but the program sectors are marked
+% by shading and point area (Figures 3 and 4) or by bars (Figure 2), not by printed numbers -- only the
+% Appendix D panels number them. So the promised sentence is NOT added, and \loc stays at Secs. 2 and 4
+% because the response does not refer to Section 5. Reopen only if the figures gain numbered labels.
 
 \subsection*{R1.10 --- The exogenous shock and the near-zero aggregate effect}
 \refcom{Another aspect I observed concerns the exogenous shock. This configuration
@@ -357,10 +356,9 @@ of Table~4 rather than as a property of prices. On the open-economy
 point, the revision is explicit, though not in the direction the comment
 suggests: exports enter final demand as an exogenous component, so relative
 price movements do not feed back into export volumes in the reported design --
-an endogenous export demand is a lever the appendix names but one that is not implemented in the approaches discussed in the paper. What the open economy does carry is the import side: imported intermediates and imported final goods enter as explicit leaks, which routes part of the program's demand abroad and makes the terms of trade
+an endogenous export demand is not implemented in the approaches discussed in the paper. What the open economy does carry is the import side: imported intermediates and imported final goods enter as explicit leaks, which routes part of the program's demand abroad and makes the terms of trade
 respond, and one of the three financing columns is an external-debt variant,
 in which the program adds external income instead of displacing domestic
 demand.}
-\loc{Sec.~4 (the removed passage; imports and taxes as leaks); Sec.~5 (Table~4 and the sectoral panels);
-Appendix~B (the quantity-side levers, including endogenous export demand).}
+\loc{Sec.~4 (the removed passage; imports and taxes as leaks); Sec.~5 (Table~4 and the sectoral panels).}
 % AG (Oct 2026): cell promoted out of R1.7.

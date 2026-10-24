@@ -159,8 +159,10 @@ Equal supply elasticities do not impose equal wages: $N$ separate labor
 markets determine $w_i$. As explained in Appendix~\ref{app:equivalences}, $\eta_s$ is a labor-supply
 elasticity and not the allocation parameter $\eta$; yet setting $\eta_s = 0$
 reproduces the no-reallocation row exactly. The calibrated real-wage anchors are $w_{i0}/\mathcal{P}_0 = 1$. The deflator remains the common consumption price index, not the sector's own goods price $p_i$. The supply curves are reduced forms without a
-labor--leisure income effect. The headline panels use $\eta_s = 0.5$;
-the elasticity ladder is reported in Table~\ref{tab:sectoral}. 
+labor--leisure income effect. The figures and the welfare comparison are drawn from the $\eta_s = 0.5$
+member; the matrix's elastic column reports the bracket $\eta_s \in [0.5, 2]$
+(Table~\ref{tab:results-matrix}), and Table~\ref{tab:sectoral} gives the ladder
+behind it. 
 
 \paragraph{The employment-adjustment closure: wage pinned, employment uncapped.}
 No labor-market equation is imposed, so employment is demand-determined and the
@@ -330,24 +332,26 @@ $ds$ ($ds = 1$ except under F1, where $ds = d$, the preference tilt):
 c_i = (1-s)(1-m_i)\,\beta_i\, ds_i\; E\; p_i^{-\sigma} \Big/
       \textstyle\sum_j \beta_j ds_j\, p_j^{1-\sigma},
 \qquad
-E = (1-\tau)\, w \textstyle\sum_i L_i + F,
+E = (1-\tau)\, W + F,
+\qquad W = \textstyle\sum_i w_i L_i,
 \label{eq:cons}
 \end{equation}
-with the wage-income tax rate $\tau = p\!\cdot\! g^G / (w \sum_i L_i)$ under
-F1/F3 and $\tau = p\!\cdot\!(g^G + g)/(w \sum_i L_i)$ under F2, and $F$ the
-net external transfer entering expenditure after tax.
-At $\eta = 0$ the wage bill is
-$\sum_i w_i \bar{L}_i$ in \eqref{eq:cons}. Saving
+with the wage-income tax rate $\tau = p\!\cdot\! g^G / W$ under
+F1/F3 and $\tau = p\!\cdot\!(g^G + g)/W$ under F2, and $F$ the
+net external transfer entering expenditure after tax. The wage bill is
+$W = \sum_i w_i L_i$ throughout, which is $w \sum_i L_i$ on the single-wage
+branch and the sectoral sum on the family's branch. Saving
 $sE$ leaks; the import content is charged margin by margin. Goods-market
 clearing is \eqref{eq:model-clearing}, with $g_i$ present only under the
 additive financings F2/F3 ($g_i = 0$ under F1).
 
-\paragraph{The four regimes.} The mobile systems solve for
+\paragraph{The four regimes.} The mobile $\alpha$-closures solve for
 $X = (p, y, w, F) \in \mathbb{R}^{2N+2}$ with the consumption price index
-\eqref{eq:labour-cpi} as numeraire, and close with the labor equation
-\eqref{eq:closure-alpha} in the standard CGE closure and
-\eqref{eq:closure-beta} in the elastic-supply closure (where
-$w_0/\mathcal{P}_0 = 1$). The wage-pinned systems solve for $X = (p, y) \in \mathbb{R}^{2N}$ with the
+\eqref{eq:labour-cpi} as numeraire and the labor equation
+\eqref{eq:closure-alpha} closing the system. The sectoral elastic-supply family
+\eqref{eq:closure-beta} replaces the single money wage by $N$ sectoral wages and
+is solved in $X = (p, y, w(1{:}N), F) \in \mathbb{R}^{3N+1}$, with its $N$ supply
+curves closing the system at the anchors $w_{i0}/\mathcal{P}_0 = 1$. The wage-pinned systems solve for $X = (p, y) \in \mathbb{R}^{2N}$ with the
 wage pinned $w \equiv 1$ and $F \equiv 0$; employment is a post-solve
 outcome. The employment-adjustment closure runs them at the baseline elasticities,
 the Leontief closure at the Leontief
@@ -395,14 +399,14 @@ p = \one, \qquad w = 1, \qquad \mathcal{P} = 1,
 \end{equation}
 independently of the demand vector, of the financing closure, and of the
 shock size. The lemma is a statement about the
-\emph{single-wage} price block: with a per-sector wage vector (the
-$\eta = 0$ endpoint) homogeneity in $(p, w)$ no longer holds
-sector by sector and the argument does not apply.
+\emph{single-wage} price block. With a per-sector wage vector (the sectoral
+family of Appendix~\ref{app:sectoral}) the zero-profit system is still
+homogeneous of degree one in $(p, w(1{:}N))$ jointly, but it no longer reduces to
+a single price vector relative to a single wage: relative wages are pinned by the
+labor equations and move with demand, so the argument does not apply.
 The statement is scoped to the branch the numeraire
 selects: $\pi(A)$ denotes the normalized solution the kernel's solves return,
-and the equivalences below compare the systems on that branch (the CES price
-system at $\theta<1$ with self-loops admits spiral branches in principle; no
-executed cell visits one).
+and the equivalences below compare the systems on that branch.
 \end{lemma}
 
 \begin{proof}
@@ -492,7 +496,7 @@ $\sum_j \Omega_{ji} a_j y_j$; \eqref{eq:closure-labour-demand} reduces to
 $L_i = \alpha_i y_i$ since every exponent collapses at unit prices; in
 \eqref{eq:cons} the terms $p_i^{-\sigma}$ and the normalizer reduce to
 $1$ and $\sum_j \beta_j ds_j$, giving the fixed spending weights
-$\tilde\beta(ds)$; and the tax rate $\tau = \sum g^G / \alpha^{\!\top}y$
+$\tilde\beta(ds)$; and the tax rate $\tau = \bigl(\sum g^G + \mathbf{1}_{F2}\sum g\bigr) / \alpha^{\!\top}y$
 turns $E$ into the affine form shown. Collecting terms in
 \eqref{eq:model-clearing} gives \eqref{eq:affine}--\eqref{eq:bvec}: the
 intermediate round contributes the columns
@@ -533,10 +537,11 @@ row is this system at $\eta_s = 0.5$, and
 Table~\ref{tab:sectoral} illustrates the ladder as well as its two ends.\footnote{The elasticity can differ
 across sectors; writing $\eta_{s,i}$ for $\eta_s$ changes nothing in what
 follows, but represents a venue for imposing further assumption on heterogenous rigidity or labor market conditions across sectors.} Because
-the $N$ wages enter the $N$ zero-profit conditions through the price index
-\eqref{eq:model-ip}, prices now depend on the $N$ employment levels and
-Lemma~\ref{lem:price} no longer applies: demand reaches prices through the wage
-structure, $p = \pi(A, w)$.
+each sector's own wage enters its unit cost $c_i(p,w_i;A_i)$ directly, while the
+intermediate price index \eqref{eq:model-ip} contains goods prices only, the $N$
+zero-profit conditions now depend on the wage structure and through it on the
+employment levels: Lemma~\ref{lem:price} no longer applies, and demand reaches
+prices through the wages, $p = \pi(A, w)$.
 
 \begin{proposition}[The rigid corner is the $\eta = 0$ endpoint]\label{prop:nest}
 Set $\eta_s = 0$. Then the elastic labor supply model and the $\eta = 0$
@@ -574,11 +579,21 @@ residual maps agree on the common solution set, so the solution sets coincide.
 \end{proof}
 
 
-\paragraph{The elastic end.} The results derived from the elastic labor supply model have a limit as $\eta_s\to\infty$,
-and it does not directly correspond to the wage-pinned closure of the matrix. As indicated, while prices return to the baseline and the real wage to its anchor, the setups differ in the external transfer, which the elastic labor supply model determines and the matrix's row sets to zero. At the transfer the elastic labor supply model selects, the wage-pinned equations hold exactly; at the zero transfer they do not, and the difference is the transfer's own contribution to demand, as illustrated in Table~\ref{tab:sectoral} below. The limit therefore does not directly intersect with the results shown for the employment adjustment closure as $F$ remains unaligned across specifications
+\paragraph{The elastic end.} The family has a limit as $\eta_s\to\infty$, and it
+does not sit on the wage-pinned closure of the matrix, because the two differ in
+the external transfer: the family determines it, the matrix's row sets it to
+zero. Aligning them shows what that difference is worth. At the transfer the
+family itself selects, $F^{\mathrm{lim}}$, the wage-pinned system reproduces its
+allocation --- employment $1.002324$ against $1.002327$, consumption $-1.289$
+against $-1.288$ --- and prices the bundle exactly at the baseline, whereas the
+family's own prices sit $8.6 \times 10^{-5}$ away; that price gap, not the
+allocation, is the residual of a finite $\eta_s$ standing in for infinity. At the
+zero transfer the two do not agree at all, and the gap is the transfer's own
+contribution to demand. The limit therefore meets the closure only once $F$ is
+aligned, not along a common solution.
 
 Pushing the uniform member past the executed cells, employment and consumption converge and the transfer turns positive; the table sets the
-limit beside the closure at $F = 0$ and at $F = F^{\ast}$.
+limit beside the closure at $F = 0$ and at the family's transfer.
 
 \input{tables/tableB1_sectoral-family}
 

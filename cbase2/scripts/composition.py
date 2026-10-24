@@ -133,11 +133,16 @@ def main() -> int:
     )
     totals = dict(imp=bill["imp"] + induced["imp_int"], tax=bill["tax"] + induced["tax_int"])
 
-    # --- the band: the direct leg at the programme-weighted import intensity
+    # --- the band: the direct component at the programme-weighted import intensity,
+    #     with the induced output RE-SOLVED. Lowering direct imports raises the domestic
+    #     share of the bill, hence the output the chains call forth, hence embodied
+    #     imports; holding the old x would understate the total.
     psi = g / G0
     w_imp = float((psi * np.where(y > 0, m / y, 0.0)).sum())
     total_high = (bill["imp"] + induced["imp_int"]) / G0
-    total_low = w_imp + induced["imp_int"] / G0
+    x_low = np.linalg.solve(np.eye(71) - P, (1.0 - w_imp - sh_tax) * g)
+    imp_low = float((np.where(y > 0, m / y, 0.0) * x_low).sum())
+    total_low = w_imp + imp_low / G0
 
     print(f"programme            {G0:12,.0f} mn EUR (2019)")
     print(f"bill                 imported {100*sh_imp:5.2f} % | taxes {100*sh_tax:5.2f} % | domestic {100*(1-sh_imp-sh_tax):5.2f} %")

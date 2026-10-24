@@ -26,8 +26,9 @@ build_one() {
   local root="$1"
   printf '=== %s ===\n' "$root"
   # clear stale aux so a moved label cannot be inherited from an earlier build
-  rm -f "$root.aux" "$root.bcf" "$root.run.xml" "$root.bbl"
-  latexmk -pdf -interaction=nonstopmode "$root.tex" >/dev/null 2>&1
+  rm -f "$root.aux" "$root.bcf" "$root.run.xml" "$root.bbl" "$root.synctex.gz"
+  # -synctex=1 keeps $root.synctex.gz in step with $root.pdf (the editor's sync)
+  latexmk -pdf -synctex=1 -interaction=nonstopmode "$root.tex" >/dev/null 2>&1
   local rc=$?
 
   [ -f "$root.pdf" ] || { echo "  FAILED: no $root.pdf (see $root.log)"; fail=1; return; }

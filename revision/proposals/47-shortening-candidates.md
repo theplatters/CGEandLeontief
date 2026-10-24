@@ -7,6 +7,7 @@ tags: [shortening, footnotes, cleaner-pass, beyondhulten, revision]
 project: BeyondHulten
 ---
 
+**Version 2** \textcolor{revisionV1}{(October 2026)}
 **Version 1** (October 2026)
 
 This note collects the places where the manuscript can be shortened without
@@ -91,13 +92,15 @@ absorbed in a few words, which is what rule 8 asks for.
   cut the rest, or leave it whole. Do not trim it to half an argument.
 - **§3 L59 (31 words).** States that under demand-only shocks the elastic model
   collapses to the conventional CGE in its single-wage form. The same fact is
-  stated in the §3 L36 footnote and proved in Appendix A. **Action:** delete;
+  stated in the §3 L36 footnote and proved in Appendix A. \textcolor{revisionV1}{An independent audit of the cleaning rules reached the same verdict: the footnote duplicates the clause already stated two paragraphs earlier.} **Action:** delete;
   the two remaining statements already carry it.
 - **§6 L20 (28 words).** Repeats four numbers that Appendix E prints: the
   $0.20$ and $0.16$ fall under preference reallocation and tax finance, the
   $+0.12$ rise under external finance, and the standard CGE's $0.16$. This is
   exactly the case rule 5 describes --- estimation output restated in running
-  text. **Action:** delete the numbers, keep the pointer to Appendix E.
+  text. \textcolor{revisionV1}{The same audit makes the structural point sharper: the sentence the footnote supports exists only to announce the footnote (``A counterfactual \dots{} is summarized in the footnote''), so the paragraph and the note stand or fall together.} **Action:** delete the numbers, keep the pointer to Appendix E.
+
+\textcolor{revisionV1}{Both items are parked here by the author's decision of 2026-10-24: they stay in this note as candidates and are not pursued in the manuscript.}
 
 # Keep
 
@@ -139,6 +142,8 @@ Recorded so the next pass does not raise them again.
   the calibration auditable.
 
 # Revision log
+
+- \textcolor{revisionV1}{**v2 (2026-10-24).** An independent audit of the cleaning rules confirmed both cut candidates and sharpened the description of §6 L20. The author's decision of the same date parks both items here rather than pursuing them in the manuscript.}
 
 - **v1 (2026-10-24).** First inventory: 19 footnotes, 1,068 words, ten
   candidates at 659 words. Taken from `cf53520` after the mechanical cleaning

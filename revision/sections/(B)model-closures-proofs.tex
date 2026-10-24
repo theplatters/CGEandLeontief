@@ -61,7 +61,7 @@ limit $0^{+}$ is fixed proportions. Table~\ref{tab:parameters} collects these el
 On the financing side, $c_i^h$ is the household purchase of good $i$ and
 $E^h$ its consumption expenditure, so $\sum_i p_i c_i^h=E^h$ is the
 household budget of Equation~\eqref{eq:utility-max}. $W=\sum_i w_i L_i$ is the wage bill, $T_G(p)=\sum_i p_i g_i^G$ the baseline tax cost of government purchases, and $g_i$ the program bundle (real public investment in sector $i$) with current-price cost
-$\sum_i p_i g_i$. F1 changes the composition of $E^h$, while under F2 the program's cost is financed by the wage-income tax at the endogenous rate $\tau$ defined in~\eqref{eq:cons}; under F3 it is booked as external program financing $B_{\mathrm{gov}}$. The net external transfer $F$ closes the external account; it is endogenous in the mobile regime and identically zero in the wage-pinned regime.
+$\sum_i p_i g_i$. F1 changes the composition of $E^h$, while under F2 the program's cost is financed by the wage-income tax at the endogenous rate $\tau$ defined in~\eqref{eq:cons}; under F3 it is booked as external program financing $B_{\mathrm{gov}}$. The net external transfer $F$ closes the external account; it is endogenous in the flexible-wage closures and identically zero in the wage-pinned closures.
 
 Each sector's technology is a nested CES with constant returns: labor and an intermediate composite substitute with elasticity $\epsilon$, and intermediate inputs substitute with elasticity $\theta$ inside the composite. Cost minimization, Equation~\eqref{eq:cost-min}, gives the intermediate price index and the unit cost
 \begin{align}
@@ -87,7 +87,7 @@ L_i^{\mathrm{cm}}(p,y_i,w_i)
 \label{eq:closure-labour-demand}
 \end{equation}
 where $y_i$ is gross output, $A_i$ productivity and $\alpha_i$ the calibrated
-labor share. Demand for intermediate goods follows in the same way from the
+value-added share. Demand for intermediate goods follows in the same way from the
 composite~\eqref{eq:model-ip} and is charged with the domestic bill
 (see \eqref{eq:int}).
 
@@ -271,7 +271,7 @@ T(p) = \sum_{i=1}^N p_i g_i,
 \end{equation}
 Total domestic tax revenue $T_G(p)+T(p)$ therefore balances the purchases
 $g^G+g$, priced at current rather than baseline prices. The tax is
-implemented proportionally as $\tau=[T_G(p)+T(p)]/W$ and the tax base moves with the wage bill $W$. In essence, the program has an explicit domestic budget counterparty and reduces household resources through $\tau$.
+implemented proportionally as $\tau=[T_G(p)+T(p)]/W$ and the tax base moves with the wage bill $W$.
 
 \paragraph{F3: externally financed public investment.}
 F3 adds the same real bundle but imposes no additional domestic program
@@ -404,8 +404,8 @@ family of Appendix~\ref{app:sectoral}) the zero-profit system is still
 homogeneous of degree one in $(p, w(1{:}N))$ jointly, but it no longer reduces to
 a single price vector relative to a single wage: relative wages are pinned by the
 labor equations and move with demand, so the argument does not apply.
-The statement is scoped to the branch the numeraire
-selects: $\pi(A)$ denotes the normalized solution the kernel's solves return,
+The statement is scoped to the positive price solution under consideration:
+$\pi(A)$ denotes that solution at $w=1$,
 and the equivalences below compare the systems on that branch.
 \end{lemma}
 
@@ -413,8 +413,8 @@ and the equivalences below compare the systems on that branch.
 Homogeneity: $c_i(tp, tw; A) = t\, c_i(p,w;A)$ for $t>0$, by inspection of
 \eqref{eq:model-cost}--\eqref{eq:model-ip}. Write $q = p/w$. Then \eqref{eq:zp} is
 equivalent to $q_i = c_i(q,1;A)$ for all $i$, i.e.\ $q = \pi(A)$, and
-the solution branch of \eqref{eq:zp} selected by the
-numeraire is the ray $\{(w\,\pi(A), w)\}$. The
+the corresponding solutions of \eqref{eq:zp} form the ray
+$\{(w\,\pi(A), w):w>0\}$. The
 CPI \eqref{eq:labour-cpi} is homogeneous of degree one in $p$, so
 $\mathcal{P}(w\,\pi) = w\,\mathcal{P}(\pi)$; the numeraire $\mathcal{P} = 1$ or the pin $w = 1$
 selects the scale. At $A \equiv \one$, $\pi = \one$ solves
@@ -510,15 +510,11 @@ Lemma~\ref{lem:price} and Lemma~\ref{lem:affine} are the production side of
 the Samuelson nonsubstitution theorem: with one primary factor, constant
 returns and no joint production, the cost-minimizing technique --- and hence
 relative prices --- is independent of the demand vector, and final demand
-allocates quantities only (Samuelson 1951). The kernel's nested-CES
-structure is a smooth parametrization of that corner; the demand-only matrix
-therefore inherits the theorem's rigidity: this is the model-class
-property behind the coincidences. The IO endpoint makes the rigidity
-literal --- the Robinson (2006) fixed-price multiplier --- but, as
-Lemma~\ref{lem:affine} shows, it is not an approximation:
-the same candidate equilibrium $(p,y)=(\one,y^{\ast})$
-solves the wage-pinned system at every elasticity triple in the wage-pinned
-gauge.
+allocates quantities only (Samuelson 1951). At the calibration technology,
+Lemma~\ref{lem:affine} establishes that the same candidate equilibrium
+$(p,y)=(\one,y^{\ast})$ solves the wage-pinned system at every substitution-elasticity
+triple. The fixed-price multiplier (Robinson 2006) is therefore exact under
+these conditions.
 \end{remark}
 
 \subsection{The elastic labor supply model and its two ends}\label{app:sectoral}
@@ -535,8 +531,8 @@ its own wage and supply curve and is solved in the unknowns
 $X = (p, y, w(1{:}N), F) \in \mathbb{R}^{3N+1}$; the matrix's elastic-supply
 row is this system at $\eta_s = 0.5$, and
 Table~\ref{tab:sectoral} illustrates the ladder as well as its two ends.\footnote{The elasticity can differ
-across sectors; writing $\eta_{s,i}$ for $\eta_s$ changes nothing in what
-follows, but represents a venue for imposing further assumption on heterogenous rigidity or labor market conditions across sectors.} Because
+across sectors; sector-specific $\eta_{s,i}$ can represent heterogeneous
+labor-supply responses.} Because
 each sector's own wage enters its unit cost $c_i(p,w_i;A_i)$ directly, while the
 intermediate price index \eqref{eq:model-ip} contains goods prices only, the $N$
 zero-profit conditions now depend on the wage structure and through it on the

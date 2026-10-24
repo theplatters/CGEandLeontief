@@ -64,6 +64,13 @@ identical system has been observed to converge to 2e-10.
 """
 function fixed_point_init(data::Data)
 	N = length(data.factor_share)
+	# ORIENTATION: Ω_raw' * diag(1 - α) has entry [u,i] = the input from u per unit of output of
+	# i, so M0 is the SUPPLY-oriented coefficient matrix P, and (I - M0) \ rhs is the standard
+	# quantity inverse for a demand vector indexed by product. Inverting the TRANSPOSED system
+	# instead inflates induced output by about a third (52,445 -> 70,466 EUR m on the paper's
+	# programme) -- the mistake the first draft of the import-content numbers made. The
+	# orientation is pinned by the accounting identity (I - Ω' diag(1-α)) y = the domestic final
+	# demand of the table, which cbase2/scripts/composition.py checks to ~4e-12 (Appendix C.9).
 	M0 = data.Ω_raw' * Diagonal(1.0 .- data.factor_share)
 	Gk = M0 + Diagonal(1.0 .- data.import_margin) * data.consumption_share *
 		 data.factor_share' * (1 - data.saving_rate) * (1 - sum(data.gov_demand))

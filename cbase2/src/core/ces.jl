@@ -35,6 +35,8 @@ Returns the labor vector adjusted, so that labor can be freely reallocated to ac
 function full_labor_slack_alt(model::Model)
 	(; data, shocks) = model
 
+	# inv(M)' = inv(M'), i.e. the same supply-oriented inverse P as in solvers.jl: see the
+	# ORIENTATION note there and Appendix C.9 before transposing anything by hand.
 	q = inv(I - diagm(1 .- data.factor_share) * data.Ω_raw)' * shocks.demand_shock_raw
 	data.labor_share + (q ./ sum(data.value_added)) .* (Vector(data.io[findfirst(==("Arbeitnehmerentgelt im Inland"), data.io.Sektoren), 2:72]) ./ data.grossy)
 end
@@ -47,6 +49,8 @@ Returns the labor vector adjusted, so that labor can be freely reallocated to ac
 function full_labor_slack(model::Model)
 	(; data, shocks) = model
 
+	# inv(M)' = inv(M'), i.e. the same supply-oriented inverse P as in solvers.jl: see the
+	# ORIENTATION note there and Appendix C.9 before transposing anything by hand.
 	q = inv(I - diagm(1 .- data.factor_share) * data.Ω_raw)' * shocks.demand_shock_raw
 	data.labor_share + inv(I - diagm(1 .- data.factor_share) * data.Ω_raw)' * (data.consumption_share_gross_output .* ((shocks.demand_shock .* data.labor_share) - data.labor_share))
 end

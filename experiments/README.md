@@ -223,7 +223,7 @@ harness and hard-validates it against the recorded run artifacts; figures
 created and no registry/run files are modified.
 
 ```bash
-julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id1,id2] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--comparison-out FILE] [--comparison-sectors s1,s2,s3] [--comparison-closures c1,c2] [--no-figures] [--quiet]
+julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v11 [--cells id1,id2] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--comparison-out FILE] [--comparison-sectors s1,s2,s3] [--comparison-closures c1,c2] [--no-figures] [--quiet]
 ```
 
 - `--design` (required) must be preregistered with a matching SHA-256;
@@ -307,7 +307,8 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   (`OpenCGE.save_closure_comparison`, OpenCGE tag `v0.5.0`,
   `OpenCGE@ADR-0041`): vertical output, household-consumption (plotted as
   `W_D`), and price ranges, grouped by labour closure; each range spans
-  financing outcomes, marked by financing-specific line styles.
+  financing outcomes, marked by financing-specific line styles. The legend
+  uses `F1`, `F2` and `F3`; the plot has no financing annotations.
   `--comparison-sectors` selects
   sectors by 1-based index, dotted label, or curated short name (default:
   `Electrical equipment`, `Metal ores & mining`, `Other personal services`);
@@ -321,10 +322,16 @@ julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v10 [--cells id
   and DELTA cells). `--scatter-split` writes one image per selected financing
   closure, adding `_F1`, `_F2` or `_F3` before the extension. Legends use the
   manuscript descriptions instead of registry ids.
+  `--scatter-panel` combines exactly two financing groups in one figure
+  using `OpenCGE.plot_closure_scatter_panel`; it requires `--scatter-out`
+  and cannot be combined with `--scatter-split`. Closure colors are shared
+  across panels through a single shared closure legend; one shared
+  shock-status legend distinguishes programme sectors from other sectors.
   Each pair gets one color; programme sectors are dark and other sectors
   are light. Point area is proportional to the pre-programme Domar weight.
-  Both comparison outputs are 17 cm wide, use 10-point text and 600-dpi PNGs,
-  and combine with `--no-figures` to suppress exploratory figures.
+  Standalone comparison outputs are 17 cm wide with 10-point text; the
+  two-scatter panel uses a 964 by 500 layout with 16-point text. All use
+  600-dpi PNGs and combine with `--no-figures` to suppress exploratory figures.
 
 The Section 5.2 comparisons are regenerated together with:
 
@@ -332,22 +339,29 @@ The Section 5.2 comparisons are regenerated together with:
 julia --project=. experiments/plot_matrix.jl --design matrix_5x3_v11 --no-figures \
   --comparison-out revision/images/closure_comparison.png \
   --comparison-closures BF,BETA,DELTA \
-  --scatter-out revision/images/closure_scatter.png --scatter-split \
+  --scatter-out revision/images/closure_scatter_panel.png --scatter-panel \
   --scatter-pairs BF/F1,BETA/F1,DELTA/F1,BF/F3,BETA/F3,DELTA/F3
 ```
 
 The range plot covers BF, BETA and DELTA under all three financing closures.
-The two scatter images, `closure_scatter_F1.png` and `closure_scatter_F3.png`,
-show those same labour closures separately under repurposing of consumption
-and external financing. Labels follow Table 4: No-reallocation, Elastic labor
+The combined `closure_scatter_panel.png` uses
+`OpenCGE.plot_closure_scatter_panel` to show those same labour closures
+side by side under (a) repurposing of consumption (F1) and (b) external
+financing (F3). The panels share closure and shock-status legends and retain independent
+axis limits. Labels follow Table 4: No-reallocation, Elastic labor
 supply and Leontief closure. Range labels are angled to keep the descriptions
 legible at print width. GAMMA and DELTA coincide on this demand-only branch;
 the selected employment-adjustment corner is represented by DELTA throughout.
 Sources are `matrix_5x3-v11-<LABOUR>-<FINANCING>`, replacing BETA by
 `matrix_5x3-v11-BETA-<FINANCING>-etas05` throughout (ADR-0036).
-Appendix D preserves the existing detailed panels, their labels and their
-`matrix_5x3_v10` source mapping in ADR-0036. The new main-text comparisons
-use `matrix_5x3_v11` (ADR-0044).
+Appendix D's detailed panels and the exploratory figures also use
+`matrix_5x3_v11` (ADR-0045), replacing ADR-0036's historical source mapping.
+Plots render with OpenCGE `v0.5.4` (ADR-0045); this presentation-only release
+retains the numerical run generation after reproduction checks.
+Regenerate all matrix plots together by removing `--no-figures` from the
+command above and adding `--panel-dir revision/images`. GLMakie can be
+loaded from a separate environment through `JULIA_LOAD_PATH`, keeping the
+committed dependency pin unchanged.
 
 ## Animating the pricing panels
 

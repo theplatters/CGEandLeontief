@@ -6,7 +6,7 @@
 #   julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c]
 #       [--outdir DIR] [--data-dir DIR] [--panel-dir DIR]
 #       [--comparison-out FILE] [--scatter-out FILE] [--scatter-pairs BF/F1,BETA/F2]
-#       [--scatter-split]
+#       [--scatter-split | --scatter-panel]
 #       [--no-figures] [--quiet]
 #
 # Validation contract: every selected cell is RE-SOLVED with the harness
@@ -40,7 +40,7 @@ isdefined(Main, :run_design) || include(joinpath(@__DIR__, "run.jl"))
 """Print usage to stderr and return exit code 1."""
 function plot_usage()::Int
     println(stderr, """usage:
-  julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--comparison-out FILE] [--comparison-sectors s1,s2,s3] [--comparison-closures c1,c2] [--scatter-out FILE] [--scatter-pairs BF/F1,BETA/F2] [--scatter-split] [--no-figures] [--quiet]""")
+  julia --project=. experiments/plot_matrix.jl --design <design> [--cells a,b,c] [--outdir DIR] [--data-dir DIR] [--panel-dir DIR] [--comparison-out FILE] [--comparison-sectors s1,s2,s3] [--comparison-closures c1,c2] [--scatter-out FILE] [--scatter-pairs BF/F1,BETA/F2] [--scatter-split | --scatter-panel] [--no-figures] [--quiet]""")
     return 1
 end
 
@@ -81,7 +81,7 @@ end
 """
 Parse the driver CLI args into a NamedTuple (`design`, `cells`, `outdir`,
 `data_dir`, `panel_dir`, `comparison_out`, `comparison_sectors`,
-`comparison_closures`, `scatter_out`, `scatter_pairs`, `scatter_split`,
+`comparison_closures`, `scatter_out`, `scatter_pairs`, `scatter_split`, `scatter_panel`,
 `no_figures`, `quiet`). `--design` is required (checked by
 `plot_main`); `--cells` is a comma-separated run-id list. Throws an
 `ArgumentError` on a missing value or an unknown option.
@@ -98,6 +98,7 @@ function parse_plot_args(args::Vector{String})::NamedTuple
     scatter_out::Union{String,Nothing} = nothing
     scatter_pairs::Union{Vector{Tuple{String,String}},Nothing} = nothing
     scatter_split = false
+    scatter_panel = false
     no_figures = false
     quiet = false
     i = 1
@@ -145,6 +146,9 @@ function parse_plot_args(args::Vector{String})::NamedTuple
         elseif a == "--scatter-split"
             scatter_split = true
             i += 1
+        elseif a == "--scatter-panel"
+            scatter_panel = true
+            i += 1
         elseif a == "--quiet"
             quiet = true
             i += 1
@@ -152,12 +156,16 @@ function parse_plot_args(args::Vector{String})::NamedTuple
             throw(ArgumentError("unknown option \"$a\""))
         end
     end
+    scatter_split && scatter_panel && throw(ArgumentError(
+        "--scatter-split and --scatter-panel are mutually exclusive"))
+    scatter_panel && scatter_out === nothing && throw(ArgumentError(
+        "--scatter-panel requires --scatter-out"))
     return (; design = design, cells = cells, outdir = outdir,
         data_dir = data_dir, panel_dir = panel_dir,
         comparison_out = comparison_out,
         comparison_sectors = comparison_sectors,
         comparison_closures = comparison_closures,
-        scatter_out = scatter_out, scatter_pairs = scatter_pairs, scatter_split = scatter_split,
+        scatter_out = scatter_out, scatter_pairs = scatter_pairs, scatter_split = scatter_split, scatter_panel = scatter_panel,
         no_figures = no_figures, quiet = quiet)
 end
 
@@ -277,7 +285,7 @@ function plot_save_comparison(path, ds, idx, closures, sector_labels)
     labour_labels = plot_labour_label.(unique(data.labours))
     fig = OpenCGE.plot_closure_comparison(ds, idx, closures;
         sector_labels, labour_labels,
-        financing_labels = plot_financing_label.(unique(data.financings)))
+        financing_labels = unique(data.financings))
     ax = only(a for a in fig.content if a isa GLMakie.Axis &&
         a.ylabel[] == "Change vs. baseline (%)")
     ax.xticks = (first(ax.xticks[]), repeat(labour_labels, length(idx)))
@@ -285,6 +293,17 @@ function plot_save_comparison(path, ds, idx, closures, sector_labels)
     ax.xticklabelalign = (:right, :center)
     GLMakie.resize_to_layout!(fig)
     return plot_save_png(path, fig)
+end
+
+"""Render the two-financing panel in the latest world after loading GLMakie."""
+function plot_save_scatter_panel(path, ds, left, right, programme, titles)
+    fig = OpenCGE.plot_closure_scatter_panel(
+        ds, left.pairs, right.pairs; programme, titles,
+        left_kwargs = (; closure_labels = plot_scatter_labels(left.pairs)),
+        right_kwargs = (; closure_labels = plot_scatter_labels(right.pairs)),
+        size = (964, 500), fontsize = 16, max_markersize = 20)
+    plot_save_png(path, fig)
+    return path
 end
 
 """
@@ -630,12 +649,24 @@ function plot_main(args::Vector{String} = ARGS;
             pairs = opts.scatter_pairs === nothing ?
                 [(c.labour, c.financing) for c in ds.cells
                     if c.labour in MANUSCRIPT_COMPARISON_CLOSURES] : opts.scatter_pairs
-            for output in plot_scatter_outputs(opts.scatter_out, pairs, opts.scatter_split)
-                fig = Base.invokelatest(OpenCGE.plot_closure_scatter, ds, output.pairs;
-                    programme = g, closure_labels = plot_scatter_labels(output.pairs),
-                    size = (482, 340), fontsize = 10, max_markersize = 16)
-                Base.invokelatest(plot_save_png, output.path, fig)
-                println("wrote $(output.path)")
+            if opts.scatter_panel
+                outputs = plot_scatter_outputs(opts.scatter_out, pairs, true)
+                length(outputs) == 2 || throw(ArgumentError(
+                    "--scatter-panel requires exactly two financing groups"))
+                left, right = outputs
+                titles = Tuple("(" * string(Char('a' + i - 1)) * ") " *
+                    last(first(output.pairs)) for (i, output) in enumerate(outputs))
+                Base.invokelatest(plot_save_scatter_panel,
+                    opts.scatter_out, ds, left, right, g, titles)
+                println("wrote $(opts.scatter_out)")
+            else
+                for output in plot_scatter_outputs(opts.scatter_out, pairs, opts.scatter_split)
+                    fig = Base.invokelatest(OpenCGE.plot_closure_scatter, ds, output.pairs;
+                        programme = g, closure_labels = plot_scatter_labels(output.pairs),
+                        size = (482, 340), fontsize = 10, max_markersize = 16)
+                    Base.invokelatest(plot_save_png, output.path, fig)
+                    println("wrote $(output.path)")
+                end
             end
         catch e
             println(stderr, "plot_closure_scatter failed: $(sprint(showerror, e))")

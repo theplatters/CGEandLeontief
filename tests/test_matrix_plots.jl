@@ -292,6 +292,11 @@ end
 end
 
 @testset "matrix plots: financing splits and manuscript labels" begin
+    panel_args = parse_plot_args(["--scatter-out", "panel.png", "--scatter-panel"])
+    @test panel_args.scatter_panel && !panel_args.scatter_split
+    @test_throws ArgumentError parse_plot_args(["--scatter-panel"])
+    @test_throws ArgumentError parse_plot_args([
+        "--scatter-out", "panel.png", "--scatter-panel", "--scatter-split"])
 	args = parse_plot_args(["--scatter-split", "--scatter-pairs",
 		"BF/F1,BETA/F1,DELTA/F1,BF/F3,BETA/F3,DELTA/F3"])
 	@test args.scatter_split

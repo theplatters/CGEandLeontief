@@ -45,7 +45,13 @@ end
 
 @testset "wage-pinned generation: unchanged design specifications (ADR-0044)" begin
     pin = opencge_pin(default_root())
-    @test pin["repo_rev"] == "v0.5.0"
+    # ADR-0045 permits the presentation-only v0.5.4 renderer; executed
+    # ADR-0044 manifests must retain their original numerical provenance.
+    run_pin = Dict("repo_rev" => "v0.5.0", "version" => "0.4.1",
+        "repo_url" => "https://github.com/theplatters/OpenCGE",
+        "git_tree_sha1" => "9f41bc9c69910f8cb37ff9ab78de75ce004ee9b9")
+    @test pin == merge(run_pin, Dict("repo_rev" => "v0.5.4", "version" => "0.5.4",
+        "git_tree_sha1" => "228312a0668cd3df12b66d6537d9013c1602962f"))
     pairs = ["matrix_5x3_v10" => "matrix_5x3_v11",
         "pricing_capacity_rows_v1" => "pricing_capacity_rows_v2",
         "pricing_capacity_v2" => "pricing_capacity_v3",
@@ -66,7 +72,7 @@ end
             without_note(d) = Dict(k => v for (k, v) in d if k != "note")
             @test without_note(cell) == without_note(original)
             man = TOML.parsefile(joinpath(default_root(), "runs", id, "manifest.toml"))
-            @test man["provenance"]["opencge"] == pin
+            @test man["provenance"]["opencge"] == run_pin
             @test man["status"] == "executed" && man["gates"]["overall"] == "pass"
         end
     end

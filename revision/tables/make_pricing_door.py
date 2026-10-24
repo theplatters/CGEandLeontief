@@ -49,7 +49,7 @@ FIN = ["F1", "F2", "F3"]
 ROWS = [
     ("BF", "No-reallocation"),
     ("ALPHA", "Standard CGE"),
-    ("BETA", r"Elastic labour supply ($\eta_s = 0.5$)"),
+    ("BETA", r"Elastic labor supply ($\eta_s = 0.5$)"),
     ("GAMMA", "Employment adjustment"),
     ("DELTA", "Leontief closure"),
 ]

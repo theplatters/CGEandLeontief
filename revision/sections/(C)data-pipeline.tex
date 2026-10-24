@@ -1,12 +1,13 @@
 % =====================================================================
-% Appendix G --- From the input--output table to Omega: the data pipeline
+% Appendix C --- From the input--output table to Omega: the data pipeline
 % ---------------------------------------------------------------------
 % Job: document, step by step, how the published Destatis input--output
 %      table becomes the calibrated objects the kernel consumes --- above
 %      all the input-share matrix Omega, plus alpha, lambda and the
 %      consumption shares omega. Section 4 states the definitions
-%      (eq:io-row, eq:io-column); Appendix C carries the A-bill leak
-%      accounting; Appendix E the investment vector. This appendix fills the
+%      (eq:io-row, eq:io-column); the A-bill leak accounting is carried here
+%      (Section~\ref{app:abill}); the investment vector is documented in
+%      Section~\ref{sec:io-bridge}. This appendix fills the
 %      gap between "the table" and "the shares".
 % Code: OpenCGE@src/core/accounting.jl (read_data, final_demand_split,
 %      generate_data, conditional_input_shares, assemble_data) and
@@ -229,7 +230,87 @@ normalization. Dropping sector 71 leaves 70 sectors and $99.2$ per cent of gross
 output; dropping also the seven high-self-share sectors leaves 63 and $87.4$ per
 cent.
 
-% TODO (AG, 2026-10-23): the import-content decomposition (direct vs embodied split, the three treatments, and the
-%   closure-invariance table) was drafted here and is REMOVED for now, until the number is settled -- it is kept in
-%   /tmp/appendix-imports-section.tex and summarised in the response letter's R2.4 cell. Re-insert as
-%   \subsection{The import content of the programme}\label{app:pipeline-imports} when the treatment is fixed.
+\subsection{The composition of the programme's spending}\label{app:pipeline-composition}
+
+Two decompositions answer where the programme's spending goes, and they must not
+be conflated, because they have different bases. The first is the bill itself.
+The programme is a final-demand vector at purchasers' prices; the table reports
+imported final use by final-demand category rather than by product, so we take
+the import and tax shares of the equipment and building columns and apply them
+to the programme: $17.8$ per cent of the bill is imported final use and $8.7$
+per cent is product taxes, leaving $73.5$ per cent as demand for domestic
+production. The second is what that domestic demand sets in motion. With the
+fixed shares of the kernel, delivering the programme as final demand calls forth
+gross output of about $1.75$ times the programme; at that scale each sector's
+recorded cost structure applies, so the induced output decomposes into domestic
+intermediates ($44.2$ per cent of it), imported intermediates ($12.1$), product
+taxes on intermediate use ($0.8$) and value added ($42.9$) --- a decomposition
+that closes exactly, because it is the column identity of the table, which holds
+to zero for every sector (Section~\ref{app:pipeline-checks}). Expressed per euro
+of programme spending, imports come to about $39$ per cent --- $18$ directly and
+$21$ along the supply chains --- product taxes to about $10$ per cent, and the
+value added generated along the chains to about three quarters of the
+programme's size. Table~\ref{tab:pipeline-composition} collects the three views.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrr}
+\toprule
+ & EUR m & share \\
+\midrule
+\multicolumn{3}{l}{\emph{A. The programme's bill at purchasers' prices}}\\
+imported final use & $7{,}176$ & $17.8$ \\
+product taxes & $3{,}494$ & $8.7$ \\
+domestic production & $29{,}630$ & $73.5$ \\
+\emph{programme} & $40{,}300$ & $100.0$ \\
+\midrule
+\multicolumn{3}{l}{\emph{B. The induced gross output, by cost structure}}\\
+domestic intermediates & $31{,}118$ & $44.2$ \\
+imported intermediates & $8{,}547$ & $12.1$ \\
+product taxes on intermediate use & $578$ & $0.8$ \\
+value added & $30{,}223$ & $42.9$ \\
+\emph{induced gross output} & $70{,}466$ & $100.0$ \\
+\midrule
+\multicolumn{3}{l}{\emph{C. Totals per euro of programme spending}}\\
+imports, direct and embodied & $15{,}722$ & $0.39$ \\
+product taxes, on the bill and on intermediates & $4{,}072$ & $0.10$ \\
+value added generated & $30{,}223$ & $0.75$ \\
+induced gross output & $70{,}466$ & $1.75$ \\
+\bottomrule
+\end{tabular}
+\caption{The programme's spending in three views. Panel A decomposes the
+programme itself and sums to its size. Panel B decomposes the gross output it
+calls forth and sums to that output; the split is the sectoral column identity
+of the table, so it closes exactly. Panel C reports totals per euro of programme
+spending, which are \emph{not} shares of a single base: the induced output is
+$1.75$ euro per euro of programme, of which the value added is $0.43$. The
+import share of the bill in panel A is an assumption, not a datum: the published
+table reports imported final use by final-demand category only, so the programme
+inherits the import and tax shares of the investment columns.}
+\label{tab:pipeline-composition}
+\end{table}
+
+Three qualifications bound these numbers. First, the fixed-technology content:
+these are Type~I figures, in the sense that they contain no induced household
+demand, whereas the kernel closes with an endogenous household block
+(Section~\ref{subsec:optimization}). The coefficients are therefore
+closure-invariant --- they are properties of the programme's composition and of
+the technology --- while the equilibrium magnitudes are not: the labor-market
+closure decides how much income the programme generates and the financing
+closure decides how much of it households can spend, so the equilibrium
+responses, and with them the consumption multiplier, are read off
+Table~\ref{tab:results-matrix} and Section~\ref{sec:application} rather than
+from the coefficients above. Second, the residual: the column identity that
+Panel B rests on holds exactly sector by sector, but the table as a whole does
+not reconcile --- it carries a residual of $7{,}347$ EUR m ($0.24$ per cent of
+value added) in addition to the production--expenditure discrepancy of $5.387$
+per cent (Section~\ref{app:pipeline-checks}). We report both rather than absorb
+them, which is also why the composition is stated per euro of programme spending
+instead of as a closed budget identity. Third, what the decomposition is for: it
+quantifies precisely the three items the closed-economy exposition of the
+original manuscript had conflated --- imported final use, product taxes and
+domestic deliveries --- and it is the content counterpart to the financing
+accounts of Section~\ref{sec:application}, where the net external position
+$\Delta D = F + B_{\mathrm{gov}}$ answers the separate question of who finances
+the programme.

@@ -1,0 +1,39 @@
+% Table B1 -- the sectoral family in three parts (rigid end / uniform ladder /
+% elastic end).  Numbers from probe21_sectoral_family_limit.jl and probe23
+% (2026-10-24), F2 financing, demand-only shocks, baseline elasticities
+% theta = eps = 0.5, sigma = 0.9, eta = 1.
+\begin{table}[htbp]
+\centering
+\caption{The sectoral family in three parts. \emph{Top:} the uniform ladder,
+extended past the executed matrix to $\eta_s = 100$. \emph{Middle:} the rigid
+end, where the family at $\eta_{s,i} = 0$ and the no-reallocation row coincide
+to all printed digits. \emph{Bottom:} the elastic end, where the family's limit
+and the employment-adjustment closure differ at $F = 0$ and coincide at the
+transfer $F^{\ast}$ the family itself delivers --- at that transfer the
+closure's equations hold exactly, at the zero transfer they do not. Deviations
+in per cent from the no-programme baseline, financing F2.}
+\label{tab:sectoral}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+& $\max|p-1|$ & Employment & Consumption & $F$ \\
+\midrule
+\multicolumn{5}{@{}l}{\emph{Uniform elasticity}} \\
+$\eta_s = 0.25$ & $0.152897$ & $1.000864$ & $-1.689$ & $-0.004424$ \\
+$\eta_s = 0.5$  & $0.105666$ & $1.001255$ & $-1.571$ & $-0.002828$ \\
+$\eta_s = 1$    & $0.065422$ & $1.001627$ & $-1.467$ & $-0.001444$ \\
+$\eta_s = 2$    & $0.037171$ & $1.001914$ & $-1.391$ & $-0.000457$ \\
+$\eta_s = 10$   & $0.008351$ & $1.002231$ & $-1.312$ & $+0.000562$ \\
+$\eta_s = 100$  & $0.000859$ & $1.002318$ & $-1.291$ & $+0.000829$ \\
+\midrule
+\multicolumn{5}{@{}l}{\emph{The rigid end}} \\
+Sectoral, $\eta_{s,i} = 0$    & $0.279009$ & $1.000000$ & $-1.980$ & $-0.008528$ \\
+No reallocation ($\eta = 0$)  & $0.279009$ & $1.000000$ & $-1.980$ & $-0.008528$ \\
+\midrule
+\multicolumn{5}{@{}l}{\emph{The elastic end}} \\
+Family limit ($\eta_s = 1000$)      & $0.000086$ & $1.002327$ & $-1.288$ & $+0.000856$ \\
+Employment adjustment, $F = 0$      & $0.000000$ & $1.001260$ & $-1.533$ & $0.000000$ \\
+Employment adjustment, $F = F^{\ast}$ & $0.000086$ & $1.002327$ & $-1.288$ & $+0.000856$ \\
+\bottomrule
+\end{tabular}
+\end{table}

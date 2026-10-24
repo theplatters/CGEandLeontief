@@ -49,9 +49,9 @@ solves the firm's cost-minimization problem
 of Section~\ref{subsec:optimization} at prices $p$ and output $y_i$. The
 allocation parameter $\eta$ takes only its endpoints: $\eta=1$ lets labor
 move to its cost-minimizing use, $\eta=0$ freezes the baseline allocation of labor.
-The labor-supply elasticity $\eta_{s,i}$ governs how strongly sectoral
-employment responds to the real wage; the headline results set it to a
-common value $\eta_s$. Finally, $\theta$, $\epsilon$ and $\sigma$ are the
+The labor-supply elasticity $\eta_s$ governs how strongly sectoral employment
+responds to the real wage; in principle, it may differ across sectors ($\eta_{s,i}$), but the paper uses a
+common value $\eta_s$ throughout. Finally, $\theta$, $\epsilon$ and $\sigma$ are the
 substitution elasticities of Section~\ref{subsec:optimization} (among
 intermediates, between labor and intermediates, and in consumption); their
 limit $0^{+}$ is fixed proportions.
@@ -521,25 +521,26 @@ gauge.
 
 The equivalences stated in Appendix~\ref{app:equivalences} are coincidences
 \emph{within} the executed matrix. The sectoral elastic labor supply model extends beyond it, and
-both of its ends are pinned: at $\eta_{s,i}=0$ it coincides exactly with the
+both of its ends are pinned: at $\eta_s=0$ it coincides exactly with the
 matrix's no-reallocation row (Proposition~\ref{prop:nest}), and as
-$\eta_{s,i}\to\infty$ it has a limit that aligns with the employment adjustment closure if differences in financing are taken into account.
+$\eta_s\to\infty$ it has a limit that aligns with the employment adjustment closure if differences in financing are taken into account.
 
 \paragraph{The model.} The elastic-supply form of
-Section~\ref{app:labour-closures}, \eqref{eq:closure-beta}, already gives each
-sector its own wage and supply curve; it replaces its single common
-elasticity $\eta_s$ by a sector vector $\eta_{s,i}$, and solves the same system in the unknowns $X = (p, y, w(1{:}N), F) \in \mathbb{R}^{3N+1}$. The matrix's
-elastic-supply row is its uniform member at $\eta_{s,i} \equiv 0.5$;
-Table~\ref{tab:sectoral} sets the ladder beside its two ends. Because
+Section~\ref{app:labour-closures}, \eqref{eq:closure-beta}, gives each sector
+its own wage and supply curve and is solved in the unknowns
+$X = (p, y, w(1{:}N), F) \in \mathbb{R}^{3N+1}$; the matrix's elastic-supply
+row is this system at $\eta_s = 0.5$, and
+Table~\ref{tab:sectoral} illustrates the ladder as well as its two ends.\footnote{The elasticity can differ
+across sectors; writing $\eta_{s,i}$ for $\eta_s$ changes nothing in what
+follows, but represents a venue for imposing further assumption on heterogenous rigidity or labor market conditions across sectors.} Because
 the $N$ wages enter the $N$ zero-profit conditions through the price index
 \eqref{eq:model-ip}, prices now depend on the $N$ employment levels and
 Lemma~\ref{lem:price} no longer applies: demand reaches prices through the wage
 structure, $p = \pi(A, w)$.
 
 \begin{proposition}[The rigid corner is the $\eta = 0$ endpoint]\label{prop:nest}
-Set $\eta_{s,i} = 0$ for every $i$. Then the sectoral system with the
-elasticity vector $\eta_{s,i}$ and the $\eta = 0$ endpoint of the elastic labor supply model have
-the same solution set ((see also table \ref{tab:sectoral} further below for a comparison based in the paper's main application)).
+Set $\eta_s = 0$. Then the elastic labor supply model and the $\eta = 0$
+endpoint of the matrix have the same solution set.
 \end{proposition}
 
 \begin{proof}
@@ -550,30 +551,30 @@ Write both systems in the unknowns $X = (p, y, w, F)$ as four row blocks:
 \text{(Y)} \quad & y_i = int_i + c_i + (1-m_i)(g^G_i + inv_i + g_i) + X_i,
    & & i = 1,\dots,N, & & \text{\eqref{eq:model-clearing}} \\
 \text{(W)} \quad & \log L^{cm}_i(p,y_i,w_i) - \log \bar{L}_i
-   - \eta_{s,i} \log \frac{w_i}{\mathcal{P}(p)} = 0, & & i = 1,\dots,N, & & \\
+   - \eta_s \log \frac{w_i}{\mathcal{P}(p)} = 0, & & i = 1,\dots,N, & & \\
 \text{(E)} \quad & \mathcal{P}(p) = 1. & & & &
 \end{align*}
 The quantity block (Y) draws labor income from the wage bill
 $\sum_i w_i L_i$ inside \eqref{eq:cons} and from the tax rate $\tau$; this is
 the only place, besides (W), where the two systems differ. The $\eta = 0$
 endpoint is the same four blocks with two changes: (W) drops the supply term
-($\eta_{s,i} = 0$), and (Y) evaluates the wage bill at the \emph{frozen}
+($\eta_s = 0$), and (Y) evaluates the wage bill at the \emph{frozen}
 allocation, $L_i := \bar{L}_i$, instead of at the cost-minimizing demand
 $L^{cm}_i$.
 
-\emph{(i)} Let $X$ solve the sectoral system at $\eta_{s,i} \equiv 0$. Its (W)
+\emph{(i)} Let $X$ solve the sectoral system at $\eta_s \equiv 0$. Its (W)
 gives $L^{cm}_i(X) = \bar{L}_i$ for every $i$; substituting this into (Y) makes
 that block equal the endpoint's (Y), while (P) and (E) are identical in the two
 systems by inspection, so $X$ solves the endpoint system.
 \emph{(ii)} Conversely, let $X$ solve the endpoint system. Its (W) gives
 $L^{cm}_i(X) = \bar{L}_i$, which satisfies the sectoral (W) at
-$\eta_{s,i} \equiv 0$, and substituting it into (Y) yields the sectoral (Y).
+$\eta_s \equiv 0$, and substituting it into (Y) yields the sectoral (Y).
 Both systems are square --- $3N+1$ unknowns, $3N+1$ equations --- and their
 residual maps agree on the common solution set, so the solution sets coincide.
 \end{proof}
 
 
-\paragraph{The elastic end.} The results derived from the elastic labor supply model have a limit as $\eta_{s,i}\to\infty$,
+\paragraph{The elastic end.} The results derived from the elastic labor supply model have a limit as $\eta_s\to\infty$,
 and it does not directly correspond to the wage-pinned closure of the matrix. As indicated, while prices return to the baseline and the real wage to its anchor, the setups differ in the external transfer, which the elastic labor supply model determines and the matrix's row sets to zero. At the transfer the elastic labor supply model selects, the wage-pinned equations hold exactly; at the zero transfer they do not, and the difference is the transfer's own contribution to demand, as illustrated in table \ref{tab:sectoral} below. The limit therefore does not directly intersect with the results shown for the employment adjustment closure as $F$ remains unaligned across specifications
 
 Pushing the uniform member past the executed cells, employment and consumption converge and the transfer turns positive; the table sets the
@@ -581,11 +582,11 @@ limit beside the closure at $F = 0$ and at $F = F^{\ast}$.
 
 \input{tables/tableB1_sectoral-family}
 
-\emph{Two checks.} Solving the sectoral system at $\eta_{s,i}=0$ from the $\eta = 0$ solution reproduces all four blocks exactly, so no separate rigid
+\emph{Two checks.} Solving the sectoral system at $\eta_s=0$ from the $\eta = 0$ solution reproduces all four blocks exactly, so no separate rigid
 sectoral cell is reported: the corner \emph{is} the no-reallocation row of
 Table~\ref{tab:matrix}. And nothing in the proof refers to $A\equiv\one$, so
 the nesting survives supply shocks, under which the elastic end instead
-separates and $\eta_{s,i}$ becomes identifiable --- whereas a demand-only
+separates and $\eta_s$ becomes identifiable --- whereas a demand-only
 program leaves it a sensitivity parameter.
 
 \subsection{Scope conditions: what breaks the equivalences}\label{app:scope}

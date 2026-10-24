@@ -8,9 +8,9 @@ Columns are in table3c order (no-reallocation leftmost).
 
 The elastic-supply column reports a BRACKET rather than one sub-column per
 executed elasticity: each outcome is the min--max interval over
-eta_{s,i} in ETA_BRACKET, read from the executed sectoral cells
+eta_s in ETA_BRACKET, read from the executed sectoral cells
 ``-etas05`` ... ``-etas2`` (ADR-0022). The headline point value is the lower
-end of the bracket, eta_{s,i} = 0.5.
+end of the bracket, eta_s = 0.5.
 
 COLLAPSE (2026-10-17): the coincidences the caption states are PRINTED ONCE.
   * F2 and F3 coincide in the three flexible-wage columns -> that cell is set
@@ -115,7 +115,7 @@ ETAS_SPEC = r"@{}>{\raggedright\arraybackslash}p{0.85cm}@{\hspace{3pt}}>{\ragged
 
 def etas_head():
     return (r"{\footnotesize\begin{tabular}{" + ETAS_SPEC + "}\n"
-            r"& $\eta_{s,i} \in [" + ETA_LO + r"," + ETA_HI + r"]$\end{tabular}}")
+            r"& $\eta_s \in [" + ETA_LO + r"," + ETA_HI + r"]$\end{tabular}}")
 
 
 def etas_cell(f):
@@ -182,8 +182,8 @@ def plain_caption():
             r"financing received, i.e.\ external debt) and household consumption welfare" "\n"
             r"($\Delta W_C$), all in percent against the reference continuation. The" "\n"
             r"elastic-supply column is bracketed: each entry is the interval over the executed" "\n"
-            r"$\eta_{s,i} \in \{" + r",\ ".join(e for e, _ in ETA_BRACKET) + r"\}$, with" "\n"
-            r"$\eta_{s,i} = " + ETA_LO + r"$ the headline point value. The wage-pinned and" "\n"
+            r"$\eta_s \in \{" + r",\ ".join(e for e, _ in ETA_BRACKET) + r"\}$, with" "\n"
+            r"$\eta_s = " + ETA_LO + r"$ the headline point value. The wage-pinned and" "\n"
             r"Leontief columns coincide, and F2 and F3 coincide in the three flexible-wage" "\n"
             r"columns, so the fifteen cells describe nine distinct economies.}")
 

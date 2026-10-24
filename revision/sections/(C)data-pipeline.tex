@@ -28,24 +28,8 @@ data step. The accounting built on them is in Section~\ref{app:abill}.
 \subsection{Source data}\label{app:pipeline-source}
 
 The table is Germany's input--output account for 2019 (revision 2019), 71
-product groups at basic prices. We read the formatted copy shipped with the
-replication package, the file \texttt{I-O\_DE2019\_}
-\texttt{formatiert.csv} in the \texttt{data} directory. Rows $1$--$71$ are the
-modelled product groups; row $72$ (households' own goods and services) lies
-outside the modelled block; rows $73$--$75$ are the domestic intermediate bill
-$A$, the imported intermediates $m_i$ and the product taxes less subsidies
-$t_i$, both by using sector; rows $77$--$84$ carry value added and output.
-Columns $2$--$72$ are the 71 using sectors, columns $75$--$81$ the seven
-final-demand categories (household consumption, government, investment,
-inventories, exports). Rows and columns are located by
-label, so the same code runs on the variants.
-
-The formatting step is mechanical: a semicolon-delimited file with comma
-decimals, the Destatis codes \texttt{-} and \texttt{x} read as zero, leading
-blanks stripped from the label column, nothing else recoded. (A slicing trap
-that shifts imports by one column, worth up to $62{,}539$~EUR~m --- nine per cent
-of the $670{,}368$~EUR~m of imported intermediates --- is guarded by reading the
-import row directly.)
+product groups at basic prices. Rows $1$--$71$ are the modelled sectors; row $72$ (households' own goods and services) lies outside the modelled block; rows $73$--$75$ represent the domestic intermediate bill $A$, the imported intermediates $m_i$ and the product taxes less subsidies $t_i$, both by using sector; rows $77$--$84$ carry value added and output. Columns $2$--$72$ are the 71 using sectors, columns $75$--$81$ the seven final-demand categories (household consumption, government, investment,
+inventories, exports).
 
 \subsection{The intermediate-use matrix}\label{app:pipeline-z}
 
@@ -62,7 +46,7 @@ stated assumption, not a datum.
 For three users imports exceed intermediate use and the domestic remainder is
 negative: coke and refined petroleum products, non-ferrous metals and water
 transport --- the sectors with the highest import intensity (imports are 68, 46
-and 54 per cent of their gross output). The pipeline clamps the remainder at
+and $54\%$ of their gross output). The pipeline clamps the remainder at
 zero and treats them as fully import-dependent: their columns of
 $Z^{\mathrm{D}}$, and hence their rows of the domestic share matrix, are zero;
 nothing else is adjusted (table~\ref{tab:pipeline-clamp}).
@@ -88,23 +72,15 @@ Water transport services & $6{,}093$ & $13{,}259$ & $7{,}166$ & 0.539 \\
 The intermediate use of a sector splits into three recorded components: the
 domestic bill $A_u$, imported intermediates $M_{\mathrm{int},u}$ and product
 taxes on intermediate use $T_{\mathrm{int},u}$. Together they exhaust gross
-output once the value-added bill is deducted,
-\begin{equation}
-\sum_u \bigl( A_u + M_{\mathrm{int},u} + T_{\mathrm{int},u} \bigr)
-  = \sum_u \lambda_u - 1,
-\label{eq:abill}
-\end{equation}
-since gross output is value added plus intermediate consumption and the
-$\lambda_u$ are measured in baseline income units with GDP $=1$. The kernel
-charges the domestic component as input demand and books the other two as the
-explicit leaks $m_i$ and $t_i$ of Section~\ref{sec:kernel}, which is what makes
-the row identity \eqref{eq:io-row} close sector by sector. On the external side
-the accounts satisfy
-\begin{equation}
-S + T_{\mathrm{int}} + M - (I + X) = F + B_{\mathrm{gov}},
-\end{equation}
-the identity of \eqref{eq:financing-external-account}: saving, product taxes and
-imports finance investment, exports and the external position.
+output once the value-added bill is deducted, since gross output is value added
+plus intermediate consumption and the $\lambda_u$ are measured in baseline
+income units with GDP $=1$. The kernel charges the domestic component as input
+demand and books the other two as the explicit leaks $m_i$ and $t_i$ of
+Section~\ref{sec:kernel}, which is what makes the row identity \eqref{eq:io-row}
+close sector by sector. The accounting closes on both sides: the bill identity
+is checked against the raw table in Section~\ref{app:pipeline-checks}, and the
+external account is the identity \eqref{eq:financing-external-account} of
+Appendix~\ref{app:proofs}.
 
 \subsection{Normalizing to cost shares: $\Omega$}\label{app:pipeline-omega}
 
@@ -112,7 +88,9 @@ Dividing each column of $Z$ by the user's intermediate bill and transposing
 gives the cost shares $\Omega_{iu}=p_ux_{ui}/\sum_{u'}p_{u'}x_{u'i}$. The same operation
 gives the total shares $\Omega^{\mathrm{raw}}$ from $Z$ and the domestic shares
 $\Omega^{\mathrm{D}}$ from $Z^{\mathrm{D}}$, every row summing to one by
-construction --- the contract the CES price index relies on. The model's
+construction --- the three clamped users of Section~\ref{app:pipeline-z}
+excepted, whose domestic rows are zero --- the foundation the CES price index
+relies on. The model's
 equilibrium technology is the \emph{total} matrix, which prices the intermediates
 a sector actually buys; the money charged to domestic intermediates is the bill $A_i$,
 with the imported and taxed content carried as the explicit leaks
@@ -120,54 +98,30 @@ $M_{\mathrm{int}}$ and $T_{\mathrm{int}}$ (Section~\ref{app:abill}). The
 domestic matrix is kept for incidence and audit.
 
 The total matrix is sparse: $1{,}631$ of its
-$5{,}041$ entries (32.4 per cent) are exactly zero and half lie below $10^{-3}$.
+$5{,}041$ entries ($32.4\%$) are exactly zero and half lie below $10^{-3}$.
 The self-supply diagonal averages $0.224$ (median $0.201$) and is strongly
 skewed --- IT and information services $0.828$, pig iron and steel $0.724$,
 non-ferrous metals $0.671$, legal and management consultancy $0.569$ --- with
-seven sectors above $0.45$ (13, 18, 19, 48, 53, 58, 68), the set behind the
-reduced variant of Section~\ref{app:pipeline-variants}. Off the diagonal the largest
+seven sectors above $0.45$ (13, 18, 19, 48, 53, 58, 68). Off the diagonal the largest
 entries are water transport's purchase of warehousing and transport services
 ($0.543$) and insurance's from finance-related services ($0.448$). Normalization
 runs down the using sector, so
 columns are not normalized: summed over users, a supplier's column ranges from
-$0.031$ to $4.03$ and averages $1.00$ (table~\ref{tab:pipeline-omega}).
-
-\begin{table}[t]
-\centering
-\caption{Descriptive statistics of the total input-share matrix $\Omega^{\mathrm{raw}}$ (71 sectors).}
-\label{tab:pipeline-omega}
-\small
-\begin{tabular}{lr}
-\toprule
-Statistic & Value \\
-\midrule
-Row sums (min--max) & $1.000000000000000$--$1.000000000000001$ \\
-Entries exactly zero & $1{,}631$ of $5{,}041$ (32.4\,\%) \\
-Entries below $10^{-3}$ & 50.0\,\% \\
-Self-supply diagonal: mean / median & $0.224$ / $0.201$ \\
-Self-supply diagonal: range & $0.000$--$0.828$ \\
-Sectors with self-share $>0.45$ & 7 (sectors 13, 18, 19, 48, 53, 58, 68) \\
-Largest off-diagonal entries & $0.543$, $0.448$, $0.407$, $0.396$, $0.395$ \\
-Column sums (min--max, mean) & $0.031$--$4.03$ ($1.00$) \\
-\bottomrule
-\end{tabular}
-\end{table}
+$0.031$ to $4.03$ and averages $1.00$, as both margins must.
 
 \subsection{Value added, factor shares and Domar weights}\label{app:pipeline-va}
 
-Value added is read in four components and reproduces gross value added to
-machine precision (largest absolute difference $0.0$): compensation of employees
+% the \emergencystretch group below absorbs one overfull line (26.9pt) created by the
+% US reflow of this paragraph; remove it if the wording is ever shortened.
+{\setlength{\emergencystretch}{2em}%
+Value added is separated in four components with no leakage: compensation of employees
 $1{,}763{,}874$~EUR~m, consumption of fixed capital $609{,}861$, net operating
 surplus $656{,}413$ and other net taxes on production $-2{,}330$ --- gross
-value added $3{,}027{,}818$~EUR~m, shares of $58.3$, $20.1$, $21.7$ and $-0.1$
-per cent. The composite factor share
-$\alpha_i=v_i/(p_iy_i)$ is total value added per euro of output, not the
-national-accounts labour share; labour is the only primary factor and all of
-$v_i$ accrues to it (Section~\ref{subsec:optimization}). It runs
+value added $3{,}027{,}818$~EUR~m, shares of $58.3$, $20.1$, $21.7$ and $-0.1\%$. The composite factor share $\alpha_i=v_i/(p_iy_i)$ is total value added per euro of output, not the national-accounts labor share; labor is the only primary factor and all of $v_i$ accrues to it (Section~\ref{subsec:optimization}). It runs
 from $0.043$ (coke and refined petroleum) to $0.766$ (education) and averages
 $0.443$. The Domar weights $\lambda_i=y_i/\text{GDP}$ are all positive, from
 $0.0002$ (fishing) to $0.1512$ (real estate services); they sum to $2.11$, and
-the income weights $\lambda_i\alpha_i$ sum to exactly one.
+the income weights $\lambda_i\alpha_i$ sum to exactly one.\par}
 
 \subsection{Final demand and household shares $\beta$}\label{app:pipeline-fd}
 
@@ -185,123 +139,94 @@ $(I-\operatorname{diag}(1-\alpha)\Omega^{\mathrm{raw}})'y$ left after government
 investment and exports is the baseline household block, clamped at zero and
 renormalized to one. With the domestic-bill accounting of
 Section~\ref{app:abill} that residual is exactly the observed domestic
-household final demand, so no sector is genuinely clamped (one sits at
-$4\times10^{-19}$ of dust). $\beta$ is concentrated --- real estate services
-$0.189$, retail trade $0.088$, food $0.059$, accommodation and food services
-$0.050$. The saving rate is not assumed but the data-implied residual
+household final demand, so no sector is genuinely clamped. $\beta$ is concentrated --- real estate services $0.189$, retail trade $0.088$, food $0.059$, accommodation and food services $0.050$. The saving rate is not assumed but the data-implied residual
 $s=1-\sum_u c_u/(1-\sum_u g_u)=0.1199$, with government at $0.2141$ of baseline
 income, exports $0.4219$, investment $0.1624$ and intermediate imports $0.2214$
 (Section~\ref{app:abill}).
 
-\subsection{Consistency checks}\label{app:pipeline-checks}
-
-Three identities are asserted on the real table:
-$\sum_u\Omega_{iu}=1$ for every $i$, to $10^{-12}$;
-$\sum_i\lambda_i\alpha_i=1$; and the intermediate-bill identity
-$\sum_u A_u+\sum_i M_{\mathrm{int},i}+\sum_i T_{\mathrm{int},i}=\sum_i\lambda_i-1$,
-which holds to $4\times10^{-16}$ ($\sum_uA_u=0.863$,
-$\sum_iM_{\mathrm{int},i}=0.221$, $\sum_iT_{\mathrm{int},i}=0.026$,
-$\sum_i\lambda_i-1=1.110$). The bill identity is pinned in the real-table block
-of the paper-side test suite (\texttt{tests/test\_calibration.jl}), together with
-the saving rate, the government block and the leak components; the row-sum and
-income-normalization contracts are asserted for every retained-sector rebuild,
-and the reproduction baseline compares every cell against the committed
-\texttt{baseline/} tree to $10^{-8}$.
+\subsection{The published table and its consistency checks}\label{app:pipeline-checks}
 
 Production and income agree exactly, both $3{,}027{,}818$~EUR~m (difference
 $0.0$). Against the expenditure side built from purchaser-price final demand
 ($3{,}776{,}137$~EUR~m) net of imports ($656{,}669$) and product taxes
-($254{,}744$) on final use, the residual is $5.387$ per cent. That residual is a
+($254{,}744$) on final use, the residual is $5.387\%$. That residual is a
 documented open item of the raw table itself, not a calibration error of ours:
 the final-demand columns are recorded at purchaser prices whose import and tax
-content does not close the basic-price identity. The gross-error guard fails
-above ten per cent; the measured value is well inside it
-(Section~\ref{app:abill}).
+content does not close the basic-price identity.
 
-\subsection{Sector-exclusion variants}\label{app:pipeline-variants}
-
-These variants are rebuilt from the raw table, not by slicing the derived shares: the dropped sectors' rows and columns come out of
-the table and the whole transformation is re-run on the slice, each retained
-$\Omega$ row renormalized over the retained suppliers, $\lambda$ and $\alpha$
-re-derived, and the category-level import and tax entries scaled by the retained
-share. Slicing the derived matrices instead would leave every
-retained user's shares summing to less than one and break the income
-normalization. Dropping sector 71 leaves 70 sectors and $99.2$ per cent of gross
-output; dropping also the seven high-self-share sectors leaves 63 and $87.4$ per
-cent.
-
-\subsection{The composition of the programme's spending}\label{app:pipeline-composition}
-
-Two decompositions answer where the programme's spending goes, and they must not
-be conflated, because they have different bases. The first is the bill itself.
-The programme is a final-demand vector at purchasers' prices; the table reports
-imported final use by final-demand category rather than by product, so we take
-the import and tax shares of the equipment and building columns and apply them
-to the programme: $17.8$ per cent of the bill is imported final use and $8.7$
-per cent is product taxes, leaving $73.5$ per cent as demand for domestic
-production. The second is what that domestic demand sets in motion. With the
-fixed shares of the kernel, delivering the programme as final demand calls forth
-gross output of about $1.3$ times the programme; at that scale each sector's
-recorded cost structure applies, so the induced output decomposes into domestic
-intermediates ($43.5$ per cent of it), imported intermediates ($13.0$), product
-taxes on intermediate use ($0.6$) and value added ($42.9$) --- a decomposition
-that closes exactly, because it is the column identity of the table, which holds
-to zero for every sector (Section~\ref{app:pipeline-checks}). Expressed per euro
-of programme spending, imports come to about $35$ per cent --- $18$ directly and
-$17$ along the supply chains --- product taxes to about $10$ per cent, and the
-value added generated along the chains to about $56$ per cent of the programme's
-size. Table~\ref{tab:pipeline-composition} collects the three views; it is generated by
-\texttt{cbase2/scripts/composition.py}, which carries the orientation check below as its canary. The direct leg carries the one assumption in
-these figures: taking it at the programme-weighted import intensity of the seven
-sectors instead of the category split lowers the total import content to $31.2$
-per cent, so the honest reading of the whole exercise is a band of roughly $31$ to
-$35$ per cent of the programme leaving the economy as imports.
-
-\input{tables/table_composition.tex}
-
-Three qualifications bound these numbers. First, the fixed-technology content:
-these are Type~I figures, in the sense that they contain no induced household
-demand, whereas the kernel closes with an endogenous household block
-(Section~\ref{subsec:optimization}). The coefficients are therefore
-closure-invariant --- they are properties of the programme's composition and of
-the technology --- while the equilibrium magnitudes are not: the labor-market
-closure decides how much income the programme generates and the financing
-closure decides how much of it households can spend, so the equilibrium
-responses, and with them the consumption multiplier, are read off
-Table~\ref{tab:results-matrix} and Section~\ref{sec:application} rather than
-from the coefficients above. Second, the orientation of the inverse, because the
-convention is not innocuous: the figures above use the cost-side coefficients in
-supply orientation, that is the matrix the kernel inverts,
-$\Omega'\operatorname{diag}(1-\alpha)$. Inverting the transposed system instead
-yields $70{,}466$ EUR m of induced output and an embodied share of $21.2$ per
-cent, some $35$ per cent too high. The orientation is fixed by the kernel's own
-calibration identity, $(I-\Omega'\operatorname{diag}(1-\alpha))y$ equal to the
-domestic final demand of the table, which holds to $4\times10^{-12}$. Third, the
-residual: the column identity that Panel B rests on holds exactly sector by
-sector, but the table as a whole does not reconcile --- it carries a residual of
-$7{,}347$ EUR m ($0.24$ per cent of value added) in addition to the
-production--expenditure discrepancy of $5.387$ per cent
-(Section~\ref{app:pipeline-checks}). We report both rather than absorb them,
-which is also why the composition is stated per euro of programme spending
-instead of as a closed budget identity. What the decomposition is for: it
-quantifies precisely the three items the closed-economy exposition of the
-original manuscript had conflated --- imported final use, product taxes and
-domestic deliveries --- and it is the content counterpart to the financing
-accounts of Section~\ref{sec:application}, where the net external position
-$\Delta D = F + B_{\mathrm{gov}}$ answers the separate question of who finances
-the programme.
-
-\subsection{The published table in summary}\label{app:pipeline-summary}
-
-Table~\ref{tab:io-summary} collects the aggregates of the table in one place, for
-readers who want the calibration's starting point before the shares: gross output, its
-intermediate, import, tax and value-added components, the final-use block with its own
-import and tax margins, and the three sides of GDP. It is assembled directly from the
-published table (the recipe is recorded in the source of the table file), and it is the
-object the pipeline of this appendix turns into $\Omega$, $\alpha$, $\lambda$ and
-$\beta$.
+Table~\ref{tab:io-summary} collects the aggregates these checks refer to, and is
+the calibration's starting point before the shares: gross output with its
+intermediate, import, tax and value-added components, the final-use block with
+its own import and tax margins, and the three sides of GDP. It is assembled
+directly from the published table, by label lookup, and the recipe is recorded
+in the source of the table file.
 
 \input{tables/table_io-summary}
 
+All relevant identities hold, and they are asserted rather than assumed:
+$\sum_u\Omega_{iu}=1$ for every user, $\sum_i\lambda_i\alpha_i=1$, and the bill
+identity of Section~\ref{app:abill}. Each is pinned in the paper-side test suite
+for every retained-sector rebuild, and the reproduction baseline compares every
+cell against the committed baseline tree.
 
+The checks also hold on restricted versions of the table, two of which we
+build as a matter of course. The first drops product group 71, ``goods and
+services of private households'', the imputed own-use line, which is not a
+production sector proper: 70 sectors remain, carrying $99.2\%$ of gross
+output, and this is the working set. The second drops in addition the seven
+sectors whose self-supply share exceeds $0.45$ (13, 18, 19, 48, 53, 58, 68),
+where a sector's own input dominates its cost structure and the self-loop
+destabilizes the fixed-point iteration. That is a modelling choice, not a data
+correction, and it costs coverage: 63 sectors remain, carrying $87.4\%$ of
+gross output.
 
+Both versions are rebuilt from the raw table rather than cut from the derived
+shares: the dropped sectors' rows and columns come out of the table and the
+whole transformation is re-run, which renormalizes every retained $\Omega$ row
+over the retained suppliers and re-derives $\lambda$ and $\alpha$. Cutting the
+derived matrices instead would leave the retained rows of $\Omega$ summing to
+$0.971$ and $0.549$ rather than one, and the income unit in mixed units. The
+coverage figures are computed on the full-table baseline, so the cost of each
+version is measured rather than asserted.
+
+\subsection{The composition of the program's spending}\label{app:pipeline-composition}
+
+Two decompositions answer where the program's spending goes, and they must not
+be conflated, because they have different bases. The first is the bill itself.
+The program is a final-demand vector at purchasers' prices; the table reports
+imported final use by final-demand category rather than by product, so we apply
+the import and tax shares of the equipment and building columns to it:
+$17.8\%$ of the bill is imported final use, $8.7\%$ product taxes, and $73.5\%$
+demand for domestic production. The second is what that demand sets in motion:
+the induced gross output decomposes into domestic intermediates ($43.5\%$),
+imported intermediates ($13.0\%$), product taxes on intermediate use ($0.6\%$)
+and value added ($42.9\%$), an identity that holds sector by sector. Per euro of
+program spending, imports come to about $0.35$ --- $0.18$ of them directly and
+$0.17$ along the supply chains --- product taxes to $0.10$ and the value added
+generated to $0.56$, that is $56\%$ of the program's size.
+
+Table~\ref{tab:pipeline-composition} collects both decompositions, with these
+per-euro totals in panel~C, which are not shares of a single base. One assumption runs through the figures: the split of the bill into domestic, imported and taxed components. Taking it from the program-weighted import intensity of the sectors the program buys from, instead
+of from the category split of the investment columns, lowers total import
+content to $31.2\%$, so the honest reading is a band of roughly $31$ to $35\%$ of
+the program leaving the economy as imports.
+
+\input{tables/table_composition.tex}
+
+Three qualifications bound these numbers. First, they are cost shares at
+baseline prices, not behavioral parameters: they record how much import content,
+product tax and value added the program's spending carries given the table's
+technology, and they are therefore the same under every closure of the model.
+Induced household demand is not included, because how much of it the income
+generates depends on which margin gives way and on how the program is financed;
+those responses are read off Table~\ref{tab:results-matrix}. Second, they use the
+cost-side coefficients in supply orientation, $\Omega'\operatorname{diag}(1-\alpha)$,
+the matrix the kernel inverts; inverting the transposed system instead raises the
+embodied share to $21.2\%$, some $35\%$ too high. Third, the table's own residual:
+panel~B closes sector by sector, the table as a whole does not, so the composition
+is stated per euro of spending rather than as a closed budget identity
+(Section~\ref{app:pipeline-checks}). What it quantifies is what the closed-economy
+exposition of Section~2 conflates --- imported final use, product taxes and
+domestic deliveries --- and it is the content counterpart to the financing accounts
+of Section~\ref{sec:application}, where $\Delta D = F + B_{\mathrm{gov}}$ answers
+who finances the program.

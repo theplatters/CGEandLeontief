@@ -19,22 +19,20 @@ Parameter & Meaning in the kernel & Value & Set in \\
 $\sigma$ & substitution across consumption goods & $0.9$ & all cells \\
 $\theta$ & substitution across intermediates & $0.5$ & all cells \\
 $\varepsilon$ & labor--intermediate nesting & $0.5$ & all cells \\
-$\eta$ & aggregate labor-supply elasticity & $1.0$ & reference \\
-$\eta_s$ & sectoral supply elasticity & $\{0.5,1,2\}$ & elastic-supply column \\
+$\eta$ & intersectoral labor-allocation selector & $\{0,1\}$ & labor closure \\
+$\eta_s$ & sectoral labor-supply elasticity with respect to the real wage & $\{0.5,1,2\}$ & elastic-supply column \\
 \addlinespace
+
 $\delta$ & capacity door: utilization elasticity of productivity & $\{0,0.05\}$ & Section~\ref{subsec:pricing-capacity} \\
 $\kappa$ & markup door: margin--utilization slope & $\{0.25,0.5\}$ & Section~\ref{subsec:pricing-markup} \\
+
 \bottomrule
 \end{tabular}
-\caption{The elasticities of the comparison, and where each is set. The
-substitution elasticities are imposed rather than estimated from the
-input--output table, as is standard in this literature, and they are held fixed
-across the closure matrix so that the fifteen cells differ only in their
-closure assumptions. The aggregate labor-supply elasticity $\eta$ is fixed at
-its reference value in every reported cell: the labor market is the closure
-dimension itself, so the supply response is read off the column rather than
-tuned within a cell. The last two rows are the extensions of
-Section~\ref{sec:beyond-demand-only}; their zero values reproduce the core
-framework, in which the price block does not respond to demand.}
+\par\smallskip
+\parbox{\textwidth}{\footnotesize
+\textit{Note:} $\eta=0$ fixes employment in each sector at its baseline level,
+with sector-specific wages; $\eta=1$ permits cost-minimizing labor
+reallocation at a common wage.}
+\caption{Parameter values for the baseline comparison and pricing extensions.}
 \label{tab:parameters}
 \end{table}

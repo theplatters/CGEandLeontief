@@ -179,34 +179,40 @@ or nominal wages should be implemented. Also a simple wage curve.
 Unless I have misunderstood the authors' approach, is it simply a matter of
 increasing labour supply by the number of unemployed persons, similar to the
 previous scenario but with different figures?}
-%FIXME: [AG] Separate the wage normalization from endogenous employment and F = 0.
-%FIXME: [AG] Scope the real-wage result to the common-wage baseline price block. The cited no-real-wage-peg corollary is missing.
-\response{In the course of reorganizing our manuscript we decided to drop the two
-designs addressed by the reviewer, as they are somewhat ad hoc constructions
-that admittedly did not represent the state of the art in input-output
-modeling well. What the replacement does is specify a wage rule rather than
-avoid one. The employment-adjustment closure pins the money
-wage at its baseline value -- a two-sided rule, with employment endogenous and
-uncapped -- so that labor-market outcomes are set by a wage rule instead of by
-market clearing at full employment, which is also where an estimated wage curve
-of the Blanchflower--Oswald type lands (the reading we give FIDELIO in
-Section~3). We now state that closure exactly as it is solved: with one
-production factor and constant returns the real wage is fixed by technology
-rather than by the closure, so what the row implements is quantity
-accommodation, and a real-wage peg would over-determine the system rather than
-add a solvable equation (Appendix~B, the no-real-wage-peg corollary). The elastic labor-supply closure then
-replaces the fixed endowment with sectoral supply curves in the real wage,
-with the supply elasticity as an explicit parameter. A nominal wage rule, by
-contrast, cannot do the work the comment expects of it in this framework: it
-re-labels the nominal scale while the real wage stays pinned by technology
-(see Appendix~B and the no-go corollary for nominal wage rules). Which side is pegged
--- and which is left free to adjust -- is thus itself part of the matrix
-rather than a background assumption.}
-% AG (Oct 2026): the first sentence is his, grammar-corrected; the rest is a draft for approval. The two designs
-% dropped are the demand-driven scenario (submitted Sec. 5.1) and the empirical-calibration variant (Sec. 5.2) --
-% both exogenous injections, neither of them a closure. The wage-rule request is this cell's real subject, and the
-% revision answers it three times over: employment adjustment, elastic supply, and the no-go result for nominal rules.
-\loc{Sec. 4 (closures); Sec. 6.}
+\response{The reviewer is right that the two original designs did not specify a
+labor-market mechanism: they injected additional factor resources
+exogenously, using either the IO result or an unemployment-based estimate.
+We have dropped both designs. The revised comparison instead states the
+labor-market closure explicitly and lets employment follow from it.
+
+In the employment-adjustment closure, three choices must be distinguished.
+The common money wage is normalized to $w=1$, which fixes the unit of
+account. The aggregate labor-supply constraint is dropped, so employment is
+endogenous, uncapped and determined by the labor required for equilibrium
+production. Separately, the net external transfer is fixed at $F=0$.
+Employment accommodation and the external-transfer restriction define the
+closure; the wage normalization alone does not supply a behavioral
+wage-setting mechanism. This is an assumption of available factor resources,
+not an estimate of how many unemployed workers can be mobilized.
+
+The role of the real wage also needs qualification. In the common-wage,
+one-factor constant-returns price block, relative prices and the real wage
+are determined by technology. At baseline technology, a demand-only shock
+therefore leaves the real wage at its reference value; it is not held there
+by an independently imposed real-wage peg. Appendix~B.5 states this result,
+and Appendix~B.7 explains why a rule determining only the nominal scale
+cannot generate an additional real adjustment margin within that price
+block. These statements do not extend to the sectoral-wage closures or to
+the demand-dependent pricing extensions of Section~6.
+
+The elastic labor-supply closure provides a different adjustment mechanism:
+each sector has its own wage and a supply curve in the CPI-deflated real
+wage, with an explicit supply elasticity. It is a reduced-form supply
+relation, without a labor--leisure income effect, rather than an estimated
+unemployment wage curve. We therefore distinguish this closure from the
+employment-adjustment benchmark and do not claim to implement the wage-curve
+mechanisms discussed in the applied literature.}
+\loc{Sec.~3, Table~3 (closure comparison); Appendix~B.2 (labor closures), B.5 (real-wage invariance) and B.7 (scope and nominal wage rules); Sec.~6 (pricing extensions).}
 
 \subsection*{R1.6 --- Labor mobility and the unified wage rule}
 \refcom{Another question pertains to labour mobility. Under imperfect labour market
@@ -236,9 +242,35 @@ sectoral results. For the type of shock the authors are doing and given the
 model configuration adopted, in aggregate the economy is not sensitive to
 change in elasticity of substitution while these changes in price
 sensitiveness it matter a lot for sectoral outcome,}
-%FIXME: [AG] Write the aggregate-versus-sectoral response using results actually shown in the revision.
-\response TODO: sections 5-6 with the sectoral Sobol.
-\loc{Sec. 5.1-5.2; Sec. 6.}
+\response{Thank you for this suggestion. The revision separates aggregate results
+in Section~5.1 (Table~4) from sectoral results in Section~5.2
+(Figures~2--4), with detailed cell-by-cell panels in Appendix~D.2.
+The distinction matters because a small aggregate response can conceal
+substantial changes in the composition of production and in sectoral prices.
+For example, under no reallocation, glass output rises by about 12--14\,per
+cent while its price rises by 22--28\,per cent; with elastic sectoral labor
+supply, the corresponding increases are about 17--18\,per cent in output
+and 10\,per cent in price. These are differences between labor-market
+closures at the reported substitution elasticities, not estimates of
+substitution-elasticity sensitivity.
+
+We also qualify the role of substitution elasticities. In the common-wage
+closures at baseline technology, the demand-only shock leaves relative
+prices unchanged, so varying substitution elasticities cannot generate a
+substitution response. With sectoral wages, prices do move and household
+substitution becomes relevant. Appendix~D.2 isolates this channel by varying
+the consumption elasticity over $\sigma\in\{0.6,0.99\}$ with the other
+parameters fixed. Section~5.2 discusses the resulting sensitivity of
+consumption of the program goods; it does not establish general aggregate
+insensitivity to every substitution parameter.
+
+Section~6 then shows the boundary of the demand-only equivalence: once
+productivity or markups respond to demand and prices move, the
+employment-adjustment and Leontief closures no longer generally coincide
+(Tables~6--7). The revised presentation thus distinguishes aggregate from
+sectoral outcomes and identifies the conditions under which substitution
+can affect them.}
+\loc{Secs.~5.1--5.2, Table~4 and Figures~2--4; Appendix~D.2 (consumption-elasticity sensitivity); Sec.~6, Tables~6--7 (pricing extensions).}
 
 \subsection*{R1.8 --- McGregor, Swales \& Yin (1996)}
 \refcom{I also advise the author to read this paper:
@@ -320,4 +352,4 @@ in which the program adds external income instead of displacing domestic
 demand.}
 \loc{Sec.~4 (the removed passage; imports and taxes as leaks); Sec.~5 (Table~4 and the sectoral panels);
 Appendix~B (the quantity-side levers, including endogenous export demand).}
-% AG (Oct 2026): cell promoted out of R1.7. The two TODO responses above are drafts for approval.
+% AG (Oct 2026): cell promoted out of R1.7.

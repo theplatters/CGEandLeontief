@@ -177,7 +177,7 @@ def plain_caption():
     return (r"\caption{Estimated impacts of a transformational stimulus in the German residential" "\n"
             r"sector across the closure matrix. Each cell reports the change in real GDP" "\n"
             r"($\Delta Y$), employment ($\Delta L$, the composite primary-factor input," "\n"
-            r"i.e.\ all value added), the price level ($\Delta P$, the GDP deflator)," "\n"
+            r"i.e.\ all value added), the price level ($\Delta P$, the GDP deflator in consumption units)," "\n"
             r"the net external position ($\Delta D = F + B_{\mathrm{gov}}$, positive = net external" "\n"
             r"financing received, i.e.\ external debt) and household consumption welfare" "\n"
             r"($\Delta W_C$), all in percent against the reference continuation. The" "\n"
@@ -290,7 +290,7 @@ def build():
     A(r"\caption{Estimated impacts of a transformational stimulus in the German residential")
     A(r"sector across the closure matrix. Each cell reports the change in real GDP")
     A(r"($\Delta Y$), employment ($\Delta L$, the composite primary-factor input,")
-    A(r"i.e.\ all value added), the price level ($\Delta P$, the GDP deflator),")
+    A(r"i.e.\ all value added), the price level ($\Delta P$, the GDP deflator in consumption units),")
     A(r"the net external position ($\Delta D$) and household consumption welfare")
     A(r"($\Delta W_C$), all in percent against the reference continuation. The wage-pinned and")
     A(r"Leontief columns coincide, and F2 and F3 coincide in the three flexible-wage")

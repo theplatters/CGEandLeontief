@@ -3,9 +3,8 @@
 % ---------------------------------------------------------------------
 % Job: the formal backing of Sections 6.1-6.2 (subsec:pricing-capacity,
 %      subsec:pricing-markup): the effective-technology and markup hooks,
-%      the first-order conditions at marginal cost, the uniqueness guard,
-%      the Cobb-Douglas price identity, and the external-account and GDP
-%      accounting with the profit booked.
+%      the first-order conditions at marginal cost, the uniqueness guard, and
+%      the external-account and GDP accounting with the profit booked.
 % Code: OpenCGE@src/closures/pricing/pricing.jl, OpenCGE@src/core/equilibrium.jl
 %      (_mobile_market_demand, _cost_minimizing_labor), OpenCGE@src/core/
 %      diagnostics.jl (gdp_components, retained_profit); the gate lives in
@@ -61,19 +60,6 @@ instead of $c$ at any of them inflates the corresponding demand by
 $\mu^{\epsilon}$ while leaving the price response untouched. Under the capacity
 modification $\mu \equiv 1$ so that $c = p$ and only $A^{\mathrm{eff}}$ moves.
 
-\subsection{The Cobb--Douglas price identity}\label{app:pricing-cd}
-At $\theta = \epsilon = 1$ and a pinned wage $w = 1$ the price block is
-log-linear: $\log p_i = \log \mu_i - \log A^{\mathrm{eff}}_i
-+ (1-\alpha_i)\sum_u \Omega_{iu}\log p_u$, hence
-\begin{equation}\label{eq:app-cd}
-  \log p \;=\; (I - B)^{-1}\bigl(\log \mu - \log A^{\mathrm{eff}}\bigr),
-  \qquad B = \operatorname{diag}(1-\alpha)\,\Omega .
-\end{equation}
-A uniform constant markup $\bar\mu$ therefore raises prices by
-$\bar\mu^{(I-B)^{-1}\mathbf 1}$, not by $\bar\mu$: the markup cascades through
-the intermediate network, by a factor of about $1.8$ on the German table. Both doors satisfy \eqref{eq:app-cd}, since they act on
-the same cost line.
-
 \subsection{The uniqueness guard}\label{app:pricing-guard}
 With $\delta_i < 0$ a sector's unit cost falls as its output rises, a positive
 feedback that can admit several equilibria. Every priced cell is reached by a
@@ -82,10 +68,7 @@ door-free solution) and must pass a uniqueness gate: re-solved from four
 starting points (the default initial point, the door-free solution, and the
 solution with all quantities scaled by $0.9$ and $1.1$), at least two must
 converge and every converged start must lie within $10^{-6}$ of the solution,
-and the Jacobian of the full residual must have full rank. The converged starts agree
-to at most $6\cdot 10^{-9}$ at condition numbers up to $10^{8}$ (the no-reallocation
-closure, whose sectoral wages enlarge the system), where a distinct equilibrium would
-sit about $10^{-2}$ away. All priced cells pass the gate, on every labor closure.
+and the Jacobian of the full residual must have full rank. All priced cells pass the gate, on every labor closure.
 
 \subsection{Accounting with the profit booked}\label{app:pricing-accounting}
 With total profits $\Pi$ of equation~\eqref{eq:profit-bill} and a retention rate

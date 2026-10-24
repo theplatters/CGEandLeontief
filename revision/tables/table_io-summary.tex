@@ -1,0 +1,52 @@
+% =====================================================================
+% Table --- the German 2019 input--output account in summary (Sec. 4.1)
+% ---------------------------------------------------------------------
+% Requested by reviewer 1 (R1.3: "key economic variables from Germany's IO
+% table in a summary table"). Every number is computed from
+% data/I-O_DE2019_formatiert.csv by LABEL lookup (never by position):
+%   gross output            row "Produktionswert" over the 71 using sectors
+%   domestic intermediate use   rows 1-71 over the same columns
+%   imported intermediates  row "Verwendung der Importe"
+%   product taxes           row "Gütersteuern abzüglich Gütersubventionen"
+%   gross value added       row "Bruttowertschöpfung"
+%   final demand            rows over the seven final-use columns
+%                           (private households, NPOS, government,
+%                           equipment, buildings, inventories, total exports)
+% Shares are of gross output (upper block) and of final demand at
+% purchasers' prices (lower block). The pipeline and the consistency checks
+% are documented in Appendix C; the Domar weights sum to 2.11.
+% Do not edit numbers by hand: recompute with the recipe above.
+% =====================================================================
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrr}
+\toprule
+ & EUR m & per cent \\
+\midrule
+Gross output (basic prices) & $6{,}388{,}424$ & $100.0$ \\
+\quad domestic intermediate use & $2{,}612{,}287$ & $40.9$ \\
+\quad imported intermediates & $670{,}368$ & $10.5$ \\
+\quad product taxes on intermediate use & $77{,}951$ & $1.2$ \\
+\quad gross value added & $3{,}027{,}818$ & $47.4$ \\
+\addlinespace
+Final demand at purchasers' prices & $4{,}694{,}897$ & $100.0$ \\
+\quad domestic final demand & $3{,}783{,}484$ & $80.6$ \\
+\quad imported final use & $656{,}669$ & $14.0$ \\
+\quad product taxes on final use & $254{,}744$ & $5.4$ \\
+\addlinespace
+GDP, production side & $3{,}027{,}818$ &  \\
+GDP, income side & $3{,}027{,}818$ &  \\
+GDP, expenditure side & $2{,}864{,}724$ &  \\
+residual, per cent of GDP & $163{,}094$ & $5.387$ \\
+\bottomrule
+\end{tabular}
+\caption{The German input--output account for 2019 in summary, with shares of
+gross output in the upper block and of final demand at purchasers' prices in the
+lower block. The production and income sides of GDP agree exactly; the
+expenditure side falls short of them by $5.387$ per cent, a discrepancy of the
+published accounts that we disclose rather than absorb into domestic demand or
+the factor account. Intermediates are recorded at basic prices, so their import
+content is read off the import row rather than inferred from trade statistics.}
+\label{tab:io-summary}
+\end{table}
